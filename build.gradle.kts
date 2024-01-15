@@ -1,21 +1,13 @@
 plugins {
-    kotlin("jvm") version "1.9.21"
+    id("basics.kotlin-conventions")
 }
 
-group = "com.jeff-media.community"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
+// For now, the root module depends on all subprojects
+// Later we'll only depend on core and a few selected modules
 dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(8)
+    rootProject.subprojects.forEach { subproject ->
+        subproject.plugins.withId("kotlin") {
+            api(subproject)
+        }
+    }
 }

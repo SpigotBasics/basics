@@ -1,0 +1,1 @@
+WIP: Essentials-like "core" plugin for modern Spigot versions (no 1.8!) called "Basics"
