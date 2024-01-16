@@ -46,7 +46,7 @@ class ModuleManagerImpl(val plugin: BasicsPlugin) : ModuleManager {
         try {
             logger.info("Loading module ${pluginFile.name}...")
             val uncleClassLoader = this.javaClass.classLoader
-            val jarFileLoader = ModuleJarFileLoader(pluginFile, uncleClassLoader)
+            val jarFileLoader = ModuleJarFileLoader(pluginFile.toURI(), uncleClassLoader)
             val module = createModuleInstance(jarFileLoader.mainClass, jarFileLoader.moduleInfo).getOrElse { throw it }
             module.load()
             loadedModules.add(module)
