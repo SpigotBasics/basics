@@ -3,10 +3,11 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-    id("org.jetbrains.dokka") version "1.9.10" apply false
 }
 
-
+//repositories {
+//    mavenCentral()
+//}
 
 val testServerDir = File(System.getProperty("TEST_SERVER_PATH","/Users/mfnalex/mctest/"))
 val pluginsDir = File(testServerDir, "plugins")

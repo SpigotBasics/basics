@@ -1,5 +1,3 @@
-import gradle.kotlin.dsl.accessors._f80d018c6682eda65edc89328dbbdb35.javaToolchains
-
 /**
  * Base plugin for Kotlin
  */
