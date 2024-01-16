@@ -24,26 +24,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         }
     }
 
-    override fun loadModule(clazz: KClass<out BasicsModule>): Result<BasicsModule, Exception> {
-        availableModules.add(clazz)
-        val module: BasicsModule
-        try {
-            module = createModule(clazz)
-        } catch (exception: Exception) {
-            logger.severe("Could not load module class ${clazz.qualifiedName}")
-            return Result.Failed(exception)
-        }
-        try {
-            module.enable()
-            enabledModules.add(module)
-        } catch (exception: Exception) {
-            logger.severe("Could not enable module ${module.name}")
-            return Result.Failed(exception)
-        }
-
-        return Result.Success(module)
-    }
-
     private fun createModule(clazz: KClass<out BasicsModule>): BasicsModule {
         val constructor = clazz.constructors.stream()
             .filter { it.parameters.size == 1 && it.parameters[0].type == BasicsPlugin::class.createType() }

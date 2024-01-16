@@ -11,6 +11,4 @@ interface BasicsPlugin: Plugin {
     val enabledModules: List<BasicsModule>
     val moduleFolder: File
 
-    fun loadModule(clazz: KClass<out BasicsModule>): Result<BasicsModule, Exception>
-
 }

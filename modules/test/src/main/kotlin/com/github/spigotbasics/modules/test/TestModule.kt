@@ -2,8 +2,10 @@ package com.github.spigotbasics.modules.test
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
+import com.github.spigotbasics.core.extensions.getPermissionNumberValue
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.BasicsModule
+import org.bukkit.Bukkit
 
 class TestModule(plugin: BasicsPlugin) : AbstractBasicsModule(plugin) {
     override val name = "test"
