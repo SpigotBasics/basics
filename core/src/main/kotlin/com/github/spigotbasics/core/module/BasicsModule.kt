@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.module
 
+import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
 
 interface BasicsModule {
@@ -24,5 +25,6 @@ interface BasicsModule {
      */
     val config: BasicsConfig
 
+    fun enable()
 
 }

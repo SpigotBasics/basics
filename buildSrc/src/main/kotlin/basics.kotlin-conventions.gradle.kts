@@ -25,4 +25,5 @@ fun getGroupId(): String {
 }
 
 group = getGroupId()
+println("Project ${projectDir.name} has ID ${project.group}:${project.name}")
 version = "1.0-SNAPSHOT"

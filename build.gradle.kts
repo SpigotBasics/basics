@@ -1,5 +1,6 @@
 plugins {
     id("basics.kotlin-conventions")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 // For now, the root module depends on all subprojects

@@ -1,0 +1,3 @@
+name: Basics
+version: "needsExpanding"
+main: com.github.spigotbasics.plugin.BasicsPluginImpl

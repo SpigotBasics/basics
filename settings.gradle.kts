@@ -24,7 +24,7 @@ val moduleFolders: Array<File> = file("modules").listFiles(FileFilter { it.isDir
     ?: throw RuntimeException("Couldn't find modules folder")
 
 for(moduleFolder in moduleFolders) {
-    val moduleName: String = moduleFolder.name
+    val moduleName = "modules:" + moduleFolder.name
     include(moduleName)
     project(":${moduleName}").projectDir = moduleFolder
 }

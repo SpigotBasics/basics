@@ -6,4 +6,6 @@ plugins {
 
 dependencies {
     implementation(project(":core"))
+    implementation(kotlin("reflect"))
+    implementation(project(":modules:test"))
 }
