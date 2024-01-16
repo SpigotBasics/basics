@@ -26,10 +26,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         }
     }
 
-    fun iterateResources(resourceDir: String) {
-
-    }
-
     override fun onEnable() {
         logger.info(
             "Basics v%version% enabled! This plugin was written by %authors%."
