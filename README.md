@@ -3,7 +3,7 @@ WIP: Essentials-like "core" plugin for modern Spigot versions (no 1.8!) called "
 https://discord.com/channels/690411863766466590/1196562355912446094
 
 ## Compile
-To compile, use `gradlew shadowJar` on the root project.
+To compile, use `gradlew build` on the root project. You can also set up the environment variable "TEST_SERVER_PATH" to your test server path, then run `gradlew copyAllToTestServer`.
 
 Check out the test module on how to add modules.
 
