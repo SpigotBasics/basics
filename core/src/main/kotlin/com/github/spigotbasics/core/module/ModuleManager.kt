@@ -1,7 +1,6 @@
 package com.github.spigotbasics.core.module
 
 import java.io.File
-import com.github.spigotbasics.core.EitherResult
 
 interface ModuleManager {
 
@@ -9,9 +8,9 @@ interface ModuleManager {
 
     val enabledModules: List<BasicsModule>
 
-    fun disableModule(module: BasicsModule)
+    fun disableModule(module: BasicsModule): Result<Unit>
 
-    fun enableModule(module: BasicsModule)
+    fun enableModule(module: BasicsModule): Result<Unit>
 
     /**
      * Load module
@@ -19,6 +18,6 @@ interface ModuleManager {
      * @param pluginFile
      * @return
      */
-    fun loadModule(pluginFile: File): EitherResult<BasicsModule, Exception>
+    fun loadModule(pluginFile: File): Result<BasicsModule>
 
 }
