@@ -15,6 +15,7 @@ interface BasicsPlugin: Plugin {
     val enabledModules: List<BasicsModule>
     val moduleFolder: File
     val moduleManager: ModuleManager
-    fun getCommandManager(): BukkitCommandManager<CommandSender>
+    //fun getCommandManager(): BukkitCommandManager<CommandSender>
+    val commandManager: BukkitCommandManager<CommandSender>
 
 }

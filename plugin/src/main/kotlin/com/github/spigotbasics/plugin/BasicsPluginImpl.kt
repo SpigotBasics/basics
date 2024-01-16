@@ -22,8 +22,15 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val enabledModules: MutableList<BasicsModule> = ArrayList()
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManagerImpl(this)
-
-    private var commandManager: BukkitCommandManager<CommandSender>? = null
+    override val commandManager: BukkitCommandManager<CommandSender> by lazy {
+        logger.info("Creating command manager...")
+        if(!isEnabled) error("Cannot create command manager before plugin is enabled")
+        BukkitCommandManager(
+            this,
+            ExecutionCoordinator.simpleCoordinator(),
+            SenderMapper.identity()
+        )
+    }
 
     override fun onLoad() {
         if (!moduleFolder.isDirectory) {
@@ -41,11 +48,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                 )
         )
 
-        commandManager = BukkitCommandManager(
-            this,
-            ExecutionCoordinator.simpleCoordinator(),
-            SenderMapper.identity()
-        )
+        // Force initialization of command manager
+        commandManager.run {  }
 
         logger.info("Loading modules from modules folder...")
         moduleManager.loadModulesFromFolder(moduleFolder)
@@ -57,7 +61,4 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         moduleManager.disableAllModules()
     }
 
-    override fun getCommandManager(): BukkitCommandManager<CommandSender> {
-        return commandManager ?: error("Command manager not initialized")
-    }
 }
