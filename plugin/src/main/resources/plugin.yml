@@ -2,3 +2,5 @@ name: Basics
 version: "${pluginVersion}"
 main: com.github.spigotbasics.plugin.BasicsPluginImpl
 api-version: "1.13"
+authors:
+  - cool people

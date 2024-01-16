@@ -100,11 +100,8 @@ class ModuleManagerImpl(val plugin: BasicsPlugin) : ModuleManager {
     }
 
     fun disableAllModules() {
-        val it = enabledModules.iterator()
-        while (it.hasNext()) {
-            val module = it.next()
+        enabledModules.forEach { module ->
             disableModule(module)
-            it.remove()
         }
     }
 
