@@ -1,7 +1,11 @@
+import gradle.kotlin.dsl.accessors._f80d018c6682eda65edc89328dbbdb35.javaToolchains
+
 /**
  * Base plugin for Kotlin
  */
-apply(plugin = "kotlin")
+plugins {
+    kotlin("jvm")
+}
 
 repositories {
     mavenCentral()
@@ -27,3 +31,7 @@ fun getGroupId(): String {
 group = getGroupId()
 println("Project ${projectDir.name} has ID ${project.group}:${project.name}")
 version = "1.0-SNAPSHOT"
+
+kotlin {
+    jvmToolchain(8)
+}
