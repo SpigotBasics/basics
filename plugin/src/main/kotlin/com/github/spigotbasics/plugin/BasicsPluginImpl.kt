@@ -1,9 +1,13 @@
 package com.github.spigotbasics.plugin
 
+import cloud.commandframework.SenderMapper
+import cloud.commandframework.bukkit.BukkitCommandManager
+import cloud.commandframework.execution.ExecutionCoordinator
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.extensions.placeholders
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.plugin.module.ModuleManagerImpl
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
 import java.lang.invoke.MethodHandles
@@ -18,6 +22,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val enabledModules: MutableList<BasicsModule> = ArrayList()
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManagerImpl(this)
+
+    private var commandManager: BukkitCommandManager<CommandSender>? = null
 
     override fun onLoad() {
         if (!moduleFolder.isDirectory) {
@@ -35,6 +41,12 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                 )
         )
 
+        commandManager = BukkitCommandManager(
+            this,
+            ExecutionCoordinator.simpleCoordinator(),
+            SenderMapper.identity()
+        )
+
         logger.info("Loading modules from modules folder...")
         moduleManager.loadModulesFromFolder(moduleFolder)
         moduleManager.enableAllModules()
@@ -43,5 +55,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override fun onDisable() {
         logger.info("Disabling modules...")
         moduleManager.disableAllModules()
+    }
+
+    override fun getCommandManager(): BukkitCommandManager<CommandSender> {
+        return commandManager ?: error("Command manager not initialized")
     }
 }
