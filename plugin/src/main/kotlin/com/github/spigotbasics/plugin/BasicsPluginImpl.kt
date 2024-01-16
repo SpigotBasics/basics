@@ -1,38 +1,47 @@
 package com.github.spigotbasics.plugin
 
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.Either
+import com.github.spigotbasics.core.Result
 import com.github.spigotbasics.core.extensions.placeholders
 import com.github.spigotbasics.core.module.BasicsModule
-import com.github.spigotbasics.modules.test.TestModule
+import com.github.spigotbasics.core.module.ModuleInfo
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.util.jar.JarFile
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.valueParameters
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val availableModules: MutableList<KClass<out BasicsModule>> = ArrayList()
     override val enabledModules: MutableList<BasicsModule> = ArrayList()
+    override val moduleFolder = File(dataFolder, "modules")
 
-    override fun loadModule(clazz: KClass<out BasicsModule>): Either<BasicsModule, Exception> {
+    override fun onLoad() {
+        if(!moduleFolder.isDirectory) {
+            logger.info("Creating modules folder at ${moduleFolder.absolutePath}")
+            moduleFolder.mkdirs()
+        }
+    }
+
+    override fun loadModule(clazz: KClass<out BasicsModule>): Result<BasicsModule, Exception> {
         availableModules.add(clazz)
         val module: BasicsModule
         try {
             module = createModule(clazz)
         } catch (exception: Exception) {
             logger.severe("Could not load module class ${clazz.qualifiedName}")
-            return Either.Right(exception)
+            return Result.Failed(exception)
         }
         try {
             module.enable()
             enabledModules.add(module)
         } catch (exception: Exception) {
             logger.severe("Could not enable module ${module.name}")
-            return Either.Right(exception)
+            return Result.Failed(exception)
         }
 
-        return Either.Left(module)
+        return Result.Success(module)
     }
 
     private fun createModule(clazz: KClass<out BasicsModule>): BasicsModule {
@@ -43,14 +52,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                 IllegalArgumentException("Cannot find constructor for BasicsModule ${clazz.qualifiedName}")
             }
         return constructor.call(this)
-
-
-//        var foundConstructor: KFunction<BasicsModule>? = null
-//        for (constructor in clazz.constructors) {
-//            println("Constructor: ${constructor}, parameters = ${constructor.parameters}, typeParameters = ${constructor.typeParameters}, valueParameters = ${constructor.valueParameters}")
-//            foundConstructor = constructor
-//        }
-//        return foundConstructor?.call(this) ?: throw IllegalStateException("Cannot find constructor for ${clazz.qualifiedName}")
     }
 
     override fun onEnable() {
@@ -62,10 +63,15 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                 )
         )
 
-        enableDefaultModules()
+        val jarFiles = moduleFolder.listFiles(ModuleJarLoader.jarFileFilter)
+        if(jarFiles != null) {
+            for(jarFile in jarFiles) {
+                val jarLoader = ModuleJarLoader(jarFile, javaClass.classLoader)
+                val moduleInfo = jarLoader.moduleInfo
+                println("Found module ${moduleInfo.name} with main ${moduleInfo.mainClass}")
+                println("Class: ${jarLoader.mainClass}")
+            }
+        }
     }
 
-    private fun enableDefaultModules() {
-        loadModule(TestModule::class)
-    }
 }
