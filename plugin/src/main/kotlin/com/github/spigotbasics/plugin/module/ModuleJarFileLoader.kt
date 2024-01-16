@@ -1,6 +1,7 @@
 package com.github.spigotbasics.plugin.module
 
 import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.module.InvalidModuleException
 import com.github.spigotbasics.core.module.ModuleInfo
 import com.github.spigotbasics.core.module.ModuleLoader
 import com.github.spigotbasics.core.module.ModuleLoader.Companion.MODULE_INFO_FILE_NAME
@@ -9,6 +10,7 @@ import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 
 /**
  * Module jar file loader
@@ -24,7 +26,12 @@ class ModuleJarFileLoader(val file: File, val parentClassLoader: ClassLoader?): 
 
     override fun loadMainClass(): KClass<out BasicsModule> {
         val classLoader = URLClassLoader.newInstance(arrayOf(file.toURI().toURL()), parentClassLoader)
-        return classLoader.loadClass(moduleInfo.mainClass).kotlin as KClass<out BasicsModule>
+        val moduleClass = classLoader.loadClass(moduleInfo.mainClass).kotlin
+        if (!BasicsModule::class.isSuperclassOf(moduleClass)) {
+            throw InvalidModuleException("main class ${moduleClass.qualifiedName} must be a subclass of BasicsModule")
+        }
+        @Suppress("UNCHECKED_CAST")
+        return moduleClass as KClass<out BasicsModule>
     }
 
     override fun loadModuleInfo(): ModuleInfo {
