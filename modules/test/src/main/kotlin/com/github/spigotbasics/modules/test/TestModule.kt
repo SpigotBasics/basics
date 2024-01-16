@@ -4,9 +4,7 @@ import cloud.commandframework.Description
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
-import java.util.logging.Logger
 
 class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
 
@@ -18,11 +16,10 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
     }
 
     private fun registerTestCommand() {
-        val manager = plugin.getCommandManager()
-        manager.command(
-            manager.commandBuilder("command", Description.of("Test cloud command using a builder"), "alias")
+        commandManager.command(
+            commandManager.commandBuilder("basicstest", Description.of("Basics test command"))
                 .handler { context ->
-                    context.sender().sendMessage("Cloud sucks so hard, wtf")
+                    context.sender().sendMessage("Basics Test module is running fine!")
                 })
 
     }

@@ -1,7 +1,9 @@
 package com.github.spigotbasics.core.module
 
+import cloud.commandframework.bukkit.BukkitCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
+import org.bukkit.command.CommandSender
 import java.util.logging.Logger
 
 /**
@@ -10,6 +12,10 @@ import java.util.logging.Logger
  * @constructor Create empty Basics plugin
  */
 interface BasicsModule {
+
+    val plugin: BasicsPlugin
+
+    val commandManager: BukkitCommandManager<CommandSender>
 
     /**
      * Info about this module
