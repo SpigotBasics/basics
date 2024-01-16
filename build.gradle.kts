@@ -5,11 +5,8 @@ plugins {
     id("com.github.johnrengelman.shadow") apply false
 }
 
-//repositories {
-//    mavenCentral()
-//}
-
-val testServerDir = File(System.getProperty("TEST_SERVER_PATH","C:\\mctest"))
+// TODO: Move this into a buildSrc script
+val testServerDir = File(System.getProperty("TEST_SERVER_PATH", "/Users/mfnalex/mctest"))
 val pluginsDir = File(testServerDir, "plugins")
 val basicsPluginDir = File(pluginsDir, "Basics")
 val basicsModulesDir = File(basicsPluginDir, "modules")
