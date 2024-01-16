@@ -1,3 +1,4 @@
 name: Basics
-version: "needsExpanding"
+version: "${pluginVersion}"
 main: com.github.spigotbasics.plugin.BasicsPluginImpl
+api-version: "1.13"

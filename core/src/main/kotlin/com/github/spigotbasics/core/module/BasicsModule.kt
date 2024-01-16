@@ -2,29 +2,43 @@ package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
+import java.util.logging.Logger
 
+/**
+ * Common interfaces to be used by all modules. Implementations require a public constructor that takes in a [BasicsPlugin] and a [ModuleInfo].
+ *
+ * @constructor Create empty Basics plugin
+ */
 interface BasicsModule {
 
     /**
-     * The module's name, e.g. "tpa"
+     * Info about this module
      */
-    val name: String
-
-    /**
-     * Short description of the module's features
-     */
-    val description: String
-
-    /**
-     * Module version
-     */
-    val version: String
+    val info: ModuleInfo
 
     /**
      * This module's config
      */
     val config: BasicsConfig
 
+    val logger: Logger
+
+    /**
+     * Called when the module is enabled
+     *
+     */
     fun enable()
+
+    /**
+     * Called when the module is disabled
+     *
+     */
+    fun disable()
+
+    /**
+     * Called when the module is loaded
+     *
+     */
+    fun load()
 
 }
