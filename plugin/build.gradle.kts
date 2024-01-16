@@ -15,3 +15,9 @@ tasks {
         dependsOn(shadowJar)
     }
 }
+
+tasks.processResources {
+    filesMatching("plugin.yml") {
+        expand("pluginVersion" to project.version)
+    }
+}
