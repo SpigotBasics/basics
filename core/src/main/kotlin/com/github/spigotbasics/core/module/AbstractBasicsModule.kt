@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
+import java.io.FileOutputStream
 import java.io.FileWriter
 import java.io.InputStream
 import java.net.URL
@@ -39,11 +40,7 @@ abstract class AbstractBasicsModule(
 
         if (!exists) {
             file.createNewFile();
-            FileWriter(File(plugin.dataFolder, configName)).use { writer ->
-                getResourceAsStream(sourceName).bufferedReader().lineSequence().forEach { line ->
-                    writer.write(line);
-                }
-            }
+            getResourceAsStream(sourceName).copyTo(FileOutputStream(file))
         }
 
         val configuration: FileConfiguration = YamlConfiguration.loadConfiguration(file);
