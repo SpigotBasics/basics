@@ -28,7 +28,7 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
     override fun load() {
         logger.info("Test#load()")
 
-        val testResourceContent = getResource("test.txt").readText()
+        val testResourceContent = getResource("/test.txt").readText()
         logger.info("Test config content:" + config.get("foo"))
         logger.info("Test resource content: $testResourceContent")
     }
