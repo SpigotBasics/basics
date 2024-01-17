@@ -10,8 +10,8 @@ To compile, use `gradlew build` on the root project.
 You can also use the `testserver` tasks:
 
 - `copyPluginToTestServer`: Copies the main plugin .jar to your test server
-- `copy<Name>ModuleToTestServer`: Copies the specific module .jar to your test server
-- `copyAllModulesToTestServer`: Copies all modules to the test server - same as running all `copy<Name>ModuleToTestServer` tasks
+- `copyModule<Name>ToTestServer`: Copies the specific module .jar to your test server
+- `copyAllModulesToTestServer`: Copies all modules to the test server - same as running all `copyModule<Name>ToTestServer` tasks
 - `copyAllToTestServer`: Copies all modules and the main plugin .jar to your test server - same as running `copyPluginToTestServer` and `copyAllModulesToTestServer`
 
 The path to your test server can be specified using a gradle property called "testserver.path" using one of the following methods:

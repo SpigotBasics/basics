@@ -20,7 +20,8 @@ abstract class AbstractBasicsModule(
     /**
      * Logger for this module
      */
-    override val logger: Logger = Logger.getLogger("basics.${info.name}")
+
+    override val logger: Logger = Logger.getLogger("Basics ${info.name}")
 
     /**
      * Shared command manager
@@ -28,14 +29,14 @@ abstract class AbstractBasicsModule(
     override val commandManager: BukkitCommandManager<CommandSender> = plugin.commandManager
     override val config = getConfig("config.yml")
 
-    fun getResource(path: String): URL {
+    fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)
-        return javaClass.getResource(actualPath) ?: error("Resource $actualPath not found")
+        return javaClass.getResource(actualPath)
     }
 
-    fun getResourceAsStream(path: String): InputStream {
+    fun getResourceAsStream(path: String): InputStream? {
         val actualPath = toAbsoluteResourcePath(path)
-        return javaClass.getResourceAsStream(actualPath) ?: error("Resource $actualPath not found")
+        return javaClass.getResourceAsStream(actualPath)
     }
 
     private fun toAbsoluteResourcePath(path: String): String {
@@ -60,18 +61,20 @@ abstract class AbstractBasicsModule(
         val configuration = SavedConfig(file)
 
         // If a default config exists, set it as defaults
-        getResourceAsStream(sourceName).use {
+        getResourceAsStream(sourceName)?.use {
             configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
         }
 
-        // If the file does not exist, save the included default config
+        // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
-            file.createNewFile()
-            getResourceAsStream(sourceName).copyTo(FileOutputStream(file))
+            getResourceAsStream(sourceName)?.copyTo(FileOutputStream(file))
         }
 
-        // Load the config from disk
-        configuration.load(file)
+        // Load the config from disk if file exists
+        if (file.exists()) {
+            configuration.load(file)
+        }
+
         return configuration
     }
 

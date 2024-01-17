@@ -16,8 +16,10 @@ open class CreateModule : DefaultTask() {
             error("Invalid module name: $moduleName")
         }
 
-        val moduleLower = moduleName!!.lowercase()
-        val moduleUpper = moduleName.replaceFirstChar { it.uppercaseChar() }
+        moduleName !!
+
+        val moduleLower = moduleName.pascalCase().lowercase()
+        val moduleUpper = moduleName.pascalCase()
 
         val folder = File(project.projectDir, moduleName)
         if (folder.exists()) {
@@ -29,8 +31,9 @@ open class CreateModule : DefaultTask() {
 
         println("Adjusting basics-module.yml ...")
         replaceInFile(File(folder, "src/main/resources/basics-module.yml"), mapOf(
-            "module-name" to moduleLower,
-            "Module-name" to moduleUpper,
+            "module-name-lower" to moduleLower,
+            "module-name-pascal" to moduleUpper,
+            "module-name" to moduleName
         ))
 
         println("Creating main class ...")
@@ -56,19 +59,19 @@ open class CreateModule : DefaultTask() {
 
         mainFile.writeText("""
             package com.github.spigotbasics.modules.${nameLower}
-
-            import cloud.commandframework.Description
+            
             import com.github.spigotbasics.core.BasicsPlugin
-            import com.github.spigotbasics.core.config.BasicsConfig
             import com.github.spigotbasics.core.module.AbstractBasicsModule
             import com.github.spigotbasics.core.module.ModuleInfo
-
+            
             class ${nameUpper}Module(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
-
-                override val config = BasicsConfig() // TODO: Move this to AbstractBasicsModule
-
+            
+                override fun enable() {
+                
+                }
+                
             }
-        """)
+""".trimIndent())
     }
 
 }
