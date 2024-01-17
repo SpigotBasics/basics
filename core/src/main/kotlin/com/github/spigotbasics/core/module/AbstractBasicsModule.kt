@@ -26,7 +26,7 @@ abstract class AbstractBasicsModule(
      * Shared command manager
      */
     override val commandManager: BukkitCommandManager<CommandSender> = plugin.commandManager
-    override val config = getConfig("config.yml");
+    override val config = getConfig("config.yml")
 
     fun getResource(path: String): URL {
         val actualPath = toAbsoluteResourcePath(path)
