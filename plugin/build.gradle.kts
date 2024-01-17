@@ -30,7 +30,6 @@ tasks.jar {
 tasks.shadowJar {
     archiveBaseName = "basics"
     archiveClassifier = "shaded"
-    minimize()
 }
 
 tasks.register("copyPluginToTestServer", Copy::class) {
