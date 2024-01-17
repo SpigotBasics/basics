@@ -57,19 +57,10 @@ class ModuleManagerImpl(val plugin: BasicsPlugin) : ModuleManager {
         }
     }
 
-    fun createModuleInstance(mainClass: KClass<out BasicsModule>, info: ModuleInfo): Result<BasicsModule> {
+    private fun createModuleInstance(mainClass: KClass<out BasicsModule>, info: ModuleInfo): Result<BasicsModule> {
         try {
-            val constructor = mainClass.constructors.stream()
-                .filter {
-                    it.parameters.size == 2
-                            && it.parameters[0].type == BasicsPlugin::class.createType()
-                            && it.parameters[1].type == ModuleInfo::class.createType()
-                }
-                .findFirst()
-                .orElseThrow {
-                    InvalidModuleException("Cannot find constructor for BasicsModule ${mainClass.qualifiedName}")
-                }
-            return Result.success(constructor.call(plugin, info))
+            val constructor = mainClass.java.getConstructor(BasicsPlugin::class.java, ModuleInfo::class.java)
+            return Result.success(constructor.newInstance(plugin, info))
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "Failed to create module from class ${mainClass.qualifiedName}", e)
             return Result.failure(e)
