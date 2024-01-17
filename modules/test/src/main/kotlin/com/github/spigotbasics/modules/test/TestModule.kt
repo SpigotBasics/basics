@@ -18,7 +18,6 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
                 .handler { context ->
                     context.sender().sendMessage("Basics Test module is running fine!")
                 })
-
     }
 
     override fun disable() {

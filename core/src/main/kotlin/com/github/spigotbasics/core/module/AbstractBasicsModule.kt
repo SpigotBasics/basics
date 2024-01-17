@@ -2,12 +2,11 @@ package com.github.spigotbasics.core.module
 
 import cloud.commandframework.bukkit.BukkitCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.config.BasicsConfig
 import org.bukkit.command.CommandSender
-import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
-import java.io.FileWriter
 import java.io.InputStream
 import java.net.URL
 import java.util.logging.Logger
@@ -33,21 +32,19 @@ abstract class AbstractBasicsModule(
         return javaClass.getResourceAsStream(actualPath) ?: error("Resource $path not found")
     }
 
-    fun getOrCreateConfig(sourceName: String): FileConfiguration {
-        val configName = if (sourceName == "config.yml") info.name + ".yml" else sourceName;
+    fun getOrCreateConfig(sourceName: String): BasicsConfig {
+        val configName = if (sourceName == "config.yml") info.name + ".yml" else "${info.name}-$sourceName";
         val file = File(plugin.dataFolder, configName);
-        val exists = file.exists();
 
-        if (!exists) {
+        val configuration = BasicsConfig();
+        configuration.setDefaults(YamlConfiguration.loadConfiguration(file));
+
+        if (!file.exists()) {
             file.createNewFile();
             getResourceAsStream(sourceName).copyTo(FileOutputStream(file))
         }
 
-        val configuration: FileConfiguration = YamlConfiguration.loadConfiguration(file);
-        if (!exists) {
-            configuration.save(file);
-        }
-
+        configuration.load(file)
         return configuration;
     }
 
