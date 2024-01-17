@@ -23,11 +23,13 @@ abstract class AbstractBasicsModule(
     override val config = getOrCreateConfig("config.yml");
 
     fun getResource(path: String): URL {
-        return javaClass.getResource("/$path") ?: error("Resource $path not found")
+        val actualPath = if (path.substring(0, 1) == "/") path else "/$path"
+        return javaClass.getResource(actualPath) ?: error("Resource $path not found")
     }
 
     fun getResourceAsStream(path: String): InputStream {
-        return javaClass.getResourceAsStream("/$path") ?: error("Resource $path not found")
+        val actualPath = if (path.substring(0, 1) == "/") path else "/$path"
+        return javaClass.getResourceAsStream(actualPath) ?: error("Resource $path not found")
     }
 
     fun getOrCreateConfig(sourceName: String): FileConfiguration {
@@ -38,7 +40,7 @@ abstract class AbstractBasicsModule(
         if (!exists) {
             file.createNewFile();
             FileWriter(File(plugin.dataFolder, configName)).use { writer ->
-                getResourceAsStream("/$sourceName").bufferedReader().lineSequence().forEach { line ->
+                getResourceAsStream(sourceName).bufferedReader().lineSequence().forEach { line ->
                     writer.write(line);
                 }
             }
