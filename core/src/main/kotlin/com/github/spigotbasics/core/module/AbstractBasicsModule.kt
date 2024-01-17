@@ -20,6 +20,7 @@ abstract class AbstractBasicsModule(
     /**
      * Logger for this module
      */
+
     override val logger: Logger = Logger.getLogger("Basics ${info.name}")
 
     /**
