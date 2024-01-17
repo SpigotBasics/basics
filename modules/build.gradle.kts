@@ -9,16 +9,6 @@ tasks.register("copyAllModulesToTestServer") {
     }
 }
 
-//val createModuleTask = tasks.register("createModule") {
-//    var moduleName: String?
-//    val moduleInputPrompt = "Enter module name. Use only lowercase letters, numbers, underscores and dashes (${moduleNameRegex.pattern}): "
-//    moduleName = readInput(moduleInputPrompt)
-//    if(!isValidModuleName(moduleName)) {
-//        error("Invalid module name: $moduleName")
-//    }
-//    println("Creating module $moduleName ...")
-//}
-
 tasks.register("createModule", CreateModule::class) {
     group = "module"
     description = "Creates a new module"
