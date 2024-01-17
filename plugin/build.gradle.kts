@@ -1,3 +1,4 @@
+
 plugins {
     id("basics.kotlin-conventions")
     id("basics.dependency.spigot-api")
@@ -30,4 +31,11 @@ tasks.shadowJar {
     archiveBaseName = "basics"
     archiveClassifier = "shaded"
     minimize()
+}
+
+tasks.register("copyPluginToTestServer", Copy::class) {
+    group = "test server"
+    description = "Copies the plugin to the test server"
+    from(tasks.shadowJar.get().archiveFile)
+    into(getServerPluginsDirectory())
 }
