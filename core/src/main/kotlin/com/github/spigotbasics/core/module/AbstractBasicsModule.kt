@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.module
 
 import cloud.commandframework.bukkit.BukkitCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.config.BasicsConfig
+import com.github.spigotbasics.core.config.SavedConfig
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -20,7 +20,7 @@ abstract class AbstractBasicsModule(
 
     override val commandManager: BukkitCommandManager<CommandSender> = plugin.commandManager
 
-    override val config = getOrCreateConfig("config.yml");
+    override val config = getConfig("config.yml");
 
     fun getResource(path: String): URL {
         val actualPath = if (path.substring(0, 1) == "/") path else "/$path"
@@ -32,20 +32,11 @@ abstract class AbstractBasicsModule(
         return javaClass.getResourceAsStream(actualPath) ?: error("Resource $path not found")
     }
 
-    fun getOrCreateConfig(sourceName: String): BasicsConfig {
+    fun getConfig(sourceName: String): SavedConfig {
         val configName = if (sourceName == "config.yml") info.name + ".yml" else "${info.name}-$sourceName";
         val file = File(plugin.dataFolder, configName);
 
-        val configuration = BasicsConfig();
-        configuration.setDefaults(YamlConfiguration.loadConfiguration(file));
-
-        if (!file.exists()) {
-            file.createNewFile();
-            getResourceAsStream(sourceName).copyTo(FileOutputStream(file))
-        }
-
-        configuration.load(file)
-        return configuration;
+        return SavedConfig.saveAndLoadDefaults(file, getResourceAsStream(sourceName))
     }
 
     override fun enable() {}
