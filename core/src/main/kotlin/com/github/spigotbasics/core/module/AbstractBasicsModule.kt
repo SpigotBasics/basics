@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
 import java.io.InputStream
 import java.net.URL
 import java.util.logging.Logger
@@ -36,7 +37,16 @@ abstract class AbstractBasicsModule(
         val configName = if (sourceName == "config.yml") info.name + ".yml" else "${info.name}-$sourceName";
         val file = File(plugin.dataFolder, configName);
 
-        return SavedConfig.saveAndLoadDefaults(file, getResourceAsStream(sourceName))
+        val configuration = SavedConfig(file)
+        configuration.setDefaults(YamlConfiguration.loadConfiguration(getResourceAsStream(sourceName).bufferedReader()));
+
+        if (!file.exists()) {
+            file.createNewFile();
+            getResourceAsStream(sourceName).copyTo(FileOutputStream(file));
+        }
+
+        configuration.load(file);
+        return configuration;
     }
 
     override fun enable() {}
