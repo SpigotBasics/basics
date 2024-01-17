@@ -19,7 +19,7 @@ tasks {
 
     val copyModulesToTestServer = register<Copy>("copyModulesToTestServer") {
         project(":modules").subprojects.forEach {
-            from(it.tasks.getByName("jar", Jar::class).archiveFile)
+            from(it.tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
         }
         into(basicsModulesDir)
     }
@@ -28,7 +28,7 @@ tasks {
         group = "test"
 
         if(!testServerDir.isDirectory) {
-            throw RuntimeException("Test server directory does not exist! Set environment var TEST_SERVER_PATH to the path of your test server.")
+            error("Test server directory does not exist! Set environment var TEST_SERVER_PATH to the path of your test server.")
         }
         basicsModulesDir.mkdirs()
 
