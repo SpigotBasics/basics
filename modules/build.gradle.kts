@@ -4,8 +4,22 @@ tasks.register("copyAllModulesToTestServer") {
     val copyAllModulesTask = this
     subprojects.forEach { module ->
         module.tasks.withType(CopyModule::class).forEach { copyModuleTask ->
-            println("${copyAllModulesTask.name} dependsOn ${copyModuleTask.name}")
             copyAllModulesTask.dependsOn(copyModuleTask)
         }
     }
+}
+
+//val createModuleTask = tasks.register("createModule") {
+//    var moduleName: String?
+//    val moduleInputPrompt = "Enter module name. Use only lowercase letters, numbers, underscores and dashes (${moduleNameRegex.pattern}): "
+//    moduleName = readInput(moduleInputPrompt)
+//    if(!isValidModuleName(moduleName)) {
+//        error("Invalid module name: $moduleName")
+//    }
+//    println("Creating module $moduleName ...")
+//}
+
+tasks.register("createModule", CreateModule::class) {
+    group = "module"
+    description = "Creates a new module"
 }

@@ -29,6 +29,15 @@ tasks.getByName("shadowJar", ShadowJar::class).apply {
     }
 }
 
+tasks.processResources {
+    filesMatching("basics-module.yml") {
+        expand(mapOf(
+            "moduleVersion" to project.version,
+            "moduleName" to project.name
+        ))
+    }
+}
+
 val moduleName = project.name
 tasks.register("copy${moduleName.replaceFirstChar { it.uppercaseChar() }}ModuleToTestServer", CopyModule::class) {
     group = "testserver"
