@@ -28,7 +28,8 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
         logger.info("Test#load()")
 
         val testResourceContent = getResource("/test.txt").readText()
-        logger.info("Test config content:" + config.get("foo"))
+        logger.info("config.yml foo: ${config.getString("foo")}")
+        logger.info("config.yml bar: ${config.getString("bar")}")
         logger.info("Test resource content: $testResourceContent")
     }
 
