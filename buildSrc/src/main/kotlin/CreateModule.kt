@@ -32,6 +32,9 @@ open class CreateModule : DefaultTask() {
             "module-name" to moduleLower,
             "Module-name" to moduleUpper,
         ))
+
+        println("Creating main class ...")
+        createMain(folder, moduleUpper, moduleLower)
     }
 
     fun copySkeletonTo(target: File) {
@@ -45,6 +48,27 @@ open class CreateModule : DefaultTask() {
             content = content.replace("%{" + key + "}%", value)
         })
         file.writeText(content)
+    }
+
+    fun createMain(folder: File, nameUpper: String, nameLower: String) {
+        val mainFile = File(folder, "src/main/kotlin/com/github/spigotbasics/modules/$nameLower/${nameUpper}Module.kt")
+        mainFile.parentFile.mkdirs()
+
+        mainFile.writeText("""
+            package com.github.spigotbasics.modules.${nameLower}
+
+            import cloud.commandframework.Description
+            import com.github.spigotbasics.core.BasicsPlugin
+            import com.github.spigotbasics.core.config.BasicsConfig
+            import com.github.spigotbasics.core.module.AbstractBasicsModule
+            import com.github.spigotbasics.core.module.ModuleInfo
+
+            class ${nameUpper}Module(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
+
+                override val config = BasicsConfig() // TODO: Move this to AbstractBasicsModule
+
+            }
+        """)
     }
 
 }
