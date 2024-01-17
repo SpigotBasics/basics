@@ -39,7 +39,7 @@ tasks.processResources {
 }
 
 val moduleName = project.name
-tasks.register("copy${moduleName.replaceFirstChar { it.uppercaseChar() }}ModuleToTestServer", CopyModule::class) {
+tasks.register("copyModule${moduleName.pascalCase()}ToTestServer", CopyModule::class) {
     group = "testserver"
     description = "Copies the ${moduleName} module to the test server"
     from(tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
