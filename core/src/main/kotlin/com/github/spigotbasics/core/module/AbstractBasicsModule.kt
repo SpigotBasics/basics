@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
-import java.io.FileReader
 import java.io.InputStream
 import java.net.URL
 import java.util.logging.Logger
@@ -56,7 +55,7 @@ abstract class AbstractBasicsModule(
 
         // The file object will use the namespaced resource name
         val configName = getNamespacedResourceName(sourceName)
-        val file = File(plugin.dataFolder, configName);
+        val file = File(plugin.dataFolder, configName)
 
         val configuration = SavedConfig(file)
 
@@ -67,13 +66,13 @@ abstract class AbstractBasicsModule(
 
         // If the file does not exist, save the included default config
         if (!file.exists()) {
-            file.createNewFile();
-            getResourceAsStream(sourceName).copyTo(FileOutputStream(file));
+            file.createNewFile()
+            getResourceAsStream(sourceName).copyTo(FileOutputStream(file))
         }
 
         // Load the config from disk
-        configuration.load(file);
-        return configuration;
+        configuration.load(file)
+        return configuration
     }
 
     /**
@@ -86,12 +85,12 @@ abstract class AbstractBasicsModule(
         var newPath = path
 
         // Remove leading slash
-        if(path.startsWith("/")) {
+        if (path.startsWith("/")) {
             newPath = path.substring(1)
         }
 
         // config.yml is called <module-name>.yml
-        if(newPath == "config.yml") {
+        if (newPath == "config.yml") {
             return "${info.name}.yml"
         }
 
