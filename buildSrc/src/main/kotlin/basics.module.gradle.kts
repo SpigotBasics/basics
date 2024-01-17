@@ -31,7 +31,7 @@ tasks.getByName("shadowJar", ShadowJar::class).apply {
 
 val moduleName = project.name
 tasks.register("copy${moduleName.replaceFirstChar { it.uppercaseChar() }}ModuleToTestServer", CopyModule::class) {
-    group = "test server"
+    group = "testserver"
     description = "Copies the ${moduleName} module to the test server"
     from(tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
     into(getServerModulesDirectory())

@@ -1,5 +1,5 @@
 tasks.register("copyAllModulesToTestServer") {
-    group = "test server"
+    group = "testserver"
     description = "Copies all modules to the test server"
     val copyAllModulesTask = this
     subprojects.forEach { module ->

@@ -7,8 +7,17 @@ WIP: Essentials-like "core" plugin for modern Spigot versions (no 1.8!) called "
 ## Compile
 To compile, use `gradlew build` on the root project.
 
-You can also set up the environment variable `TEST_SERVER_PATH` to your test server path,
-then run `gradlew copyAllToTestServer` to copy the plugin and all modules to your test server.
+You can also use the `testserver` tasks:
+
+- `copyPluginToTestServer`: Copies the main plugin .jar to your test server
+- `copy<Name>ModuleToTestServer`: Copies the specific module .jar to your test server
+- `copyAllModulesToTestServer`: Copies all modules to the test server - same as running all `copy<Name>ModuleToTestServer` tasks
+- `copyAllToTestServer`: Copies all modules and the main plugin .jar to your test server - same as running `copyPluginToTestServer` and `copyAllModulesToTestServer`
+
+The path to your test server can be specified using a gradle property called "testserver.path" using one of the following methods:
+- as command line argument (`gradlew copyAllToTestServer -Ptestserver.path=/my/test/server`)
+- in the `gradle.properties` file in the gradle home directory (usually `~/.gradle`): `testserver.path=/my/test/server`
+
 
 ## Todo
 Check the [Trello Board](https://trello.com/b/QjvNuXEO/basics)!
