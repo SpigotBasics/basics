@@ -2,13 +2,10 @@ package com.github.spigotbasics.modules.test
 
 import cloud.commandframework.Description
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.config.BasicsConfig
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
 
 class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
-
-    override val config = BasicsConfig() // TODO: Move this to AbstractBasicsModule
 
     override fun enable() {
         logger.info("Test#enable()")
@@ -21,7 +18,6 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
                 .handler { context ->
                     context.sender().sendMessage("Basics Test module is running fine!")
                 })
-
     }
 
     override fun disable() {
@@ -32,6 +28,8 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
         logger.info("Test#load()")
 
         val testResourceContent = getResource("/test.txt").readText()
+        logger.info("config.yml foo: ${config.getString("foo")}")
+        logger.info("config.yml bar: ${config.getString("bar")}")
         logger.info("Test resource content: $testResourceContent")
     }
 
