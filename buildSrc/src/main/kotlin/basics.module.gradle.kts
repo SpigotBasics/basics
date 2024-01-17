@@ -28,3 +28,11 @@ tasks.getByName("shadowJar", ShadowJar::class).apply {
         exclude(dependency("org.jetbrains:annotations"))
     }
 }
+
+val moduleName = project.name
+tasks.register("copy${moduleName.replaceFirstChar { it.uppercaseChar() }}ModuleToTestServer", CopyModule::class) {
+    group = "test server"
+    description = "Copies the ${moduleName} module to the test server"
+    from(tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
+    into(getServerModulesDirectory())
+}
