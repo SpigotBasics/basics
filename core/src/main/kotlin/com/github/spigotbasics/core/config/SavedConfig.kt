@@ -9,7 +9,13 @@ import java.io.File
  * @property file File backing this configuration
  * @constructor Create empty Saved config
  */
-class SavedConfig(private val file: File) : YamlConfiguration() {
+class SavedConfig(
+
+    /**
+     * File backing this configuration.
+     */
+    val file: File
+) : YamlConfiguration() {
 
     companion object {
         /**
@@ -25,6 +31,9 @@ class SavedConfig(private val file: File) : YamlConfiguration() {
         }
     }
 
+    /**
+     * Saves this configuration to the file.
+     */
     fun save() {
         save(file)
     }
