@@ -4,6 +4,7 @@ import cloud.commandframework.bukkit.BukkitCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.BasicsConfig
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.file.FileConfiguration
 import java.util.logging.Logger
 
 /**
@@ -25,7 +26,7 @@ interface BasicsModule {
     /**
      * This module's config
      */
-    val config: BasicsConfig
+    val config: FileConfiguration
 
     val logger: Logger
 

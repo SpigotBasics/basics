@@ -23,7 +23,9 @@ abstract class AbstractBasicsModule(
     override val config = getOrCreateConfig("config.yml");
 
     fun getResource(path: String): URL {
-        return javaClass.getResource(path) ?: error("Resource $path not found")
+        return javaClass.getResource("/$path") ?: error("Resource $path not found")
+    }
+
     fun getResourceAsStream(path: String): InputStream {
         return javaClass.getResourceAsStream("/$path") ?: error("Resource $path not found")
     }

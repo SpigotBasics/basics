@@ -2,13 +2,10 @@ package com.github.spigotbasics.modules.test
 
 import cloud.commandframework.Description
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.config.BasicsConfig
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
 
 class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
-
-    override val config = BasicsConfig() // TODO: Move this to AbstractBasicsModule
 
     override fun enable() {
         logger.info("Test#enable()")
@@ -31,7 +28,7 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
     override fun load() {
         logger.info("Test#load()")
 
-        val testResourceContent = getResource("/test.txt").readText()
+        val testResourceContent = getResource("test.txt").readText()
         logger.info("Test config content:" + config.get("foo"))
         logger.info("Test resource content: $testResourceContent")
     }
