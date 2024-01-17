@@ -4,7 +4,7 @@ plugins {
 }
 
 tasks.register("copyAllToTestServer") {
-    group = "test server"
+    group = "testserver"
     description = "Copies the plugin and all modules to the test server"
     dependsOn("plugin:copyPluginToTestServer")
     dependsOn("modules:copyAllModulesToTestServer")
