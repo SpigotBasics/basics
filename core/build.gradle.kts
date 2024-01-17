@@ -9,6 +9,9 @@ plugins {
 dependencies {
     api("cloud.commandframework:cloud-core:2.0.0-SNAPSHOT")
     api("cloud.commandframework:cloud-bukkit:2.0.0-SNAPSHOT")
+    //implementation(kotlin("reflect"))
+    api("net.kyori:adventure-api:4.14.0")
+    api("net.kyori:adventure-platform-bukkit:4.3.1")
 }
 
 tasks.withType(DokkaTask::class).configureEach {
