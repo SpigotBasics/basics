@@ -4,8 +4,12 @@ tasks.register("copyAllModulesToTestServer") {
     val copyAllModulesTask = this
     subprojects.forEach { module ->
         module.tasks.withType(CopyModule::class).forEach { copyModuleTask ->
-            println("${copyAllModulesTask.name} dependsOn ${copyModuleTask.name}")
             copyAllModulesTask.dependsOn(copyModuleTask)
         }
     }
+}
+
+tasks.register("createModule", CreateModule::class) {
+    group = "module"
+    description = "Creates a new module"
 }
