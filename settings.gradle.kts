@@ -7,6 +7,14 @@ pluginManagement {
     }
 }
 
+// TODO: Set this up for each and every plugin & dependency & version & buildSrc
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+        }
+    }
+}
+
 
 plugins {
     kotlin("jvm") version "1.9.20" apply false
