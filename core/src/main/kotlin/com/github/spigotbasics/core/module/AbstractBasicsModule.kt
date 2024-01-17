@@ -3,6 +3,11 @@ package com.github.spigotbasics.core.module
 import cloud.commandframework.bukkit.BukkitCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import java.io.File
+import java.io.FileWriter
+import java.io.InputStream
 import java.net.URL
 import java.util.logging.Logger
 
@@ -15,10 +20,34 @@ abstract class AbstractBasicsModule(
 
     override val commandManager: BukkitCommandManager<CommandSender> = plugin.commandManager
 
-    // Loading the config should happen here
+    override val config = getOrCreateConfig("config.yml");
 
     fun getResource(path: String): URL {
         return javaClass.getResource(path) ?: error("Resource $path not found")
+    fun getResourceAsStream(path: String): InputStream {
+        return javaClass.getResourceAsStream("/$path") ?: error("Resource $path not found")
+    }
+
+    fun getOrCreateConfig(sourceName: String): FileConfiguration {
+        val configName = if (sourceName == "config.yml") info.name + ".yml" else sourceName;
+        val file = File(plugin.dataFolder, configName);
+        val exists = file.exists();
+
+        if (!exists) {
+            file.createNewFile();
+            FileWriter(File(plugin.dataFolder, configName)).use { writer ->
+                getResourceAsStream("/$sourceName").bufferedReader().lineSequence().forEach { line ->
+                    writer.write(line);
+                }
+            }
+        }
+
+        val configuration: FileConfiguration = YamlConfiguration.loadConfiguration(file);
+        if (!exists) {
+            configuration.save(file);
+        }
+
+        return configuration;
     }
 
     override fun enable() {}
@@ -26,6 +55,4 @@ abstract class AbstractBasicsModule(
     override fun disable() {}
 
     override fun load() {}
-
-
 }
