@@ -21,3 +21,13 @@ tasks.processResources {
         expand("pluginVersion" to project.version)
     }
 }
+
+tasks.jar {
+    archiveBaseName = "basics"
+}
+
+tasks.shadowJar {
+    archiveBaseName = "basics"
+    archiveClassifier = "shaded"
+    minimize()
+}
