@@ -1,9 +1,8 @@
 package com.github.spigotbasics.core.module
 
-import cloud.commandframework.bukkit.BukkitCommandManager
+import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
-import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
@@ -26,7 +25,7 @@ abstract class AbstractBasicsModule(
     /**
      * Shared command manager
      */
-    override val commandManager: BukkitCommandManager<CommandSender> = plugin.commandManager
+    override val commandManager: PaperCommandManager = plugin.commandManager
     override val config = getConfig("config.yml")
 
     fun getResource(path: String): URL? {
