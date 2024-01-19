@@ -11,21 +11,33 @@ import java.net.URL
 import java.util.logging.Logger
 
 abstract class AbstractBasicsModule(
-    final override val plugin: BasicsPlugin,
-    final override val info: ModuleInfo
+    context: ModuleInstantiationContext
 ) :
     BasicsModule {
 
     /**
+     * Module info
+     */
+    final override val info: ModuleInfo = context.info
+
+    /**
      * Logger for this module
      */
+    final override val logger: Logger = Logger.getLogger("Basics ${info.name}")
 
-    override val logger: Logger = Logger.getLogger("Basics ${info.name}")
+    /**
+     * Plugin instance
+     */
+    final override val plugin: BasicsPlugin = context.plugin
 
     /**
      * Shared command manager
      */
     override val commandManager: PaperCommandManager = plugin.commandManager
+
+    /**
+     * Config
+     */
     override val config = getConfig("config.yml")
 
     fun getResource(path: String): URL? {
@@ -100,9 +112,4 @@ abstract class AbstractBasicsModule(
         return "${info.name}-$newPath"
     }
 
-    override fun enable() {}
-
-    override fun disable() {}
-
-    override fun load() {}
 }

@@ -1,12 +1,11 @@
 package com.github.spigotbasics.modules.basicsversion
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInfo
+import com.github.spigotbasics.core.module.ModuleInstantiationContext
 
-class BasicsVersionModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
+class BasicsVersionModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
-    override fun enable() {
+    override fun onEnable() {
         commandManager.registerCommand(BasicsVersionCommand(plugin.description))
     }
 

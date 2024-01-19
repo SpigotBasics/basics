@@ -1,20 +1,19 @@
 package com.github.spigotbasics.modules.test
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInfo
+import com.github.spigotbasics.core.module.ModuleInstantiationContext
 
-class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
+class TestModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
-    override fun enable() {
+    override fun onEnable() {
         logger.info("Test#enable()")
     }
 
-    override fun disable() {
+    override fun onDisable() {
         logger.info("Test#disable()")
     }
 
-    override fun load() {
+    override fun onLoad() {
         logger.info("Test#load()")
 
         val testResourceContent = getResource("/test.txt")!!.readText()
