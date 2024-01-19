@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.module
 
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
-import org.bukkit.configuration.file.FileConfiguration
+import com.github.spigotbasics.core.config.SavedConfig
 import java.util.logging.Logger
 
 /**
@@ -24,26 +24,35 @@ interface BasicsModule {
     /**
      * This module's config
      */
-    val config: FileConfiguration
+    val config: SavedConfig
 
+    /**
+     * This module's Logger
+     */
     val logger: Logger
 
     /**
      * Called when the module is enabled
      *
      */
-    fun enable()
+    fun onEnable() {
+
+    }
 
     /**
      * Called when the module is disabled
      *
      */
-    fun disable()
+    fun onDisable() {
+
+    }
 
     /**
      * Called when the module is loaded
      *
      */
-    fun load()
+    fun onLoad() {
+
+    }
 
 }
