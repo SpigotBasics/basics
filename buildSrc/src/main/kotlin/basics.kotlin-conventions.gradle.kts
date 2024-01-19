@@ -7,8 +7,27 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-        name = "sonatypeOssSnapshots"
+
+    maven {
+        name = "spigotmc"
+        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        content {
+            includeGroup("org.spigotmc")
+        }
+    }
+
+// This was only required for cloud
+//    maven {
+//        name = "sonatypeOssSnapshots"
+//        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+//    }
+
+    maven {
+        name = "aikar"
+        url = uri("https://repo.aikar.co/content/groups/aikar/")
+        content {
+            includeGroup("co.aikar")
+        }
     }
 }
 

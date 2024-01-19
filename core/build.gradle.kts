@@ -3,13 +3,11 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     id("basics.kotlin-conventions")
     id("basics.dependency.spigot-api")
+    id("basics.dependency.acf")
     id("org.jetbrains.dokka") version "1.9.10"
 }
 
 dependencies {
-    api("cloud.commandframework:cloud-core:2.0.0-SNAPSHOT")
-    api("cloud.commandframework:cloud-bukkit:2.0.0-SNAPSHOT")
-    //implementation(kotlin("reflect"))
     api("net.kyori:adventure-api:4.14.0")
     api("net.kyori:adventure-platform-bukkit:4.3.1")
 }
