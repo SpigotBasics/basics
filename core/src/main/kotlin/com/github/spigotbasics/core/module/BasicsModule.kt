@@ -1,8 +1,7 @@
 package com.github.spigotbasics.core.module
 
-import cloud.commandframework.bukkit.BukkitCommandManager
+import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
-import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import java.util.logging.Logger
 
@@ -15,7 +14,7 @@ interface BasicsModule {
 
     val plugin: BasicsPlugin
 
-    val commandManager: BukkitCommandManager<CommandSender>
+    val commandManager: PaperCommandManager
 
     /**
      * Info about this module
