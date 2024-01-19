@@ -10,6 +10,9 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/") {
         name = "sonatypeOssSnapshots"
     }
+    maven("https://repo.aikar.co/content/groups/aikar/") {
+        name = "aikar"
+    }
 }
 
 /**

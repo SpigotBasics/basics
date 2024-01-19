@@ -1,20 +1,13 @@
 package com.github.spigotbasics.plugin
 
-import cloud.commandframework.SenderMapper
-import cloud.commandframework.bukkit.BukkitCommandManager
-import cloud.commandframework.execution.ExecutionCoordinator
+import co.aikar.commands.BaseCommand
+import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.extensions.placeholders
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.plugin.module.ModuleManagerImpl
-import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.*
-import java.lang.invoke.MethodHandles
-import java.net.URI
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import kotlin.io.path.extension
+import java.io.File
 import kotlin.reflect.KClass
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
@@ -22,14 +15,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val enabledModules: MutableList<BasicsModule> = ArrayList()
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManagerImpl(this)
-    override val commandManager: BukkitCommandManager<CommandSender> by lazy {
-        logger.info("Creating command manager...")
-        if(!isEnabled) error("Cannot create command manager before plugin is enabled")
-        BukkitCommandManager(
-            this,
-            ExecutionCoordinator.simpleCoordinator(),
-            SenderMapper.identity()
-        )
+    override val commandManager: PaperCommandManager by lazy {
+        PaperCommandManager(this)
     }
 
     override fun onLoad() {
@@ -47,9 +34,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                     "authors" to "cool people"
                 )
         )
-
-        // Force initialization of command manager
-        commandManager.run {  }
+        
+        commandManager.registerCommand(BasicsCommand());
 
         logger.info("Loading modules from modules folder...")
         moduleManager.loadModulesFromFolder(moduleFolder)
