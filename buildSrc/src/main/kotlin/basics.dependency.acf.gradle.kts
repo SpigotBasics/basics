@@ -1,14 +1,5 @@
-import org.gradle.kotlin.dsl.maven
-
 plugins {
     `java-library`
-}
-
-repositories {
-    maven {
-        name = "spigotmc"
-        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    }
 }
 
 dependencies {
