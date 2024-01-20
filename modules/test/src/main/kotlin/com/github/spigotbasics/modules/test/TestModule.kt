@@ -12,6 +12,7 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
 
     override fun disable() {
         logger.info("Test#disable()")
+        scheduler.killAll()
     }
 
     override fun load() {
@@ -21,6 +22,7 @@ class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(
         logger.info("config.yml foo: ${config.getString("foo")}")
         logger.info("config.yml bar: ${config.getString("bar")}")
         logger.info("Test resource content: $testResourceContent")
+
     }
 
     init {
