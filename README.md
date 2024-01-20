@@ -23,3 +23,7 @@ To create a new module, use the `createModule` task. It will ask you for the mod
 
 ## Todo
 Check the [Trello Board](https://trello.com/b/QjvNuXEO/basics)!
+
+## Did you know?
+> [!WARNING]\
+> Did you know that you can add fancy warnings like this, using `> [!WARNING]`?
