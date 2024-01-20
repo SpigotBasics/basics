@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.module
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
@@ -27,6 +28,7 @@ abstract class AbstractBasicsModule(
      */
     override val commandManager: PaperCommandManager = plugin.commandManager
     override val config = getConfig("config.yml")
+    override val scheduler = BasicsScheduler(plugin)
 
     fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)

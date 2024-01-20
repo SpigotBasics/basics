@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.module
 
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.file.FileConfiguration
 import java.util.logging.Logger
 
@@ -27,6 +28,11 @@ interface BasicsModule {
     val config: FileConfiguration
 
     val logger: Logger
+
+    /**
+     * Modules scheduler
+     */
+    val scheduler: BasicsScheduler
 
     /**
      * Called when the module is enabled

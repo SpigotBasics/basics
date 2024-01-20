@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core
 
-import co.aikar.commands.BaseCommand
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.ModuleManager
