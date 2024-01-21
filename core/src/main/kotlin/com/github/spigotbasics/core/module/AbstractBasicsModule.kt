@@ -1,31 +1,53 @@
 package com.github.spigotbasics.core.module
 
 import co.aikar.commands.PaperCommandManager
+import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
+import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URL
+import java.util.logging.Level
 import java.util.logging.Logger
 
-abstract class AbstractBasicsModule(
-    final override val plugin: BasicsPlugin,
-    final override val info: ModuleInfo
-) :
-    BasicsModule {
+abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
+
+    /**
+     * Module class loader
+     */
+    final override val moduleClassLoader = context.classLoader
+
+    /**
+     * Module file
+     */
+    final override val moduleFile = context.file
+
+    /**
+     * Module info
+     */
+    final override val info: ModuleInfo = context.info
 
     /**
      * Logger for this module
      */
+    final override val logger: Logger = BasicsLoggerFactory.getModuleLogger(this)
 
-    override val logger: Logger = Logger.getLogger("Basics ${info.name}")
+    /**
+     * Plugin instance
+     */
+    final override val plugin: BasicsPlugin = context.plugin
 
     /**
      * Shared command manager
      */
     override val commandManager: PaperCommandManager = plugin.commandManager
+
+    /**
+     * Config
+     */
     override val config = getConfig("config.yml")
 
     fun getResource(path: String): URL? {
@@ -59,9 +81,13 @@ abstract class AbstractBasicsModule(
 
         val configuration = SavedConfig(file)
 
-        // If a default config exists, set it as defaults
-        getResourceAsStream(sourceName)?.use {
-            configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
+        try {
+            // If a default config exists, set it as defaults
+            getResourceAsStream(sourceName)?.use {
+                configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
+            }
+        } catch (e: InvalidConfigurationException) {
+            throw InvalidModuleException("Module contains invalid default config: $sourceName", e)
         }
 
         // If the file does not exist, save the included default config if it exists
@@ -70,8 +96,12 @@ abstract class AbstractBasicsModule(
         }
 
         // Load the config from disk if file exists
-        if (file.exists()) {
-            configuration.load(file)
+        try {
+            if (file.exists()) {
+                configuration.load(file)
+            }
+        } catch (e: InvalidConfigurationException) {
+            logger.log(Level.WARNING, "Failed to load invalid config file $configName", e)
         }
 
         return configuration
@@ -100,9 +130,17 @@ abstract class AbstractBasicsModule(
         return "${info.name}-$newPath"
     }
 
-    override fun enable() {}
+    private var isEnabled = false
+    final override fun enable() {
+        isEnabled = true
+    }
 
-    override fun disable() {}
+    final override fun disable() {
+        isEnabled = false
+    }
 
-    override fun load() {}
+    override fun isEnabled(): Boolean {
+        return isEnabled
+    }
+
 }
