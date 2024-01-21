@@ -15,16 +15,16 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(ModuleLoader::class)
 
-    private val loadedModules: MutableList<BasicsModule> = mutableListOf()
+    private val myLoadedModules: MutableList<BasicsModule> = mutableListOf()
 
-    val modules: List<BasicsModule>
-        get() = loadedModules.sortedBy { it.info.name } // TODO: Maybe have to call toList before calling sortedBy
+    val loadedModules: List<BasicsModule>
+        get() = myLoadedModules.sortedBy { it.info.name } // TODO: Maybe have to call toList before calling sortedBy
 
     val enabledModules: List<BasicsModule>
-        get() = loadedModules.filter { it.isEnabled() }
+        get() = myLoadedModules.filter { it.isEnabled() }
 
     val disabledModules: List<BasicsModule>
-        get() = loadedModules.filter { !it.isEnabled() }
+        get() = myLoadedModules.filter { !it.isEnabled() }
 
     init {
         if (!modulesDirectory.isDirectory()) {
@@ -32,9 +32,9 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         }
     }
 
-    fun getModule(name: String): BasicsModule? = loadedModules.find { it.info.name == name }
+    fun getModule(name: String): BasicsModule? = myLoadedModules.find { it.info.name == name }
 
-    fun loadModules() {
+    fun loadAllModulesFromModulesFolder() {
         val moduleFiles = modulesDirectory.listFiles(ModuleJarFileFilter)
             ?: throw FileNotFoundException("Modules directory ${modulesDirectory.absolutePath} not found")
         for (moduleFile in moduleFiles) {
@@ -46,13 +46,24 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         }
     }
 
+    fun enableAllLoadedModules() {
+        for(module in myLoadedModules) {
+            enableModule(module)
+        }
+    }
+
+    fun loadAndEnableAllModulesFromModulesFolder() {
+        loadAllModulesFromModulesFolder()
+        enableAllLoadedModules()
+    }
+
     @Throws(ModuleAlreadyLoadedException::class, InvalidModuleException::class)
-    private fun loadModuleFromFile(moduleFile: File) {
+    fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
         val loader = try {
             ModuleLoader(plugin, moduleFile)
         } catch (e: InvalidModuleException) {
             logger.log(Level.SEVERE, "Failed to load module ${moduleFile.absolutePath}", e)
-            return
+            return Result.failure(e)
         }
         val info = loader.info
 
@@ -64,10 +75,11 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             loader.createInstance()
         } catch (e: InvalidModuleException) {
             logger.log(Level.SEVERE, "Failed to instantiate module ${info.nameAndVersion}", e)
-            return
+            return Result.failure(e)
         }
 
-        loadedModules += module
+        myLoadedModules += module
+        return Result.success(module)
     }
 
     fun enableModule(module: BasicsModule) {
@@ -109,7 +121,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         if(module.isEnabled()) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
-        loadedModules.remove(module)
+        myLoadedModules.remove(module)
         forceGc()
 
     }
