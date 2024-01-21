@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import java.io.File
 
 /**
@@ -16,5 +17,5 @@ data class ModuleInstantiationContext(
     val plugin: BasicsPlugin,
     val info: ModuleInfo,
     val file: File,
-    val classLoader: ClassLoader
+    val classLoader: ModuleJarClassLoader
 )

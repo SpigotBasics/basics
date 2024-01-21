@@ -8,8 +8,3 @@ plugins {
 dependencies {
     api(libs().acf.paper)
 }
-
-tasks.compileJava {
-    options.compilerArgs.add("-parameters")
-    options.isFork = true
-}
