@@ -1,8 +1,8 @@
 package com.github.spigotbasics.core.module
 
-import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.InvalidConfigurationException
@@ -42,9 +42,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val plugin: BasicsPlugin = context.plugin
 
     /**
-     * Shared command manager
+     * Commands Manager
      */
-    override val commandManager: PaperCommandManager = plugin.commandManager
+    final override val commandManager: BasicsCommandManager = context.plugin.createCommandManager()
 
     /**
      * Config
@@ -139,6 +139,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     final override fun disable() {
         scheduler.killAll()
+        commandManager.unregisterAll()
         isEnabled = false
     }
 
