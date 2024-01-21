@@ -12,9 +12,9 @@ class ClockCommand(private val module: BasicsModule) : BaseCommand() {
 
     @Default
     fun startClock(sender: CommandSender) {
-        Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+        module.scheduler.runTimer(20, 20) {
             sender.sendMessage("§a${System.currentTimeMillis()}")
-        }, 20, 20)
+        }
     }
 
 }
