@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.joinmessages
 
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import com.github.spigotbasics.core.replace.mini
+import com.github.spigotbasics.core.replace.miniComponents
 import com.github.spigotbasics.core.replace.papi
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,12 +20,17 @@ class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsMo
 
     @EventHandler
     fun joinMessage(event: PlayerJoinEvent) {
-        event.joinMessage = getJoinMessage()?.papi(event.player)?.mini() ?: return
+        event.joinMessage = null
+        val component = getJoinMessage()?.papi(event.player)?.miniComponents() ?: return
+        audience.all().sendMessage(component)
     }
 
     @EventHandler
     fun leaveMessage(event: PlayerQuitEvent) {
-        event.quitMessage = getQuitMessage()?.papi(event.player)?.mini() ?: return
+        event.quitMessage = null
+        val component = getQuitMessage()?.papi(event.player)?.miniComponents() ?: return
+        audience.all().sendMessage(component)
     }
-    
+
+
 }
