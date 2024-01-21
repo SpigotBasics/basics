@@ -13,7 +13,6 @@ class TestModule(context: ModuleInstantiationContext) : AbstractBasicsModule(con
 
     override fun onDisable() {
         logger.info("Test#disable()")
-        scheduler.killAll()
     }
 
     init {
