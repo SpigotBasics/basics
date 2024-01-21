@@ -60,11 +60,10 @@ open class CreateModule : DefaultTask() {
         mainFile.writeText("""
             package com.github.spigotbasics.modules.${nameLower}
             
-            import com.github.spigotbasics.core.BasicsPlugin
             import com.github.spigotbasics.core.module.AbstractBasicsModule
-            import com.github.spigotbasics.core.module.ModuleInfo
+            import com.github.spigotbasics.core.module.ModuleInstantiationContext
             
-            class ${nameUpper}Module(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
+            class ${nameUpper}Module(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
             
                 override fun enable() {
                 

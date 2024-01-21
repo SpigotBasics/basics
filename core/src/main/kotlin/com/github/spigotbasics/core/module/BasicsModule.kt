@@ -2,8 +2,14 @@ package com.github.spigotbasics.core.module
 
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
+
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.file.FileConfiguration
+
+import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
+import java.io.File
+
 import java.util.logging.Logger
 
 /**
@@ -14,8 +20,9 @@ import java.util.logging.Logger
 interface BasicsModule {
 
     val plugin: BasicsPlugin
-
     val commandManager: PaperCommandManager
+    val moduleClassLoader: ModuleJarClassLoader
+    val moduleFile: File
 
     /**
      * Info about this module
@@ -25,8 +32,11 @@ interface BasicsModule {
     /**
      * This module's config
      */
-    val config: FileConfiguration
+    val config: SavedConfig
 
+    /**
+     * This module's Logger
+     */
     val logger: Logger
 
     /**
@@ -38,18 +48,29 @@ interface BasicsModule {
      * Called when the module is enabled
      *
      */
-    fun enable()
+    fun onEnable() {
+
+    }
 
     /**
      * Called when the module is disabled
      *
      */
+    fun onDisable() {
+
+    }
+
+    fun enable()
     fun disable()
 
-    /**
-     * Called when the module is loaded
-     *
-     */
-    fun load()
+    fun isEnabled(): Boolean
+
+//    /**
+//     * Called when the module is loaded
+//     *
+//     */
+//    fun onLoad() {
+//
+//    }
 
 }
