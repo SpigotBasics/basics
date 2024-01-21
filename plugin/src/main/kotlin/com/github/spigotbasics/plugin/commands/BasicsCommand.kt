@@ -19,6 +19,19 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
         help.showHelp()
     }
 
+    @Subcommand("reloadConfig")
+    @CommandPermission("basics.reloadconfig")
+    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES}")
+    fun reloadConfig(sender: CommandSender, moduleName: String) {
+        val module = plugin.moduleManager.getModule(moduleName)
+        if (module == null) {
+            sender.sendMessage("§cModule $moduleName not found")
+            return
+        }
+        module.reloadConfig()
+        sender.sendMessage("§aConfig of $moduleName reloaded")
+    }
+
     @Subcommand("module loadAll")
     @CommandPermission("basics.module.load")
     fun loadAllModules(sender: CommandSender) {
