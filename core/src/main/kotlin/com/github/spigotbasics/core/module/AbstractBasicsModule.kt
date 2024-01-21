@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -49,6 +50,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      * Config
      */
     override val config = getConfig("config.yml")
+    override val scheduler = BasicsScheduler(plugin)
 
     fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)
