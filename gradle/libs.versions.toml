@@ -5,7 +5,9 @@ acf = "0.5.1-SNAPSHOT"
 spigot = "1.20.4-R0.1-SNAPSHOT"
 dokka = "1.9.10"
 adventure-api = "4.14.0"
-adventure-bukkit = "4.3.1"
+adventure-bukkit = "4.3.2"
+adventure-minimessage = "4.15.0"
+adventure-text-serializer-legacy = "4.15.0"
 
 [libraries]
 shadow = { group = "com.github.johnrengelman", name="shadow", version.ref="shadow" }
@@ -14,6 +16,8 @@ acf-paper = { group = "co.aikar", name="acf-paper", version.ref="acf" }
 spigot-api = { group = "org.spigotmc", name="spigot-api", version.ref="spigot" }
 adventure-api = { group = "net.kyori", name="adventure-api", version.ref="adventure-api" }
 adventure-bukkit = { group = "net.kyori", name="adventure-platform-bukkit", version.ref="adventure-bukkit" }
+adventure-minimessage = { group = "net.kyori", name="adventure-text-minimessage", version.ref="adventure-minimessage" }
+adventure-text-serializer-legacy = { group = "net.kyori", name="adventure-text-serializer-legacy", version.ref="adventure-text-serializer-legacy" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref="shadow" }
