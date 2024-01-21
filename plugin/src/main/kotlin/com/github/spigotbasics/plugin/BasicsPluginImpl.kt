@@ -3,10 +3,12 @@ package com.github.spigotbasics.plugin
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.plugin.commands.BasicsCommand
 import com.github.spigotbasics.plugin.commands.CommandCompletions
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -17,7 +19,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
 
-    override val commandManager: PaperCommandManager by lazy {
+    private val commandManager: PaperCommandManager by lazy {
         PaperCommandManager(this)
     }
 
@@ -61,6 +63,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private fun registerCommands() {
         commandManager.registerCommand(BasicsCommand(this));
+    }
+
+    override fun createCommandManager(): BasicsCommandManager {
+        return BasicsCommandManager(commandManager)
     }
 
 }
