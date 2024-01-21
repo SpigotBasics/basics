@@ -11,6 +11,7 @@ class SubscribedListener<T : Event>(
 ) {
 
     fun call(event: Event) {
+        @Suppress("UNCHECKED_CAST")
         action.invoke(event as T)
     }
 
