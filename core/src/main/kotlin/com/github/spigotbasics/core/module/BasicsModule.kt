@@ -71,12 +71,7 @@ interface BasicsModule {
 
     fun isEnabled(): Boolean
 
-//    /**
-//     * Called when the module is loaded
-//     *
-//     */
-//    fun onLoad() {
-//
-//    }
+
+    fun reloadConfig()
 
 }
