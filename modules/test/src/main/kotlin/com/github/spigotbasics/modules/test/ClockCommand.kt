@@ -2,31 +2,36 @@ package com.github.spigotbasics.modules.test
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.CommandAlias
-import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import com.github.spigotbasics.core.module.BasicsModule
-import com.github.spigotbasics.core.module.ForbiddenFruitException
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.scheduler.BukkitRunnable
 
 @CommandAlias("clock")
 class ClockCommand(private val module: BasicsModule) : BaseCommand() {
 
-    @Default
-    fun startClock(sender: CommandSender) {
+    @Subcommand("basics-scheduler")
+    fun basicsScheduler(sender: CommandSender) {
         module.scheduler.runTimer(20, 20) {
-            sender.sendMessage("§a${System.currentTimeMillis()}")
+            sender.sendMessage("§aBasics Scheduler")
         }
     }
 
-    @Subcommand("tryscheduler")
-    fun tryScheduler() {
-        try {
-            Bukkit.getScheduler().runTaskLater(module.plugin, Runnable {
-                Bukkit.broadcastMessage("§cI was able to access the scheduler :< :< :<")
-            }, 5)
-        } catch (e: ForbiddenFruitException) {
-            Bukkit.broadcastMessage("§aI was not able to access the scheduler :3")
-        }
+    @Subcommand("bukkit-scheduler")
+    fun bukkitScheduler(sender: CommandSender) {
+        Bukkit.getScheduler().runTaskTimer(module.plugin, Runnable {
+            sender.sendMessage("§cBukkit Scheduler")
+        }, 20, 20)
     }
+
+    @Subcommand("bukkit-runnable")
+    fun bukkitRunnable(sender: CommandSender) {
+        object : BukkitRunnable() {
+            override fun run() {
+                sender.sendMessage("§cBukkit Runnable")
+            }
+        }.runTaskTimer(module.plugin, 20, 20)
+    }
+
 }
