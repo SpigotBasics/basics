@@ -49,8 +49,21 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     /**
      * Config
      */
-    override val config = getConfig("config.yml")
+    override var config = getConfig("config.yml")
+
+    override fun reloadConfig() {
+        config = getConfig("config.yml")
+    }
+
+    /**
+     * Scheduler
+     */
     override val scheduler = BasicsScheduler(plugin)
+
+    /**
+     * Adventure Audience
+     */
+    override val audience = plugin.audience
 
     fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)

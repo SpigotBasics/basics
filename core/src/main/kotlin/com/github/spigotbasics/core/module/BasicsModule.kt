@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration
 
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import java.io.File
 
 import java.util.logging.Logger
@@ -46,6 +47,11 @@ interface BasicsModule {
     val scheduler: BasicsScheduler
 
     /**
+     * Adventure Audience
+     */
+    val audience: BukkitAudiences
+
+    /**
      * Commands Manager
      */
     val commandManager: BasicsCommandManager
@@ -71,12 +77,7 @@ interface BasicsModule {
 
     fun isEnabled(): Boolean
 
-//    /**
-//     * Called when the module is loaded
-//     *
-//     */
-//    fun onLoad() {
-//
-//    }
+
+    fun reloadConfig()
 
 }
