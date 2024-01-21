@@ -13,6 +13,8 @@ dependencies {
 //    api("net.kyori:adventure-platform-bukkit:4.3.1")
     api(libs.adventure.api)
     api(libs.adventure.bukkit)
+    api(libs.adventure.minimessage)
+    api(libs.adventure.text.serializer.legacy)
 }
 
 tasks.withType(DokkaTask::class).configureEach {

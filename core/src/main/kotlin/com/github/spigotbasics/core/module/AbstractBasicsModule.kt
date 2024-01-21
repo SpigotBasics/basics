@@ -60,6 +60,11 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      */
     override val scheduler = BasicsScheduler(plugin)
 
+    /**
+     * Adventure Audience
+     */
+    override val audience = plugin.audience
+
     fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)
         return javaClass.getResource(actualPath)
