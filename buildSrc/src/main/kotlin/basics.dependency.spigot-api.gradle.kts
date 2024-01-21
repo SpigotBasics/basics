@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs("spigot-api"))
+    compileOnly(libs().spigot.api)
 }

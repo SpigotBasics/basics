@@ -1,3 +1,5 @@
+import gradle.kotlin.dsl.accessors._e054d9723d982fdb55b1e388b8ab0cbf.compileJava
+
 /**
  * Base plugin for Kotlin
  */
@@ -29,8 +31,12 @@ repositories {
     }
 }
 
-
-
 kotlin {
     jvmToolchain(8)
+}
+
+tasks.compileKotlin {
+    kotlinOptions {
+        javaParameters = true
+    }
 }
