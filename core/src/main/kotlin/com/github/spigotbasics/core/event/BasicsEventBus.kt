@@ -37,7 +37,7 @@ class BasicsEventBus(private val plugin: Plugin) {
     }
 
     fun unsubscribe(listener: SubscribedListener<*>) {
-        val priorityBus = priorityBusses[listener.priorty] ?: return
+        val priorityBus = priorityBusses[listener.priority] ?: return
         priorityBus.unsubscribe(listener)
     }
 

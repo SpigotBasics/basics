@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority
 class SubscribedListener<T : Event>(
     private val bus: PriorityEventBus,
     private val action: (T) -> Unit,
-    val priorty: EventPriority,
+    val priority: EventPriority,
     val eventClass: Class<T>
 ) {
 
