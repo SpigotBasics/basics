@@ -1,0 +1,2 @@
+join-message: "<rainbow>%player_name%</rainbow><green> joined the game!"
+quit-message: "<rainbow>%player_name%</rainbow><red> left the game!"
