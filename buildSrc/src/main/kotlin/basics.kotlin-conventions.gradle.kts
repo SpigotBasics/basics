@@ -29,6 +29,14 @@ repositories {
             includeGroup("co.aikar")
         }
     }
+
+    maven {
+        name = "extendedclip"
+        url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        content {
+            includeGroup("me.clip")
+        }
+    }
 }
 
 kotlin {
