@@ -4,6 +4,7 @@ import co.aikar.commands.ACFBukkitUtil.sendMsg
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.annotation.*
+import com.github.spigotbasics.core.module.ModuleAlreadyLoadedException
 import com.github.spigotbasics.plugin.BasicsPluginImpl
 import org.bukkit.command.CommandSender
 
@@ -13,11 +14,13 @@ import org.bukkit.command.CommandSender
 class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
 
     @HelpCommand
-    fun doHelp(sender: CommandSender, help: CommandHelp) {
+    @Default
+    fun doHelp(help: CommandHelp) {
         help.showHelp()
     }
 
     @Subcommand("module loadAll")
+    @CommandPermission("basics.module.load")
     fun loadAllModules(sender: CommandSender) {
         plugin.moduleManager.loadModules()
         val allModulesList = plugin.moduleManager.modules.joinToString(", ") { it.info.name }
@@ -25,7 +28,8 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module enable")
-    @CommandCompletion("@disabledmodules")
+    @CommandCompletion("@${CommandCompletions.DISABLED_MODULES}")
+    @CommandPermission("basics.module.enable")
     fun enableModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
         if (module == null) {
@@ -41,7 +45,8 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module disable")
-    @CommandCompletion("@enabledmodules")
+    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES}")
+    @CommandPermission("basics.module.disable")
     fun disableModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
         if (module == null) {
@@ -57,6 +62,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module list enabled")
+    @CommandPermission("basics.module.list")
     fun listEnabledModules(sender: CommandSender) {
         val enabledModulesList = plugin.moduleManager.enabledModules.joinToString(", ") { it.info.name }
         sender.sendMessage("Enabled Modules:")
@@ -64,6 +70,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module list disabled")
+    @CommandPermission("basics.module.list")
     fun listDisabledModules(sender: CommandSender) {
         val disabledModulesList = plugin.moduleManager.disabledModules.joinToString(", ") { it.info.name }
         sender.sendMessage("Disabled Modules:")
@@ -71,13 +78,15 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module list")
+    @CommandPermission("basics.module.list")
     fun listAllModules(sender: CommandSender) {
         listEnabledModules(sender)
         listDisabledModules(sender)
     }
 
     @Subcommand("module info")
-    @CommandCompletion("@allmodules")
+    @CommandCompletion("@${CommandCompletions.LOADED_MODULES}")
+    @CommandPermission("basics.module.info")
     fun moduleInfo(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
         if (module == null) {
@@ -91,7 +100,8 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module unload")
-    @CommandCompletion("@disabledmodules")
+    @CommandCompletion("@${CommandCompletions.LOADED_MODULES}")
+    @CommandPermission("basics.module.unload")
     fun unloadModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
         if (module == null) {
@@ -99,10 +109,37 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
             return
         }
         if (module.isEnabled()) {
-            sender.sendMessage("§cModule $moduleName is enabled, disable it first")
-            return
+            sender.sendMessage("§cModule $moduleName is enabled, disable it now...")
+            plugin.moduleManager.disableModule(module)
         }
         plugin.moduleManager.unloadModule(module)
         sender.sendMessage("§aModule $moduleName unloaded")
+    }
+
+    @Subcommand("module load")
+    @CommandCompletion("@${CommandCompletions.ALL_MODULE_FILES}")
+    @CommandPermission("basics.module.load")
+    fun loadModule(sender: CommandSender, moduleFile: String) {
+        val file = plugin.moduleFolder.resolve(moduleFile)
+        if (!file.exists()) {
+            sender.sendMessage("§cModule file ${file.name} not found")
+            return
+        }
+        if(file.parentFile != plugin.moduleFolder) {
+            sender.sendMessage("§cModule file ${file.name} is not in the modules folder")
+            return
+        }
+        val result = try {
+            plugin.moduleManager.loadModuleFromFile(file)
+        } catch (e: ModuleAlreadyLoadedException) {
+            sender.sendMessage("§cModule from file ${file.name} is already loaded")
+            return
+        } catch (e: Exception) {
+            sender.sendMessage("§cFailed to load module from file ${file.name}, see console.")
+            e.printStackTrace()
+            return
+        }
+        val module = result.getOrThrow()
+        sender.sendMessage("§aModule ${module.info.nameAndVersion} loaded")
     }
 }
