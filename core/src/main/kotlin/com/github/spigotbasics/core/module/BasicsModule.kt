@@ -2,9 +2,14 @@ package com.github.spigotbasics.core.module
 
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
+
+import com.github.spigotbasics.core.scheduler.BasicsScheduler
+import org.bukkit.configuration.file.FileConfiguration
+
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import java.io.File
+
 import java.util.logging.Logger
 
 /**
@@ -33,6 +38,11 @@ interface BasicsModule {
      * This module's Logger
      */
     val logger: Logger
+
+    /**
+     * Modules scheduler
+     */
+    val scheduler: BasicsScheduler
 
     /**
      * Called when the module is enabled
