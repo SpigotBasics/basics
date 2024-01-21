@@ -22,9 +22,8 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     @Subcommand("module loadAll")
     @CommandPermission("basics.module.load")
     fun loadAllModules(sender: CommandSender) {
-        plugin.moduleManager.loadModules()
-        val allModulesList = plugin.moduleManager.modules.joinToString(", ") { it.info.name }
-        sender.sendMessage("Loaded all modules: $allModulesList")
+        plugin.moduleManager.loadAllModulesFromModulesFolder()
+        sender.sendMessage("Loaded all available modules.")
     }
 
     @Subcommand("module enable")
