@@ -4,6 +4,7 @@ import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
@@ -45,6 +46,11 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      * Commands Manager
      */
     final override val commandManager: BasicsCommandManager = context.plugin.createCommandManager()
+
+    /**
+     * Event bus for registering events
+     */
+    final override val eventBus: BasicsEventBus = BasicsEventBus(context.plugin)
 
     /**
      * Config
@@ -140,6 +146,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override fun disable() {
         scheduler.killAll()
         commandManager.unregisterAll()
+        eventBus.dispose()
         isEnabled = false
     }
 

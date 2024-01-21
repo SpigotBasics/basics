@@ -1,14 +1,12 @@
 package com.github.spigotbasics.core.module
 
-import co.aikar.commands.BaseCommand
-import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
-import org.bukkit.configuration.file.FileConfiguration
 
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import java.io.File
 
@@ -49,6 +47,11 @@ interface BasicsModule {
      * Commands Manager
      */
     val commandManager: BasicsCommandManager
+
+    /**
+     * Event bus for registering events
+     */
+    val eventBus: BasicsEventBus
 
     /**
      * Called when the module is enabled
