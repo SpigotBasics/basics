@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 
 @CommandAlias("clock")
-class ClockCommand(private val plugin: Plugin): BaseCommand() {
+class ClockCommand(private val module: BasicsModule) : BaseCommand() {
 
     @Default
     fun startClock(sender: CommandSender) {

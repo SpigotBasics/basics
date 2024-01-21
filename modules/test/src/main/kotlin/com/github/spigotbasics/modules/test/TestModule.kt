@@ -8,7 +8,7 @@ class TestModule(context: ModuleInstantiationContext) : AbstractBasicsModule(con
 
     override fun onEnable() {
         logger.info("Test#enable()")
-        commandManager.registerCommand(ClockCommand(plugin))
+        commandManager.registerCommand(ClockCommand(this))
     }
 
     override fun onDisable() {
