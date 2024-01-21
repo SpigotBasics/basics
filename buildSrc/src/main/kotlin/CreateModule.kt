@@ -65,7 +65,7 @@ open class CreateModule : DefaultTask() {
             
             class ${nameUpper}Module(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
             
-                override fun enable() {
+                override fun onEnable() {
                 
                 }
                 
