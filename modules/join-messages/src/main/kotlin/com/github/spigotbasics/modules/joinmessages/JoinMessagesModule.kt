@@ -12,7 +12,8 @@ import org.bukkit.event.player.PlayerQuitEvent
 class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context), Listener {
 
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(this, plugin)
+        //plugin.server.pluginManager.registerEvents(this, plugin)
+        eventBus.subscribe(this)
     }
 
     private fun getJoinMessage(): String? = config.getString("join-message")
