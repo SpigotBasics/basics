@@ -82,7 +82,8 @@ fun String.papi(player: OfflinePlayer? = null): String {
  *
  * @return The parsed component
  */
-fun String.miniComponents(): Component {
+fun String.miniComponents(): Component? {
+    if(this.isEmpty()) return null
     return mini.deserialize(this)
 }
 
@@ -91,8 +92,9 @@ fun String.miniComponents(): Component {
  *
  * @return The parsed string
  */
-fun String.mini(): String {
-    return this.miniComponents().toLegacy()
+fun String.mini(): String? {
+    if(this.isEmpty()) return null
+    return this.miniComponents()?.toLegacy()
 }
 
 /**
@@ -100,6 +102,8 @@ fun String.mini(): String {
  *
  * @return The parsed string
  */
-fun Component.toLegacy(): String {
-    return legacy.serialize(this)
+fun Component.toLegacy(): String? {
+    val value = legacy.serialize(this)
+    if(value.isEmpty()) return null
+    return value
 }
