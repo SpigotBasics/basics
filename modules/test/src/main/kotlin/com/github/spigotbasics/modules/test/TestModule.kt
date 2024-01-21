@@ -1,28 +1,19 @@
 package com.github.spigotbasics.modules.test
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInfo
+import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import org.checkerframework.checker.units.qual.C
 
-class TestModule(plugin: BasicsPlugin, info: ModuleInfo) : AbstractBasicsModule(plugin, info) {
+class TestModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
-    override fun enable() {
+    override fun onEnable() {
         logger.info("Test#enable()")
+        commandManager.registerCommand(ClockCommand(plugin))
     }
 
-    override fun disable() {
+    override fun onDisable() {
         logger.info("Test#disable()")
         scheduler.killAll()
-    }
-
-    override fun load() {
-        logger.info("Test#load()")
-
-        val testResourceContent = getResource("/test.txt")!!.readText()
-        logger.info("config.yml foo: ${config.getString("foo")}")
-        logger.info("config.yml bar: ${config.getString("bar")}")
-        logger.info("Test resource content: $testResourceContent")
-
     }
 
     init {
