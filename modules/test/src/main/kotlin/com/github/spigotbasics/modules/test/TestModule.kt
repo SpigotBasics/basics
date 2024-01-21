@@ -8,7 +8,7 @@ class TestModule(context: ModuleInstantiationContext) : AbstractBasicsModule(con
 
     override fun onEnable() {
         logger.info("Test#enable()")
-        commandManager.registerCommand(ClockCommand(this))
+        commandManager.registerCommand(ClockCommand(this)) // TODO: Do not expose ACF directly, we need to be able to keep track of registered commands!
     }
 
     override fun onDisable() {
