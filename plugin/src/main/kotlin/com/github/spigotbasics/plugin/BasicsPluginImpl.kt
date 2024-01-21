@@ -8,6 +8,7 @@ import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.plugin.commands.BasicsCommand
 import com.github.spigotbasics.plugin.commands.CommandCompletions
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
