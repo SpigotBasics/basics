@@ -4,6 +4,7 @@ plugins {
     id("basics.kotlin-conventions")
     id("basics.dependency.spigot-api")
     id("basics.dependency.acf")
+    id("basics.dependency.placeholderapi")
     id("org.jetbrains.dokka") version "1.9.10"
     //libs.plugins.dokka // TODO: Fix this not working because of missing import
 }
@@ -15,7 +16,6 @@ dependencies {
     api(libs.adventure.bukkit)
     api(libs.adventure.minimessage)
     api(libs.adventure.text.serializer.legacy)
-    compileOnlyApi(libs.papi)
 }
 
 tasks.withType(DokkaTask::class).configureEach {
