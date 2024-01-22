@@ -1,5 +1,14 @@
-join: &join "<gold>%player_name%</gold> <gradient:green:dark_green>joined the game</gradient>"
+# Join message shown to other players
+join: "<gold>%player_name%</gold> <gradient:green:dark_green>joined the game</gradient> <gray><hover:show_text:Click to DM %player_name%><click:suggest_command:/tell %player_name%>[DM]</click></hover></gray>"
 
-join-self: *join
+# Join message shown to the player who joined
+join-self: "<gold>%player_name%</gold> <gradient:green:dark_green>joined the game</gradient>"
 
+# Join message shown to the console
+join-console: "<yellow>%player_name% joined the game</yellow>"
+
+# Quit message shown to other players
 quit: "<gold>%player_name%</gold> <gradient:red:dark_red>left the game</gradient>"
+
+# Quit message shown to console
+quit-console: "<yellow>%player_name% left the game</yellow>"
