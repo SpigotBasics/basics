@@ -38,4 +38,14 @@ class SavedConfig(
         save(file)
     }
 
+    fun getMessage(path: String): Message {
+        if(isList(path)) {
+            return Message(getStringList(path))
+        } else if (isString(path)) {
+            return Message(getString(path)!!)
+        } else {
+            return Message.EMPTY
+        }
+    }
+
 }
