@@ -28,7 +28,7 @@ class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsMo
         event.joinMessage = null
 
         // All players
-        config.getMessage(JOIN).papi(event.player).sendMiniTo(audience.players().filterAudience { it != event.player })
+        config.getMessage(JOIN).papi(event.player).sendMiniTo(audience.players().filterAudience { it != audience.player(event.player) })
 
         // Self player
         config.getMessage(JOIN_SELF).papi(event.player).sendMiniTo(audience.player(event.player))
