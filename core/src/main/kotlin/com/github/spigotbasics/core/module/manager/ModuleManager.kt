@@ -122,6 +122,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
         myLoadedModules.remove(module)
+        module.moduleClassLoader.close()
         forceGc()
 
     }
