@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.replace
+package com.github.spigotbasics.core.extensions
 
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
@@ -82,8 +82,7 @@ fun String.papi(player: OfflinePlayer? = null): String {
  *
  * @return The parsed component
  */
-fun String.miniComponents(): Component? {
-    if(this.isEmpty()) return null
+fun String.miniComponents(): Component {
     return mini.deserialize(this)
 }
 
@@ -92,9 +91,8 @@ fun String.miniComponents(): Component? {
  *
  * @return The parsed string
  */
-fun String.mini(): String? {
-    if(this.isEmpty()) return null
-    return this.miniComponents()?.toLegacy()
+fun String.miniLegacy(): String {
+    return this.miniComponents().toLegacy()
 }
 
 /**
@@ -102,8 +100,7 @@ fun String.mini(): String? {
  *
  * @return The parsed string
  */
-fun Component.toLegacy(): String? {
+fun Component.toLegacy(): String {
     val value = legacy.serialize(this)
-    if(value.isEmpty()) return null
     return value
 }
