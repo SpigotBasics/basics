@@ -22,8 +22,12 @@ The path to your test server can be specified using a gradle property called "te
 Check the [Trello Board](https://trello.com/b/QjvNuXEO/basics)!
 
 ## Documentation
-The dokkaHtml can be found [here](https://hub.jeff-media.com/javadoc/basics-core). It is not often updated, so better create
-your own using `gradlew dokkaHtml` in the core project.
+The documentation can be found here:
+
+- [Dokka HTML](https://hub.jeff-media.com/javadoc/basics-core/html)
+- [Javadoc HTML](https://hub.jeff-media.com/javadoc/basics-core/javadoc)
+
+It is not often updated, so better create your own using `gradlew dokkaHtml` or `gradlew dokkaJavadoc` in the core project.
 
 ## Create a new module
 To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
