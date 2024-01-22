@@ -152,6 +152,6 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
             return
         }
         val module = result.getOrThrow()
-        sender.sendMessage("§aModule ${module.info.nameAndVersion} loaded")
+        sender.sendMessage("§aModule ${module.info.nameAndVersion} loaded (but not enabled)")
     }
 }
