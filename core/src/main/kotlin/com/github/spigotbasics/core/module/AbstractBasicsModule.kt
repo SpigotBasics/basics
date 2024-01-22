@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.module
 import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
@@ -55,10 +56,10 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     /**
      * Config
      */
-    override var config = getConfig("config.yml")
+    override var config = getConfig(ConfigName.CONFIG)
 
     override fun reloadConfig() {
-        config = getConfig("config.yml")
+        config = getConfig(ConfigName.CONFIG)
     }
 
     /**
@@ -84,6 +85,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     private fun toAbsoluteResourcePath(path: String): String {
         return if (path.substring(0, 1) == "/") path else "/$path"
     }
+
+    fun getConfig(ConfigName: ConfigName): SavedConfig = getConfig(ConfigName.path)
 
     /**
      * Get a [SavedConfig] for a certain file name. This will load the default file from the plugin's resources
