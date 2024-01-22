@@ -18,11 +18,15 @@ The path to your test server can be specified using a gradle property called "te
 - as command line argument (`gradlew copyAllToTestServer -Ptestserver.path=/my/test/server`)
 - in the `gradle.properties` file in your gradle home directory (usually `~/.gradle`): `testserver.path=/my/test/server`
 
-## Create a new module
-To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
-
 ## Todo
 Check the [Trello Board](https://trello.com/b/QjvNuXEO/basics)!
+
+## Documentation
+The dokkaHtml can be found [here](https://hub.jeff-media.com/javadoc/basics-core). It is not often updated, so better create
+your own using `gradlew dokkaHtml` in the core project.
+
+## Create a new module
+To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
 
 ## Did you know?
 > [!WARNING]\
