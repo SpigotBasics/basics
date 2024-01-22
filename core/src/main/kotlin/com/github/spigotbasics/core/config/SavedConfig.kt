@@ -59,7 +59,7 @@ class SavedConfig(
         } else if (isString(path)) {
             return Message(getString(path)!!)
         } else {
-            return Message.EMPTY
+            return Message.DISABLED
         }
     }
 

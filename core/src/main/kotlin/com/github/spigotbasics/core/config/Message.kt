@@ -15,7 +15,10 @@ import org.bukkit.OfflinePlayer
  */
 data class Message(var lines: List<String>) {
     companion object {
-        val EMPTY = Message()
+        /**
+         * Represents a disabled message that will not do anything when sent
+         */
+        val DISABLED = Message()
     }
 
     internal constructor(line: String) : this(listOf(line))
