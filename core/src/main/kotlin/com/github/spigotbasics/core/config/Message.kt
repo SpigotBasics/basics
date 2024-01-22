@@ -8,10 +8,10 @@ import org.bukkit.OfflinePlayer
 /**
  * Represents a message containing of zero or more lines
  *
- * See [SavedConfig.getMessage] on how to obtain a message
+ * See [SavedModuleConfig.getMessage] on how to obtain a message
  *
  * @property lines Lines of the message
- * @constructor Create new message
+ * @constructor Create a new message
  */
 data class Message(var lines: List<String>) {
     companion object {
@@ -28,22 +28,20 @@ data class Message(var lines: List<String>) {
      * Applies the given transform to each line of the message
      *
      * @param transform Transform to apply
-     * @return This message
+     * @return The message with the transform applied
      */
     fun map(transform: (String) -> String): Message {
-        lines = lines.map(transform)
-        return this
+        return Message(lines.map(transform))
     }
 
     /**
      * Applies PlaceholderAPI placeholders to each line of the message
      *
      * @param player Player to apply placeholders for, or null
-     * @return This message
+     * @return The message with placeholders applied
      */
     fun papi(player: OfflinePlayer?): Message {
-        lines = lines.map { it.papi(player) }
-        return this
+        return Message(lines.map { it.papi(player) })
     }
 
     /**

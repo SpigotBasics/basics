@@ -5,7 +5,7 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 
-import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.config.SavedModuleConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -32,7 +32,7 @@ interface BasicsModule {
     /**
      * This module's config
      */
-    val config: SavedConfig
+    val config: SavedModuleConfig
 
     /**
      * This module's Logger

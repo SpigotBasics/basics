@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
-import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.config.SavedModuleConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import org.bukkit.configuration.InvalidConfigurationException
@@ -59,7 +59,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override var config = getConfig(ConfigName.CONFIG)
 
     override fun reloadConfig() {
-        config = getConfig(ConfigName.CONFIG)
+        config.reload()
     }
 
     /**
@@ -86,10 +86,10 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return if (path.substring(0, 1) == "/") path else "/$path"
     }
 
-    fun getConfig(ConfigName: ConfigName): SavedConfig = getConfig(ConfigName.path)
+    fun getConfig(ConfigName: ConfigName): SavedModuleConfig = getConfig(ConfigName.path)
 
     /**
-     * Get a [SavedConfig] for a certain file name. This will load the default file from the plugin's resources
+     * Get a [SavedModuleConfig] for a certain file name. This will load the default file from the plugin's resources
      * if it exists. If the file does not exist but the default config exists, the file will be created and the default
      * config will be copied to it.
      * If a default config does not exist, no file will be saved.
@@ -97,13 +97,13 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      * @param sourceName Name of the source file
      * @return Configuration file
      */
-    fun getConfig(sourceName: String): SavedConfig {
+    private fun getConfig(sourceName: String): SavedModuleConfig {
 
         // The file object will use the namespaced resource name
         val configName = getNamespacedResourceName(sourceName)
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = SavedConfig(file)
+        val configuration = SavedModuleConfig(file)
 
         try {
             // If a default config exists, set it as defaults
@@ -146,9 +146,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         }
 
         // config.yml is called <module-name>.yml
-        if (newPath == "config.yml") {
-            return "${info.name}.yml"
-        }
+//        if (newPath == "config.yml") {
+//            return "${info.name}.yml"
+//        }
 
         // All other files are called <module-name>-<file-name>
         return "${info.name}-$newPath"
@@ -157,6 +157,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     private var isEnabled = false
     final override fun enable() {
         isEnabled = true
+        config.reload()
     }
 
     final override fun disable() {
