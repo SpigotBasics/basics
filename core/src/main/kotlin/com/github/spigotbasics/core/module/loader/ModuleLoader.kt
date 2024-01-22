@@ -9,7 +9,6 @@ import com.github.spigotbasics.core.module.ModuleInstantiationContext
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
-import java.io.IOException
 import java.util.jar.JarFile
 
 class ModuleLoader
@@ -17,7 +16,7 @@ class ModuleLoader
 constructor(val plugin: BasicsPlugin, val file: File) {
 
     val path = file.absolutePath
-    val jarFile: JarFile
+    //val jarFile: JarFile
     val info: ModuleInfo
     val classLoader: ModuleJarClassLoader;
     val bMainClass: Class<out BasicsModule> by lazy {
@@ -39,14 +38,11 @@ constructor(val plugin: BasicsPlugin, val file: File) {
             throw InvalidModuleException("Module file $path is not a jar file")
         }
 
-        try {
-            jarFile = JarFile(file)
-        } catch (e: IOException) {
-            throw InvalidModuleException("Failed to open module file $path as jar", e)
-        }
+//        try {
+//             JarFile(file).use { jarFile ->
 
-        try {
-            classLoader = ModuleJarClassLoader(file, javaClass.classLoader)
+        classLoader = try {
+            ModuleJarClassLoader(file, javaClass.classLoader)
         } catch (e: Exception) {
             throw InvalidModuleException("Failed to create class loader for module file $path", e)
         }
@@ -68,55 +64,62 @@ constructor(val plugin: BasicsPlugin, val file: File) {
         } catch (e: InvalidModuleException) {
             throw InvalidModuleException("Failed to create ModuleInfo for $MODULE_YML_FILE_NAME", e)
         }
+
+
+//        } catch (e: IOException) {
+//            throw InvalidModuleException("Failed to open module file $path as jar", e)
+//        }
+
+
+}
+
+@Throws(InvalidModuleException::class)
+fun getMainClass(): Class<out BasicsModule> {
+    val mainClassName = info.mainClass
+    val mainClass = try {
+        //Class.forName(mainClassName)
+        classLoader.loadClass(mainClassName)
+    } catch (e: ClassNotFoundException) {
+        throw InvalidModuleException("Main class $mainClassName not found", e)
+    } catch (e: ExceptionInInitializerError) {
+        throw InvalidModuleException("Failed to initialize main class $mainClassName", e)
+    } catch (e: LinkageError) {
+        throw InvalidModuleException("Failed to link main class $mainClassName", e)
+    }
+    if (!BasicsModule::class.java.isAssignableFrom(mainClass)) {
+        throw InvalidModuleException("Main class $mainClassName does not implement BasicsModule")
     }
 
-    @Throws(InvalidModuleException::class)
-    fun getMainClass(): Class<out BasicsModule> {
-        val mainClassName = info.mainClass
-        val mainClass = try {
-            //Class.forName(mainClassName)
-            classLoader.loadClass(mainClassName)
-        } catch (e: ClassNotFoundException) {
-            throw InvalidModuleException("Main class $mainClassName not found", e)
-        } catch (e: ExceptionInInitializerError) {
-            throw InvalidModuleException("Failed to initialize main class $mainClassName", e)
-        } catch (e: LinkageError) {
-            throw InvalidModuleException("Failed to link main class $mainClassName", e)
-        }
-        if (!BasicsModule::class.java.isAssignableFrom(mainClass)) {
-            throw InvalidModuleException("Main class $mainClassName does not implement BasicsModule")
-        }
+    return mainClass.asSubclass(BasicsModule::class.java)
+}
 
-        return mainClass.asSubclass(BasicsModule::class.java)
+@Throws(InvalidModuleException::class)
+fun createInstance(): BasicsModule {
+
+    val mainClassName = info.mainClass
+
+    val constructor = try {
+        bMainClass.getConstructor(ModuleInstantiationContext::class.java)
+    } catch (e: NoSuchMethodException) {
+        throw InvalidModuleException(
+            "Main class $mainClassName does not have a constructor with a single parameter of type ModuleInstantiationContext",
+            e
+        )
     }
 
-    @Throws(InvalidModuleException::class)
-    fun createInstance(): BasicsModule {
-
-        val mainClassName = info.mainClass
-
-        val constructor = try {
-            bMainClass.getConstructor(ModuleInstantiationContext::class.java)
-        } catch (e: NoSuchMethodException) {
-            throw InvalidModuleException(
-                "Main class $mainClassName does not have a constructor with a single parameter of type ModuleInstantiationContext",
-                e
-            )
-        }
-
-        val moduleInstantiationContext = try {
-            ModuleInstantiationContext(plugin = plugin, info = info, file = file, classLoader = classLoader)
-        } catch (e: Exception) {
-            throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)
-        }
-
-        val moduleInstance = try {
-            constructor.newInstance(moduleInstantiationContext)
-        } catch (e: Exception) {
-            throw InvalidModuleException("Failed to instantiate main class $mainClassName", e)
-        }
-
-        return moduleInstance
+    val moduleInstantiationContext = try {
+        ModuleInstantiationContext(plugin = plugin, info = info, file = file, classLoader = classLoader)
+    } catch (e: Exception) {
+        throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)
     }
+
+    val moduleInstance = try {
+        constructor.newInstance(moduleInstantiationContext)
+    } catch (e: Exception) {
+        throw InvalidModuleException("Failed to instantiate main class $mainClassName", e)
+    }
+
+    return moduleInstance
+}
 
 }
