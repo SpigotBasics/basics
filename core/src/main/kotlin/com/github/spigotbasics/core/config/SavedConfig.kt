@@ -38,6 +38,21 @@ class SavedConfig(
         save(file)
     }
 
+    /**
+     * Get a [Message] from the config. Messages can be declared as simple String (one line), a list of Strings (multiple lines) or an empty list (disabled message):
+     *
+     * <pre>
+     * single-line: "<green>This is a single line message"
+     * multi-line:
+     *  - "<green>This is a multi-line message"
+     *  - "<green>With multiple lines"
+     *  - "<green>And even more lines"
+     * disabled: [] # This message has been disabled
+     * </pre>
+     *
+     * @param path Path to the message
+     * @return Message
+     */
     fun getMessage(path: String): Message {
         if(isList(path)) {
             return Message(getStringList(path))
