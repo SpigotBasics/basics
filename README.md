@@ -24,8 +24,8 @@ Check the [Trello Board](https://trello.com/b/QjvNuXEO/basics)!
 ## Documentation
 The documentation can be found here:
 
-- [Dokka HTML](https://hub.jeff-media.com/javadoc/basics-core/html)
-- [Javadoc HTML](https://hub.jeff-media.com/javadoc/basics-core/javadoc)
+- [Dokka HTML](https://hub.jeff-media.com/javadocs/basics-core/html)
+- [Javadoc HTML](https://hub.jeff-media.com/javadocs/basics-core/javadoc)
 
 It is not often updated, so better create your own using `gradlew dokkaHtml` or `gradlew dokkaJavadoc` in the core project.
 
