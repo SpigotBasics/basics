@@ -10,27 +10,43 @@ import org.bukkit.event.player.PlayerQuitEvent
 
 class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context), Listener {
 
+    companion object {
+        const val JOIN = "join"
+        const val JOIN_SELF = "join-self"
+        const val JOIN_CONSOLE = "join-console"
+        const val QUIT = "quit"
+        const val QUIT_CONSOLE = "quit-console"
+    }
+
     override fun onEnable() {
-        //plugin.server.pluginManager.registerEvents(this, plugin)
         eventBus.subscribe(this)
     }
 
-    private fun getJoinMessage(): Message = config.getMessage("join")
-    private fun getJoinSelfMessage(): Message = config.getMessage("join-self")
-    private fun getQuitMessage(): Message = config.getMessage("quit")
 
     @EventHandler
     fun joinMessage(event: PlayerJoinEvent) {
         event.joinMessage = null
-        getJoinMessage().papi(event.player).sendMiniTo(audience.filter { it != event.player })
-        getJoinSelfMessage().papi(event.player).sendMiniTo(audience.player(event.player))
+
+        // All players
+        config.getMessage(JOIN).papi(event.player).sendMiniTo(audience.players().filterAudience { it != event.player })
+
+        // Self player
+        config.getMessage(JOIN_SELF).papi(event.player).sendMiniTo(audience.player(event.player))
+
+        // Console
+        config.getMessage(JOIN_CONSOLE).papi(event.player).sendMiniTo(audience.console())
 
     }
 
     @EventHandler
     fun leaveMessage(event: PlayerQuitEvent) {
         event.quitMessage = null
-        getQuitMessage().papi(event.player).sendMiniTo(audience.all())
+
+        // All players
+        config.getMessage(QUIT).papi(event.player).sendMiniTo(audience.players())
+
+        // Console
+        config.getMessage(QUIT_CONSOLE).papi(event.player).sendMiniTo(audience.console())
     }
 
 
