@@ -8,7 +8,7 @@ adventure-api = "4.14.0"
 adventure-bukkit = "4.3.2"
 adventure-minimessage = "4.15.0"
 adventure-text-serializer-legacy = "4.15.0"
-papi = "2.11.5"
+placeholderapi = "2.11.5"
 
 [libraries]
 shadow = { group = "com.github.johnrengelman", name="shadow", version.ref="shadow" }
@@ -19,7 +19,7 @@ adventure-api = { group = "net.kyori", name="adventure-api", version.ref="advent
 adventure-bukkit = { group = "net.kyori", name="adventure-platform-bukkit", version.ref="adventure-bukkit" }
 adventure-minimessage = { group = "net.kyori", name="adventure-text-minimessage", version.ref="adventure-minimessage" }
 adventure-text-serializer-legacy = { group = "net.kyori", name="adventure-text-serializer-legacy", version.ref="adventure-text-serializer-legacy" }
-papi = { group = "me.clip", name="placeholderapi", version.ref="papi" }
+placeholderapi = { group = "me.clip", name="placeholderapi", version.ref="placeholderapi" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref="shadow" }
