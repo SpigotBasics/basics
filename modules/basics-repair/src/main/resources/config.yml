@@ -1,0 +1,11 @@
+# Repair message sent to you when repairing other player's hand
+repair-hand: "<green>Repaired <gold>%player_name%'s</gold> hand"
+
+# Repair message sent when you repair your own hand
+repair-hand-self: "<green>Repaired <gold>your</gold> hand"
+
+# Repair message sent when you repair another player's inventory
+repair-all: "<green>Repaired <gold>%player_name%'s</gold> inventory"
+
+# Repair message sent when you repair your own inventory
+repair-all-self: "<green>Repaired <gold>your</gold> inventory"

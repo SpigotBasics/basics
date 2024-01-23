@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.extensions
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -84,6 +85,11 @@ fun String.papi(player: OfflinePlayer? = null): String {
  */
 fun String.miniComponents(): Component {
     return mini.deserialize(this)
+}
+
+fun String.miniComponents(vararg tagResolvers: TagResolver): Component? {
+    if(this.isEmpty()) return null
+    return mini.deserialize(this, *tagResolvers)
 }
 
 /**
