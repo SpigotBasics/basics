@@ -6,16 +6,16 @@ import com.github.spigotbasics.core.module.ModuleInstantiationContext
 
 class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
-    val repairHand: Message
-        get() = config.getMessage("repair-hand")
+    val msgRepairHandOther: Message
+        get() = config.getMessage("repair-hand-other")
 
-    val repairHandSelf: Message
+    val msgRepairHandSelf: Message
         get() = config.getMessage("repair-hand-self")
 
-    val repairAll: Message
-        get() = config.getMessage("repair-all")
+    val msgRepairAllOther: Message
+        get() = config.getMessage("repair-all-other")
 
-    val repairAllSelf: Message
+    val msgRepairAllSelf: Message
         get()= config.getMessage("repair-all-self")
 
     override fun onEnable() {
