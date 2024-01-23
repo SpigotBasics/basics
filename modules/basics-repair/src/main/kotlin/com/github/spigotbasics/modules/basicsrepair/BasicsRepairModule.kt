@@ -12,7 +12,10 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     val repairAllSelf: Message = config.getMessage("repair-all-self")
 
     override fun onEnable() {
-        commandManager.registerCommand(RepairCommand(this))
+        val parent: RepairCommand = RepairCommand(this)
+        commandManager.registerCommand(parent)
+        commandManager.registerCommand(FixCommand(parent))
+        commandManager.registerCommand(FixAllCommand(parent))
     }
-    
+
 }
