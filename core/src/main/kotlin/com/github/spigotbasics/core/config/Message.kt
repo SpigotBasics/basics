@@ -1,9 +1,8 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.extensions.miniComponents
-import com.github.spigotbasics.core.extensions.papi
+import com.github.spigotbasics.core.extensions.mini
+import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import net.kyori.adventure.audience.Audience
-import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
 /**
@@ -14,21 +13,32 @@ import org.bukkit.entity.Player
  * @property lines Lines of the message
  * @constructor Create a new message
  */
-data class Message(var lines: List<String>, private var concerns: Player? = null) {
+data class Message(
+    var lines: List<String>,
+    val tagResolverFactory: TagResolverFactory? = null,
+    private var concerns: Player? = null
+) {
     companion object {
         /**
          * Represents a disabled message that will not do anything when sent
          */
-        val DISABLED = Message()
+        val DISABLED = Message(emptyList())
     }
 
-    internal constructor(line: String) : this(listOf(line))
-    private constructor() : this(emptyList())
+    internal constructor(
+        tagResolverFactory: TagResolverFactory?,
+        line: String
+    ) : this(tagResolverFactory = tagResolverFactory, lines = listOf(line))
+
+//    private constructor(tagResolverFactory: TagResolverFactory) : this(
+//        tagResolverFactory = tagResolverFactory,
+//        lines = emptyList()
+//    )
 
     //private val concerns: Player? = null
 
     fun concerns(player: Player?): Message {
-        return Message(lines, player)
+        return Message(tagResolverFactory = tagResolverFactory, lines = lines, concerns = player)
     }
 
     /**
@@ -38,7 +48,7 @@ data class Message(var lines: List<String>, private var concerns: Player? = null
      * @return The message with the transform applied
      */
     fun map(transform: (String) -> String): Message {
-        return Message(lines.map(transform))
+        return Message(tagResolverFactory = tagResolverFactory, lines = lines.map(transform), concerns = concerns)
     }
 
 //    /**
@@ -57,7 +67,9 @@ data class Message(var lines: List<String>, private var concerns: Player? = null
      * @param receiver Audience to send the message to
      */
     fun sendMiniTo(receiver: Audience) {
-        lines.map { it.papi(concerns) }.forEach { receiver.sendMessage(it.miniComponents(concerns)) }
+        // lines.map { it.papi(concerns) }.forEach { receiver.sendMessage(it.miniComponents(concerns)) } // TODO: Old
+        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
+        lines.forEach { receiver.sendMessage(mini.deserialize(it, *resolvers)) }
     }
 
 }

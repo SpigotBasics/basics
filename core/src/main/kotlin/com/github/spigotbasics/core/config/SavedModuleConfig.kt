@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.config
 
 import com.github.spigotbasics.core.BasicsLoggerFactory
+import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -17,6 +18,7 @@ import java.util.logging.Level
  * @constructor Create empty Saved config
  */
 class SavedModuleConfig internal constructor(
+    val module: BasicsModule,
     /**
      * File backing this configuration.
      */
@@ -103,9 +105,9 @@ class SavedModuleConfig internal constructor(
      */
     fun getMessage(path: String): Message {
         if(isList(path)) {
-            return Message(getStringList(path))
+            return Message(tagResolverFactory = module.tagResolverFactory, lines = getStringList(path))
         } else if (isString(path)) {
-            return Message(getString(path)!!)
+            return Message(tagResolverFactory = module.tagResolverFactory, line = getString(path)!!)
         } else {
             return Message.DISABLED
         }
