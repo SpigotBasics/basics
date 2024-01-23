@@ -7,6 +7,7 @@ import com.github.spigotbasics.core.scheduler.BasicsScheduler
 
 import com.github.spigotbasics.core.config.SavedModuleConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import java.io.File
@@ -58,6 +59,8 @@ interface BasicsModule {
      * Event bus for registering events
      */
     val eventBus: BasicsEventBus
+
+    val tagResolverFactory: TagResolverFactory
 
     /**
      * Called when the module is enabled

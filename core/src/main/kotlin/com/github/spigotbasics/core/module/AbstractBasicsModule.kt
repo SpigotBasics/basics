@@ -72,6 +72,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      */
     override val audience = plugin.audience
 
+    override val tagResolverFactory
+        get() = plugin.tagResolverFactory
+
     fun getResource(path: String): URL? {
         val actualPath = toAbsoluteResourcePath(path)
         return javaClass.getResource(actualPath)
@@ -103,7 +106,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         val configName = getNamespacedResourceName(sourceName)
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = SavedModuleConfig(file)
+        val configuration = SavedModuleConfig(this, file)
 
         try {
             // If a default config exists, set it as defaults
