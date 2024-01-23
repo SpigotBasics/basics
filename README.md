@@ -1,5 +1,10 @@
 WIP: Essentials-like "core" plugin for modern Spigot versions (no 1.8!) called "Basics"
 
+<p align="center">
+  <img src="https://static.jeff-media.com/img/basics/logo1_512.png" alt="Basics Logo">
+</p>
+
+
 ## Links
 - [SpigotMC Discord Thread](https://discord.com/channels/690411863766466590/1196562355912446094)
 - [Trello Board](https://trello.com/b/QjvNuXEO/basics)
