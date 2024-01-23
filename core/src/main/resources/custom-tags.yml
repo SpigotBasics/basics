@@ -2,8 +2,9 @@
 
 # The following tags are included by default:
 #
-# <player-name>               - Player's username
-# <papi:%some_placeholder%>   - Parses %some_placeholder% in PlaceholderAPI (if installed)
+# <player-name>                  - Player's username
+# <player-name-genitive-suffix>  - Genitive suffix for player's username ('s or ')
+# <papi:%some_placeholder%>      - Parses %some_placeholder% in PlaceholderAPI (if installed)
 
 # This example lets you use <player-dm> to insert a clickable version of a player's name
 test: "<hover:show_text:It's working!><red>This is a test</red></hover>"
