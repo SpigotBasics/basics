@@ -19,28 +19,28 @@ class RepairCommand(private val module: BasicsRepairModule) : BaseCommand() {
     @CommandPermission("basics.command.repair.hand")
     fun runHandSelf(player: Player) {
         repairHand(player)
-        module.msgRepairHandSelf.papi(player).sendMiniTo(audience.player(player))
+        module.msgRepairHandSelf.concerns(player).sendMiniTo(audience.player(player))
     }
 
     @Default
     @CommandPermission("basics.command.repair.hand.other")
     fun runHandOther(sender: CommandSender, target: OnlinePlayer) {
         repairHand(target.player)
-        module.msgRepairHandOther.papi(target.player).sendMiniTo(audience.sender(sender))
+        module.msgRepairHandOther.concerns(target.player).sendMiniTo(audience.sender(sender))
     }
 
     @CommandAlias("repairall|fixall")
     @CommandPermission("basics.command.repair.all")
     fun runAllSelf(player: Player) {
         repairAll(player)
-        module.msgRepairAllSelf.papi(player).sendMiniTo(audience.player(player))
+        module.msgRepairAllSelf.concerns(player).sendMiniTo(audience.player(player))
     }
 
     @CommandAlias("repairall|fixall")
     @CommandPermission("basics.command.repair.all.other")
     fun runAllOther(sender: CommandSender, target: OnlinePlayer) {
         repairAll(target.player)
-        module.msgRepairAllOther.papi(target.player).sendMiniTo(audience.sender(sender))
+        module.msgRepairAllOther.concerns(target.player).sendMiniTo(audience.sender(sender))
     }
 
     private fun repairHand(target: Player) {

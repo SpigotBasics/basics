@@ -26,13 +26,13 @@ class JoinLeaveListener(
         event.joinMessage = null
 
         // All players
-        joinMsg.papi(event.player).sendMiniTo(audience.players().filterAudience { it != audience.player(event.player) })
+        joinMsg.concerns(event.player).sendMiniTo(audience.players().filterAudience { it != audience.player(event.player) })
 
         // Self player
-        joinSelfMsg.papi(event.player).sendMiniTo(audience.player(event.player))
+        joinSelfMsg.concerns(event.player).sendMiniTo(audience.player(event.player))
 
         // Console
-        joinConsoleMsg.papi(event.player).sendMiniTo(audience.console())
+        joinConsoleMsg.concerns(event.player).sendMiniTo(audience.console())
 
     }
 
@@ -40,10 +40,10 @@ class JoinLeaveListener(
         event.quitMessage = null
 
         // All players
-        quitMsg.papi(event.player).sendMiniTo(audience.players())
+        quitMsg.concerns(event.player).sendMiniTo(audience.players())
 
         // Console
-        quitConsoleMsg.papi(event.player).sendMiniTo(audience.console())
+        quitConsoleMsg.concerns(event.player).sendMiniTo(audience.console())
     }
 
 }

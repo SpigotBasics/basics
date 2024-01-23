@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.extensions
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
@@ -10,7 +11,8 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
 val mini: MiniMessage = MiniMessage.builder().strict(false).build()
-val legacy: LegacyComponentSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build()
+val legacy: LegacyComponentSerializer =
+    LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build()
 
 fun hasPapi(): Boolean {
     return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")
@@ -47,15 +49,17 @@ fun String.placeholders(placeholders: Map<String, String>): String {
  * @return The string with the placeholders applied
  */
 fun String.papiFallbackPlayer(player: Player): String {
-    return this.placeholders(mapOf(
-        "player_name" to player.name,
-        "player_uuid" to player.uniqueId.toString(),
-        "player_world" to player.world.name,
-        "player_x" to player.location.x.toString(),
-        "player_y" to player.location.y.toString(),
-        "player_z" to player.location.z.toString(),
-        "player_displayname" to player.displayName,
-    ))
+    return this.placeholders(
+        mapOf(
+            "player_name" to player.name,
+            "player_uuid" to player.uniqueId.toString(),
+            "player_world" to player.world.name,
+            "player_x" to player.location.x.toString(),
+            "player_y" to player.location.y.toString(),
+            "player_z" to player.location.z.toString(),
+            "player_displayname" to player.displayName,
+        )
+    )
 }
 
 
@@ -67,10 +71,10 @@ fun String.papiFallbackPlayer(player: Player): String {
  * @return The string with the placeholders applied
  */
 fun String.papi(player: OfflinePlayer? = null): String {
-    if(hasPapi()) {
+    if (hasPapi()) {
         return PlaceholderAPI.setPlaceholders(player, this)
     } else {
-        if(player is Player) {
+        if (player is Player) {
             return this.papiFallbackPlayer(player)
         } else {
             return this
@@ -78,18 +82,24 @@ fun String.papi(player: OfflinePlayer? = null): String {
     }
 }
 
-/**
- * Parses MiniMessage into a Component
- *
- * @return The parsed component
- */
-fun String.miniComponents(): Component {
-    return mini.deserialize(this)
+fun String.miniComponents(vararg tagResolvers: TagResolver): Component? {
+    if (this.isEmpty()) return null
+    return mini.deserialize(this, *tagResolvers)
 }
 
-fun String.miniComponents(vararg tagResolvers: TagResolver): Component? {
-    if(this.isEmpty()) return null
-    return mini.deserialize(this, *tagResolvers)
+fun String.miniComponents(player: Player? = null): Component {
+    return if (player == null)
+        mini.deserialize(this)
+    else mini.deserialize(
+        this,
+        Placeholder.unparsed("player", player.name),
+        Placeholder.unparsed("player-genitive-suffix", player.name.genitiveSuffix()),
+        // TODO: Format configurable
+        Placeholder.parsed(
+            "player-dm",
+            "<click:suggest_command:/tell ${player.name} ><hover:show_text:Send message to ${player.name}>${player.name}</hover></click>"
+        )
+    )
 }
 
 /**
