@@ -13,54 +13,44 @@ import org.bukkit.inventory.meta.Damageable
 @CommandAlias("repair|fix")
 class RepairCommand(private val module: BasicsRepairModule) : BaseCommand() {
 
+    private val audience = module.audience
+
     @Default
     @CommandPermission("basics.command.repair.hand")
-    fun runHandSelf(sender: Player) {
-        repairSingle(sender, sender)
+    fun runHandSelf(player: Player) {
+        repairHand(player)
+        module.msgRepairHandSelf.papi(player).sendMiniTo(audience.player(player))
     }
 
     @Default
     @CommandPermission("basics.command.repair.hand.other")
     fun runHandOther(sender: CommandSender, target: OnlinePlayer) {
-        repairSingle(sender, target.player)
+        repairHand(target.player)
+        module.msgRepairHandOther.papi(target.player).sendMiniTo(audience.sender(sender))
     }
 
     @CommandAlias("repairall|fixall")
     @CommandPermission("basics.command.repair.all")
-    fun runAllSelf(sender: Player) {
-        repairAll(sender, sender)
+    fun runAllSelf(player: Player) {
+        repairAll(player)
+        module.msgRepairAllSelf.papi(player).sendMiniTo(audience.player(player))
     }
 
     @CommandAlias("repairall|fixall")
     @CommandPermission("basics.command.repair.all.other")
     fun runAllOther(sender: CommandSender, target: OnlinePlayer) {
-        repairAll(sender, target.player)
+        repairAll(target.player)
+        module.msgRepairAllOther.papi(target.player).sendMiniTo(audience.sender(sender))
     }
 
-    fun repairSingle(sender: CommandSender, target: Player) {
+    private fun repairHand(target: Player) {
         repairItem(target.inventory.itemInMainHand)
-
-        val message = if (target == sender) {
-            module.repairHandSelf
-        } else {
-            module.repairHand
-        }
-
-        message.papi(target).sendMiniTo(module.audience.sender(sender))
     }
 
-    fun repairAll(sender: CommandSender, target: Player) {
+    private fun repairAll(target: Player) {
         for (content in target.inventory.contents) {
             repairItem(content)
         }
-
-        val message = if (target == sender) {
-            module.repairAllSelf
-        } else {
-            module.repairAll
-        }
-
-        message.papi(target).sendMiniTo(module.audience.sender(sender))
     }
 
     private fun repairItem(item: ItemStack?) {
