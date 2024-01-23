@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.minimessage
 
+import com.github.spigotbasics.core.extensions.genitiveSuffix
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
@@ -20,19 +21,10 @@ class TagResolverFactory(customTagsMap: Map<String, String>) {
 
     private fun createDefaultPlayerTagResolverList(player: Player): List<TagResolver> {
         return listOf(
-            playerName(player)
+            Placeholder.parsed("player-name", player.name),
+            Placeholder.parsed("player-name-genitive-suffix", player.name.genitiveSuffix())
         )
     }
-
-//    private fun getCustomTagResolvers(player: Player): List<TagResolver> {
-//        return customTagsMap.map {
-//            val name = it.key
-//            val replace = it.value
-//            //val replaced = miniMessage.deserialize(replace, *getDefaultPlayerTagResolvers(player).toTypedArray())
-//            //return@map Placeholder.component(name, replaced)
-//            return@map Placeholder.parsed(name, replace)
-//        }
-//    }
 
     fun getTagResolvers(player: Player?): List<TagResolver> {
         val list = mutableListOf<TagResolver>()
@@ -41,14 +33,7 @@ class TagResolverFactory(customTagsMap: Map<String, String>) {
         if(player != null) {
             list.addAll(createDefaultPlayerTagResolverList(player))
         }
-        return list.reversed()
-    }
-
-
-    // Default TagResolvers requiring players
-
-    private fun playerName(player: Player): TagResolver.Single {
-        return Placeholder.parsed("player-name", player.name)
+        return list
     }
 
 }
