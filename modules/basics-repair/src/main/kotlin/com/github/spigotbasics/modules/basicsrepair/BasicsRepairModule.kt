@@ -14,8 +14,6 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     override fun onEnable() {
         val parent: RepairCommand = RepairCommand(this)
         commandManager.registerCommand(parent)
-        commandManager.registerCommand(FixCommand(parent))
-        commandManager.registerCommand(FixAllCommand(parent))
     }
 
 }
