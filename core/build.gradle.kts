@@ -16,6 +16,7 @@ dependencies {
     api(libs.adventure.bukkit)
     api(libs.adventure.minimessage)
     api(libs.adventure.text.serializer.legacy)
+    api(libs.paperlib)
 }
 
 tasks.withType(DokkaTask::class).configureEach {
