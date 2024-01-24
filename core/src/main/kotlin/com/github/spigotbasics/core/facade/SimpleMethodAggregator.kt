@@ -12,69 +12,40 @@ open class SimpleMethodAggregator<T : Any, A1, A2, R1 : Any, R2 : Any>(
     private val argType2: Class<A2>?
 ) : MethodAggregator<T, A1, A2, R1, R2> {
 
-    private val method1: Method?
-    private val method2: Method?
+    private val method1: Method? = findMethod(methodName1, argType1)
+    private val method2: Method? = method1 ?: findMethod(methodName2, argType2)
 
     init {
-
-        var method1: Method? = null
-        var method2: Method? = null
-
-        try {
-            if(argType1 == null) {
-                method1 = clazz.java.getMethod(methodName1)
-            } else {
-                method1 = clazz.java.getMethod(methodName1, argType1)
-            }
-        } catch (_: NoSuchMethodException) {
-
+        if (method1 == null && method2 == null) {
+            throw IllegalArgumentException("Couldn't find method $methodName1 or $methodName2 on class ${clazz.qualifiedName}")
         }
+    }
 
-        if(method1 == null) {
-            try {
-                if(argType2 == null) {
-                    method2 = clazz.java.getMethod(methodName2)
-                } else {
-                    method2 = clazz.java.getMethod(methodName2, argType2)
-                }
-            } catch (_: NoSuchMethodException) {
-
-            }
+    private fun findMethod(name: String, argType: Class<*>?): Method? {
+        return try {
+            if (argType == null) clazz.java.getMethod(name) else clazz.java.getMethod(name, argType)
+        } catch (e: NoSuchMethodException) {
+            null
         }
-
-        if(method1 == null && method2 == null) {
-            throw IllegalArgumentException("Couldn't get method ${methodName1}(${argType1?.name ?: ""}) nor method $methodName2(${argType2?.name ?: ""}) on class ${clazz.qualifiedName}")
-        }
-
-        this.method1 = method1
-        this.method2 = method2
-
     }
 
     override fun apply(clazz: T, arg1: A1?, arg2: A2?): Either<R1, R2> {
-        try {
-            if(method1 != null) {
-                var result: R1?
-                if(argType1 == null) {
-                    result = method1.invoke(clazz) as? R1?
-                } else {
-                    result = method1.invoke(clazz, arg1) as? R1?
-                }
-                return Either.Left<R1>(result ?: Unit as R1)
-            } else if(method2 != null) {
-                var result: R2?
-                if(argType2 == null) {
-                    result = method2.invoke(clazz) as? R2?
-                } else {
-                    result = method2.invoke(clazz, arg2) as? R2?
-                }
-                return Either.Right<R2>(result ?: Unit as R2)
+        return try {
+            if (method1 != null) {
+                val result = invokeMethod(method1, clazz, arg1)
+                @Suppress("UNCHECKED_CAST")
+                Either.Left<R1>(result as? R1 ?: Unit as R1)
             } else {
-                error("Both methods are null")
+                val result = invokeMethod(method2!!, clazz, arg2)
+                @Suppress("UNCHECKED_CAST")
+                Either.Right<R2>(result as? R2 ?: Unit as R2)
             }
         } catch (e: Exception) {
-            val method = method1 ?: method2
-            throw IllegalStateException("Could not call method ${method} on class ${this.clazz.qualifiedName}", e)
+            throw IllegalStateException("Error invoking method on ${this.clazz.qualifiedName}", e)
         }
+    }
+
+    private fun invokeMethod(method: Method, instance: T, arg: Any?): Any? {
+        return if (method.parameterCount == 0) method.invoke(instance) else method.invoke(instance, arg)
     }
 }
