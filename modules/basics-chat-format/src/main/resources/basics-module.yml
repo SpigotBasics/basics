@@ -1,0 +1,3 @@
+main-class: com.github.spigotbasics.modules.basicschatformat.BasicsChatFormatModule
+name: basics-chat-format
+version: ${moduleVersion}

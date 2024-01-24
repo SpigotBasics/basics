@@ -9,17 +9,21 @@ adventure-bukkit = "4.3.2"
 adventure-minimessage = "4.15.0"
 adventure-text-serializer-legacy = "4.15.0"
 placeholderapi = "2.11.5"
+paperlib = "1.0.7"
+paper-api = "1.20.4-R0.1-SNAPSHOT"
 
 [libraries]
 shadow = { group = "com.github.johnrengelman", name="shadow", version.ref="shadow" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name="kotlin-gradle-plugin", version.ref="kotlin" }
-acf-paper = { group = "co.aikar", name="acf-paper", version.ref="acf" }
+acf-paper = { group = "com.github.spigotbasics", name="acf-paper", version.ref="acf" }
 spigot-api = { group = "org.spigotmc", name="spigot-api", version.ref="spigot" }
 adventure-api = { group = "net.kyori", name="adventure-api", version.ref="adventure-api" }
 adventure-bukkit = { group = "net.kyori", name="adventure-platform-bukkit", version.ref="adventure-bukkit" }
 adventure-minimessage = { group = "net.kyori", name="adventure-text-minimessage", version.ref="adventure-minimessage" }
 adventure-text-serializer-legacy = { group = "net.kyori", name="adventure-text-serializer-legacy", version.ref="adventure-text-serializer-legacy" }
 placeholderapi = { group = "me.clip", name="placeholderapi", version.ref="placeholderapi" }
+paperlib = { group = "io.papermc", name="paperlib", version.ref="paperlib" }
+paper-api = { group = "io.papermc.paper", name="paper-api", version.ref="paper-api"}
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref="shadow" }
