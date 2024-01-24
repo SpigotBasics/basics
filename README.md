@@ -42,6 +42,12 @@ It is not often updated, so better create your own using `gradlew dokkaHtml` or 
 ## Create a new module
 To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
 
+## Custom forks of other repositories used
+- ACF
+  - `co.aikar:acf-paper:0.5.1-SNAPSHOT` -> `com.github.spigotbasics:acf-paper:0.5.1-SNAPSHOT`
+  - Fixes the "cannot get locale" error message when using ACF on modern Spigot versions.
+  - [Our Fork](https://github.com/SpigotBasics/acf) | [Original](https://github.com/aikar/commands)
+
 ## Did you know?
 > [!WARNING]\
 > Did you know that you can add fancy warnings like this, using `> [!WARNING]`?
