@@ -13,15 +13,15 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
 
     @EventHandler
     fun onPaperChat(event: AsyncChatEvent) {
-        event.renderer { player, displayName, message, audience ->
-            formatMessage(player, displayName, message)
+        event.renderer { player, _, message, _ ->
+            formatMessage(player, message)
         }
 
     }
 
-    fun formatMessage(player: Player, name: Component, message: Component): Component {
+    fun formatMessage(player: Player, message: Component): Component {
         val originalFormatters = module.tagResolverFactory.getTagResolvers(player)
-        val msgFormatter = Placeholder.component("message", message)!!
+        val msgFormatter = Placeholder.component("message", message)
         val combinedFormatters = originalFormatters + msgFormatter
         return MiniMessage.miniMessage().deserialize(module.formatAsStr, *combinedFormatters.toTypedArray())
     }
