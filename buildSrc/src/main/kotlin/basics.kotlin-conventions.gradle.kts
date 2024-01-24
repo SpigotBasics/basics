@@ -46,6 +46,15 @@ repositories {
             includeGroup("me.clip")
         }
     }
+
+    maven {
+        name = "papermc"
+        url = uri("https://papermc.io/repo/repository/maven-public/")
+        content {
+            includeGroup("io.papermc")
+            includeGroup("io.papermc.paper")
+        }
+    }
 }
 
 kotlin {
