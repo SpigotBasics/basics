@@ -29,6 +29,7 @@ fun Player.getTrueExperience(): Int {
  * @param exp the amount of experience to add or remove
  */
 fun Player.addTrueExperience(exp: Int) {
+    @Suppress("NAME_SHADOWING")
     var exp = exp + this.getTrueExperience()
 
     if (exp < 0) {
