@@ -1,14 +1,17 @@
-# Join message shown to other players
-join: "<green>+ <gold><hover:show_text:Click to DM %player_name%><click:suggest_command:/tell %player_name% >%player_name%</click></hover> <gradient:green:dark_green>joined the game</gradient>"
+## Join message shown to other players
+#join: "<green>+ <gold><hover:show_text:Click to DM %player_name%><click:suggest_command:/tell %player_name% >%player_name%</click></hover> <gradient:green:dark_green>joined the game</gradient>"
+#
+## Join message shown to the player who joined
+#join-self: "<green>+ <gold>%player_name% <gradient:green:dark_green>joined the game"
+#
+## Join message shown to the console
+#join-console: "<green>+ <yellow>%player_name% joined the game"
+#
+## Quit message shown to other players
+#quit: "<red>- <gold>%player_name% <gradient:red:dark_red>left the game"
+#
+## Quit message shown to console
+#quit-console: "<red- <yellow>%player_name% left the game"
 
-# Join message shown to the player who joined
-join-self: "<green>+ <gold>%player_name% <gradient:green:dark_green>joined the game"
-
-# Join message shown to the console
-join-console: "<green>+ <yellow>%player_name% joined the game"
-
-# Quit message shown to other players
-quit: "<red>- <gold>%player_name% <gradient:red:dark_red>left the game"
-
-# Quit message shown to console
-quit-console: "<red- <yellow>%player_name% left the game"
+join: "<green>+ <gold><player-dm></gold> <gradient:dark_green:green>joined the game</gradient>"
+quit: "<red>- <gold><player-name></gold> <gradient:red:dark_red>left the game</gradient>"
