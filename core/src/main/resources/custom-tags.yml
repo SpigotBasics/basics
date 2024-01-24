@@ -4,8 +4,9 @@
 #
 # <player-name>                  - Player's username
 # <player-name-genitive-suffix>  - Genitive suffix for player's username ('s or ')
+# <player-display-name>          - Player's display name
 # <papi:%some_placeholder%>      - Parses %some_placeholder% in PlaceholderAPI (if installed)
 
 # This example lets you use <player-dm> to insert a clickable version of a player's name
 test: "<hover:show_text:It's working!><red>This is a test</red></hover>"
-player-dm: "<hover:show_text:Message <player-name>><red><player-name></red></hover>"
+player-dm: "<gold><click:suggest_command:/tell <player-name> ><hover:show_text:Message <player-name>><player-display-name></hover></click></gold>"
