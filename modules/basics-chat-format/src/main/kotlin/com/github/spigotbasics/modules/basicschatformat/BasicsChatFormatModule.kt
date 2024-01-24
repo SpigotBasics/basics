@@ -35,7 +35,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     fun changeChatFormatSpigot(event: AsyncPlayerChatEvent) {
         //event.format = MiniMessage.miniMessage().deserialize()//format.concerns(event.player).toComponent().toLegacy().escapeFormat()
         val originalFormatters = tagResolverFactory.getTagResolvers(event.player)
-        val msgFormatter = Placeholder.unparsed("message", event.message)!!
+        val msgFormatter = Placeholder.unparsed("message", event.message)
         val combinedFormatters = originalFormatters + msgFormatter
         event.format = MiniMessage.miniMessage().deserialize(formatAsStr, *combinedFormatters.toTypedArray()).toLegacy().escapeFormat()
     }
