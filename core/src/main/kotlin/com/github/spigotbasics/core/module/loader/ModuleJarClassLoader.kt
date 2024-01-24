@@ -45,4 +45,9 @@ class ModuleJarClassLoader(val file: File, parentLoader: ClassLoader) :
 
         return super.loadClass(name, resolve)
     }
+
+    override fun close() {
+        super.close()
+        Runtime.getRuntime().gc()
+    }
 }
