@@ -8,6 +8,7 @@ import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.plugin.commands.BasicsCommand
+import com.github.spigotbasics.plugin.commands.BasicsDebugCommand
 import com.github.spigotbasics.plugin.commands.CommandCompletions
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.configuration.file.YamlConfiguration
@@ -69,6 +70,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private fun registerCommands() {
         commandManager.registerCommand(BasicsCommand(this));
+        commandManager.registerCommand(BasicsDebugCommand(this))
     }
 
     override fun createCommandManager(): BasicsCommandManager {

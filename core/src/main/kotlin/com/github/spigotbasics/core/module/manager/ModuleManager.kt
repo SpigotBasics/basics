@@ -57,6 +57,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         enableAllLoadedModules()
     }
 
+    // TODO: Switch back to this when issues happen
     @Throws(ModuleAlreadyLoadedException::class, InvalidModuleException::class)
     fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
         val loader = try {
@@ -78,9 +79,34 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             return Result.failure(e)
         }
 
+        // TODO: Initialize all classes here, then close the loader
+
+        //loader.close() // TODO: Remove this when issues happen
+
         myLoadedModules += module
         return Result.success(module)
     }
+
+//    @Throws(ModuleAlreadyLoadedException::class, InvalidModuleException::class)
+//    fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
+//        ModuleLoader(plugin, moduleFile).use { loader ->
+//            val info = loader.info
+//
+//            if (getModule(info.name) != null) {
+//                throw ModuleAlreadyLoadedException(info)
+//            }
+//
+//            val module = try {
+//                loader.createInstance()
+//            } catch (e: InvalidModuleException) {
+//                logger.log(Level.SEVERE, "Failed to instantiate module ${info.nameAndVersion}", e)
+//                return Result.failure(e)
+//            }
+//
+//            myLoadedModules += module
+//            return Result.success(module)
+//        }
+//    }
 
     fun enableModule(module: BasicsModule) {
         //if(enabledModules.contains(module)) {
@@ -123,6 +149,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         }
         myLoadedModules.remove(module)
         module.moduleClassLoader.close()
+
         forceGc()
 
     }

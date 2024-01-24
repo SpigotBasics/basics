@@ -3,6 +3,8 @@ package com.github.spigotbasics.core.config
 import com.github.spigotbasics.core.extensions.mini
 import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.entity.Player
 
 /**
@@ -66,10 +68,21 @@ data class Message(
      *
      * @param receiver Audience to send the message to
      */
-    fun sendMiniTo(receiver: Audience) {
+    fun sendTo(receiver: Audience) {
         // lines.map { it.papi(concerns) }.forEach { receiver.sendMessage(it.miniComponents(concerns)) } // TODO: Old
-        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
-        lines.forEach { receiver.sendMessage(mini.deserialize(it, *resolvers)) }
+//        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
+//        lines.forEach { receiver.sendMessage(mini.deserialize(it, *resolvers)) }
+        receiver.sendMessage(toComponent())
     }
+
+    fun toComponents(): List<Component> {
+        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
+        return lines.map { mini.deserialize(it, *resolvers) }
+    }
+
+    fun toComponent(): Component {
+        return Component.join(JoinConfiguration.newlines(), toComponents())
+    }
+
 
 }

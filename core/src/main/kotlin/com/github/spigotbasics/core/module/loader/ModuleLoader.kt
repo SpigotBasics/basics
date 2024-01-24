@@ -13,7 +13,7 @@ import java.util.jar.JarFile
 
 class ModuleLoader
 @Throws(InvalidModuleException::class)
-constructor(val plugin: BasicsPlugin, val file: File) {
+constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
 
     val path = file.absolutePath
     //val jarFile: JarFile
@@ -64,13 +64,6 @@ constructor(val plugin: BasicsPlugin, val file: File) {
         } catch (e: InvalidModuleException) {
             throw InvalidModuleException("Failed to create ModuleInfo for $MODULE_YML_FILE_NAME", e)
         }
-
-
-//        } catch (e: IOException) {
-//            throw InvalidModuleException("Failed to open module file $path as jar", e)
-//        }
-
-
 }
 
 @Throws(InvalidModuleException::class)
@@ -121,5 +114,9 @@ fun createInstance(): BasicsModule {
 
     return moduleInstance
 }
+
+    override fun close() {
+        classLoader.close()
+    }
 
 }
