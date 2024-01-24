@@ -23,6 +23,15 @@ repositories {
     }
 
     maven {
+        name = "jeff-media-public"
+        url = uri("https://repo.jeff-media.com/public/")
+        content {
+            includeGroup("com.jeff-media")
+            includeGroup("com.github.spigotbasics")
+        }
+    }
+
+    maven {
         name = "aikar"
         url = uri("https://repo.aikar.co/content/groups/aikar/")
         content {
