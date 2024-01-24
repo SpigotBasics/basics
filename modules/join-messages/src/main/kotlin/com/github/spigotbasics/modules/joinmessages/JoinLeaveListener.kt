@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.joinmessages
 
-import com.github.spigotbasics.core.facade.PlayerJoinEventSetMessageAccess
-import com.github.spigotbasics.core.facade.PlayerQuitEventSetMessageAccess
+import com.github.spigotbasics.core.facade.event.PlayerJoinEventSetMessageAccess
+import com.github.spigotbasics.core.facade.event.PlayerQuitEventSetMessageAccess
 import com.github.spigotbasics.core.config.SavedModuleConfig
 import com.github.spigotbasics.core.extensions.toLegacy
 import org.bukkit.event.player.PlayerJoinEvent
