@@ -1,0 +1,7 @@
+# Special tags: <new-gamemode>
+gamemode-changed-others: "<gray>Set <player-dm><player-name-genitive-suffix> game mode to <yellow><new-gamemode></yellow>."
+
+survival: "<gradient:#00AA00:#00FF00>survival</gradient>"
+creative: "<gradient:#5555FF:#87BEDB>creative</gradient>"
+adventure: "<gradient:#FF8C00:#FFD700>adventure</gradient>"
+spectator: "<gradient:#A9A9A9:#D3D3D3>spectator</gradient>"
