@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
 
 /**
@@ -17,30 +18,34 @@ import org.bukkit.entity.Player
  */
 data class Message(
     var lines: List<String>,
-    val tagResolverFactory: TagResolverFactory? = null,
-    private var concerns: Player? = null
+    val tagResolverFactory: TagResolverFactory?,
+    private var concerns: Player?,
+    private val customTagResolvers: Collection<TagResolver>
 ) {
     companion object {
         /**
          * Represents a disabled message that will not do anything when sent
          */
-        val DISABLED = Message(emptyList())
+        val DISABLED = Message(
+            lines = emptyList(),
+            tagResolverFactory = null,
+            concerns = null,
+            customTagResolvers = emptyList())
     }
 
     internal constructor(
         tagResolverFactory: TagResolverFactory?,
         line: String
-    ) : this(tagResolverFactory = tagResolverFactory, lines = listOf(line))
-
-//    private constructor(tagResolverFactory: TagResolverFactory) : this(
-//        tagResolverFactory = tagResolverFactory,
-//        lines = emptyList()
-//    )
-
-    //private val concerns: Player? = null
+    ) : this(tagResolverFactory = tagResolverFactory,
+        lines = listOf(line),
+        concerns = null,
+        customTagResolvers = emptyList())
 
     fun concerns(player: Player?): Message {
-        return Message(tagResolverFactory = tagResolverFactory, lines = lines, concerns = player)
+        return Message(tagResolverFactory = tagResolverFactory,
+            lines = lines,
+            concerns = player,
+            customTagResolvers = customTagResolvers)
     }
 
     /**
@@ -50,18 +55,22 @@ data class Message(
      * @return The message with the transform applied
      */
     fun map(transform: (String) -> String): Message {
-        return Message(tagResolverFactory = tagResolverFactory, lines = lines.map(transform), concerns = concerns)
+        return Message(
+            tagResolverFactory = tagResolverFactory,
+            lines = lines.map(transform),
+            concerns = concerns,
+            customTagResolvers = customTagResolvers
+        )
     }
 
-//    /**
-//     * Applies PlaceholderAPI placeholders to each line of the message
-//     *
-//     * @param player Player to apply placeholders for, or null
-//     * @return The message with placeholders applied
-//     */
-//    fun papi(player: OfflinePlayer?): Message {
-//        return Message(lines.map { it.papi(player) })
-//    }
+    fun tags(tags: Collection<TagResolver>): Message {
+        val newTagResolvers = customTagResolvers + tags
+        return Message(tagResolverFactory = tagResolverFactory, lines = lines, concerns = concerns, customTagResolvers = newTagResolvers)
+    }
+
+    fun tags(vararg tags: TagResolver): Message {
+        return tags(tags.toList())
+    }
 
     /**
      * Parses the message from MiniMessage format to Components and sends them to the given audience
@@ -69,15 +78,17 @@ data class Message(
      * @param receiver Audience to send the message to
      */
     fun sendTo(receiver: Audience) {
-        // lines.map { it.papi(concerns) }.forEach { receiver.sendMessage(it.miniComponents(concerns)) } // TODO: Old
-//        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
-//        lines.forEach { receiver.sendMessage(mini.deserialize(it, *resolvers)) }
         receiver.sendMessage(toComponent())
     }
 
+    private fun getAllTagResolvers(): Array<TagResolver> {
+        val defaultResolvers = tagResolverFactory?.getTagResolvers(concerns) ?: emptyList()
+        return (defaultResolvers + customTagResolvers).toTypedArray()
+    }
+
+
     fun toComponents(): List<Component> {
-        val resolvers = tagResolverFactory?.getTagResolvers(concerns)?.toTypedArray() ?: emptyArray()
-        return lines.map { mini.deserialize(it, *resolvers) }
+        return lines.map { mini.deserialize(it, *getAllTagResolvers()) }
     }
 
     fun toComponent(): Component {
