@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import java.util.logging.Level
 
 /**
@@ -27,7 +28,7 @@ data class MinecraftVersion(
                 val major = split[0].toInt()
                 val minor = split[1].toInt()
                 val patch = if (split.size > 2) split[2].toInt() else 0
-                return MinecraftVersion(split[0].toInt(), split[1].toInt(), split[2].toInt())
+                return MinecraftVersion(major, minor, patch)
             } catch (e: Exception) {
                 logger.log(Level.SEVERE, "Failed to parse Bukkit version $version", e)
                 return UNKNOWN
@@ -35,11 +36,37 @@ data class MinecraftVersion(
         }
 
         val UNKNOWN = MinecraftVersion(0 ,0 ,0)
-        val CURRENT = fromBukkitVersion(org.bukkit.Bukkit.getVersion())
+        val CURRENT = fromBukkitVersion(org.bukkit.Bukkit.getBukkitVersion())
 
         fun current(): MinecraftVersion {
             return CURRENT
         }
+    }
+
+    operator fun compareTo(other: MinecraftVersion): Int {
+        if (major > other.major) {
+            return 1
+        } else if (major < other.major) {
+            return -1
+        } else {
+            if (minor > other.minor) {
+                return 1
+            } else if (minor < other.minor) {
+                return -1
+            } else {
+                if (patch > other.patch) {
+                    return 1
+                } else if (patch < other.patch) {
+                    return -1
+                } else {
+                    return 0
+                }
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "$major.$minor.$patch"
     }
 
 }

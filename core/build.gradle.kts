@@ -24,3 +24,9 @@ tasks.withType(DokkaTask::class).configureEach {
         //includeNonPublic.set(false)
     }
 }
+
+tasks.processResources {
+    filesMatching("rusty-spigot-threshold") {
+        expand("version" to libs.versions.spigot.get())
+    }
+}

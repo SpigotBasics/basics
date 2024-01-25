@@ -1,9 +1,12 @@
 package com.github.spigotbasics.plugin
 
 import co.aikar.commands.PaperCommandManager
-import com.github.spigotbasics.core.BasicsLoggerFactory
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.MinecraftVersion
+import com.github.spigotbasics.core.RUSTY_SPIGOT_THRESHOLD_FILE_NAME
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
@@ -11,22 +14,37 @@ import com.github.spigotbasics.plugin.commands.BasicsCommand
 import com.github.spigotbasics.plugin.commands.BasicsDebugCommand
 import com.github.spigotbasics.plugin.commands.CommandCompletions
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.logging.Level
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
+
+    private val rustySpigotThreshold =
+        MinecraftVersion.fromBukkitVersion(getTextResource(RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
+            ?: error("Missing $RUSTY_SPIGOT_THRESHOLD_FILE_NAME resource file"))
+
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, moduleFolder)
     override val audience by lazy { BukkitAudiences.create(this) }
-    override val tagResolverFactory: TagResolverFactory = loadCustomTags()
+    override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
+    override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
 
     private val commandManager: PaperCommandManager by lazy {
         PaperCommandManager(this)
+    }
+
+    /**
+     * Checks if this server is running a rusty version of Spigot.
+     * A rusty version of spigot is a version that's older than the version of spigot-api used by the core module.
+     *
+     * @return True if this server is running a rusty version of Spigot
+     */
+    private fun isRustySpigot(): Boolean {
+        val myVersion = MinecraftVersion.current()
+        return rustySpigotThreshold > myVersion;
     }
 
     override fun onLoad() {
@@ -37,9 +55,19 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
+        if(isRustySpigot()) {
+            logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty. Please update to at least Spigot $rustySpigotThreshold!")
+            logger.severe("See here for more information:")
+            logger.severe("- https://j3f.de/downloadspigotlatest")
+            logger.severe("- https://j3f.de/howtoupdatespigot")
+            server.pluginManager.disablePlugin(this)
+            return
+        }
         this::audience.get() // Force lazy init
         setupAcf()
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
+
+        reloadCoreConfig()
     }
 
     private fun setupAcf() {
@@ -66,6 +94,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             moduleFolder.listFiles(ModuleJarFileFilter)?.map { it.name } ?: listOf()
         }
 
+        completions.registerAsyncCompletion(CommandCompletions.ENABLED_MODULES_AND_CORE) {
+            listOf("core") + moduleManager.enabledModules.map { it.info.name }
+        }
+
     }
 
     private fun registerCommands() {
@@ -77,23 +109,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         return BasicsCommandManager(commandManager)
     }
 
-    private fun loadCustomTags(): TagResolverFactory {
-        try {
-            val yaml = getTextResource("custom-tags.yml")?.use { reader ->
-                YamlConfiguration.loadConfiguration(reader)
-            } ?: error("custom-tags.yml not found")
-
-            val map = yaml.getValues(true).mapValues {
-                val value: String = it.value?.toString() ?: ""
-                println("tag <${it.key}> = $value")
-
-                return@mapValues value
-            }
-            return TagResolverFactory(map)
-        } catch (e: Exception) {
-            logger.log(Level.WARNING, "Cannot load custom-tags.yml, disabling all custom tags", e)
-            return TagResolverFactory(emptyMap())
-        }
+    override fun reloadCoreConfig() {
+        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig("custom-tags.yml", "custom-tags.yml"))
     }
 
 }

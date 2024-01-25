@@ -1,6 +1,7 @@
-package com.github.spigotbasics.core
+package com.github.spigotbasics.core.logger
 
 import com.github.spigotbasics.core.module.BasicsModule
+import java.io.File
 import java.util.logging.Logger
 import kotlin.reflect.KClass
 
@@ -13,6 +14,10 @@ object BasicsLoggerFactory {
 
     fun getModuleLogger(module: BasicsModule): Logger {
         return getLogger("Module/${module.info.name}")
+    }
+
+    fun getConfigLogger(file: File): Logger {
+        return getLogger("Config/${file.name}")
     }
 
     fun getCoreLogger(clazz: KClass<*>): Logger {

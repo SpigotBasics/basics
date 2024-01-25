@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.module.manager
 
-import com.github.spigotbasics.core.BasicsLoggerFactory
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.InvalidModuleException
