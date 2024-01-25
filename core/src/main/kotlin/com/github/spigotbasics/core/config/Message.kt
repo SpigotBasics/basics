@@ -19,8 +19,8 @@ import org.bukkit.entity.Player
 data class Message(
     var lines: List<String>,
     val tagResolverFactory: TagResolverFactory?,
-    private var concerns: Player?,
-    private val customTagResolvers: Collection<TagResolver>
+    private var concerns: Player? = null,
+    private val customTagResolvers: MutableList<TagResolver> = mutableListOf()
 ) {
     companion object {
         /**
@@ -28,24 +28,18 @@ data class Message(
          */
         val DISABLED = Message(
             lines = emptyList(),
-            tagResolverFactory = null,
-            concerns = null,
-            customTagResolvers = emptyList())
+            tagResolverFactory = null)
     }
 
     internal constructor(
         tagResolverFactory: TagResolverFactory?,
         line: String
     ) : this(tagResolverFactory = tagResolverFactory,
-        lines = listOf(line),
-        concerns = null,
-        customTagResolvers = emptyList())
+        lines = listOf(line))
 
     fun concerns(player: Player?): Message {
-        return Message(tagResolverFactory = tagResolverFactory,
-            lines = lines,
-            concerns = player,
-            customTagResolvers = customTagResolvers)
+        this.concerns = player
+        return this
     }
 
     /**
@@ -55,17 +49,13 @@ data class Message(
      * @return The message with the transform applied
      */
     fun map(transform: (String) -> String): Message {
-        return Message(
-            tagResolverFactory = tagResolverFactory,
-            lines = lines.map(transform),
-            concerns = concerns,
-            customTagResolvers = customTagResolvers
-        )
+        lines = lines.map(transform)
+        return this
     }
 
     fun tags(tags: Collection<TagResolver>): Message {
-        val newTagResolvers = customTagResolvers + tags
-        return Message(tagResolverFactory = tagResolverFactory, lines = lines, concerns = concerns, customTagResolvers = newTagResolvers)
+        customTagResolvers.addAll(tags)
+        return this
     }
 
     fun tags(vararg tags: TagResolver): Message {

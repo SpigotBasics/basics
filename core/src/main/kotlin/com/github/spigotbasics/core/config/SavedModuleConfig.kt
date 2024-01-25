@@ -106,9 +106,7 @@ class SavedModuleConfig internal constructor(
     fun getMessage(path: String): Message {
         if(isList(path)) {
             return Message(tagResolverFactory = module.tagResolverFactory,
-                lines = getStringList(path),
-                concerns = null,
-                customTagResolvers = emptyList())
+                lines = getStringList(path))
         } else if (isString(path)) {
             return Message(
                 tagResolverFactory = module.tagResolverFactory,
