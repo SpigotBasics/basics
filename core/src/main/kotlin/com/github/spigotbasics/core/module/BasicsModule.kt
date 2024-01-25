@@ -78,7 +78,7 @@ interface BasicsModule {
 
     }
 
-    fun enable()
+    fun enable(reloadConfig: Boolean)
     fun disable()
 
     fun isEnabled(): Boolean

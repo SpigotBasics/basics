@@ -23,7 +23,7 @@ class CoreConfigManager(
     // TODO: Duplicate in AbstractBasicsModule
     fun getConfig(resourceFileName: String, fileName: String, clazz: Class<*> = javaClass): SavedModuleConfig {
 
-        logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
+        //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
 
         // The file object will use the namespaced resource name
         val configName = fileName
@@ -34,7 +34,7 @@ class CoreConfigManager(
         try {
             // If a default config exists, set it as defaults
             clazz.getCustomResourceAsStream(resourceFileName)?.use {
-                logger.info("DEBUG: CoreConfigManager.getConfig() found default config file $resourceFileName")
+                //logger.info("DEBUG: CoreConfigManager.getConfig() found default config file $resourceFileName")
                 configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
             }
         } catch (e: InvalidConfigurationException) {
@@ -43,7 +43,7 @@ class CoreConfigManager(
 
         // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
-            logger.info("Saving default config file $configName to ${file.absolutePath}")
+            //logger.info("Saving default config file $configName to ${file.absolutePath}")
             clazz.getCustomResourceAsStream(resourceFileName)?.copyTo(FileOutputStream(file))
         }
 

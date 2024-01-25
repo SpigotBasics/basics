@@ -59,7 +59,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
             sender.sendMessage("§cModule $moduleName is already enabled")
             return
         }
-        plugin.moduleManager.enableModule(module)
+        plugin.moduleManager.enableModule(module, true)
         sender.sendMessage("§aModule $moduleName has been enabled.")
     }
 

@@ -6,13 +6,7 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedModuleConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
-import com.github.spigotbasics.core.extensions.getCustomResourceAsStream
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
-import org.bukkit.configuration.InvalidConfigurationException
-import org.bukkit.configuration.file.YamlConfiguration
-import java.io.File
-import java.io.FileOutputStream
-import java.util.logging.Level
 import java.util.logging.Logger
 
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
@@ -95,9 +89,11 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     }
 
     private var isEnabled = false
-    final override fun enable() {
+    final override fun enable(reloadConfig: Boolean) {
         isEnabled = true
-        config.reload()
+        if(reloadConfig) {
+            config.reload()
+        }
     }
 
     final override fun disable() {
