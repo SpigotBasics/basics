@@ -48,7 +48,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     fun enableAllLoadedModules() {
         for(module in myLoadedModules) {
-            enableModule(module)
+            enableModule(module, false)
         }
     }
 
@@ -108,12 +108,12 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 //        }
 //    }
 
-    fun enableModule(module: BasicsModule) {
+    fun enableModule(module: BasicsModule, reloadConfig: Boolean) {
         //if(enabledModules.contains(module)) {
         if(module.isEnabled()) {
             error("Module ${module.info.name} is already enabled")
         }
-        module.enable()
+        module.enable(reloadConfig)
         try {
             module.onEnable()
         } catch (e: Exception) {
