@@ -10,6 +10,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
 
     val msgConfig = getConfig(ConfigName.MESSAGES)
     val msgChangedOthers get() = msgConfig.getMessage("gamemode-changed-others")
+    val msgChangedSelf get() = msgConfig.getMessage("gamemode-changed-self")
     val nameSurvival get() = msgConfig.getMessage("survival").toComponent()
     val nameCreative get() = msgConfig.getMessage("creative").toComponent()
     val nameAdventure get() = msgConfig.getMessage("adventure").toComponent()
