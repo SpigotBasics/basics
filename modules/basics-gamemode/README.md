@@ -1,7 +1,7 @@
 | Command                        | Permission                               | Description                             |
 |--------------------------------|------------------------------------------|-----------------------------------------|
-| /gamemode <gamemode>           | basics.command.gamemode.<gamemode>       | Sets your game mode to <gamemode>       |
-| /gamemode <gamemode> <player>  | basics.command.gamemode.<gamemode>.other | Sets <player>'s game mode to <gamemode> |
+| /gamemode &lt;gamemode&gt;           | basics.command.gamemode.&lt;gamemode&gt;       | Sets your game mode to &lt;gamemode&gt;       |
+| /gamemode &lt;gamemode&gt; &lt;player&gt;  | basics.command.gamemode.&lt;gamemode&gt;.other | Sets &lt;player&gt;'s game mode to &lt;gamemode&gt; |
 
 Available game modes are `survival`, `creative`, `adventure` and `spectator`.
 
