@@ -21,8 +21,15 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
 
     @Subcommand("reloadConfig")
     @CommandPermission("basics.reloadconfig")
-    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES}")
+    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES_AND_CORE}")
     fun reloadConfig(sender: CommandSender, moduleName: String) {
+
+        if(moduleName == "core") {
+            plugin.reloadCoreConfig()
+            sender.sendMessage("§aBasics Core config reloaded")
+            return
+        }
+
         val module = plugin.moduleManager.getModule(moduleName)
         if (module == null) {
             sender.sendMessage("§cModule $moduleName not found")

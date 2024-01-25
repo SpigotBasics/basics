@@ -1,12 +1,13 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.BasicsLoggerFactory
-import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.Reader
 import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Represents a [YamlConfiguration] that is backed by a file. Instances of this class should only be obtained using
@@ -18,30 +19,15 @@ import java.util.logging.Level
  * @constructor Create empty Saved config
  */
 class SavedModuleConfig internal constructor(
-    val module: BasicsModule,
+
     /**
      * File backing this configuration.
      */
-    val file: File
+    val file: File,
+    val tagResolverFactory: TagResolverFactory
 ) : YamlConfiguration() {
 
-    companion object {
-        private val logger = BasicsLoggerFactory.getCoreLogger(SavedModuleConfig::class)
-
-        // TODO: Remove. SavedModuleConfigs should not be arbitrary created, as their purpose is to be backed
-        // by a module-namespaced filename and to also include the module's default config for that file!
-//        /**
-//         * Creates a new [SavedModuleConfig] from the given file.
-//         *
-//         * @param file File to load from
-//         * @return New [SavedModuleConfig] instance
-//         */
-//        fun fromFile(file: File): SavedModuleConfig {
-//            val config = SavedModuleConfig(file)
-//            config.load(file)
-//            return config
-//        }
-    }
+    private val logger: Logger = BasicsLoggerFactory.getConfigLogger(file)
 
     /**
      * Saves this configuration to the file.
@@ -105,11 +91,11 @@ class SavedModuleConfig internal constructor(
      */
     fun getMessage(path: String): Message {
         if(isList(path)) {
-            return Message(tagResolverFactory = module.tagResolverFactory,
+            return Message(tagResolverFactory = tagResolverFactory,
                 lines = getStringList(path))
         } else if (isString(path)) {
             return Message(
-                tagResolverFactory = module.tagResolverFactory,
+                tagResolverFactory = tagResolverFactory,
                 line = getString(path)!!)
         } else {
             return Message.DISABLED
