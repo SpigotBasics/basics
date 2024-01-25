@@ -1,19 +1,23 @@
 package com.github.spigotbasics.core.minimessage
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.Either
 import com.github.spigotbasics.core.extensions.genitiveSuffix
 import com.github.spigotbasics.core.facade.entity.PlayerGetDisplayNameAccess
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
+import java.util.logging.Level
 
-// TODO: Save custom-tags.yml and load the customized version
 // TODO: Add PlaceholderAPI <papi:...> tag
-class TagResolverFactory(customTagsMap: Map<String, String>) {
+class TagResolverFactory {
 
-    //private val miniMessage = MiniMessage.miniMessage()
-    private val customParsedTagResolvers = customTagsMap.map { Placeholder.parsed(it.key, it.value) }
-    private val defaultNonPlayerTagResolverList = createDefaultNonPlayerTagResolverList()
+    private val logger = BasicsLoggerFactory.getCoreLogger(TagResolverFactory::class)
+
+    private var customTagsMap: Map<String, String> = emptyMap()
+    private var customParsedTagResolvers: List<TagResolver> = listOf() // = customTagsMap.map { Placeholder.parsed(it.key, it.value) }
+    private var defaultNonPlayerTagResolverList: List<TagResolver> = listOf(); // = createDefaultNonPlayerTagResolverList()
 
     private fun createDefaultNonPlayerTagResolverList(): List<TagResolver> {
         return listOf( // TODO: Add static placeholders
@@ -45,6 +49,25 @@ class TagResolverFactory(customTagsMap: Map<String, String>) {
             list.addAll(createDefaultPlayerTagResolverList(player))
         }
         return list
+    }
+
+    fun loadCustomTags(yaml: YamlConfiguration) {
+        try {
+            val map = yaml.getValues(true).mapValues {
+                val value: String = it.value?.toString() ?: ""
+                println("tag <${it.key}> = $value")
+
+                return@mapValues value
+            }
+
+
+            customTagsMap = map
+            customParsedTagResolvers = customTagsMap.map { Placeholder.parsed(it.key, it.value) }
+            defaultNonPlayerTagResolverList = createDefaultNonPlayerTagResolverList()
+
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "Failed to load custom tags", e)
+        }
     }
 
 }

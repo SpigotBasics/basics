@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.BasicsLoggerFactory
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 
 /**
  * Represents a config name
