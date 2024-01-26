@@ -49,7 +49,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     /**
      * Config
      */
-    override var config = getConfig(ConfigName.CONFIG)
+    override var config = getConfig(ConfigName.CONFIG, javaClass)
 
     override fun reloadConfig() {
         config.reload()
@@ -68,9 +68,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override val tagResolverFactory
         get() = plugin.tagResolverFactory
 
-    fun getConfig(configName: ConfigName): SavedConfig = getConfig(configName, SavedConfig::class.java)
+    fun getConfig(configName: ConfigName, clazzToGetFrom: Class<*> = javaClass): SavedConfig = getConfig(configName, SavedConfig::class.java, clazzToGetFrom)
 
-    fun <T: SavedConfig> getConfig(configName: ConfigName, clazz: Class<T>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), clazz)
+    fun <T: SavedConfig> getConfig(configName: ConfigName, clazz: Class<T>, clazzToGetFrom: Class<*>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), clazz, clazzToGetFrom)
 
     /**
      * Get namespaced resource name. For `config.yml` this will simply be `<module-name>.yml`, for all other files it will be `<module-name>-<file-name>`.

@@ -31,7 +31,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
     override val messages: CoreMessages =
-        coreConfigManager.getConfig(ConfigName.MESSAGES.path, ConfigName.MESSAGES.path, CoreMessages::class.java)
+        coreConfigManager.getConfig(ConfigName.MESSAGES.path, ConfigName.MESSAGES.path, CoreMessages::class.java, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
@@ -114,7 +114,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     private fun reloadCustomTags() {
-        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig("custom-tags.yml", "custom-tags.yml"))
+        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig("custom-tags.yml", "custom-tags.yml", TagResolverFactory::class.java))
     }
 
     override fun reloadCoreConfig() {

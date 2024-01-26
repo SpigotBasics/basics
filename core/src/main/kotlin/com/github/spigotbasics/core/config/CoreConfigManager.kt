@@ -28,11 +28,11 @@ class CoreConfigManager(
         }
     }
 
-    fun getConfig (resourceFileName: String, fileName: String): SavedConfig {
-        return getConfig(resourceFileName, fileName, SavedConfig::class.java)
+    fun getConfig (resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>): SavedConfig {
+        return getConfig(resourceFileName, fileName, SavedConfig::class.java, clazzToGetFrom)
     }
 
-    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazz: Class<T>): T {
+    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazz: Class<T>, clazzToGetFrom: Class<*>): T {
 
         //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
 
@@ -44,7 +44,7 @@ class CoreConfigManager(
 
         try {
             // If a default config exists, set it as defaults
-            clazz.getCustomResourceAsStream(resourceFileName)?.use {
+            clazzToGetFrom.getCustomResourceAsStream(resourceFileName)?.use {
                 //logger.info("DEBUG: CoreConfigManager.getConfig() found default config file $resourceFileName")
                 configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
             }
@@ -55,7 +55,7 @@ class CoreConfigManager(
         // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
             //logger.info("Saving default config file $configName to ${file.absolutePath}")
-            clazz.getCustomResourceAsStream(resourceFileName)?.copyTo(FileOutputStream(file))
+            clazzToGetFrom.getCustomResourceAsStream(resourceFileName)?.copyTo(FileOutputStream(file))
         }
 
         // Load the config from disk if file exists
