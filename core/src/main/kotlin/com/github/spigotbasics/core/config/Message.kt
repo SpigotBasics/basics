@@ -19,9 +19,9 @@ import org.bukkit.entity.Player
  */
 data class Message(
     var lines: List<String>,
-    val tagResolverFactory: TagResolverFactory?,
-    private var concerns: Player? = null,
-    private val customTagResolvers: MutableList<TagResolver> = mutableListOf()
+    var tagResolverFactory: TagResolverFactory?,
+    var concerns: Player? = null,
+    val customTagResolvers: MutableList<TagResolver> = mutableListOf()
 ) {
     companion object {
         /**
