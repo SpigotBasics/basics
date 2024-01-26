@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
-import com.github.spigotbasics.core.config.SavedModuleConfig
+import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import java.util.logging.Logger
@@ -68,7 +68,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override val tagResolverFactory
         get() = plugin.tagResolverFactory
 
-    fun getConfig(ConfigName: ConfigName): SavedModuleConfig = plugin.coreConfigManager.getConfig(ConfigName.path, getNamespacedResourceName(ConfigName.path), javaClass)
+    fun getConfig(configName: ConfigName): SavedConfig = getConfig(configName, SavedConfig::class.java)
+
+    fun <T: SavedConfig> getConfig(configName: ConfigName, clazz: Class<T>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), clazz)
 
     /**
      * Get namespaced resource name. For `config.yml` this will simply be `<module-name>.yml`, for all other files it will be `<module-name>-<file-name>`.
