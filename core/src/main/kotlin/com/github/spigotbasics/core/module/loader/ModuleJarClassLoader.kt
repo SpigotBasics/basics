@@ -53,6 +53,6 @@ class ModuleJarClassLoader(val file: File, parentLoader: ClassLoader) :
     }
 
     override fun getResource(name: String?): URL? {
-        return findResource(name)
+        return findResource(name) // TODO: Maybe return super.getResource if findResource is null?
     }
 }
