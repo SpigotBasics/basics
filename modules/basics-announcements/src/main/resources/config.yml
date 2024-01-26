@@ -1,0 +1,6 @@
+interval: 30
+pick-random: false
+messages:
+  - This is a plain message.
+  - This message has <bold>formatting!!!
+  - <red>This message is DEFINITELY blue...

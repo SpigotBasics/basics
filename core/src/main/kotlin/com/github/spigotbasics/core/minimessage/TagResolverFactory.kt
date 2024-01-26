@@ -41,7 +41,7 @@ class TagResolverFactory {
         }
     }
 
-    fun getTagResolvers(player: Player?): List<TagResolver> {
+    fun getTagResolvers(player: Player? = null): List<TagResolver> {
         val list = mutableListOf<TagResolver>()
         list.addAll(defaultNonPlayerTagResolverList) // TODO:
         list.addAll(customParsedTagResolvers) // TODO: Cache these two
