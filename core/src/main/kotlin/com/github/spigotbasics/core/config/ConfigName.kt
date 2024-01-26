@@ -21,7 +21,7 @@ class ConfigName private constructor(val path: String){
         /**
          * Messages config name
          */
-        val MESSAGES = ConfigName("messages.yml")
+        val MESSAGES = ConfigName("core-messages.yml")
 
 
         fun fromName(name: String): ConfigName {
@@ -30,7 +30,7 @@ class ConfigName private constructor(val path: String){
                     logger.warning("Module tried to get default config using name $name instead of ConfigName.CONFIG")
                     CONFIG
                 }
-                "messages", "messages.yml" -> {
+                "messages", "core-messages.yml" -> {
                     logger.warning("Module tried to get default config using name $name instead of ConfigName.MESSAGES")
                     MESSAGES
                 }
