@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.config
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.SafeResourceGetter
 import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.InvalidModuleException
 import org.bukkit.configuration.InvalidConfigurationException
@@ -28,24 +29,18 @@ class CoreConfigManager(
     }
 
     fun getConfig (resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>): SavedConfig {
-        return getConfig(resourceFileName, fileName, SavedConfig::class.java, clazzToGetFrom)
+        return getConfig(resourceFileName, fileName, clazzToGetFrom, SavedConfig::class.java)
     }
 
-    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, configurationClass: Class<T>, clazzToGetFrom: Class<*>): T {
-
-
-        //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
-
-        // The file object will use the namespaced resource name
+    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>, configurationClass: Class<T>): T {
         val configName = fileName
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = createInstance(configurationClass, file, tagResolverFactory)//SavedConfig(file, tagResolverFactory)
+        val configuration = createInstance(configurationClass, file, tagResolverFactory)
 
         try {
             // If a default config exists, set it as defaults
-            clazzToGetFrom.getResourceAsStream("/$resourceFileName")?.use {
-                //logger.info("DEBUG: CoreConfigManager.getConfig() found default config file $resourceFileName")
+            SafeResourceGetter.getResourceAsStream(clazzToGetFrom, resourceFileName)?.use {
                 configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
             }
         } catch (e: InvalidConfigurationException) {
@@ -55,9 +50,7 @@ class CoreConfigManager(
         // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
             //logger.info("Saving default config file $configName to ${file.absolutePath}")
-            clazzToGetFrom.getResourceAsStream("/$resourceFileName")?.copyTo(FileOutputStream(file))
-
-
+            SafeResourceGetter.getResourceAsStream(clazzToGetFrom, resourceFileName)?.copyTo(FileOutputStream(file))
         }
 
         // Load the config from disk if file exists

@@ -1,4 +1,4 @@
-# Special tags: <new-gamemode>
+# Tags: <new-gamemode>
 gamemode-changed-others: "<gray>Set <player-dm><player-name-genitive-suffix> game mode to <yellow><new-gamemode></yellow>."
 gamemode-changed-self: "<gray>Set <gold>your</gold> game mode to <yellow><new-gamemode></yellow>."
 

@@ -1,6 +1,4 @@
 interval: 30
 pick-random: false
 messages:
-  - This is a plain message.
-  - This message has <bold>formatting!!!
-  - <red>This message is DEFINITELY blue...
+  - <click:open_url:https://github.com/SpigotBasics/basics><rainbow>You're using Basics! Isn't that awesome?</rainbow></click>
