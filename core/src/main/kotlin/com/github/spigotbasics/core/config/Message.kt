@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
 
@@ -56,6 +57,14 @@ data class Message(
     fun tags(tags: Collection<TagResolver>): Message {
         customTagResolvers.addAll(tags)
         return this
+    }
+
+    fun tags(vararg tags: Pair<String, String>): Message {
+        return tags(tags.map { (key, value) -> Placeholder.unparsed(key, value) })
+    }
+
+    fun tags(tags: Map<String, String>): Message {
+        return tags(tags.map { (key, value) -> Placeholder.unparsed(key, value) })
     }
 
     fun tags(vararg tags: TagResolver): Message {
