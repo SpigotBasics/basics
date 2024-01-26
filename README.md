@@ -39,6 +39,12 @@ The documentation can be found here:
 
 It is not often updated, so better create your own using `gradlew dokkaHtml` or `gradlew dokkaJavadoc` in the core project.
 
+## Note to Contributors
+Contributions are always welcome from anyone!
+
+> [!WARNING]\
+> Contributions from CMarco, however, are not welcome and will be rejected.
+
 ## Create a new module
 To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
 
