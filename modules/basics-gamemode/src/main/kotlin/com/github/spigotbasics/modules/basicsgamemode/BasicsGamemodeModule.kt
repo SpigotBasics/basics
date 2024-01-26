@@ -1,6 +1,7 @@
 package com.github.spigotbasics.modules.basicsgamemode
 
 import com.github.spigotbasics.core.config.ConfigName
+import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
 import net.kyori.adventure.text.Component
@@ -8,7 +9,7 @@ import org.bukkit.GameMode
 
 class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
-    val msgConfig = getConfig(ConfigName.MESSAGES)
+    val msgConfig = getConfig(ConfigName.fromName("messages.yml"))
     val msgChangedOthers get() = msgConfig.getMessage("gamemode-changed-others")
     val msgChangedSelf get() = msgConfig.getMessage("gamemode-changed-self")
     val nameSurvival get() = msgConfig.getMessage("survival").toComponent()

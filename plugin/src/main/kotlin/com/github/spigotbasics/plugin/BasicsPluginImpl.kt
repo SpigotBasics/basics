@@ -31,7 +31,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
     override val messages: CoreMessages =
-        coreConfigManager.getConfig(ConfigName.MESSAGES.path, ConfigName.MESSAGES.path, CoreMessages::class.java, CoreMessages::class.java)
+        coreConfigManager.getConfig("core-messages.yml", "core-messages.yml", CoreMessages::class.java, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
