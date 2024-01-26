@@ -1,0 +1,8 @@
+# These are the messages used by the core plugin. You can use all tags from custom-tags.yml here.
+# Some messages have additional available tags, which are listed for each message.
+
+# Tags: <permission-name>
+no-permission: "<red>You don't have permission to do that!</red> <gray>(Required permission: <permission>)</gray>"
+
+command-not-from-console: "<red>This command can't be run from console!</red>"
+must-specify-player-from-console: "<red>You must specify a player when running this command from console!</red>"

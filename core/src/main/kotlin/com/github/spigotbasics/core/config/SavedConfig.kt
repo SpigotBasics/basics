@@ -18,7 +18,7 @@ import java.util.logging.Logger
  * @property file File backing this configuration
  * @constructor Create empty Saved config
  */
-class SavedModuleConfig internal constructor(
+open class SavedConfig internal constructor(
 
     /**
      * File backing this configuration.
@@ -36,35 +36,11 @@ class SavedModuleConfig internal constructor(
         save(file)
     }
 
-    override fun load(file: String) {
-        try {
-            super.load(file)
-        } catch (e: InvalidConfigurationException) {
-            logger.log(Level.SEVERE, "Failed to load config file $file", e)
-        }
-    }
-
     override fun load(file: File) {
         try {
             super.load(file)
         } catch (e: InvalidConfigurationException) {
             logger.log(Level.SEVERE, "Failed to load config file $file", e)
-        }
-    }
-
-    override fun load(reader: Reader) {
-        try {
-            super.load(reader)
-        } catch (e: InvalidConfigurationException) {
-            logger.log(Level.SEVERE, "Failed to load config from reader", e)
-        }
-    }
-
-    override fun loadFromString(contents: String) {
-        try {
-            super.loadFromString(contents)
-        } catch (e: InvalidConfigurationException) {
-            logger.log(Level.SEVERE, "Failed to load config from string", e)
         }
     }
 

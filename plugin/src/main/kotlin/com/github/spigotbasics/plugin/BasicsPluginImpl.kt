@@ -1,12 +1,14 @@
 package com.github.spigotbasics.plugin
 
 import co.aikar.commands.PaperCommandManager
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.RUSTY_SPIGOT_THRESHOLD_FILE_NAME
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.CoreConfigManager
+import com.github.spigotbasics.core.config.CoreMessages
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
@@ -28,6 +30,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val audience by lazy { BukkitAudiences.create(this) }
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
+    override val messages: CoreMessages =
+        coreConfigManager.getConfig(ConfigName.MESSAGES.path, ConfigName.MESSAGES.path, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
@@ -55,7 +59,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
-        if(isRustySpigot()) {
+        if (isRustySpigot()) {
             logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty. Please update to at least Spigot $rustySpigotThreshold!")
             logger.severe("See here for more information:")
             logger.severe("- https://j3f.de/downloadspigotlatest")
@@ -67,7 +71,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         setupAcf()
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
 
-        reloadCoreConfig()
+        reloadCustomTags()
     }
 
     private fun setupAcf() {
@@ -109,8 +113,13 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         return BasicsCommandManager(commandManager)
     }
 
-    override fun reloadCoreConfig() {
+    private fun reloadCustomTags() {
         tagResolverFactory.loadCustomTags(coreConfigManager.getConfig("custom-tags.yml", "custom-tags.yml"))
+    }
+
+    override fun reloadCoreConfig() {
+        reloadCustomTags()
+        messages.reload()
     }
 
 }
