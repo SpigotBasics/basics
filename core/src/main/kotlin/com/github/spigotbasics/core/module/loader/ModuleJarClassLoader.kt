@@ -7,6 +7,7 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import java.io.File
+import java.net.URL
 import java.net.URLClassLoader
 
 class ModuleJarClassLoader(val file: File, parentLoader: ClassLoader) :
@@ -49,5 +50,9 @@ class ModuleJarClassLoader(val file: File, parentLoader: ClassLoader) :
     override fun close() {
         super.close()
         Runtime.getRuntime().gc()
+    }
+
+    override fun getResource(name: String?): URL? {
+        return findResource(name)
     }
 }

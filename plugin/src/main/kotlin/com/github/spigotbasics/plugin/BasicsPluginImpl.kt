@@ -5,7 +5,6 @@ import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.RUSTY_SPIGOT_THRESHOLD_FILE_NAME
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
@@ -31,7 +30,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
     override val messages: CoreMessages =
-        coreConfigManager.getConfig("core-messages.yml", "core-messages.yml", CoreMessages::class.java, CoreMessages::class.java)
+        coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
