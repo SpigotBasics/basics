@@ -70,7 +70,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     fun getConfig(configName: ConfigName, clazzToGetFrom: Class<*> = javaClass): SavedConfig = getConfig(configName, SavedConfig::class.java, clazzToGetFrom)
 
-    fun <T: SavedConfig> getConfig(configName: ConfigName, clazz: Class<T>, clazzToGetFrom: Class<*>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), clazz, clazzToGetFrom)
+    fun <T: SavedConfig> getConfig(configName: ConfigName, configurationClass: Class<T>, clazzToGetFrom: Class<*>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), configurationClass, clazzToGetFrom)
 
     /**
      * Get namespaced resource name. For `config.yml` this will simply be `<module-name>.yml`, for all other files it will be `<module-name>-<file-name>`.

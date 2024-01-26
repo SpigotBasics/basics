@@ -2,7 +2,6 @@ package com.github.spigotbasics.core.config
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.extensions.getCustomResourceAsStream
 import com.github.spigotbasics.core.minimessage.TagResolverFactory
 import com.github.spigotbasics.core.module.InvalidModuleException
 import org.bukkit.configuration.InvalidConfigurationException
@@ -32,7 +31,8 @@ class CoreConfigManager(
         return getConfig(resourceFileName, fileName, SavedConfig::class.java, clazzToGetFrom)
     }
 
-    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazz: Class<T>, clazzToGetFrom: Class<*>): T {
+    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, configurationClass: Class<T>, clazzToGetFrom: Class<*>): T {
+
 
         //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
 
@@ -40,11 +40,11 @@ class CoreConfigManager(
         val configName = fileName
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = createInstance(clazz, file, tagResolverFactory)//SavedConfig(file, tagResolverFactory)
+        val configuration = createInstance(configurationClass, file, tagResolverFactory)//SavedConfig(file, tagResolverFactory)
 
         try {
             // If a default config exists, set it as defaults
-            clazzToGetFrom.getCustomResourceAsStream(resourceFileName)?.use {
+            clazzToGetFrom.getResourceAsStream("/$resourceFileName")?.use {
                 //logger.info("DEBUG: CoreConfigManager.getConfig() found default config file $resourceFileName")
                 configuration.setDefaults(YamlConfiguration.loadConfiguration(it.bufferedReader()))
             }
@@ -55,7 +55,9 @@ class CoreConfigManager(
         // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
             //logger.info("Saving default config file $configName to ${file.absolutePath}")
-            clazzToGetFrom.getCustomResourceAsStream(resourceFileName)?.copyTo(FileOutputStream(file))
+            clazzToGetFrom.getResourceAsStream("/$resourceFileName")?.copyTo(FileOutputStream(file))
+
+
         }
 
         // Load the config from disk if file exists
