@@ -28,7 +28,10 @@ class CoreConfigManager(
         }
     }
 
-    // TODO: Add parameter for class to use
+    fun getConfig (resourceFileName: String, fileName: String): SavedConfig {
+        return getConfig(resourceFileName, fileName, SavedConfig::class.java)
+    }
+
     fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazz: Class<T>): T {
 
         //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
