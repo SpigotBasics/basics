@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 /**
  * Represents a message containing of zero or more lines
  *
- * See [SavedModuleConfig.getMessage] on how to obtain a message
+ * See [SavedConfig.getMessage] on how to obtain a message
  *
  * @property lines Lines of the message
  * @constructor Create a new message
