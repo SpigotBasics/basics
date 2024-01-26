@@ -18,7 +18,7 @@ import java.util.logging.Logger
  * @property file File backing this configuration
  * @constructor Create empty Saved config
  */
-class SavedModuleConfig internal constructor(
+open class SavedConfig internal constructor(
 
     /**
      * File backing this configuration.

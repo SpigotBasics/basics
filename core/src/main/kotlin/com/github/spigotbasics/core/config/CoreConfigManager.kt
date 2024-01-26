@@ -20,8 +20,16 @@ class CoreConfigManager(
         private val logger = BasicsLoggerFactory.getCoreLogger(CoreConfigManager::class)
     }
 
-    // TODO: Duplicate in AbstractBasicsModule
-    fun getConfig(resourceFileName: String, fileName: String, clazz: Class<*> = javaClass): SavedModuleConfig {
+    private fun <T : SavedConfig> createInstance(clazz: Class<T>, file: File, tagResolverFactory: TagResolverFactory): T {
+        try {
+            return clazz.getConstructor(File::class.java, TagResolverFactory::class.java).newInstance(file, tagResolverFactory)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to create config instance of class ${clazz.name}", e)
+        }
+    }
+
+    // TODO: Add parameter for class to use
+    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazz: Class<T>): T {
 
         //logger.info("DEBUG: CoreConfigManager.getConfig() called with resourceFileName: $resourceFileName, fileName: $fileName")
 
@@ -29,7 +37,7 @@ class CoreConfigManager(
         val configName = fileName
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = SavedModuleConfig(file, tagResolverFactory)
+        val configuration = createInstance(clazz, file, tagResolverFactory)//SavedConfig(file, tagResolverFactory)
 
         try {
             // If a default config exists, set it as defaults
