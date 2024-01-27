@@ -102,7 +102,7 @@ fun createInstance(): BasicsModule {
     }
 
     val moduleInstantiationContext = try {
-        ModuleInstantiationContext(plugin = plugin, info = info, file = file, classLoader = classLoader)
+        ModuleInstantiationContext(plugin = plugin, info = info, file = file, classLoader = classLoader, commandManager = plugin.createCommandManager())
     } catch (e: Exception) {
         throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)
     }

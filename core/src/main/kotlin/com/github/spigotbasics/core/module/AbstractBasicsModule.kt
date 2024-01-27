@@ -39,7 +39,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     /**
      * Commands Manager
      */
-    final override val commandManager: BasicsCommandManager = context.plugin.createCommandManager()
+    final override val commandManager: BasicsCommandManager = context.commandManager //context.plugin.createCommandManager()
 
     /**
      * Event bus for registering events
