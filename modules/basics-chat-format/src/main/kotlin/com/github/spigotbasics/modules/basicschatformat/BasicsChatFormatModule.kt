@@ -1,8 +1,7 @@
 package com.github.spigotbasics.modules.basicschatformat
 
-import com.github.spigotbasics.core.config.Message
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.extensions.getAsNewLineSeparatedString
-import com.github.spigotbasics.core.extensions.toLegacy
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
 import io.papermc.lib.PaperLib
@@ -37,7 +36,8 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
         val originalFormatters = tagResolverFactory.getTagResolvers(event.player)
         val msgFormatter = Placeholder.unparsed("message", event.message)
         val combinedFormatters = originalFormatters + msgFormatter
-        event.format = MiniMessage.miniMessage().deserialize(formatAsStr, *combinedFormatters.toTypedArray()).toLegacy().escapeFormat()
+        event.format = "TODO: Chat format Spigot"
+        //event.format = MiniMessage.miniMessage().deserialize(formatAsStr, *combinedFormatters.toTypedArray()).toLegacy().escapeFormat()
     }
 
 }

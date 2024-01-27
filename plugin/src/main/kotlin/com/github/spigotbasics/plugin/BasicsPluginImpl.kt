@@ -8,13 +8,14 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.AudienceProvider
+import com.github.spigotbasics.core.messages.MessageFactory
+import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.plugin.commands.BasicsCommand
 import com.github.spigotbasics.plugin.commands.BasicsDebugCommand
 import com.github.spigotbasics.plugin.commands.CommandCompletions
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -24,11 +25,13 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         MinecraftVersion.fromBukkitVersion(getTextResource(Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
             ?: error("Missing ${Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME} resource file"))
 
+    override val audienceProvider: AudienceProvider = AudienceProvider(this)
+
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, moduleFolder)
-    override val audience by lazy { BukkitAudiences.create(this) }
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
-    override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, tagResolverFactory)
+    override val messageFactory: MessageFactory = MessageFactory(audienceProvider, tagResolverFactory)
+    override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
     override val messages: CoreMessages =
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
 
@@ -66,7 +69,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             server.pluginManager.disablePlugin(this)
             return
         }
-        this::audience.get() // Force lazy init
+
         setupAcf()
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
 

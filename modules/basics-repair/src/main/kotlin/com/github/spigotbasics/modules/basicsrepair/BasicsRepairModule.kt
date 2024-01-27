@@ -1,6 +1,6 @@
 package com.github.spigotbasics.modules.basicsrepair
 
-import com.github.spigotbasics.core.config.Message
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
 

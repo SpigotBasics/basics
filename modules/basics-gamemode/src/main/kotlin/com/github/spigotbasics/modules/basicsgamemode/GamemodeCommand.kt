@@ -6,7 +6,6 @@ import co.aikar.commands.annotation.CommandPermission
 import co.aikar.commands.annotation.Description
 import co.aikar.commands.annotation.Subcommand
 import co.aikar.commands.bukkit.contexts.OnlinePlayer
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -93,9 +92,14 @@ class GamemodeCommand(val module: BasicsGamemodeModule) : BaseCommand() {
         player.gameMode = gameMode
         val message = if(sender == player.player) module.msgChangedSelf else module.msgChangedOthers
 
-        message.tags(Placeholder.component("new-gamemode", module.getGameModeName(gameMode)))
+        message.tags("new-gamemode" to module.getGameModeName(gameMode))
             .concerns(player)
 
-        module.audience.sender(sender).sendMessage(message.toComponent())
+//        message.tags(Placeholder.component("new-gamemode", module.getGameModeName(gameMode)))
+//            .concerns(player)
+
+        message.sendToSender(sender)
+
+       // module.audience.sender(sender).sendMessage(message.toComponent())
     }
 }

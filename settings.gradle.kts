@@ -16,6 +16,7 @@ rootProject.name = "basics"
 
 // Core Module, includes the actual Plugin and interfaces for modules
 include("core")
+include("pipe")
 include("plugin")
 include("modules")
 
