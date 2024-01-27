@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.joinmessages
 
 import com.github.spigotbasics.core.config.SavedConfig
-import com.github.spigotbasics.pipe.JoinQuitEventPipe
+import com.github.spigotbasics.pipe.Pipe
 import io.papermc.lib.PaperLib
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -19,12 +19,12 @@ class JoinLeaveListener(
 
     fun joinMessage(event: PlayerJoinEvent) {
         val msg = joinMsg.concerns(event.player)
-        JoinQuitEventPipe.setJoinMessage(isPaper, event, msg.toLegacy(), msg.serialize())
+        Pipe.setJoinMessage(isPaper, event, msg.toLegacy(), msg.serialize())
     }
 
     fun leaveMessage(event: PlayerQuitEvent) {
         val msg = quitMsg.concerns(event.player)
-        JoinQuitEventPipe.setQuitMessage(isPaper, event, msg.toLegacy(), msg.serialize())
+        Pipe.setQuitMessage(isPaper, event, msg.toLegacy(), msg.serialize())
     }
 
 }

@@ -3,6 +3,8 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.Either
 import com.github.spigotbasics.core.extensions.genitiveSuffix
+import com.github.spigotbasics.pipe.Pipe
+import io.papermc.lib.PaperLib
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
@@ -11,6 +13,8 @@ import java.util.logging.Level
 
 // TODO: Add PlaceholderAPI <papi:...> tag
 class TagResolverFactory {
+
+    private val isPaper = PaperLib.isPaper()
 
     private val logger = BasicsLoggerFactory.getCoreLogger(TagResolverFactory::class)
 
@@ -33,12 +37,11 @@ class TagResolverFactory {
     }
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
-//        val result = PlayerGetDisplayNameAccess.get(player)
-//        return when(result) {
-//            is Either.Left -> Placeholder.component("player-display-name", result.value)
-//            is Either.Right -> Placeholder.parsed("player-display-name", result.value)
-//        }
-        return Placeholder.unparsed("player-display-name", "[TODO: player-display-name Placeholder]")
+        return if(isPaper) {
+            Placeholder.parsed("player-display-name", Pipe.getDisplayNameMini(player))
+        } else {
+            Placeholder.unparsed("player-display-name", Pipe.getDisplayNameLegacy(player))
+        }
     }
 
     fun getTagResolvers(player: Player? = null): List<TagResolver> {
