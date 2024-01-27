@@ -15,8 +15,7 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     private val messages
         get() = config.getStringList("messages")
 
-    private val localRandom
-        get() = ThreadLocalRandom.current()
+    private val localRandom = ThreadLocalRandom.current()
 
     private var msgIndex = 0
     private var announcerTaskId = 0
