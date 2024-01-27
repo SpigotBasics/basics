@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import java.util.logging.Level
 
 /**
- * Represents a Minecraft version
+ * Represents a comparable Minecraft version
  *
  * @property major Major version - 1 for 1.20.4
  * @property minor Minor version - 20 for 1.20.4
@@ -14,7 +14,7 @@ data class MinecraftVersion(
     val major: Int,
     val minor: Int,
     val patch: Int = 0
-) {
+) : Comparable<MinecraftVersion> {
     companion object {
 
         val `1_20_4` = MinecraftVersion(1, 20, 4)
@@ -22,6 +22,13 @@ data class MinecraftVersion(
 
         private val logger = BasicsLoggerFactory.getCoreLogger(MinecraftVersion::class)
 
+        /**
+         * Gets a MinecraftVersion from the output of [org.bukkit.Bukkit.getBukkitVersion] or the version string of the
+         * bukkit artifact, e.g. "1.20.4-R0.1-SNAPSHOT"
+         *
+         * @param version Bukkit Version, e.g. "1.20.4-R0.1-SNAPSHOT"
+         * @return MinecraftVersion, or [UNKNOWN] if it couldn't be parsed
+         */
         fun fromBukkitVersion(version: String): MinecraftVersion {
             try {
                 val split = version.split("-")[0].split(".")
@@ -43,7 +50,7 @@ data class MinecraftVersion(
         }
     }
 
-    operator fun compareTo(other: MinecraftVersion): Int {
+    override operator fun compareTo(other: MinecraftVersion): Int {
         if (major > other.major) {
             return 1
         } else if (major < other.major) {
