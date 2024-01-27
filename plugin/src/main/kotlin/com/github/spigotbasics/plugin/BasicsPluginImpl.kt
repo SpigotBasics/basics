@@ -2,8 +2,8 @@ package com.github.spigotbasics.plugin
 
 import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
-import com.github.spigotbasics.core.RUSTY_SPIGOT_THRESHOLD_FILE_NAME
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
@@ -21,8 +21,8 @@ import java.io.File
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val rustySpigotThreshold =
-        MinecraftVersion.fromBukkitVersion(getTextResource(RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
-            ?: error("Missing $RUSTY_SPIGOT_THRESHOLD_FILE_NAME resource file"))
+        MinecraftVersion.fromBukkitVersion(getTextResource(Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
+            ?: error("Missing ${Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME} resource file"))
 
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, moduleFolder)
@@ -113,7 +113,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     private fun reloadCustomTags() {
-        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig("custom-tags.yml", "custom-tags.yml", TagResolverFactory::class.java))
+        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig(Constants.CUSTOM_TAGS_FILE_NAME, Constants.CUSTOM_TAGS_FILE_NAME, TagResolverFactory::class.java))
     }
 
     override fun reloadCoreConfig() {
