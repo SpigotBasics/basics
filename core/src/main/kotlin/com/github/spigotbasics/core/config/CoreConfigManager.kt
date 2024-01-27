@@ -3,7 +3,8 @@ package com.github.spigotbasics.core.config
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.SafeResourceGetter
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.MessageFactory
+import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.InvalidModuleException
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
@@ -13,16 +14,16 @@ import java.util.logging.Level
 
 class CoreConfigManager(
     private val plugin: BasicsPlugin,
-    private val tagResolverFactory: TagResolverFactory
+    private val messageFactory: MessageFactory
     ) {
 
     companion object {
         private val logger = BasicsLoggerFactory.getCoreLogger(CoreConfigManager::class)
     }
 
-    private fun <T : SavedConfig> createInstance(clazz: Class<T>, file: File, tagResolverFactory: TagResolverFactory): T {
+    private fun <T : SavedConfig> createInstance(clazz: Class<T>, file: File, messageFactory: MessageFactory): T {
         try {
-            return clazz.getConstructor(File::class.java, TagResolverFactory::class.java).newInstance(file, tagResolverFactory)
+            return clazz.getConstructor(File::class.java, MessageFactory::class.java).newInstance(file, messageFactory)
         } catch (e: Exception) {
             throw RuntimeException("Failed to create config instance of class ${clazz.name}", e)
         }
@@ -36,7 +37,7 @@ class CoreConfigManager(
         val configName = fileName
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = createInstance(configurationClass, file, tagResolverFactory)
+        val configuration = createInstance(configurationClass, file, messageFactory)
 
         try {
             // If a default config exists, set it as defaults

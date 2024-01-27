@@ -5,6 +5,13 @@ plugins {
     `java-library`
 }
 
+repositories {
+    maven {
+        url = uri("https://papermc.io/repo/repository/maven-public/")
+        name = "papermc"
+    }
+}
+
 dependencies {
     compileOnly(libs().paper.api)
 }

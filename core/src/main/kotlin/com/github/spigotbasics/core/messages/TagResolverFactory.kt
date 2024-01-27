@@ -1,9 +1,8 @@
-package com.github.spigotbasics.core.minimessage
+package com.github.spigotbasics.core.messages
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.Either
 import com.github.spigotbasics.core.extensions.genitiveSuffix
-import com.github.spigotbasics.core.facade.entity.PlayerGetDisplayNameAccess
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
@@ -34,11 +33,12 @@ class TagResolverFactory {
     }
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
-        val result = PlayerGetDisplayNameAccess.get(player)
-        return when(result) {
-            is Either.Left -> Placeholder.component("player-display-name", result.value)
-            is Either.Right -> Placeholder.parsed("player-display-name", result.value)
-        }
+//        val result = PlayerGetDisplayNameAccess.get(player)
+//        return when(result) {
+//            is Either.Left -> Placeholder.component("player-display-name", result.value)
+//            is Either.Right -> Placeholder.parsed("player-display-name", result.value)
+//        }
+        return Placeholder.unparsed("player-display-name", "[TODO: player-display-name Placeholder]")
     }
 
     fun getTagResolvers(player: Player? = null): List<TagResolver> {

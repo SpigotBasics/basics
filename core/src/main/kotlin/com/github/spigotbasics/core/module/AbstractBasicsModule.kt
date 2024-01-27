@@ -61,9 +61,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override val scheduler = BasicsScheduler(plugin)
 
     /**
-     * Adventure Audience
+     * Message Factory
      */
-    override val audience = plugin.audience
+    override val messageFactory = plugin.messageFactory
 
     override val tagResolverFactory
         get() = plugin.tagResolverFactory

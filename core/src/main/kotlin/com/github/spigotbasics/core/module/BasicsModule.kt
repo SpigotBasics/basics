@@ -7,7 +7,8 @@ import com.github.spigotbasics.core.scheduler.BasicsScheduler
 
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.MessageFactory
+import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import java.io.File
@@ -46,9 +47,9 @@ interface BasicsModule {
     val scheduler: BasicsScheduler
 
     /**
-     * Adventure Audience
+     * Message Factory
      */
-    val audience: BukkitAudiences
+    val messageFactory: MessageFactory
 
     /**
      * Commands Manager

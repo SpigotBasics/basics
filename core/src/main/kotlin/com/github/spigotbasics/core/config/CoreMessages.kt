@@ -1,9 +1,10 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.Message
+import com.github.spigotbasics.core.messages.MessageFactory
 import java.io.File
 
-class CoreMessages(file: File, tagResolverFactory: TagResolverFactory): SavedConfig(file, tagResolverFactory) {
+class CoreMessages(file: File, messageFactory: MessageFactory): SavedConfig(file, messageFactory) {
 
     fun noPermission(permission: String): Message {
         return getMessage("no-permission").tags("permission" to permission)
