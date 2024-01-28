@@ -1,14 +1,17 @@
 package com.github.spigotbasics.modules.basicschatformat
 
+import com.github.spigotbasics.pipe.SerializedMiniMessage
+import com.github.spigotbasics.pipe.paper.NativeComponentConverter
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 class PaperChatEventListener(private val module: BasicsChatFormatModule) : Listener {
+
+    private val mini = MiniMessage.miniMessage()
 
     @EventHandler
     fun onPaperChat(event: AsyncChatEvent) {
@@ -19,10 +22,11 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
     }
 
     fun formatMessage(player: Player, message: Component): Component {
-        val originalFormatters = module.tagResolverFactory.getTagResolvers(player)
-        val msgFormatter = Placeholder.component("message", message)
-        val combinedFormatters = originalFormatters + msgFormatter
-        return MiniMessage.miniMessage().deserialize(module.formatAsStr, *combinedFormatters.toTypedArray())
+        val serialized = module.format.concerns(player)
+            .tags("message" to SerializedMiniMessage(mini.serialize(message)))
+            .serialize()
+        val component = NativeComponentConverter.toNativeComponent(serialized)
+        return component
     }
 
 }

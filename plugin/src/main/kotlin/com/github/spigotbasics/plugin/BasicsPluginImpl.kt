@@ -1,10 +1,10 @@
 package com.github.spigotbasics.plugin
 
-import co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.CommandCompletionIDs
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
@@ -13,9 +13,13 @@ import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.libraries.co.aikar.commands.PaperCommandManager
+import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
+import com.github.spigotbasics.pipe.SpigotPaperFacade
+import com.github.spigotbasics.pipe.paper.PaperFacade
+import com.github.spigotbasics.pipe.spigot.SpigotFacade
 import com.github.spigotbasics.plugin.commands.BasicsCommand
 import com.github.spigotbasics.plugin.commands.BasicsDebugCommand
-import com.github.spigotbasics.plugin.commands.CommandCompletions
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -27,9 +31,15 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     override val audienceProvider: AudienceProvider = AudienceProvider(this)
 
+    override val facade: SpigotPaperFacade = if (PaperLib.isPaper()) {
+        PaperFacade()
+    } else {
+        SpigotFacade()
+    }
+
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, moduleFolder)
-    override val tagResolverFactory: TagResolverFactory = TagResolverFactory()
+    override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
     override val messageFactory: MessageFactory = MessageFactory(audienceProvider, tagResolverFactory)
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
     override val messages: CoreMessages =
@@ -71,6 +81,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         }
 
         setupAcf()
+
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
 
         reloadCustomTags()
@@ -79,36 +90,32 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     private fun setupAcf() {
         commandManager.enableUnstableAPI("help"); // Allow using generateCommandHelp()
         registerCommandCompletions()
-        registerCommands()
+        commandManager.registerCommand(BasicsCommand(this))
+        commandManager.registerCommand(BasicsDebugCommand(facade))
     }
 
     private fun registerCommandCompletions() {
         val completions = commandManager.commandCompletions
-        completions.registerAsyncCompletion(CommandCompletions.LOADED_MODULES) {
+        completions.registerAsyncCompletion(CommandCompletionIDs.LOADED_MODULES) {
             moduleManager.loadedModules.map { it.info.name }
         }
 
-        completions.registerAsyncCompletion(CommandCompletions.ENABLED_MODULES) {
+        completions.registerAsyncCompletion(CommandCompletionIDs.ENABLED_MODULES) {
             moduleManager.enabledModules.map { it.info.name }
         }
 
-        completions.registerAsyncCompletion(CommandCompletions.DISABLED_MODULES) {
+        completions.registerAsyncCompletion(CommandCompletionIDs.DISABLED_MODULES) {
             moduleManager.disabledModules.map { it.info.name }
         }
 
-        completions.registerAsyncCompletion(CommandCompletions.ALL_MODULE_FILES) {
+        completions.registerAsyncCompletion(CommandCompletionIDs.ALL_MODULE_FILES) {
             moduleFolder.listFiles(ModuleJarFileFilter)?.map { it.name } ?: listOf()
         }
 
-        completions.registerAsyncCompletion(CommandCompletions.ENABLED_MODULES_AND_CORE) {
+        completions.registerAsyncCompletion(CommandCompletionIDs.ENABLED_MODULES_AND_CORE) {
             listOf("core") + moduleManager.enabledModules.map { it.info.name }
         }
 
-    }
-
-    private fun registerCommands() {
-        commandManager.registerCommand(BasicsCommand(this));
-        commandManager.registerCommand(BasicsDebugCommand(this))
     }
 
     override fun createCommandManager(): BasicsCommandManager {
@@ -116,7 +123,13 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     private fun reloadCustomTags() {
-        tagResolverFactory.loadCustomTags(coreConfigManager.getConfig(Constants.CUSTOM_TAGS_FILE_NAME, Constants.CUSTOM_TAGS_FILE_NAME, TagResolverFactory::class.java))
+        tagResolverFactory.loadCustomTags(
+            coreConfigManager.getConfig(
+                Constants.CUSTOM_TAGS_FILE_NAME,
+                Constants.CUSTOM_TAGS_FILE_NAME,
+                TagResolverFactory::class.java
+            )
+        )
     }
 
     override fun reloadCoreConfig() {

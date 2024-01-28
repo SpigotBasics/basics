@@ -3,10 +3,12 @@ package com.github.spigotbasics.core.command
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.PaperCommandManager
 
-class BasicsCommandManager(private val manager: PaperCommandManager) {
+class BasicsCommandManager(private val manager: PaperCommandManager/*plugin: BasicsPlugin*/) {
 
     private val commands: MutableList<BaseCommand> = ArrayList()
+    //private val manager: PaperCommandManager = PaperCommandManager(plugin)
 //    private val rootCommands: Field = CommandManager::class.java.getDeclaredField("rootCommands")
+
 
     fun registerCommand(command: BaseCommand) {
         commands.add(command)

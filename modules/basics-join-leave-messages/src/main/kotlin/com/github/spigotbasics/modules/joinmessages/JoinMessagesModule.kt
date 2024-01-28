@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 
 class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context), Listener {
     override fun onEnable() {
-        val listener = JoinLeaveListener(config)
+        val listener = JoinLeaveListener(plugin.facade, config)
 
         eventBus.subscribe(PlayerJoinEvent::class.java, listener::joinMessage)
         eventBus.subscribe(PlayerQuitEvent::class.java, listener::leaveMessage)

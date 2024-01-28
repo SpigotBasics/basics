@@ -14,10 +14,21 @@ plugins {
 
 rootProject.name = "basics"
 
+// Data classes used in multiple modules
+include("common")
+
 // Core Module, includes the actual Plugin and interfaces for modules
 include("core")
-include("pipe")
+
+// Facades for Bukkit and Paper
+include("pipe:facade")
+include("pipe:spigot")
+include("pipe:paper")
+
+// Actual JavaPlugin
 include("plugin")
+
+// Parent for all modules
 include("modules")
 
 // Import subprojects from modules folder

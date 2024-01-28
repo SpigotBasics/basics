@@ -1,0 +1,1 @@
+const val SHADED: String = "com.github.spigotbasics.libraries"

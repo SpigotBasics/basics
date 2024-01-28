@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.messages
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import com.github.spigotbasics.pipe.SerializedMiniMessage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -87,6 +87,9 @@ data class Message(
         if(value is Message) {
             return Placeholder.component(key, value.toComponent())
         }
+        if(value is SerializedMiniMessage) {
+            return Placeholder.component(key, miniMessage.deserialize(value.value))
+        }
         error("Unsupported Placeholder value type: ${value::class}")
     }
 
@@ -126,8 +129,8 @@ data class Message(
             .build()
     }
 
-    fun serialize(): String {
-        return miniMessage.serialize(toComponent())
+    fun serialize(): SerializedMiniMessage {
+        return SerializedMiniMessage(miniMessage.serialize(toComponent()))
     }
 
     fun toLegacy(): String {
