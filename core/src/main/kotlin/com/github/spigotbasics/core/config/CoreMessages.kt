@@ -10,6 +10,10 @@ class CoreMessages(file: File, messageFactory: MessageFactory): SavedConfig(file
         return getMessage("no-permission").tags("permission" to permission)
     }
 
+    fun noPermission(): Message {
+        return getMessage("no-permission")
+    }
+
     val commandNotFromConsole: Message
         get() = getMessage("command-not-from-console")
 
