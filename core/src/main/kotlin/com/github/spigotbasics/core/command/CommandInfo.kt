@@ -1,8 +1,6 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.messages.Message
-import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
 // TODO: Executor does not belong into CommandInfo

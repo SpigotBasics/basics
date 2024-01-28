@@ -1,8 +1,7 @@
 package com.github.spigotbasics.core
 
-import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
-import com.github.spigotbasics.core.config.CoreMessages
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
