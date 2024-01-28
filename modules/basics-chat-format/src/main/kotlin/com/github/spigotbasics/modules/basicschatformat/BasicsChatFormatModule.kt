@@ -32,7 +32,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     fun changeChatFormatSpigot(event: AsyncPlayerChatEvent) {
         event.format = format
             .concerns(event.player)
-            .tags("message" to event.message)
+            .tagUnparsed("message", event.message) // TODO: To allow MiniMessage in chat, this should be parsed.
             .toLegacy().escapeFormat()
     }
 
