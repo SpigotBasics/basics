@@ -1,5 +1,7 @@
 package com.github.spigotbasics.plugin
 
+import com.github.spigotbasics.common.data.DataPlatform
+import com.github.spigotbasics.common.data.DataProvider
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
@@ -46,6 +48,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+    var dataProvider: DataProvider? = null
     override fun getLogger() = logger
 
     private val commandManager: PaperCommandManager by lazy {
@@ -68,6 +71,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             logger.info("Creating modules folder at ${moduleFolder.absolutePath}")
             moduleFolder.mkdirs()
         }
+
+        val dbConfig = coreConfigManager.getConfig("database.yml", "database.yml", BasicsPluginImpl::class.java)
+        dataProvider = DataPlatform.valueOf(dbConfig.getString("type")?.uppercase() ?: throw IllegalStateException("must specify database type")).creator().invoke()
     }
 
     override fun onEnable() {
@@ -85,6 +91,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
 
         reloadCustomTags()
+    }
+
+    override fun onDisable() {
+        dataProvider?.disconnect()
     }
 
     private fun setupAcf() {

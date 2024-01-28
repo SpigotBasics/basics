@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core
 
+import com.github.spigotbasics.common.data.DataProvider
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
@@ -14,7 +15,7 @@ import java.io.File
 /**
  * Represents the Basics Bukkit Plugin instance.
  */
-interface BasicsPlugin: Plugin {
+interface BasicsPlugin : Plugin {
 
     val audienceProvider: AudienceProvider
 
@@ -56,4 +57,9 @@ interface BasicsPlugin: Plugin {
      * Reloads the core configuration settings of the plugin.
      */
     fun reloadCoreConfig()
+
+    /**
+     * Obtains the data provider
+     */
+    fun dataProvider(): DataProvider
 }
