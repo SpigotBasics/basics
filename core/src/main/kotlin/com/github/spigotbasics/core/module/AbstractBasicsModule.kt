@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import java.util.logging.Logger
 
@@ -65,6 +66,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override val tagResolverFactory
         get() = plugin.tagResolverFactory
 
+    override val permissionManager = BasicsPermissionManager(logger)
+
     fun getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*> = javaClass*/): SavedConfig = getConfig(configName/*, clazzToGetFrom*/, SavedConfig::class.java)
 
     fun <T: SavedConfig> getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*>*/, configurationClass: Class<T>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), javaClass, configurationClass)
@@ -99,6 +102,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         scheduler.killAll()
         eventBus.dispose()
         commandManager.unregisterAll()
+        permissionManager.unregisterAll()
         isEnabled = false
     }
 

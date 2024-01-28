@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.extensions
 
+import com.github.spigotbasics.core.util.DurationParser
 import org.bukkit.configuration.MemorySection
 
 fun MemorySection.getAsNewLineSeparatedString(key: String): String {
@@ -8,4 +9,8 @@ fun MemorySection.getAsNewLineSeparatedString(key: String): String {
         return value.joinToString("\n")
     }
     return value.toString()
+}
+
+fun MemorySection.getDurationAsTicks(key: String, defaultValue: Long): Long {
+    return DurationParser.parseDurationToTicks(getString(key) ?: return defaultValue)
 }

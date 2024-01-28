@@ -9,6 +9,12 @@ plugins {
     kotlin("jvm")
 }
 
+dependencies {
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
 repositories {
     mavenCentral()
 
@@ -63,4 +69,8 @@ tasks.compileKotlin {
     kotlinOptions {
         javaParameters = true
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

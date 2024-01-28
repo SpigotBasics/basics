@@ -10,7 +10,8 @@ data class BasicsCommandContext(
     val command: BasicsCommand,
     val label: String,
     val args: MutableList<String>,
-    val location: Location?
+    val location: Location?,
+    val flags: MutableList<String> = mutableListOf(),
 ) {
 
 }

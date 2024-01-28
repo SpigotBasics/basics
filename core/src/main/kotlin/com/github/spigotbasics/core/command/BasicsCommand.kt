@@ -12,20 +12,30 @@ class BasicsCommand(
     Command(info.name) {
 
         init {
-            permission = info.permission
+            val permString = info.permission.name
+            permission = permString
             description = info.description ?: ""
             usage = info.usage ?: "/$name"
-            permission = info.permission
+            permissionMessage = info.permissionMessage.tagUnparsed("permission", permString).toLegacy()
         }
 
-    override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>?): Boolean {
+    override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>?): Boolean {
         try {
+
+            val args = origArgs?.toMutableList() ?: mutableListOf()
+            val flags = mutableListOf<String>()
+
+            // Parse "flags" (arguments that start with --)
+            while (args.isNotEmpty() && args[0].startsWith("--")) {
+                flags.add(args.removeAt(0))
+            }
 
             val context = BasicsCommandContext(
                 sender = sender,
                 command = this,
                 label = commandLabel,
-                args = args?.toMutableList() ?: mutableListOf(),
+                args = args,
+                flags = flags,
                 location = if (sender is Entity) sender.location else null
             )
 
@@ -55,10 +65,7 @@ class BasicsCommand(
     }
 
     override fun getPermission(): String {
-        return info.permission
+        return info.permission.name
     }
 
-    override fun getPermissionMessage(): String {
-        return info.permissionMessage.tagUnparsed("permission", permission).toLegacy()
-    }
 }
