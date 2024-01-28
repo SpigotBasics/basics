@@ -1,21 +1,38 @@
 package com.github.spigotbasics.modules.basicsminimessage
 
-import com.github.spigotbasics.core.command.BasicsCommand
-import com.github.spigotbasics.core.command.CommandInfo
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import org.bukkit.entity.Player
 
 class BasicsMinimessageModule(val context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
     override fun onEnable() {
-        val executor = MiniMessageExecutor(messageFactory)
-        val commandInfo = CommandInfo.Builder(context.plugin.messages).name("broadcast")
-            .permission("basics.command.broadcast")
+
+        // Option 1: Inline the execution logic
+        createCommand()
+            .name("broadcast1")
+            .permission("basics.broadcast")
+            .description("Broadcasts a message to all players")
             .usage("/broadcast <message>")
-            .executor(executor)
-            .build()
-        val command = BasicsCommand(commandInfo)
-        commandManager.registerCommand(command)
+            .executor { context ->
+
+                val text = context.args.joinToString(" ")
+                var message = messageFactory.createPlainMessage(text)
+
+                message.sendToAllPlayers()
+                true
+
+            }
+            .register()
+
+        // Option 2 - separate executor class
+        createCommand()
+            .name("broadcast2")
+            .permission("basics.broadcast")
+            .description("Broadcasts a message to all players")
+            .usage("/broadcast [--parse] <message>")
+            .executor(MiniMessageExecutor(this))
+            .register()
     }
     
 }
