@@ -1,10 +1,10 @@
 package com.github.spigotbasics.core.messages
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.Either
+import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.extensions.genitiveSuffix
-import com.github.spigotbasics.pipe.Pipe
-import io.papermc.lib.PaperLib
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.pipe.SpigotPaperFacade
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
@@ -12,15 +12,19 @@ import org.bukkit.entity.Player
 import java.util.logging.Level
 
 // TODO: Add PlaceholderAPI <papi:...> tag
-class TagResolverFactory {
+class TagResolverFactory(private val facade: SpigotPaperFacade) {
 
-    private val isPaper = PaperLib.isPaper()
+    //private val isPaper = PaperLib.isPaper()
 
     private val logger = BasicsLoggerFactory.getCoreLogger(TagResolverFactory::class)
 
     private var customTagsMap: Map<String, String> = emptyMap()
-    private var customParsedTagResolvers: List<TagResolver> = listOf() // = customTagsMap.map { Placeholder.parsed(it.key, it.value) }
-    private var defaultNonPlayerTagResolverList: List<TagResolver> = listOf(); // = createDefaultNonPlayerTagResolverList()
+    private var customParsedTagResolvers: List<TagResolver> =
+        listOf() // = customTagsMap.map { Placeholder.parsed(it.key, it.value) }
+    private var defaultNonPlayerTagResolverList: List<TagResolver> =
+        listOf(); // = createDefaultNonPlayerTagResolverList()
+
+    private val mini = MiniMessage.miniMessage()
 
     private fun createDefaultNonPlayerTagResolverList(): List<TagResolver> {
         return listOf( // TODO: Add static placeholders
@@ -37,10 +41,13 @@ class TagResolverFactory {
     }
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
-        return if(isPaper) {
-            Placeholder.parsed("player-display-name", Pipe.getDisplayNameMini(player))
+        val result = facade.getDisplayName(player)
+        return if (result is Either.Right) {
+            Placeholder.component("player-display-name", mini.deserialize(result.value.value))
+        } else if (result is Either.Left) {
+            Placeholder.unparsed("player-display-name", result.value)
         } else {
-            Placeholder.unparsed("player-display-name", Pipe.getDisplayNameLegacy(player))
+            error("Unknown result type: ${result::class.qualifiedName}")
         }
     }
 
@@ -48,7 +55,7 @@ class TagResolverFactory {
         val list = mutableListOf<TagResolver>()
         list.addAll(defaultNonPlayerTagResolverList) // TODO:
         list.addAll(customParsedTagResolvers) // TODO: Cache these two
-        if(player != null) {
+        if (player != null) {
             list.addAll(createDefaultPlayerTagResolverList(player))
         }
         return list

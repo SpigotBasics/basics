@@ -7,6 +7,7 @@ import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.pipe.SpigotPaperFacade
 import org.bukkit.plugin.Plugin
 import java.io.File
 
@@ -16,6 +17,8 @@ import java.io.File
 interface BasicsPlugin: Plugin {
 
     val audienceProvider: AudienceProvider
+
+    val facade: SpigotPaperFacade
 
     /**
      * The folder where the plugin's modules are stored.
@@ -47,11 +50,6 @@ interface BasicsPlugin: Plugin {
      */
     val messages: CoreMessages
 
-    /**
-     * Creates and returns an instance of [BasicsCommandManager].
-     *
-     * @return The created instance of [BasicsCommandManager].
-     */
     fun createCommandManager(): BasicsCommandManager
 
     /**

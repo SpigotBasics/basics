@@ -1,12 +1,13 @@
 package com.github.spigotbasics.modules.joinmessages
 
 import com.github.spigotbasics.core.config.SavedConfig
-import com.github.spigotbasics.pipe.Pipe
-import io.papermc.lib.PaperLib
+import com.github.spigotbasics.pipe.SpigotPaperFacade
+import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class JoinLeaveListener(
+    private val facade: SpigotPaperFacade,
     private val config: SavedConfig,
 ) {
 
@@ -19,12 +20,12 @@ class JoinLeaveListener(
 
     fun joinMessage(event: PlayerJoinEvent) {
         val msg = joinMsg.concerns(event.player)
-        Pipe.setJoinMessage(isPaper, event, msg.toLegacy(), msg.serialize())
+        facade.setJoinMessage(event, msg.toLegacy(), msg.serialize())
     }
 
     fun leaveMessage(event: PlayerQuitEvent) {
         val msg = quitMsg.concerns(event.player)
-        Pipe.setQuitMessage(isPaper, event, msg.toLegacy(), msg.serialize())
+        facade.setQuitMessage(event, msg.toLegacy(), msg.serialize())
     }
 
 }

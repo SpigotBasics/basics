@@ -11,25 +11,18 @@ plugins {
     id("basics.dependency.placeholderapi")
     id("org.jetbrains.dokka") version "1.9.10"
     id("com.github.johnrengelman.shadow")
-    //libs.plugins.dokka // TODO: Fix this not working because of missing import
 }
 
 dependencies {
-//    api("net.kyori:adventure-api:4.14.0")
-//    api("net.kyori:adventure-platform-bukkit:4.3.1")
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
     implementation(libs.adventure.minimessage)
     implementation(libs.adventure.text.serializer.legacy)
-    api(project(":pipe"))
+    api(project(":common"))
+    api(project(":pipe:facade"))
     api(libs.paperlib)
 }
 
-tasks.withType(DokkaTask::class).configureEach {
-    dokkaSourceSets.configureEach {
-        //includeNonPublic.set(false)
-    }
-}
 
 tasks.processResources {
     filesMatching("rusty-spigot-threshold") {
@@ -38,9 +31,23 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    val shaded = "shaded"
     archiveClassifier = "shaded"
-    relocate("net.kyori", "$shaded.net.kyori")
+    for(path in listOf(
+        "net.kyori",
+        "co.aikar",
+        "io.papermc.lib",
+        "org.intellij",
+        "org.jetbrains"
+        ))
+//    relocate("net.kyori", "$SHADED.net.kyori")
+//    relocate("co.aikar", "$SHADED.co.aikar")
+//    relocate("io.papermc.lib", "$SHADED.io.papermc.lib")
+//    relocate("org.intellij", "$SHADED.org.intellij")
+//    relocate("org.jetbrains", "$SHADED.org.jetbrains")
+        relocate(path, "$SHADED.$path")
+
+    exclude("kotlin/**")
+
 
     //exclude("com/github/spigotbasics/pipe/JoinQuitEventPipe.class")
     //finalizedBy(tasks.getByName("shadowPipe"))

@@ -17,6 +17,7 @@ class ModuleLoader
 constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
 
     val path = file.absolutePath
+
     //val jarFile: JarFile
     val info: ModuleInfo
     val classLoader: ModuleJarClassLoader;
@@ -65,56 +66,62 @@ constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
         } catch (e: InvalidModuleException) {
             throw InvalidModuleException("Failed to create ModuleInfo for $MODULE_YML_FILE_NAME", e)
         }
-}
-
-@Throws(InvalidModuleException::class)
-fun getMainClass(): Class<out BasicsModule> {
-    val mainClassName = info.mainClass
-    val mainClass = try {
-        //Class.forName(mainClassName)
-        classLoader.loadClass(mainClassName)
-    } catch (e: ClassNotFoundException) {
-        throw InvalidModuleException("Main class $mainClassName not found", e)
-    } catch (e: ExceptionInInitializerError) {
-        throw InvalidModuleException("Failed to initialize main class $mainClassName", e)
-    } catch (e: LinkageError) {
-        throw InvalidModuleException("Failed to link main class $mainClassName", e)
-    }
-    if (!BasicsModule::class.java.isAssignableFrom(mainClass)) {
-        throw InvalidModuleException("Main class $mainClassName does not implement BasicsModule")
     }
 
-    return mainClass.asSubclass(BasicsModule::class.java)
-}
+    @Throws(InvalidModuleException::class)
+    fun getMainClass(): Class<out BasicsModule> {
+        val mainClassName = info.mainClass
+        val mainClass = try {
+            //Class.forName(mainClassName)
+            classLoader.loadClass(mainClassName)
+        } catch (e: ClassNotFoundException) {
+            throw InvalidModuleException("Main class $mainClassName not found", e)
+        } catch (e: ExceptionInInitializerError) {
+            throw InvalidModuleException("Failed to initialize main class $mainClassName", e)
+        } catch (e: LinkageError) {
+            throw InvalidModuleException("Failed to link main class $mainClassName", e)
+        }
+        if (!BasicsModule::class.java.isAssignableFrom(mainClass)) {
+            throw InvalidModuleException("Main class $mainClassName does not implement BasicsModule")
+        }
 
-@Throws(InvalidModuleException::class)
-fun createInstance(): BasicsModule {
-
-    val mainClassName = info.mainClass
-
-    val constructor = try {
-        bMainClass.getConstructor(ModuleInstantiationContext::class.java)
-    } catch (e: NoSuchMethodException) {
-        throw InvalidModuleException(
-            "Main class $mainClassName does not have a constructor with a single parameter of type ModuleInstantiationContext",
-            e
-        )
+        return mainClass.asSubclass(BasicsModule::class.java)
     }
 
-    val moduleInstantiationContext = try {
-        ModuleInstantiationContext(plugin = plugin, info = info, file = file, classLoader = classLoader, commandManager = plugin.createCommandManager())
-    } catch (e: Exception) {
-        throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)
-    }
+    @Throws(InvalidModuleException::class)
+    fun createInstance(): BasicsModule {
 
-    val moduleInstance = try {
-        constructor.newInstance(moduleInstantiationContext)
-    } catch (e: Exception) {
-        throw InvalidModuleException("Failed to instantiate main class $mainClassName", e)
-    }
+        val mainClassName = info.mainClass
 
-    return moduleInstance
-}
+        val constructor = try {
+            bMainClass.getConstructor(ModuleInstantiationContext::class.java)
+        } catch (e: NoSuchMethodException) {
+            throw InvalidModuleException(
+                "Main class $mainClassName does not have a constructor with a single parameter of type ModuleInstantiationContext",
+                e
+            )
+        }
+
+        val moduleInstantiationContext = try {
+            ModuleInstantiationContext(
+                plugin = plugin,
+                info = info,
+                file = file,
+                classLoader = classLoader,
+                commandManager = plugin.createCommandManager()
+            )
+        } catch (e: Exception) {
+            throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)
+        }
+
+        val moduleInstance = try {
+            constructor.newInstance(moduleInstantiationContext)
+        } catch (e: Exception) {
+            throw InvalidModuleException("Failed to instantiate main class $mainClassName", e)
+        }
+
+        return moduleInstance
+    }
 
     override fun close() {
         classLoader.close()
