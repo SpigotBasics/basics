@@ -1,0 +1,5 @@
+# Tags: <message>
+format-received: "<gray>[ <gold><player-dm></gold> » <gray>you</gray> ]</gray><reset> <#cdcdcd><message>"
+format-sent: "<gray>[ <gray>you</gray> » <gold><player-dm></gold> ]</gray><reset> <#cdcdcd><message>"
+format-self: "<gray>[ you » yourself ]</gray><reset> <#cdcdcd><message>"
+format-console: "<gray>[ <red>Console</red> » you ]</gray><reset> <#cdcdcd><message>"
