@@ -4,11 +4,12 @@ import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.command.CommandSender
+import org.bukkit.permissions.Permission
 
 class BasicsCommandBuilder(private val module: BasicsModule) {
 
     private var name: String? = null
-    private var permission: String? = null
+    private var permission: Permission? = null
     private var permissionMessage: Message = module.plugin.messages.noPermission()
     private var description: String? = null
     private var usage: String? = null
@@ -16,7 +17,7 @@ class BasicsCommandBuilder(private val module: BasicsModule) {
     private var executor: BasicsCommandExecutor? = null
 
     fun name(name: String) = apply { this.name = name }
-    fun permission(permission: String) = apply { this.permission = permission }
+    fun permission(permission: Permission) = apply { this.permission = permission }
     fun description(description: String) = apply { this.description = description }
     fun usage(usage: String) = apply { this.usage = usage }
     fun permissionMessage(permissionMessage: Message) = apply { this.permissionMessage = permissionMessage }

@@ -2,7 +2,10 @@
 # Some messages have additional available tags, which are listed for each message.
 
 # Tags: <permission-name>
-no-permission: "<red>You don't have permission to do that!</red> <gray>(Required permission: <permission>)</gray>"
+no-permission: "<hover:show_text:'<gray>Permission missing:</gray> <permission>'><red>You don't have permission to do that!</red></hover>"
+
+# Tags: <option>
+unknown-option: "<red>Unknown option: </red><color:#FF8888><option></color>"
 
 command-not-from-console: "<red>This command can't be run from console!</red>"
 must-specify-player-from-console: "<red>You must specify a player when running this command from console!</red>"
