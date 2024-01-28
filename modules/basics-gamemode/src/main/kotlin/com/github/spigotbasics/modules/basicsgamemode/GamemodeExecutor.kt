@@ -12,7 +12,7 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
         val sender = context.sender
         var target: Player
 
-        if(args.isEmpty()) {
+        if(args.isEmpty() || args.size > 2) {
             return false
         }
 
@@ -27,13 +27,10 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
         if(args.size == 1) {
             target = requirePlayerOrMustSpecifyPlayerFromConsole(sender)
         } else if(args.size == 2) {
+            requirePermission(sender, module.permOthers)
             target = requirePlayer(sender, args[1])
         } else {
             return false
-        }
-
-        if(target != sender) {
-            requirePermission(sender, module.permOthers)
         }
 
         target.gameMode = gameMode

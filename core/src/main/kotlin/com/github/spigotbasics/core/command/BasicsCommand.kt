@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.extensions.debug
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -22,6 +23,8 @@ class BasicsCommand(
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>?): Boolean {
         try {
 
+            debug("Executing command $name with label $commandLabel and args ${origArgs?.joinToString(", ")}")
+
             val args = origArgs?.toMutableList() ?: mutableListOf()
             val flags = mutableListOf<String>()
 
@@ -39,10 +42,20 @@ class BasicsCommand(
                 location = if (sender is Entity) sender.location else null
             )
 
-            return executor.execute(context)
+            val returned = executor.execute(context)
 
-        } catch (_: BasicsCommandException) {
-            // TODO: Print out when debug is enabled
+            if (!returned) {
+                debug("Command Executor returned false, printing usage now...")
+                sender.sendMessage("Usage: $usage") // TODO: Use messages instead of Strings
+                debug("And returning false now, too")
+                return false
+            }
+
+            debug("Command Executor returned true, returning true now")
+            return true
+
+        } catch (e: BasicsCommandException) {
+            debug("BasicsCommandException: ${e.message}")
             return true
         }
     }
