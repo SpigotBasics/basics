@@ -107,8 +107,7 @@ constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
                 plugin = plugin,
                 info = info,
                 file = file,
-                classLoader = classLoader,
-                commandManager = plugin.createCommandManager()
+                classLoader = classLoader
             )
         } catch (e: Exception) {
             throw InvalidModuleException("Failed to create ModuleInstantiationContext for main class $mainClassName", e)

@@ -22,7 +22,7 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
         get() = msgConfig.getMessage("repair-all-self")
 
     override fun onEnable() {
-        commandManager.registerCommand(RepairCommand(this))
+
     }
 
     override fun reloadConfig() {

@@ -18,8 +18,7 @@ data class ModuleInstantiationContext(
     val plugin: BasicsPlugin,
     val info: ModuleInfo,
     val file: File,
-    val classLoader: ModuleJarClassLoader,
-    val commandManager: BasicsCommandManager
+    val classLoader: ModuleJarClassLoader
 ) {
 
 }

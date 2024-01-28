@@ -95,7 +95,6 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     final override fun disable() {
         scheduler.killAll()
-        commandManager.unregisterAll()
         eventBus.dispose()
         isEnabled = false
     }
