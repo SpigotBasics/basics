@@ -47,7 +47,7 @@ class GamemodeCommand(val module: BasicsGamemodeModule) {
         player.gameMode = gameMode
         val message = if (sender == player.player) module.msgChangedSelf else module.msgChangedOthers
 
-        message.tags("new-gamemode" to module.getGameModeName(gameMode))
+        message.tags("new-gamemode" to module.getName(gameMode))
             .concerns(player)
 
         message.sendToSender(sender)
