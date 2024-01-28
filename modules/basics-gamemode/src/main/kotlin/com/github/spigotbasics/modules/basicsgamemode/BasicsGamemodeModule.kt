@@ -22,7 +22,6 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     }
 
     override fun onEnable() {
-        commandManager.registerCommand(GamemodeCommand(this))
     }
 
     fun getGameModeName(gameMode: GameMode): Message {

@@ -1,29 +1,19 @@
 package com.github.spigotbasics.modules.basicsmsg
 
-import com.github.spigotbasics.libraries.co.aikar.commands.BaseCommand
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandAlias
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandPermission
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.Default
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.Description
-import com.github.spigotbasics.libraries.co.aikar.commands.bukkit.contexts.OnlinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("msg|dm|pm|tell|whisper|w|message")
-@Description("Sends a private message to another player")
-@CommandPermission("basics.command.msg")
-class MsgCommand(private val module: BasicsMsgModule) : BaseCommand() {
+class MsgCommand(private val module: BasicsMsgModule) {
 
-    @Default
-    fun onMsg(sender: CommandSender, player: OnlinePlayer, message: String) {
+    fun onMsg(sender: CommandSender, player: Player, message: String) {
         if (sender is Player) {
             if (player.player == sender) {
                 player2self(sender, message)
             } else {
-                player2player(sender, player.player, message)
+                player2player(sender, player, message)
             }
         } else {
-            console2player(sender, player.player, message)
+            console2player(sender, player, message)
         }
     }
 

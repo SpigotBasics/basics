@@ -19,7 +19,7 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
         get() = config.getMessage("format-console")
 
     override fun onEnable() {
-        commandManager.registerCommand(MsgCommand(this))
+
     }
     
 }
