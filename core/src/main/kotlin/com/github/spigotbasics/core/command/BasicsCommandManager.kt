@@ -10,7 +10,16 @@ class BasicsCommandManager(private val manager: PaperCommandManager/*plugin: Bas
 //    private val rootCommands: Field = CommandManager::class.java.getDeclaredField("rootCommands")
 
 
-    fun registerCommand(command: BaseCommand) {
+    // Using Any as class, because otherwise IJ complains about relocation... even though compiling works.
+    fun registerCommand(command: Any) {
+        if(command is BaseCommand) {
+            registerCommand(command)
+        } else {
+            error("Class ${command::class.qualifiedName} does not extend BaseCommand")
+        }
+    }
+
+    private fun registerCommand(command: BaseCommand) {
         commands.add(command)
         manager.registerCommand(command)
     }
