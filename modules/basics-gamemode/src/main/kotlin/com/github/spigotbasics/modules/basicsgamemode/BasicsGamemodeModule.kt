@@ -1,10 +1,9 @@
 package com.github.spigotbasics.modules.basicsgamemode
 
 import com.github.spigotbasics.core.config.ConfigName
-import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import net.kyori.adventure.text.Component
 import org.bukkit.GameMode
 
 class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -12,10 +11,10 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     val msgConfig = getConfig(ConfigName.fromName("messages.yml"))
     val msgChangedOthers get() = msgConfig.getMessage("gamemode-changed-others")
     val msgChangedSelf get() = msgConfig.getMessage("gamemode-changed-self")
-    val nameSurvival get() = msgConfig.getMessage("survival").toComponent()
-    val nameCreative get() = msgConfig.getMessage("creative").toComponent()
-    val nameAdventure get() = msgConfig.getMessage("adventure").toComponent()
-    val nameSpectator get() = msgConfig.getMessage("spectator").toComponent()
+    val nameSurvival get() = msgConfig.getMessage("survival")
+    val nameCreative get() = msgConfig.getMessage("creative")
+    val nameAdventure get() = msgConfig.getMessage("adventure")
+    val nameSpectator get() = msgConfig.getMessage("spectator")
 
     override fun reloadConfig() {
         super.reloadConfig()
@@ -26,7 +25,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
         commandManager.registerCommand(GamemodeCommand(this))
     }
 
-    fun getGameModeName(gameMode: GameMode): Component {
+    fun getGameModeName(gameMode: GameMode): Message {
         return when(gameMode) {
             GameMode.SURVIVAL -> nameSurvival
             GameMode.CREATIVE -> nameCreative

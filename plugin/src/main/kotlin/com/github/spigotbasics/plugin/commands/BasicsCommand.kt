@@ -1,9 +1,9 @@
 package com.github.spigotbasics.plugin.commands
 
-import co.aikar.commands.ACFBukkitUtil.sendMsg
-import co.aikar.commands.BaseCommand
-import co.aikar.commands.CommandHelp
-import co.aikar.commands.annotation.*
+import com.github.spigotbasics.core.command.CommandCompletionIDs
+import com.github.spigotbasics.libraries.co.aikar.commands.BaseCommand
+import com.github.spigotbasics.libraries.co.aikar.commands.CommandHelp
+import com.github.spigotbasics.libraries.co.aikar.commands.annotation.*
 import com.github.spigotbasics.core.module.ModuleAlreadyLoadedException
 import com.github.spigotbasics.plugin.BasicsPluginImpl
 import org.bukkit.command.CommandSender
@@ -21,7 +21,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
 
     @Subcommand("reloadConfig")
     @CommandPermission("basics.reloadconfig")
-    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES_AND_CORE}")
+    @CommandCompletion("@${CommandCompletionIDs.ENABLED_MODULES_AND_CORE}")
     fun reloadConfig(sender: CommandSender, moduleName: String) {
 
         if(moduleName == "core") {
@@ -47,7 +47,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module enable")
-    @CommandCompletion("@${CommandCompletions.DISABLED_MODULES}")
+    @CommandCompletion("@${CommandCompletionIDs.DISABLED_MODULES}")
     @CommandPermission("basics.module.enable")
     fun enableModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
@@ -64,7 +64,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module disable")
-    @CommandCompletion("@${CommandCompletions.ENABLED_MODULES}")
+    @CommandCompletion("@${CommandCompletionIDs.ENABLED_MODULES}")
     @CommandPermission("basics.module.disable")
     fun disableModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
@@ -104,7 +104,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module info")
-    @CommandCompletion("@${CommandCompletions.LOADED_MODULES}")
+    @CommandCompletion("@${CommandCompletionIDs.LOADED_MODULES}")
     @CommandPermission("basics.module.info")
     fun moduleInfo(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
@@ -119,7 +119,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module unload")
-    @CommandCompletion("@${CommandCompletions.LOADED_MODULES}")
+    @CommandCompletion("@${CommandCompletionIDs.LOADED_MODULES}")
     @CommandPermission("basics.module.unload")
     fun unloadModule(sender: CommandSender, moduleName: String) {
         val module = plugin.moduleManager.getModule(moduleName)
@@ -136,7 +136,7 @@ class BasicsCommand(val plugin: BasicsPluginImpl) : BaseCommand() {
     }
 
     @Subcommand("module load")
-    @CommandCompletion("@${CommandCompletions.ALL_MODULE_FILES}")
+    @CommandCompletion("@${CommandCompletionIDs.ALL_MODULE_FILES}")
     @CommandPermission("basics.module.load")
     fun loadModule(sender: CommandSender, moduleFile: String) {
         val file = plugin.moduleFolder.resolve(moduleFile)

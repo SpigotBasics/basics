@@ -1,13 +1,10 @@
 package com.github.spigotbasics.modules.basicschatformat
 
-import com.github.spigotbasics.core.config.Message
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.extensions.getAsNewLineSeparatedString
-import com.github.spigotbasics.core.extensions.toLegacy
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import io.papermc.lib.PaperLib
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.AsyncPlayerChatEvent
 
@@ -33,11 +30,10 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     }
 
     fun changeChatFormatSpigot(event: AsyncPlayerChatEvent) {
-        //event.format = MiniMessage.miniMessage().deserialize()//format.concerns(event.player).toComponent().toLegacy().escapeFormat()
-        val originalFormatters = tagResolverFactory.getTagResolvers(event.player)
-        val msgFormatter = Placeholder.unparsed("message", event.message)
-        val combinedFormatters = originalFormatters + msgFormatter
-        event.format = MiniMessage.miniMessage().deserialize(formatAsStr, *combinedFormatters.toTypedArray()).toLegacy().escapeFormat()
+        event.format = format
+            .concerns(event.player)
+            .tags("message" to event.message)
+            .toLegacy().escapeFormat()
     }
 
 }
