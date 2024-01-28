@@ -4,7 +4,6 @@ import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.CommandCompletionIDs
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory

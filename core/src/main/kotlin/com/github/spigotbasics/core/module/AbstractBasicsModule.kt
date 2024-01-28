@@ -37,11 +37,6 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val plugin: BasicsPlugin = context.plugin
 
     /**
-     * Commands Manager
-     */
-    final override val commandManager: BasicsCommandManager = context.commandManager //context.plugin.createCommandManager()
-
-    /**
      * Event bus for registering events
      */
     final override val eventBus: BasicsEventBus = BasicsEventBus(context.plugin)
