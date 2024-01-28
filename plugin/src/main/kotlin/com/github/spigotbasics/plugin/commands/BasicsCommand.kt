@@ -1,6 +1,5 @@
 package com.github.spigotbasics.plugin.commands
 
-import com.github.spigotbasics.core.command.CommandCompletionIDs
 import com.github.spigotbasics.libraries.co.aikar.commands.BaseCommand
 import com.github.spigotbasics.libraries.co.aikar.commands.CommandHelp
 import com.github.spigotbasics.libraries.co.aikar.commands.annotation.*

@@ -50,8 +50,6 @@ interface BasicsPlugin: Plugin {
      */
     val messages: CoreMessages
 
-    fun createCommandManager(): BasicsCommandManager
-
     /**
      * Reloads the core configuration settings of the plugin.
      */
