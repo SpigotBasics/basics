@@ -1,9 +1,7 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
-import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
 class BasicsCommandBuilder(private val module: BasicsModule) {
