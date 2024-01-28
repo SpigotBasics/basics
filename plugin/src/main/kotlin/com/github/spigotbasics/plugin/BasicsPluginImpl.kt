@@ -3,22 +3,18 @@ package com.github.spigotbasics.plugin
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
-import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
-import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.manager.ModuleManager
-import com.github.spigotbasics.libraries.co.aikar.commands.PaperCommandManager
 import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
-import com.github.spigotbasics.plugin.commands.BasicsCommand
-import com.github.spigotbasics.plugin.commands.BasicsDebugCommand
+
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -46,10 +42,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     override fun getLogger() = logger
-
-    private val commandManager: PaperCommandManager by lazy {
-        PaperCommandManager(this)
-    }
 
     /**
      * Checks if this server is running a rusty version of Spigot.
@@ -79,46 +71,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             return
         }
 
-        setupAcf()
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
-
         reloadCustomTags()
-    }
-
-    private fun setupAcf() {
-        commandManager.enableUnstableAPI("help"); // Allow using generateCommandHelp()
-        registerCommandCompletions()
-        commandManager.registerCommand(BasicsCommand(this))
-        commandManager.registerCommand(BasicsDebugCommand(facade))
-    }
-
-    private fun registerCommandCompletions() {
-        val completions = commandManager.commandCompletions
-        completions.registerAsyncCompletion(CommandCompletionIDs.LOADED_MODULES) {
-            moduleManager.loadedModules.map { it.info.name }
-        }
-
-        completions.registerAsyncCompletion(CommandCompletionIDs.ENABLED_MODULES) {
-            moduleManager.enabledModules.map { it.info.name }
-        }
-
-        completions.registerAsyncCompletion(CommandCompletionIDs.DISABLED_MODULES) {
-            moduleManager.disabledModules.map { it.info.name }
-        }
-
-        completions.registerAsyncCompletion(CommandCompletionIDs.ALL_MODULE_FILES) {
-            moduleFolder.listFiles(ModuleJarFileFilter)?.map { it.name } ?: listOf()
-        }
-
-        completions.registerAsyncCompletion(CommandCompletionIDs.ENABLED_MODULES_AND_CORE) {
-            listOf("core") + moduleManager.enabledModules.map { it.info.name }
-        }
-
-    }
-
-    override fun createCommandManager(): BasicsCommandManager {
-        return BasicsCommandManager(commandManager)
     }
 
     private fun reloadCustomTags() {
