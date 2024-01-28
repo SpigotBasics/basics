@@ -3,9 +3,11 @@ package com.github.spigotbasics.core
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.AudienceProvider
+import com.github.spigotbasics.core.messages.MessageFactory
+import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import com.github.spigotbasics.pipe.SpigotPaperFacade
 import org.bukkit.plugin.Plugin
 import java.io.File
 
@@ -13,6 +15,10 @@ import java.io.File
  * Represents the Basics Bukkit Plugin instance.
  */
 interface BasicsPlugin: Plugin {
+
+    val audienceProvider: AudienceProvider
+
+    val facade: SpigotPaperFacade
 
     /**
      * The folder where the plugin's modules are stored.
@@ -25,14 +31,14 @@ interface BasicsPlugin: Plugin {
     val moduleManager: ModuleManager
 
     /**
-     * Adventure Audience factory
-     */
-    val audience: BukkitAudiences
-
-    /**
      * Factory for creating and getting tag resolvers for MiniMessage
      */
     val tagResolverFactory: TagResolverFactory
+
+    /**
+     * Message factory
+     */
+    val messageFactory: MessageFactory
 
     /**
      * Manager for handling configuration and message files
@@ -44,11 +50,6 @@ interface BasicsPlugin: Plugin {
      */
     val messages: CoreMessages
 
-    /**
-     * Creates and returns an instance of [BasicsCommandManager].
-     *
-     * @return The created instance of [BasicsCommandManager].
-     */
     fun createCommandManager(): BasicsCommandManager
 
     /**

@@ -1,11 +1,11 @@
 package com.github.spigotbasics.core.config
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.minimessage.TagResolverFactory
+import com.github.spigotbasics.core.messages.Message
+import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
-import java.io.Reader
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -24,7 +24,8 @@ open class SavedConfig internal constructor(
      * File backing this configuration.
      */
     val file: File,
-    val tagResolverFactory: TagResolverFactory
+    //val tagResolverFactory: TagResolverFactory
+    val messageFactory: MessageFactory
 ) : YamlConfiguration() {
 
     private val logger: Logger = BasicsLoggerFactory.getConfigLogger(file)
@@ -67,14 +68,16 @@ open class SavedConfig internal constructor(
      */
     fun getMessage(path: String): Message {
         if(isList(path)) {
-            return Message(tagResolverFactory = tagResolverFactory,
-                lines = getStringList(path))
+//            return Message(tagResolverFactory = tagResolverFactory,
+//                lines = getStringList(path))
+            return messageFactory.createMessage(getStringList(path))
         } else if (isString(path)) {
-            return Message(
-                tagResolverFactory = tagResolverFactory,
-                line = getString(path)!!)
+//            return Message(
+//                tagResolverFactory = tagResolverFactory,
+//                line = getString(path)!!)
+            return messageFactory.createMessage(getString(path)!!)
         } else {
-            return Message.DISABLED
+            return messageFactory.createMessage(emptyList())
         }
     }
 

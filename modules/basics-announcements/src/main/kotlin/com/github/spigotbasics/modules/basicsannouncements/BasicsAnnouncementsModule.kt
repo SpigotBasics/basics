@@ -2,7 +2,6 @@ package com.github.spigotbasics.modules.basicsannouncements
 
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import net.kyori.adventure.text.minimessage.MiniMessage
 import java.util.concurrent.ThreadLocalRandom
 
 class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -36,10 +35,12 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     }
 
     private fun broadcastAnnouncement() {
+        // TODO: Reimplement
         if (messages.isEmpty()) return
         if (pickRandom) msgIndex = localRandom.nextInt(messages.size)
         val message = messages[msgIndex]
-        audience.players().sendMessage(MiniMessage.miniMessage().deserialize(message, *tagResolverFactory.getTagResolvers().toTypedArray()))
+        messageFactory.createMessage(message).sendToAllPlayers()
+        //audience.players().sendMessage(MiniMessage.miniMessage().deserialize(message, *tagResolverFactory.getTagResolvers().toTypedArray()))
         msgIndex = (msgIndex + 1).mod(messages.size)
     }
 }

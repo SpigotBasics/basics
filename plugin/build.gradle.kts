@@ -7,7 +7,10 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":core", "shadow"))
+    implementation(project(":pipe:facade"))
+    implementation(project(":pipe:spigot"))
+    implementation(project(":pipe:paper"))
     implementation(kotlin("reflect"))
 }
 
@@ -31,6 +34,8 @@ tasks.shadowJar {
     archiveBaseName = "basics"
     archiveClassifier = "shaded"
     // Needs proper setup to not exclude unused API minimize() {}
+
+    //relocate("kotlin", "$SHADED.kotlin")
 }
 
 tasks.register("copyPluginToTestServer", Copy::class) {

@@ -1,4 +1,8 @@
-interval: 30
+interval: 60
 pick-random: false
 messages:
-  - <click:open_url:https://github.com/SpigotBasics/basics><rainbow>You're using Basics! Isn't that awesome?</rainbow></click>
+  - "<i><gradient:#00ff00:#00cc00>\"OMG YOU'RE USING BASICS???!!!\"</gradient></i> Basics makes players wet since 2024!"
+  - "<rainbow>Check out the Basics repo on <click:open_url:https://github.com/SpigotBasics/basics><hover:show_text:'Click to visit GitHub'><red>GitHub</red></hover>!</rainbow>"
+  - "\"With <bold>Basics</bold>, server management has never been this simple. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)"
+  - "<gradient:#ff0000:#cc0000>\"Basics is the best plugin ever!\"</gradient>\n- <gradient:#0000ff:#0000cc>mfnalex</gradient>"
+  - "<gray>(You can customize these messages in the basics-announcements module)</gray>"
