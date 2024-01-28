@@ -52,6 +52,11 @@ interface BasicsModule {
     val messageFactory: MessageFactory
 
     /**
+     * Command manager
+     */
+    val commandManager: BasicsCommandManager
+
+    /**
      * Event bus for registering events
      */
     val eventBus: BasicsEventBus

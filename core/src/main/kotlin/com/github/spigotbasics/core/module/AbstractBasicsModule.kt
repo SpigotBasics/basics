@@ -55,6 +55,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      */
     override val scheduler = BasicsScheduler(plugin)
 
+    override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(plugin.server.pluginManager))
+
     /**
      * Message Factory
      */
@@ -96,6 +98,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override fun disable() {
         scheduler.killAll()
         eventBus.dispose()
+        commandManager.unregisterAll()
         isEnabled = false
     }
 
