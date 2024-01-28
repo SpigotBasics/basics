@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.permission
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.Bukkit
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
@@ -17,8 +16,8 @@ class BasicsPermissionManager(val logger: Logger) {
 
     ): Permission {
 
-        if(permissions.any { it.name == permission }) {
-            logger.warning("Permission $permission already registered in this module")
+        if (permissions.any { it.name == permission }) {
+            error("Permission $permission already registered in this module")
         }
 
         val perm = Permission(
@@ -28,19 +27,22 @@ class BasicsPermissionManager(val logger: Logger) {
         )
 
         val existing = Bukkit.getPluginManager().getPermission(permission)
-        if(existing != null) {
-            if(existing.default != defaultValue) {
+
+        if (existing != null) {
+            if (existing.default != defaultValue) {
                 logger.warning("Permission $permission already registered with different default value")
+            }
+            if (existing.description != description) {
+                logger.warning("Permission $permission already registered with different description")
+            }
+            if (existing.children != perm.children) {
+                logger.warning("Permission $permission already registered with different children")
             }
             permissions.add(existing)
             return existing
         }
 
-        try {
-            Bukkit.getPluginManager().addPermission(perm)
-        } catch (e: IllegalArgumentException) {
-            logger.warning("Failed to register permission $permission: ${e.message}")
-        }
+        Bukkit.getPluginManager().addPermission(perm)
         permissions.add(perm)
         return perm
     }
@@ -51,4 +53,5 @@ class BasicsPermissionManager(val logger: Logger) {
         }
         permissions.clear()
     }
+
 }
