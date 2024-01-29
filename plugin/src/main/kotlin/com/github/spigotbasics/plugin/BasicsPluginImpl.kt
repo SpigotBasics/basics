@@ -91,4 +91,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         messages.reload()
     }
 
+    override fun onDisable() {
+        moduleManager.disableAndUnloadAllModules()
+    }
+
 }

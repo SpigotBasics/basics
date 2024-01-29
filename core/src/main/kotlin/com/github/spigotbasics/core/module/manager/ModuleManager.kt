@@ -150,13 +150,27 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         myLoadedModules.remove(module)
         module.moduleClassLoader.close()
 
-        forceGc()
+        //forceGc()
 
     }
 
     private fun forceGc() {
         System.runFinalization()
         System.gc()
+    }
+
+    fun disableAllModules() {
+        for(module in enabledModules) {
+            disableModule(module)
+        }
+    }
+
+    fun disableAndUnloadAllModules() {
+        for(module in myLoadedModules.toList()) {
+            disableModule(module)
+            unloadModule(module)
+        }
+        forceGc()
     }
 
 
