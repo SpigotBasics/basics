@@ -101,7 +101,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override fun disable() {
         scheduler.killAll()
         eventBus.dispose()
-        commandManager.unregisterAll()
+        commandManager.unregisterAll() // TODO: SimpleCommandMap uses an unmodifiable collection
         permissionManager.unregisterAll()
         isEnabled = false
     }

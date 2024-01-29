@@ -177,7 +177,9 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     fun disableAndUnloadAllModules() {
         for(module in myLoadedModules.toList()) {
-            disableModule(module)
+            if(module.isEnabled()) {
+                disableModule(module)
+            }
             unloadModule(module, false)
         }
         forceGc()

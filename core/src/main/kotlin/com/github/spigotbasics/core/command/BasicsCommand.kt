@@ -1,14 +1,15 @@
 package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.core.extensions.debug
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 
 class BasicsCommand(
-    val info: CommandInfo,
-    private var executor: BasicsCommandExecutor,
+    var info: CommandInfo,
+    private var executor: BasicsCommandExecutor?,
 ) :
     Command(info.name) {
 
@@ -41,7 +42,12 @@ class BasicsCommand(
                 location = if (sender is Entity) sender.location else null
             )
 
-            val returned = executor.execute(context)
+            if(executor == null) {
+                sender.sendMessage(ChatColor.RED.toString() + "The module that registered this command has been disabled.")
+                return true
+            }
+
+            val returned = executor!!.execute(context)
 
             if (!returned) {
                 debug("Command Executor returned false, printing usage now...")
@@ -59,8 +65,9 @@ class BasicsCommand(
         }
     }
 
-    internal fun disableExecutor() {
-        executor = DisabledModuleExecutor
+    internal fun replaceCommand(command: BasicsCommand) {
+        this.executor = command.executor
+        this.info = command.info
     }
 
     override fun tabComplete(
@@ -69,9 +76,6 @@ class BasicsCommand(
         args: Array<out String>?,
         location: Location?
     ): MutableList<String> {
-        if(executor == DisabledModuleExecutor) {
-            return mutableListOf()
-        }
         val context = BasicsCommandContext(
             sender = sender,
             command = this,
@@ -79,12 +83,17 @@ class BasicsCommand(
             args = args?.toMutableList() ?: mutableListOf(),
             location = location
         )
-        val result = executor.tabComplete(context)
+        if(executor == null) return mutableListOf()
+        val result = executor!!.tabComplete(context)
         return result ?: super.tabComplete(sender, alias, args, location)
     }
 
     override fun getPermission(): String {
         return info.permission.name
+    }
+
+    fun disableExecutor() {
+        executor = null
     }
 
 }
