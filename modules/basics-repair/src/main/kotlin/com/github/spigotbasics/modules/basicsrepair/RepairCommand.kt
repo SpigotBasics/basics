@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicsrepair
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.TabCompleter
+import com.github.spigotbasics.core.extensions.startsWithIgnoreCase
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -12,7 +13,39 @@ import org.bukkit.util.StringUtil
 class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecutor(module) {
 
     override fun execute(context: BasicsCommandContext): Boolean {
-        TODO("Not yet implemented")
+        context.readFlags()
+        val args = context.args
+        val repairAll = context.popFlag("--all")
+
+        if(repairAll) {
+            requirePermission(context.sender, module.permissionAll)
+        }
+
+        val target = if(args.size > 0) {
+            requirePlayer(context.sender, args[0])
+        } else {
+            requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
+        }
+
+        if(target != context.sender) {
+            requirePermission(context.sender, module.permissionOthers)
+        }
+
+        if(repairAll) {
+            if(target == context.sender) {
+                runAllSelf(target)
+            } else {
+                runAllOther(context.sender, target)
+            }
+        } else {
+            if(target == context.sender) {
+                runHandSelf(target)
+            } else {
+                runHandOther(context.sender, target)
+            }
+        }
+
+        return true
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
@@ -29,6 +62,10 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
                 return StringUtil.copyPartialMatches(args[0], listOf("--all") + TabCompleter.getPlayers(sender, args[0]), mutableListOf())
             } else if (!mayAll && mayOthers) {
                 return TabCompleter.getPlayers(sender, args[0])
+            }
+        } else if(args.size == 2) {
+            if(mayAll && mayOthers && args[0].startsWithIgnoreCase("--")) {
+                return TabCompleter.getPlayers(sender, args[1])
             }
         }
         return mutableListOf()
