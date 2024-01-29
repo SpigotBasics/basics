@@ -6,7 +6,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-val exposedVersion: String by project
 dependencies {
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
@@ -14,8 +13,8 @@ dependencies {
     implementation(libs.adventure.text.serializer.legacy)
     implementation(libs.paperlib)
     implementation(libs.folialib)
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
     api(project(":common"))
     api(project(":pipe:facade"))
 }
