@@ -29,7 +29,9 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
         createCommand().name("repair")
             .usage("/repair [--all] [player]")
             .permission(permission)
-
+            .description("Repairs an item")
+            .executor(RepairCommand(this))
+            .register()
     }
 
     override fun reloadConfig() {
