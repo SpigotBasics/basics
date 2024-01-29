@@ -15,6 +15,9 @@ dependencies {
     implementation(libs.folialib)
     api(project(":common"))
     api(project(":pipe:facade"))
+//    api(libs.exposed.core)
+//    api(libs.exposed.dao)
+//    api(libs.exposed.jdbc)
 }
 
 
