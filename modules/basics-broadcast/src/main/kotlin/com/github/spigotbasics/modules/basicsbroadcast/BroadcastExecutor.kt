@@ -10,8 +10,9 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
     override fun execute(context: BasicsCommandContext): Boolean {
 
         debug("Executing broadcast command")
+        context.readFlags()
 
-        val parseMini = context.flags.remove("--parsed")
+        val parseMini = context.popFlag("--parsed")
         debug("parseMini: $parseMini")
         failIfFlagsLeft(context)
         debug("Flags: ${context.flags}")
