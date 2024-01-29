@@ -6,6 +6,8 @@ import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.messages.CoreMessages
+import com.github.spigotbasics.core.data.DataPlatform
+import com.github.spigotbasics.core.data.DataProvider
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -41,6 +43,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+    var dataProvider: DataProvider? = null
     override fun getLogger() = logger
 
     /**
@@ -59,6 +62,18 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             logger.info("Creating modules folder at ${moduleFolder.absolutePath}")
             moduleFolder.mkdirs()
         }
+
+        val dbConfig = coreConfigManager.getConfig("database.yml", "database.yml", BasicsPluginImpl::class.java)
+        dataProvider = DataPlatform.valueOf(
+            dbConfig.getString("type")?.uppercase() ?: throw IllegalStateException("must specify database type")
+        ).creator().invoke()
+        dataProvider!!.connect(
+            "jdbc:sqlite:${dataFolder.absolutePath}/${
+                dbConfig.getString("name") ?: throw IllegalStateException(
+                    "must specify database name"
+                )
+            }"
+        )
     }
 
     override fun onEnable() {
@@ -74,6 +89,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
+    }
+
+    override fun onDisable() {
+        dataProvider?.disconnect()
     }
 
     private fun reloadCustomTags() {

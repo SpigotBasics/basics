@@ -1,5 +1,7 @@
 package com.github.spigotbasics.core
 
+import com.github.spigotbasics.core.data.DataProvider
+import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.AudienceProvider
