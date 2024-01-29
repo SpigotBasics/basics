@@ -15,6 +15,7 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     fun unregisterAll() {
+        // TODO: SimpleCommandMap uses an unmodifiable collection
         registeredCommands.toList().forEach { command ->
             unregisterCommand(command, false)
         }
@@ -30,6 +31,7 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     fun unregisterCommand(command: BasicsCommand, update: Boolean = true) {
+        //TODO("SimpleCommandMap uses an unmodifiable collection")
         registeredCommands -= command
         removeFromServerCommandMap(command)
         if (update) {
@@ -44,7 +46,17 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     private fun injectToServerCommandMap(command: BasicsCommand) {
-        serverCommandMap.register("basics", command)
+        val success = serverCommandMap.register("basics", command)
+        if(!success) {
+            serverCommandMap.commands.forEach { existing ->
+                if(existing.name == command.name) {
+                    //serverCommandMap.commands.remove(existing)
+                    if(existing is BasicsCommand) {
+                        existing.replaceCommand(command)
+                    }
+                }
+            }
+        }
     }
 
     private fun removeFromServerCommandMap(command: BasicsCommand) {
