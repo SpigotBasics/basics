@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core", "shadow"))
+    implementation(project(":core"))
     implementation(project(":pipe:facade"))
     implementation(project(":pipe:spigot"))
     implementation(project(":pipe:paper"))

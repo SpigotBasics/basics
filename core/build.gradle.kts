@@ -23,18 +23,3 @@ tasks.processResources {
         expand("version" to libs.versions.spigot.get())
     }
 }
-
-tasks.shadowJar {
-    archiveClassifier = "shaded"
-    for (path in listOf(
-        "net.kyori",
-        "io.papermc.lib",
-        "org.intellij",
-        "org.jetbrains",
-        "com.tcoded.folialib"
-    )) {
-        relocate(path, "$SHADED.$path")
-    }
-
-    exclude("kotlin/**")
-}
