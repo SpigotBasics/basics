@@ -9,7 +9,9 @@ import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.loader.ModuleLoader
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.Thread.sleep
 import java.util.logging.Level
+import kotlin.coroutines.suspendCoroutine
 
 class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
@@ -143,20 +145,28 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         //enabledModules.remove(module)
     }
 
-    fun unloadModule(module: BasicsModule) {
+    fun unloadModule(module: BasicsModule, forceGc: Boolean = false) {
         if(module.isEnabled()) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
         myLoadedModules.remove(module)
         module.moduleClassLoader.close()
 
-        //forceGc()
+        if(forceGc) {
+            forceGc()
+        }
 
     }
 
     private fun forceGc() {
         System.runFinalization()
         System.gc()
+        Thread {
+            sleep(1000)
+            System.runFinalization()
+            System.gc()
+        }.start()
+
     }
 
     fun disableAllModules() {
@@ -167,8 +177,10 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     fun disableAndUnloadAllModules() {
         for(module in myLoadedModules.toList()) {
-            disableModule(module)
-            unloadModule(module)
+            if(module.isEnabled()) {
+                disableModule(module)
+            }
+            unloadModule(module, false)
         }
         forceGc()
     }
