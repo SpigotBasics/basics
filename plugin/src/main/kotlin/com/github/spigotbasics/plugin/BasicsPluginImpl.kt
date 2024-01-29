@@ -1,7 +1,5 @@
 package com.github.spigotbasics.plugin
 
-import com.github.spigotbasics.common.data.DataPlatform
-import com.github.spigotbasics.common.data.DataProvider
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
@@ -9,6 +7,8 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.CommandCompletionIDs
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.CoreMessages
+import com.github.spigotbasics.core.data.DataPlatform
+import com.github.spigotbasics.core.data.DataProvider
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -73,7 +73,16 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         }
 
         val dbConfig = coreConfigManager.getConfig("database.yml", "database.yml", BasicsPluginImpl::class.java)
-        dataProvider = DataPlatform.valueOf(dbConfig.getString("type")?.uppercase() ?: throw IllegalStateException("must specify database type")).creator().invoke()
+        dataProvider = DataPlatform.valueOf(
+            dbConfig.getString("type")?.uppercase() ?: throw IllegalStateException("must specify database type")
+        ).creator().invoke()
+        dataProvider!!.connect(
+            "jdbc:sqlite:${dataFolder.absolutePath}/${
+                dbConfig.getString("name") ?: throw IllegalStateException(
+                    "must specify database name"
+                )
+            }"
+        )
     }
 
     override fun onEnable() {
@@ -146,5 +155,4 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         reloadCustomTags()
         messages.reload()
     }
-
 }

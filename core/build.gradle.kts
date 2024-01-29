@@ -1,9 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.Transformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.TransformerContext
-import org.apache.tools.zip.ZipOutputStream
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     id("basics.kotlin-conventions")
     id("basics.dependency.spigot-api")
@@ -13,11 +7,14 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
+val exposedVersion: String by project
 dependencies {
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
     implementation(libs.adventure.minimessage)
     implementation(libs.adventure.text.serializer.legacy)
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     api(project(":common"))
     api(project(":pipe:facade"))
     api(libs.paperlib)
