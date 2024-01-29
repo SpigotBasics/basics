@@ -1,4 +1,4 @@
-interval: 60
+interval: 2 minutes
 pick-random: false
 messages:
   - "<i><gradient:#00ff00:#00cc00>\"OMG YOU'RE USING BASICS???!!!\"</gradient></i> Basics makes players wet since 2024!"

@@ -1,18 +1,18 @@
 package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
-
-import com.github.spigotbasics.core.scheduler.BasicsScheduler
-
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import com.github.spigotbasics.core.permission.BasicsPermissionManager
+import com.github.spigotbasics.core.scheduler.BasicsScheduler
+import org.bukkit.permissions.Permission
+import org.bukkit.permissions.PermissionDefault
 import java.io.File
-
 import java.util.logging.Logger
 
 /**
@@ -52,7 +52,7 @@ interface BasicsModule {
     val messageFactory: MessageFactory
 
     /**
-     * Commands Manager
+     * Command manager
      */
     val commandManager: BasicsCommandManager
 
@@ -62,6 +62,8 @@ interface BasicsModule {
     val eventBus: BasicsEventBus
 
     val tagResolverFactory: TagResolverFactory
+
+    val permissionManager: BasicsPermissionManager
 
     /**
      * Called when the module is enabled
@@ -86,5 +88,11 @@ interface BasicsModule {
 
 
     fun reloadConfig()
+
+    fun createCommand(): BasicsCommandBuilder {
+        return BasicsCommandBuilder(this)
+    }
+
+
 
 }

@@ -21,8 +21,17 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     val msgRepairAllSelf: Message
         get() = msgConfig.getMessage("repair-all-self")
 
+    val permission = permissionManager.createSimplePermission("basics.repair", "Allows to repair your current items")
+    val permissionAll = permissionManager.createSimplePermission("basics.repair.all", "Allows to repair all your items")
+    val permissionOthers = permissionManager.createSimplePermission("basics.repair.others", "Allows to repair other players' items")
+
     override fun onEnable() {
-        commandManager.registerCommand(RepairCommand(this))
+        createCommand().name("repair")
+            .usage("/repair [--all] [player]")
+            .permission(permission)
+            .description("Repairs an item")
+            .executor(RepairCommand(this))
+            .register()
     }
 
     override fun reloadConfig() {

@@ -1,56 +1,55 @@
 package com.github.spigotbasics.core.command
 
-import co.aikar.commands.BaseCommand
-import co.aikar.commands.PaperCommandManager
+import org.bukkit.Bukkit
+import org.bukkit.command.SimpleCommandMap
 
-class BasicsCommandManager(private val manager: PaperCommandManager/*plugin: BasicsPlugin*/) {
+class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
 
-    private val commands: MutableList<BaseCommand> = ArrayList()
-    //private val manager: PaperCommandManager = PaperCommandManager(plugin)
-//    private val rootCommands: Field = CommandManager::class.java.getDeclaredField("rootCommands")
+    private val registeredCommands: MutableList<BasicsCommand> = mutableListOf()
 
-
-    // Using Any as class, because otherwise IJ complains about relocation... even though compiling works.
-    fun registerCommand(command: Any) {
-        if(command is BaseCommand) {
-            registerCommand(command)
-        } else {
-            error("Class ${command::class.qualifiedName} does not extend BaseCommand")
+    fun registerAll(commands: List<BasicsCommand>) {
+        commands.forEach { command ->
+            registerCommand(command, false)
         }
-    }
-
-    private fun registerCommand(command: BaseCommand) {
-        commands.add(command)
-        manager.registerCommand(command)
-    }
-
-    fun unregisterCommand(command: BaseCommand) {
-        dispose(command)
-        commands.remove(command)
+        updateCommandsToPlayers()
     }
 
     fun unregisterAll() {
-        commands.forEach() { dispose(it) }
-        commands.clear()
+        registeredCommands.toList().forEach { command ->
+            unregisterCommand(command, false)
+        }
+        updateCommandsToPlayers()
     }
 
-    private fun dispose(command: BaseCommand) {
-        manager.unregisterCommand(command)
-        /*
-        * The code below, while not currently functioning as intended is supposed to remove left over data ACF
-        * Keeps on commands. While this code is effective at removing leaky data in memory from disabled modules it is
-        * simply equally as effective currently to only run the above code as it results in the same client
-        * communication.
-        *
-        * Related to https://github.com/aikar/commands/issues/273
-         */
-//        val root = manager.getRootCommand(command.name) ?: return
-//        manager.unregisterCommand(root as BukkitRootCommand) // removes from command map
-//        rootCommands.isAccessible = true
-//        val roots = rootCommands.get(manager) as HashMap<String, RootCommand>
-//        roots.remove(root.name)
-//        rootCommands.isAccessible = false
-//        println(manager.getRootCommand(command.name))
+    fun registerCommand(command: BasicsCommand, update: Boolean = true) {
+        registeredCommands += command
+        injectToServerCommandMap(command)
+        if (update) {
+            updateCommandsToPlayers()
+        }
     }
+
+    fun unregisterCommand(command: BasicsCommand, update: Boolean = true) {
+        registeredCommands -= command
+        removeFromServerCommandMap(command)
+        if (update) {
+            updateCommandsToPlayers()
+        }
+    }
+
+    private fun updateCommandsToPlayers() {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.updateCommands()
+        }
+    }
+
+    private fun injectToServerCommandMap(command: BasicsCommand) {
+        serverCommandMap.register("basics", command)
+    }
+
+    private fun removeFromServerCommandMap(command: BasicsCommand) {
+        serverCommandMap.commands.remove(command)
+    }
+
 
 }

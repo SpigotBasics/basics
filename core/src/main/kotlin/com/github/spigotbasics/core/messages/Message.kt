@@ -72,6 +72,18 @@ data class Message(
         return this
     }
 
+    fun tagUnparsed(tag: String, value: String): Message {
+        return tags(Placeholder.unparsed(tag, value))
+    }
+
+    fun tagParsed(tag: String, value: String): Message {
+        return tags(Placeholder.parsed(tag, value))
+    }
+
+    fun tagMessage(tag: String, value: Message): Message {
+        return tags(Placeholder.component(tag, value.toComponent()))
+    }
+
     fun tags(vararg tags: Pair<String, Any>): Message {
         return tags(tags.map { (key, value) -> toPlaceholder(key, value) })
     }
