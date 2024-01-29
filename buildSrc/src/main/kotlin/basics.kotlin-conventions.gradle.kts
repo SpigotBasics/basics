@@ -59,6 +59,14 @@ repositories {
             includeGroup("io.papermc.paper")
         }
     }
+
+    maven {
+        name = "devmart-other"
+        url = uri("https://nexuslite.gcnt.net/repos/other/")
+        content {
+            includeGroup("com.tcoded")
+        }
+    }
 }
 
 kotlin {

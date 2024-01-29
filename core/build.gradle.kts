@@ -1,9 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.Transformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.TransformerContext
-import org.apache.tools.zip.ZipOutputStream
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     id("basics.kotlin-conventions")
     id("basics.dependency.spigot-api")
@@ -17,9 +11,10 @@ dependencies {
     implementation(libs.adventure.bukkit)
     implementation(libs.adventure.minimessage)
     implementation(libs.adventure.text.serializer.legacy)
+    implementation(libs.paperlib)
+    implementation(libs.folialib)
     api(project(":common"))
     api(project(":pipe:facade"))
-    implementation(libs.paperlib)
 }
 
 
@@ -31,13 +26,15 @@ tasks.processResources {
 
 tasks.shadowJar {
     archiveClassifier = "shaded"
-    for(path in listOf(
+    for (path in listOf(
         "net.kyori",
         "io.papermc.lib",
         "org.intellij",
-        "org.jetbrains"
-        ))
+        "org.jetbrains",
+        "com.tcoded.folialib"
+    )) {
         relocate(path, "$SHADED.$path")
+    }
 
     exclude("kotlin/**")
 }

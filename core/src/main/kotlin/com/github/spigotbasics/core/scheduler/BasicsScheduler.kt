@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.scheduler
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 
+// TODO: Make this use FoliaLib
 class BasicsScheduler(private val plugin: Plugin) {
 
     private val taskIds: MutableSet<Int> = HashSet();
