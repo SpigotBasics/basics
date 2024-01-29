@@ -48,7 +48,8 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     private fun removeFromServerCommandMap(command: BasicsCommand) {
-        serverCommandMap.commands.remove(command)
+        //serverCommandMap.commands.remove(command)
+        command.disableExecutor()
     }
 
 

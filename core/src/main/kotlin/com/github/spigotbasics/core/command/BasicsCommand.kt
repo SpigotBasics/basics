@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity
 
 class BasicsCommand(
     val info: CommandInfo,
-    val executor: BasicsCommandExecutor,
+    private var executor: BasicsCommandExecutor,
 ) :
     Command(info.name) {
 
@@ -59,12 +59,19 @@ class BasicsCommand(
         }
     }
 
+    internal fun disableExecutor() {
+        executor = DisabledModuleExecutor
+    }
+
     override fun tabComplete(
         sender: CommandSender,
         alias: String,
         args: Array<out String>?,
         location: Location?
     ): MutableList<String> {
+        if(executor == DisabledModuleExecutor) {
+            return mutableListOf()
+        }
         val context = BasicsCommandContext(
             sender = sender,
             command = this,
