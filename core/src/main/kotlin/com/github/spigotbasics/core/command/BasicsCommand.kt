@@ -26,19 +26,18 @@ class BasicsCommand(
             debug("Executing command $name with label $commandLabel and args ${origArgs?.joinToString(", ")}")
 
             val args = origArgs?.toMutableList() ?: mutableListOf()
-            val flags = mutableListOf<String>()
+            //val flags = mutableListOf<String>()
 
             // Parse "flags" (arguments that start with --)
-            while (args.isNotEmpty() && args[0].startsWith("--")) {
-                flags.add(args.removeAt(0))
-            }
+//            while (args.isNotEmpty() && args[0].startsWith("--")) {
+//                flags.add(args.removeAt(0))
+//            }
 
             val context = BasicsCommandContext(
                 sender = sender,
                 command = this,
                 label = commandLabel,
                 args = args,
-                flags = flags,
                 location = if (sender is Entity) sender.location else null
             )
 
