@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import java.util.logging.Logger
 
@@ -37,11 +38,6 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val plugin: BasicsPlugin = context.plugin
 
     /**
-     * Commands Manager
-     */
-    final override val commandManager: BasicsCommandManager = context.commandManager //context.plugin.createCommandManager()
-
-    /**
      * Event bus for registering events
      */
     final override val eventBus: BasicsEventBus = BasicsEventBus(context.plugin)
@@ -60,6 +56,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
      */
     override val scheduler = BasicsScheduler(plugin)
 
+    override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(plugin.server.pluginManager))
+
     /**
      * Message Factory
      */
@@ -67,6 +65,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     override val tagResolverFactory
         get() = plugin.tagResolverFactory
+
+    override val permissionManager = BasicsPermissionManager(logger)
 
     fun getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*> = javaClass*/): SavedConfig = getConfig(configName/*, clazzToGetFrom*/, SavedConfig::class.java)
 
@@ -100,8 +100,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     final override fun disable() {
         scheduler.killAll()
-        commandManager.unregisterAll()
         eventBus.dispose()
+        commandManager.unregisterAll()
+        permissionManager.unregisterAll()
         isEnabled = false
     }
 

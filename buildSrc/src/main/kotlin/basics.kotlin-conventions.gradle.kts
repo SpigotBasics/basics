@@ -9,6 +9,12 @@ plugins {
     kotlin("jvm")
 }
 
+dependencies {
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
 repositories {
     mavenCentral()
 
@@ -53,6 +59,14 @@ repositories {
             includeGroup("io.papermc.paper")
         }
     }
+
+    maven {
+        name = "devmart-other"
+        url = uri("https://nexuslite.gcnt.net/repos/other/")
+        content {
+            includeGroup("com.tcoded")
+        }
+    }
 }
 
 kotlin {
@@ -63,4 +77,8 @@ tasks.compileKotlin {
     kotlinOptions {
         javaParameters = true
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

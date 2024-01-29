@@ -1,46 +1,95 @@
 package com.github.spigotbasics.modules.basicsrepair
 
-import com.github.spigotbasics.libraries.co.aikar.commands.BaseCommand
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandAlias
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandPermission
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.Description
-import com.github.spigotbasics.libraries.co.aikar.commands.bukkit.contexts.OnlinePlayer
+import com.github.spigotbasics.core.command.BasicsCommandContext
+import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.TabCompleter
+import com.github.spigotbasics.core.extensions.startsWithIgnoreCase
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
+import org.bukkit.util.StringUtil
 
-class RepairCommand(private val module: BasicsRepairModule) : BaseCommand() {
+class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecutor(module) {
 
-    @CommandAlias("repair|fix")
-    @CommandPermission("basics.command.repair.hand")
-    @Description("Repairs your currently held item")
+    override fun execute(context: BasicsCommandContext): Boolean {
+        context.readFlags()
+        val args = context.args
+        val repairAll = context.popFlag("--all")
+
+        if(repairAll) {
+            requirePermission(context.sender, module.permissionAll)
+        }
+
+        val target = if(args.size > 0) {
+            requirePlayer(context.sender, args[0])
+        } else {
+            requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
+        }
+
+        if(target != context.sender) {
+            requirePermission(context.sender, module.permissionOthers)
+        }
+
+        if(repairAll) {
+            if(target == context.sender) {
+                runAllSelf(target)
+            } else {
+                runAllOther(context.sender, target)
+            }
+        } else {
+            if(target == context.sender) {
+                runHandSelf(target)
+            } else {
+                runHandOther(context.sender, target)
+            }
+        }
+
+        return true
+    }
+
+    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+        val args = context.args
+        val sender = context.sender
+        val mayAll = sender.hasPermission(module.permissionAll)
+        val mayOthers = sender.hasPermission(module.permissionOthers)
+
+        if(!mayAll && !mayOthers) return mutableListOf()
+        if(args.size == 1) {
+            if(mayAll && !mayOthers) {
+                return StringUtil.copyPartialMatches(args[0], listOf("--all"), mutableListOf())
+            } else if(mayAll && mayOthers) {
+                return StringUtil.copyPartialMatches(args[0], listOf("--all") + TabCompleter.getPlayers(sender, args[0]), mutableListOf())
+            } else if (!mayAll && mayOthers) {
+                return TabCompleter.getPlayers(sender, args[0])
+            }
+        } else if(args.size == 2) {
+            if(mayAll && mayOthers && args[0].startsWithIgnoreCase("--")) {
+                return TabCompleter.getPlayers(sender, args[1])
+            }
+        }
+        return mutableListOf()
+    }
+
     fun runHandSelf(player: Player) {
         repairHand(player)
         module.msgRepairHandSelf.concerns(player).sendToPlayer(player)
     }
 
-    @CommandAlias("repair|fix")
-    @CommandPermission("basics.command.repair.hand.other")
-    @Description("Repair the given player's currently held item")
-    fun runHandOther(sender: CommandSender, player: OnlinePlayer) {
-        repairHand(player.player)
+
+    fun runHandOther(sender: CommandSender, player: Player) {
+        repairHand(player)
         module.msgRepairHandOther.concerns(player.player).sendToSender(sender)
     }
 
-    @CommandAlias("repairall|fixall")
-    @CommandPermission("basics.command.repair.all")
-    @Description("Repair all items in your inventory")
+
     fun runAllSelf(player: Player) {
         repairAll(player)
         module.msgRepairAllSelf.concerns(player).sendToPlayer(player)
     }
 
-    @CommandAlias("repairall|fixall")
-    @CommandPermission("basics.command.repair.all.other")
-    @Description("Repair all items in the given player's inventory")
-    fun runAllOther(sender: CommandSender, player: OnlinePlayer) {
-        repairAll(player.player)
+    fun runAllOther(sender: CommandSender, player: Player) {
+        repairAll(player)
         module.msgRepairAllOther.concerns(player.player).sendToSender(sender)
     }
 
@@ -64,5 +113,7 @@ class RepairCommand(private val module: BasicsRepairModule) : BaseCommand() {
             }
         }
     }
+
+
 
 }

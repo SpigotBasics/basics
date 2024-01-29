@@ -1,7 +1,6 @@
 [versions]
 shadow = "8.1.1"
 kotlin = "1.9.20"
-acf = "0.5.1-SNAPSHOT"
 spigot = "1.20.4-R0.1-SNAPSHOT"
 dokka = "1.9.10"
 adventure-api = "4.14.0"
@@ -11,11 +10,11 @@ adventure-text-serializer-legacy = "4.15.0"
 placeholderapi = "2.11.5"
 paperlib = "1.0.7"
 paper-api = "1.20.4-R0.1-SNAPSHOT"
+folialib = "0.3.1"
 
 [libraries]
 shadow = { group = "com.github.johnrengelman", name="shadow", version.ref="shadow" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name="kotlin-gradle-plugin", version.ref="kotlin" }
-acf-paper = { group = "co.aikar", name="acf-paper", version.ref="acf" }
 spigot-api = { group = "org.spigotmc", name="spigot-api", version.ref="spigot" }
 adventure-api = { group = "net.kyori", name="adventure-api", version.ref="adventure-api" }
 adventure-bukkit = { group = "net.kyori", name="adventure-platform-bukkit", version.ref="adventure-bukkit" }
@@ -24,6 +23,7 @@ adventure-text-serializer-legacy = { group = "net.kyori", name="adventure-text-s
 placeholderapi = { group = "me.clip", name="placeholderapi", version.ref="placeholderapi" }
 paperlib = { group = "io.papermc", name="paperlib", version.ref="paperlib" }
 paper-api = { group = "io.papermc.paper", name="paper-api", version.ref="paper-api"}
+folialib = { group = "com.tcoded", name = "FoliaLib", version.ref = "folialib" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref="shadow" }

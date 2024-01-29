@@ -1,29 +1,35 @@
 package com.github.spigotbasics.modules.basicsmsg
 
-import com.github.spigotbasics.libraries.co.aikar.commands.BaseCommand
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandAlias
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.CommandPermission
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.Default
-import com.github.spigotbasics.libraries.co.aikar.commands.annotation.Description
-import com.github.spigotbasics.libraries.co.aikar.commands.bukkit.contexts.OnlinePlayer
+import com.github.spigotbasics.core.command.BasicsCommandContext
+import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("msg|dm|pm|tell|whisper|w|message")
-@Description("Sends a private message to another player")
-@CommandPermission("basics.command.msg")
-class MsgCommand(private val module: BasicsMsgModule) : BaseCommand() {
-
-    @Default
-    fun onMsg(sender: CommandSender, player: OnlinePlayer, message: String) {
+class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(module) {
+    override fun execute(context: BasicsCommandContext): Boolean {
+        val sender = context.sender
+        if(context.args.size < 2) {
+            return false
+        }
+        val player = requirePlayer(sender, context.args[0])
+        val message = context.args.drop(1).joinToString(" ")
         if (sender is Player) {
             if (player.player == sender) {
                 player2self(sender, message)
             } else {
-                player2player(sender, player.player, message)
+                player2player(sender, player, message)
             }
         } else {
-            console2player(sender, player.player, message)
+            console2player(sender, player, message)
+        }
+        return true
+    }
+
+    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+        if(context.args.size == 1) {
+            return null // null = normal list of players
+        } else {
+            return mutableListOf()
         }
     }
 

@@ -16,6 +16,10 @@ object BasicsLoggerFactory {
         return getLogger("Module/${module.info.name}")
     }
 
+    fun getModuleLogger(module: BasicsModule, clazz: KClass<*>): Logger {
+        return getLogger("Module/${module.info.name}/${clazz.simpleName}")
+    }
+
     fun getConfigLogger(file: File): Logger {
         return getLogger("Config/${file.name}")
     }
