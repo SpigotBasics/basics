@@ -13,11 +13,6 @@ class HomeOwner(val uuid: UUID, private val homes: MutableList<BasicHome>) {
     }
 
     fun removeHome(homeName: String): Boolean {
-        for (home in homes) {
-            if (home.name.equals(homeName)) {
-                return homes.remove(home)
-            }
-        }
-        return false
+        return homes.removeIf { it.name == homeName };
     }
 }
