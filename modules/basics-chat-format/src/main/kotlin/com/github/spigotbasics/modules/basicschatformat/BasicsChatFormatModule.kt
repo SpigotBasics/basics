@@ -1,10 +1,10 @@
 package com.github.spigotbasics.modules.basicschatformat
 
+import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.extensions.getAsNewLineSeparatedString
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.AsyncPlayerChatEvent
 
@@ -22,7 +22,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
         get() = config.getAsNewLineSeparatedString("chat-format")
 
     override fun onEnable() {
-        if(PaperLib.isPaper()) {
+        if(Spiper.isPaper) {
             eventBus.subscribe(PaperChatEventListener(this))
         } else {
             eventBus.subscribe(AsyncPlayerChatEvent::class.java, this::changeChatFormatSpigot, EventPriority.HIGHEST)

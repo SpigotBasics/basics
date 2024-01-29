@@ -19,7 +19,7 @@ dependencies {
     implementation(libs.adventure.text.serializer.legacy)
     api(project(":common"))
     api(project(":pipe:facade"))
-    api(libs.paperlib)
+    implementation(libs.paperlib)
 }
 
 

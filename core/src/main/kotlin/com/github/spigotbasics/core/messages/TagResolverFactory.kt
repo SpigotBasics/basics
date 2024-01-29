@@ -14,8 +14,6 @@ import java.util.logging.Level
 // TODO: Add PlaceholderAPI <papi:...> tag
 class TagResolverFactory(private val facade: SpigotPaperFacade) {
 
-    //private val isPaper = PaperLib.isPaper()
-
     private val logger = BasicsLoggerFactory.getCoreLogger(TagResolverFactory::class)
 
     private var customTagsMap: Map<String, String> = emptyMap()

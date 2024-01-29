@@ -3,6 +3,7 @@ package com.github.spigotbasics.plugin
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
+import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
@@ -10,7 +11,6 @@ import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
-import com.github.spigotbasics.libraries.io.papermc.lib.PaperLib
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
@@ -26,7 +26,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     override val audienceProvider: AudienceProvider = AudienceProvider(this)
 
-    override val facade: SpigotPaperFacade = if (PaperLib.isPaper()) {
+    override val facade: SpigotPaperFacade = if (Spiper.isPaper) {
         PaperFacade()
     } else {
         SpigotFacade()
