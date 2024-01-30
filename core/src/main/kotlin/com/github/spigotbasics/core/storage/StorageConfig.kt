@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.extensions.getDurationAsMillis
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import java.io.File
 
@@ -40,6 +41,9 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
 
     val mysqlPassword: String?
         get() = getString("mysql.password")
+
+    val ioDelay: Long
+        get() = getDurationAsMillis("debug.artificial-io-delay", 0L)
 
     private fun replaceDir(dir: String): String {
         return dir.replace("%plugindir%", plugin.dataFolder.absolutePath)

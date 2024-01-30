@@ -19,3 +19,6 @@ mysql:
   database: "minecraft"
   username: "username"
   password: "password"
+
+debug:
+  io-delay: 500 ms

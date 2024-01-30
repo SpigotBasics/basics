@@ -14,3 +14,7 @@ fun MemorySection.getAsNewLineSeparatedString(key: String): String {
 fun MemorySection.getDurationAsTicks(key: String, defaultValue: Long): Long {
     return DurationParser.parseDurationToTicks(getString(key) ?: return defaultValue)
 }
+
+fun MemorySection.getDurationAsMillis(key: String, defaultValue: Long): Long {
+    return DurationParser.parseDurationToMillis(getString(key) ?: return defaultValue)
+}

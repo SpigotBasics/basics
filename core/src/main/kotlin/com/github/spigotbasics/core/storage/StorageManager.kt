@@ -18,7 +18,7 @@ class StorageManager(configManager: CoreConfigManager) {
     )
 
     private val backend: StorageBackend = when (config.storageType) {
-        StorageType.JSON -> JsonBackend(config.jsonDirectory)
+        StorageType.JSON -> JsonBackend(config.jsonDirectory, config.ioDelay)
         StorageType.SQLITE -> TODO("SQLite Storage backend") //SqliteBackend(config.sqliteFile)
     }
 

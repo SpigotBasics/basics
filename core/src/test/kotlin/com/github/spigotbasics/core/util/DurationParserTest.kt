@@ -19,6 +19,16 @@ class DurationParserTest {
         assertEquals(10, DurationParser.parseDurationToTicks("0.5"))
         assertEquals(10, DurationParser.parseDurationToTicks("0.5s"))
 
+        assertEquals(0, DurationParser.parseDurationToTicks("49ms"))
+        assertEquals(1, DurationParser.parseDurationToTicks("50ms"))
+
         assertThrows<IllegalArgumentException> { DurationParser.parseDurationToTicks("42 asd") }
+    }
+
+    @Test
+    fun parseDurationToMillis() {
+        assertEquals(69000, DurationParser.parseDurationToMillis("69"))
+        assertEquals(69000, DurationParser.parseDurationToMillis("69s"))
+        assertEquals(69, DurationParser.parseDurationToMillis("69 ms"))
     }
 }
