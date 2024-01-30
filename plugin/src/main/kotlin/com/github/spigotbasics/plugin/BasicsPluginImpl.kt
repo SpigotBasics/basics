@@ -42,7 +42,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
-    override fun getLogger() = logger
+    //override fun getLogger() = logger
 
     /**
      * Checks if this server is running a rusty version of Spigot.

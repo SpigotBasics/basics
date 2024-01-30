@@ -48,6 +48,7 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
 
     fun shutdown(timeout: Long, unit: TimeUnit): CompletableFuture<Void?> {
         isShutdown = true
+        logger.info("Shutting down...")
         return CompletableFuture.supplyAsync({
             synchronized(futures) {
                 val executorService = Executors.newCachedThreadPool()
@@ -70,6 +71,7 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
                         logger.warning("Forcefully completed future $future due to shutdown")
                     }
                 }
+                logger.info("Shutdown complete")
                 hasShutdown = true
                 futures.clear()
             }

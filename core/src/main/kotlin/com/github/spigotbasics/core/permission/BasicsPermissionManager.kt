@@ -1,11 +1,11 @@
 package com.github.spigotbasics.core.permission
 
+import com.github.spigotbasics.core.logger.BasicsLogger
 import org.bukkit.Bukkit
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import java.util.logging.Logger
 
-class BasicsPermissionManager(val logger: Logger) {
+class BasicsPermissionManager(val logger: BasicsLogger) {
 
     private val permissions = mutableListOf<Permission>()
 
