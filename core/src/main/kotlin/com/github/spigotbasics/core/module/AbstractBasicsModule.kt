@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.module
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
@@ -10,7 +9,6 @@ import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Logger
 
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
 
@@ -27,22 +25,22 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     /**
      * Module info
      */
-    final override val info: ModuleInfo = context.info
+    final override val info = context.info
 
     /**
      * Logger for this module
      */
-    final override val logger: Logger = BasicsLoggerFactory.getModuleLogger(this)
+    final override val logger = BasicsLoggerFactory.getModuleLogger(this)
 
     /**
      * Plugin instance
      */
-    final override val plugin: BasicsPlugin = context.plugin
+    final override val plugin = context.plugin
 
     /**
      * Event bus for registering events
      */
-    final override val eventBus: BasicsEventBus = BasicsEventBus(context.plugin)
+    final override val eventBus = BasicsEventBus(context.plugin)
 
     /**
      * Config

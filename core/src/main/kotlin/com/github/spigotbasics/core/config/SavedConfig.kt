@@ -30,7 +30,7 @@ open class SavedConfig internal constructor(
     //val messageFactory: MessageFactory
 ) : YamlConfiguration() {
 
-    private val logger: Logger = BasicsLoggerFactory.getConfigLogger(file)
+    private val logger = BasicsLoggerFactory.getConfigLogger(file)
     private val messageFactory: MessageFactory = plugin.messageFactory
 
     /**

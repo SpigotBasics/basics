@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.logger.BasicsLogger
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
@@ -41,7 +42,7 @@ interface BasicsModule {
     /**
      * This module's Logger
      */
-    val logger: Logger
+    val logger: BasicsLogger
 
     /**
      * Modules scheduler

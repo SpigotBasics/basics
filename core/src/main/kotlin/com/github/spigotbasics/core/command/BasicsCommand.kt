@@ -24,15 +24,7 @@ class BasicsCommand(
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>?): Boolean {
         try {
 
-            debug("Executing command $name with label $commandLabel and args ${origArgs?.joinToString(", ")}")
-
             val args = origArgs?.toMutableList() ?: mutableListOf()
-            //val flags = mutableListOf<String>()
-
-            // Parse "flags" (arguments that start with --)
-//            while (args.isNotEmpty() && args[0].startsWith("--")) {
-//                flags.add(args.removeAt(0))
-//            }
 
             val context = BasicsCommandContext(
                 sender = sender,
@@ -50,17 +42,15 @@ class BasicsCommand(
             val returned = executor!!.execute(context)
 
             if (!returned) {
-                debug("Command Executor returned false, printing usage now...")
+                "Command Executor returned false, printing usage now...")
                 sender.sendMessage("Usage: $usage") // TODO: Use messages instead of Strings
-                debug("And returning false now, too")
                 return false
             }
 
-            debug("Command Executor returned true, returning true now")
             return true
 
         } catch (e: BasicsCommandException) {
-            debug("BasicsCommandException: ${e.message}")
+
             return true
         }
     }
