@@ -64,6 +64,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     // TODO: Switch back to this when issues happen
     @Throws(ModuleAlreadyLoadedException::class, InvalidModuleException::class)
     fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
+        logger.info("Loading module ${moduleFile.absolutePath}")
         val loader = try {
             ModuleLoader(plugin, moduleFile)
         } catch (e: InvalidModuleException) {
@@ -113,6 +114,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 //    }
 
     fun enableModule(module: BasicsModule, reloadConfig: Boolean) {
+        logger.info("Enabling module ${module.info.nameAndVersion}")
         //if(enabledModules.contains(module)) {
         if(module.isEnabled()) {
             error("Module ${module.info.name} is already enabled")
@@ -134,6 +136,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     }
 
     fun disableModule(module: BasicsModule): CompletableFuture<Void?> {
+        logger.info("Disabling module ${module.info.nameAndVersion}")
         //if(!enabledModules.contains(module)) {
         if(!module.isEnabled()) {
             error("Module ${module.info.name} is not enabled")
@@ -149,6 +152,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     }
 
     fun unloadModule(module: BasicsModule, forceGc: Boolean = false) {
+        logger.info("Unloading module ${module.info.nameAndVersion}")
         if(module.isEnabled()) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
