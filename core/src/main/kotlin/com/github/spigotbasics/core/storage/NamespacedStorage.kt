@@ -9,6 +9,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
+// TODO: add debug logs for get and set methods and whenComplete, print out parameters and time taken
 class NamespacedStorage(private val backend: StorageBackend, private val namespace: String) {
 
     private val logger = BasicsLoggerFactory.getStorageLogger(backend.type, namespace)
@@ -33,6 +34,8 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
         }
         return track(backend.setJsonObject(namespace, user, value))
     }
+
+    // TODO: getAndSet method. Probably should take a Function<JsonObject?, JsonObject?> as parameter
 
     private fun <T> track(future: CompletableFuture<T>): CompletableFuture<T> {
         futures.add(future)
