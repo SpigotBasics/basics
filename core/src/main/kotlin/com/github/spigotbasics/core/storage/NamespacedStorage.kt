@@ -20,9 +20,11 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
 
     init {
         try {
+            logger.info("Initializing backend storage ...")
             backend.setupNamespace(namespace)
+            logger.info("Backend storage initialization complete")
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Failed to setup namespace $namespace", e)
+            logger.log(Level.SEVERE, "Failed to setup backend storage, marking as shutdown:", e)
             hasShutdown = true
         }
     }
@@ -54,7 +56,7 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
 
     fun shutdown(timeout: Long, unit: TimeUnit): CompletableFuture<Void?> {
         isShutdown = true
-        logger.info("Shutting down...")
+        logger.info("Shutting down backend storage ...")
         return CompletableFuture.supplyAsync({
             synchronized(futures) {
                 val executorService = Executors.newCachedThreadPool()
@@ -77,7 +79,7 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
                         logger.warning("Forcefully completed future $future due to shutdown")
                     }
                 }
-                logger.info("Shutdown complete")
+                logger.info("Backend storage shutdown complete")
                 hasShutdown = true
                 futures.clear()
             }
