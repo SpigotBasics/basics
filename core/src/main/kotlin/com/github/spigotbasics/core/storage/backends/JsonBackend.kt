@@ -12,27 +12,15 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
 
     override val type = StorageType.JSON
 
-    init {
-        if (!directory.isDirectory) {
-            val success = directory.mkdirs()
-            if (!success) {
-                throw IOException("Could not create storage directory $directory")
-            }
-        }
-    }
-
     private fun ioDelay() {
         if(ioDelay > 0L) {
-            println("Sleeping for $ioDelay ms")
             Thread.sleep(ioDelay)
-            println("Sleep done.")
         }
     }
 
-    override fun getJsonObject(namespace: String, user: String): CompletableFuture<JsonObject?> {
-        println("JsonBackend.getJsonObject($namespace, $user)")
+    override fun getJsonObject(namespace: String, keyId: String): CompletableFuture<JsonObject?> {
         return CompletableFuture.supplyAsync {
-            val file = getFile(namespace, user)
+            val file = getFile(namespace, keyId)
             if (!file.parentFile.isDirectory) {
                 file.parentFile.mkdirs()
             }
@@ -49,20 +37,26 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
     }
 
 
-    override fun setJsonObject(namespace: String, user: String, value: JsonObject?): CompletableFuture<Void?> {
-        println("JsonBackend.setJsonObject($namespace, $user, $value)")
+    override fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
-            val file = getFile(namespace, user)
+            val file = getFile(namespace, keyId)
             ioDelay()
             if (value == null) {
-                println("value == null, deleting file...")
                 val deleted = file.delete()
                 if(!deleted) {
                     throw IllegalStateException("Could not delete file $file")
                 }
             } else {
-                println("value != null, writing to file...")
                 file.writeText(value.toString())
+            }
+        }
+    }
+
+    override fun setupNamespace(namespace: String) {
+        if (!directory.isDirectory) {
+            val success = directory.mkdirs()
+            if (!success) {
+                throw IOException("Could not create storage directory $directory")
             }
         }
     }

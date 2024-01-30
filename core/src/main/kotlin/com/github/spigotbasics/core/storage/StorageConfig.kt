@@ -45,6 +45,16 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
     val ioDelay: Long
         get() = getDurationAsMillis("debug.artificial-io-delay", 0L)
 
+    val mysqlInfo: MySQLDatabaseInfo
+        get() {
+            val host = mysqlHost ?: error("MySQL host not set")
+            val port = mysqlPort; if(port == 0) error("MySQL port not set")
+            val database = mysqlDatabase ?: error("MySQL database not set")
+            val username = mysqlUsername ?: error("MySQL username not set")
+            val password = mysqlPassword ?: error("MySQL password not set")
+            return MySQLDatabaseInfo(host, port, database, username, password)
+        }
+
     private fun replaceDir(dir: String): String {
         return dir.replace("%plugindir%", plugin.dataFolder.absolutePath)
     }
