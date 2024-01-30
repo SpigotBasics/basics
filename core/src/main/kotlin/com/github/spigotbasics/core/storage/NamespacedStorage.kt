@@ -29,9 +29,12 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
     }
 
     fun setJsonObject(user: String, value: JsonObject?): CompletableFuture<Void?> {
+        println("NamespacedStorage.setJsonObject($user, $value)")
         if (hasShutdown) {
+            println("hasShutdown == true")
             throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
         }
+        println("hasShutdown == false")
         return track(backend.setJsonObject(namespace, user, value))
     }
 
