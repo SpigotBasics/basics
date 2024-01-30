@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture
 
 class MySQLBackend(dbInfo: MySQLDatabaseInfo, ioDelay: Long): HikariBackend(HikariConfigFactory.createMysqlConfig(dbInfo), ioDelay) {
 
-    override val type = StorageType.SQLITE
+    override val type = StorageType.MYSQL
 
     override fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
