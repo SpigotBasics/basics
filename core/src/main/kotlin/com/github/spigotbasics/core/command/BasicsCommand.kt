@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.extensions.debug
+import com.github.spigotbasics.core.messages.CoreMessages
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.command.Command
@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity
 class BasicsCommand internal constructor (
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
+    val coreMessages: CoreMessages
 ) :
     Command(info.name) {
 
@@ -42,7 +43,7 @@ class BasicsCommand internal constructor (
             )
 
             if(executor == null) {
-                sender.sendMessage(ChatColor.RED.toString() + "The module that registered this command has been disabled.")
+                coreMessages.commandModuleDisabled.sendToSender(sender)
                 return true
             }
 
@@ -84,6 +85,11 @@ class BasicsCommand internal constructor (
         return result ?: super.tabComplete(sender, alias, args, location)
     }
 
+    /**
+     * Disable this command's executor by setting it to null. Disabled commands will always return true and
+     * print a message to the sender.
+     *
+     */
     fun disableExecutor() {
         executor = null
     }
