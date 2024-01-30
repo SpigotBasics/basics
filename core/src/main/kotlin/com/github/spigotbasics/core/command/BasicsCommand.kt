@@ -7,7 +7,14 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 
-class BasicsCommand(
+
+/**
+ * Represents a registered command. This is what is actually registered to Bukkit.
+ *
+ * @property info Command info
+ * @property executor Command executor
+ */
+class BasicsCommand internal constructor (
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
 ) :
@@ -75,10 +82,6 @@ class BasicsCommand(
         if(executor == null) return mutableListOf()
         val result = executor!!.tabComplete(context)
         return result ?: super.tabComplete(sender, alias, args, location)
-    }
-
-    override fun getPermission(): String {
-        return info.permission.name
     }
 
     fun disableExecutor() {
