@@ -7,6 +7,8 @@ plugins {
 }
 
 dependencies {
+    api(libs.gson)
+    testImplementation(libs.gson)
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
     implementation(libs.adventure.minimessage)
@@ -15,12 +17,7 @@ dependencies {
     implementation(libs.folialib)
     api(project(":common"))
     api(project(":pipe:facade"))
-//    api(libs.exposed.core)
-//    api(libs.exposed.dao)
-//    api(libs.exposed.jdbc)
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    testImplementation("com.google.code.gson:gson:2.10.1")
-    api("com.google.code.gson:gson:2.10.1")
+
 
 }
 
