@@ -84,6 +84,9 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     )
 
     override fun createStorage(name: String?): NamespacedStorage {
+        if(!isEnabled) {
+            throw IllegalStateException("Cannot create storage while module is disabled")
+        }
         val toReplaceRegex = "[^a-zA-Z0-9]".toRegex()
         var namespacedName = "m_${info.name.replace(toReplaceRegex, "_")}"
         if(name != null) {
