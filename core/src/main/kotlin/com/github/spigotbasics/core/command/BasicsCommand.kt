@@ -1,7 +1,6 @@
 package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.core.messages.CoreMessages
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
