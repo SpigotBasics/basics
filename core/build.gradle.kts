@@ -9,6 +9,7 @@ plugins {
 dependencies {
     api(libs.gson)
     testImplementation(libs.gson)
+    implementation(libs.hikari)
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
     implementation(libs.adventure.minimessage)

@@ -13,6 +13,7 @@ paper-api = "1.20.4-R0.1-SNAPSHOT"
 folialib = "0.3.1"
 exposed = "0.45.0"
 gson = "2.10.1"
+hikari = "4.0.3" # 5.X isn't compatible with Java 8
 
 [libraries]
 shadow = { group = "com.github.johnrengelman", name="shadow", version.ref="shadow" }
@@ -30,6 +31,7 @@ exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref="shadow" }
