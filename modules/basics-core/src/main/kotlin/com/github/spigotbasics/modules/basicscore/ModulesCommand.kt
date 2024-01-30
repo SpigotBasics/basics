@@ -82,7 +82,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private fun unloadModule(sender: CommandSender, module: BasicsModule): Boolean {
         if(module.isEnabled()) {
-            moduleManager.disableModule(module)
+            moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
             messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
                 .sendToSender(sender)
         }
@@ -130,7 +130,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
                 .sendToSender(sender)
             return true
         }
-        moduleManager.disableModule(module)
+        moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
         messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
             .sendToSender(sender)
         return true

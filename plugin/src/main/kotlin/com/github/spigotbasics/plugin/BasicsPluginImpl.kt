@@ -5,16 +5,16 @@ import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
-import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
-
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -39,9 +39,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
     override val messages: CoreMessages =
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
+    override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
-    override fun getLogger() = logger
+    //override fun getLogger() = logger
 
     /**
      * Checks if this server is running a rusty version of Spigot.
@@ -71,6 +72,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             return
         }
 
+        ::storageManager.get()
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()

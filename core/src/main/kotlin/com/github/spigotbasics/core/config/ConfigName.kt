@@ -23,6 +23,11 @@ class ConfigName private constructor(val path: String){
          */
         val MESSAGES = ConfigName("messages.yml")
 
+        /**
+         * Storage config name
+         */
+        val STORAGE = ConfigName("storage.yml")
+
 
         fun fromName(name: String): ConfigName {
             when(name) {

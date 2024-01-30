@@ -5,14 +5,17 @@ import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.logger.BasicsLogger
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
+import com.github.spigotbasics.core.storage.NamespacedStorage
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import java.io.File
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
 /**
@@ -39,7 +42,7 @@ interface BasicsModule {
     /**
      * This module's Logger
      */
-    val logger: Logger
+    val logger: BasicsLogger
 
     /**
      * Modules scheduler
@@ -82,7 +85,7 @@ interface BasicsModule {
     }
 
     fun enable(reloadConfig: Boolean)
-    fun disable()
+    fun disable(): CompletableFuture<Void?>
 
     fun isEnabled(): Boolean
 
@@ -92,6 +95,8 @@ interface BasicsModule {
     fun createCommand(): BasicsCommandBuilder {
         return BasicsCommandBuilder(this)
     }
+
+    fun createStorage(name: String? = null): NamespacedStorage
 
 
 

@@ -1,6 +1,8 @@
 package com.github.spigotbasics.core.logger
 
 import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.storage.StorageType
+import org.bukkit.Bukkit
 import java.io.File
 import java.util.logging.Logger
 import kotlin.reflect.KClass
@@ -8,27 +10,32 @@ import kotlin.reflect.KClass
 
 object BasicsLoggerFactory {
 
-    fun getLogger(name: String): Logger {
-        return Logger.getLogger("Basics $name")
+    fun getLogger(name: String): BasicsLogger {
+        return BasicsLogger(Bukkit.getLogger(),"Basics/$name")
     }
 
-    fun getModuleLogger(module: BasicsModule): Logger {
+    fun getModuleLogger(module: BasicsModule): BasicsLogger {
         return getLogger("Module/${module.info.name}")
     }
 
-    fun getModuleLogger(module: BasicsModule, clazz: KClass<*>): Logger {
+    fun getModuleLogger(module: BasicsModule, clazz: KClass<*>): BasicsLogger {
         return getLogger("Module/${module.info.name}/${clazz.simpleName}")
     }
 
-    fun getConfigLogger(file: File): Logger {
+    fun getConfigLogger(file: File): BasicsLogger {
         return getLogger("Config/${file.name}")
     }
 
-    fun getCoreLogger(clazz: KClass<*>): Logger {
+    fun getCoreLogger(clazz: KClass<*>): BasicsLogger {
         if (clazz.java.classLoader != javaClass.classLoader) {
             throw IllegalArgumentException("Class must be loaded by the same classloader as this class")
         }
         return getLogger("Core/${clazz.simpleName}")
+    }
+
+    fun getStorageLogger(type: StorageType, namespace: String): BasicsLogger {
+        return getLogger("Storage/${type.name}/$namespace")
+
     }
 
 }

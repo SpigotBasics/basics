@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import org.bukkit.plugin.Plugin
 import java.io.File
@@ -48,6 +49,11 @@ interface BasicsPlugin: Plugin {
      * Messages used by the plugin itself or by more than one module.
      */
     val messages: CoreMessages
+
+    /**
+     * Storage manager
+     */
+    val storageManager: StorageManager
 
     /**
      * Reloads the core configuration settings of the plugin.

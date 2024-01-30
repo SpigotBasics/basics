@@ -21,9 +21,11 @@ class CoreConfigManager(
         private val logger = BasicsLoggerFactory.getCoreLogger(CoreConfigManager::class)
     }
 
-    private fun <T : SavedConfig> createInstance(clazz: Class<T>, file: File, messageFactory: MessageFactory): T {
+    private fun <T : SavedConfig> createInstance(clazz: Class<T>, plugin: BasicsPlugin, file: File): T {
         try {
-            return clazz.getConstructor(File::class.java, MessageFactory::class.java).newInstance(file, messageFactory)
+            return clazz.getConstructor(BasicsPlugin::class.java, File::class.java).newInstance(plugin, file)
+        } catch(e: NoSuchMethodException) {
+            throw RuntimeException("Failed to create config instance of class ${clazz.name}, no visible constructor with (BasicsPlugin, File) found", e)
         } catch (e: Exception) {
             throw RuntimeException("Failed to create config instance of class ${clazz.name}", e)
         }
@@ -37,7 +39,7 @@ class CoreConfigManager(
         val configName = fileName
         val file = File(plugin.dataFolder, configName)
 
-        val configuration = createInstance(configurationClass, file, messageFactory)
+        val configuration = createInstance(configurationClass, plugin, file)
 
         try {
             // If a default config exists, set it as defaults
