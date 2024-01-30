@@ -8,7 +8,7 @@ class BasicsCommandBuilder(private val module: BasicsModule) {
 
     private var name: String? = null
     private var permission: Permission? = null
-    private var permissionMessage: Message = module.plugin.messages.noPermission()
+    private var permissionMessage: Message = module.plugin.messages.noPermission
     private var description: String? = null
     private var usage: String? = null
     private var aliases: List<String> = emptyList()
@@ -45,7 +45,7 @@ class BasicsCommandBuilder(private val module: BasicsModule) {
             usage = usage,
             aliases = aliases,
         )
-        return BasicsCommand(info, executor ?: error("Executor must be set"))
+        return BasicsCommand(info, executor ?: error("Executor must be set"), module.plugin.messages)
     }
 
 

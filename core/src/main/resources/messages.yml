@@ -13,3 +13,4 @@ player-not-found: "<red>Player not found: </red><color:#FF8888><argument></color
 
 command-not-from-console: "<red>This command can't be run from console!</red>"
 must-specify-player-from-console: "<red>You must specify a player when running this command from console!</red>"
+command-module-disabled: "<red>The module that registered this command is disabled!</red>"
