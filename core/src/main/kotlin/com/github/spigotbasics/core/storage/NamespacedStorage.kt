@@ -1,7 +1,9 @@
 package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
@@ -29,21 +31,21 @@ class NamespacedStorage(private val backend: StorageBackend, val namespace: Stri
         }
     }
 
-    fun getJsonObject(user: String): CompletableFuture<JsonObject?> {
+    fun getJsonElement(user: String): CompletableFuture<JsonElement?> {
         if (hasShutdown) {
             throw IllegalStateException("Storage has been shutdown, not accepting new get requests")
         }
         if (isShutdown) {
             throw IllegalStateException("Storage is shutting down, not accepting new get requests")
         }
-        return track(backend.getJsonObject(namespace, user))
+        return track(backend.getJsonElement(namespace, user))
     }
 
-    fun setJsonObject(user: String, value: JsonObject?): CompletableFuture<Void?> {
+    fun setJsonElement(user: String, value: JsonElement?): CompletableFuture<Void?> {
         if (hasShutdown) {
             throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
         }
-        return track(backend.setJsonObject(namespace, user, value))
+        return track(backend.setJsonElement(namespace, user, value))
     }
 
     // TODO: getAndSet method. Probably should take a Function<JsonObject?, JsonObject?> as parameter

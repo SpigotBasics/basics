@@ -1,5 +1,6 @@
 package com.github.spigotbasics.modules.basicslastjoin
 
+import com.github.spigotbasics.core.Serialization
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.ModuleInstantiationContext
 import com.github.spigotbasics.core.storage.NamespacedStorage
@@ -14,7 +15,7 @@ class BasicsLastJoinModule(context: ModuleInstantiationContext) : AbstractBasics
         eventBus.subscribe(PlayerJoinEvent::class.java) {
 
             val player = it.player
-            storage?.getJsonObject(player.uniqueId.toString())?.whenComplete { json, u ->
+            storage?.getJsonElement(player.uniqueId.toString())?.whenComplete { json, u ->
 
                 if (u != null) {
                     logger.warning("Failed to get last join for ${it.player.name}")
@@ -23,14 +24,14 @@ class BasicsLastJoinModule(context: ModuleInstantiationContext) : AbstractBasics
                 }
 
                 if (json != null) {
-                    val lastJoin = LastJoin.fromJson(json)
+                    val lastJoin = Serialization.fromJson(json, LastJoin::class.java)
                     player.sendMessage("Welcome back, ${it.player.name}! Your last join was @ ${lastJoin.dateTime}")
                 } else {
                     player.sendMessage("This is your first join, ${it.player.name}!")
                 }
             }?.thenRun() {
                 try {
-                    storage?.setJsonObject(player.uniqueId.toString(), LastJoin().toJson())
+                    storage?.setJsonElement(player.uniqueId.toString(), Serialization.toJson(LastJoin()))
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 }
