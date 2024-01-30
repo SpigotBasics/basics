@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
 // TODO: add debug logs for get and set methods and whenComplete, print out parameters and time taken
-class NamespacedStorage(private val backend: StorageBackend, private val namespace: String) {
+class NamespacedStorage(private val backend: StorageBackend, val namespace: String) {
 
     private val logger = BasicsLoggerFactory.getStorageLogger(backend.type, namespace)
     private val futures: MutableList<CompletableFuture<*>> = Collections.synchronizedList(mutableListOf())
