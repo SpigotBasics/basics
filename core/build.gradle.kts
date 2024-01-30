@@ -18,6 +18,10 @@ dependencies {
 //    api(libs.exposed.core)
 //    api(libs.exposed.dao)
 //    api(libs.exposed.jdbc)
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    testImplementation("com.google.code.gson:gson:2.10.1")
+    api("com.google.code.gson:gson:2.10.1")
+
 }
 
 
