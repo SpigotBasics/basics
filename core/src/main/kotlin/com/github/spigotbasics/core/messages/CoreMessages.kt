@@ -1,10 +1,11 @@
 package com.github.spigotbasics.core.messages
 
+import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.SavedConfig
 import org.bukkit.permissions.Permission
 import java.io.File
 
-class CoreMessages(file: File, messageFactory: MessageFactory): SavedConfig(file, messageFactory) {
+class CoreMessages(plugin: BasicsPlugin, file: File): SavedConfig(plugin, file) {
 
     fun noPermission(permission: Permission): Message {
         return getMessage("no-permission").tags("permission" to permission.name)

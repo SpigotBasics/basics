@@ -1,0 +1,21 @@
+# Available storage types:
+# - JSON (default)
+# - SQLITE
+# - MYSQL
+type: JSON
+
+# Path to use for JSON storage
+# %plugindir% will be replaced with the directory of the plugin
+json-directory: "%plugindir%/data-storage/"
+
+# Path to use for SQLITE storage
+# %plugindir% will be replaced with the directory of the plugin
+sqlite-file: "%plugindir%/data-storage/database.db"
+
+# Credentials to use for MYSQL storage
+mysql:
+  host: localhost
+  port: 3306
+  database: "minecraft"
+  username: "username"
+  password: "password"

@@ -1,13 +1,15 @@
 package com.github.spigotbasics.core.module
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
+import com.github.spigotbasics.core.storage.NamespacedStorage
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
@@ -68,9 +70,37 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     override val permissionManager = BasicsPermissionManager(logger)
 
-    fun getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*> = javaClass*/): SavedConfig = getConfig(configName/*, clazzToGetFrom*/, SavedConfig::class.java)
+    private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
 
-    fun <T: SavedConfig> getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*>*/, configurationClass: Class<T>): T = plugin.coreConfigManager.getConfig(configName.path, getNamespacedResourceName(configName.path), javaClass, configurationClass)
+    fun getConfig(configName: ConfigName/*, clazzToGetFrom: Class<*> = javaClass*/): SavedConfig =
+        getConfig(configName/*, clazzToGetFrom*/, SavedConfig::class.java)
+
+    fun <T : SavedConfig> getConfig(
+        configName: ConfigName/*, clazzToGetFrom: Class<*>*/,
+        configurationClass: Class<T>
+    ): T = plugin.coreConfigManager.getConfig(
+        configName.path,
+        getNamespacedResourceName(configName.path),
+        javaClass,
+        configurationClass
+    )
+
+    override fun createStorage(name: String?): NamespacedStorage {
+        // TODO: name must match regex [a-z0-9-_]+ (or something like that)
+        val namespacedName = if (name == null) {
+            "module.${info.name}"
+        } else {
+            "module.${info.name}.$name"
+        }
+
+        if(storages.containsKey(namespacedName)) {
+            throw IllegalArgumentException("Storage with name '$namespacedName' already exists")
+        }
+
+        val storage: NamespacedStorage = plugin.storageManager.createStorage(namespacedName)
+        storages[namespacedName] = storage
+        return storage
+    }
 
     /**
      * Get namespaced resource name. For `config.yml` this will simply be `<module-name>.yml`, for all other files it will be `<module-name>-<file-name>`.
@@ -93,17 +123,21 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     private var isEnabled = false
     final override fun enable(reloadConfig: Boolean) {
         isEnabled = true
-        if(reloadConfig) {
+        if (reloadConfig) {
             config.reload()
         }
     }
 
-    final override fun disable() {
+    final override fun disable(): CompletableFuture<Void?> {
+        val storageShutdownFuture =
+            CompletableFuture.allOf(*storages.values.map { it.shutdown(10, java.util.concurrent.TimeUnit.SECONDS) }
+                .toTypedArray()) // TODO: Configurable timeout
         scheduler.killAll()
         eventBus.dispose()
         commandManager.unregisterAll()
         permissionManager.unregisterAll()
         isEnabled = false
+        return storageShutdownFuture
     }
 
     override fun isEnabled(): Boolean {

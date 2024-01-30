@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.config
 
+import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -23,12 +24,14 @@ open class SavedConfig internal constructor(
     /**
      * File backing this configuration.
      */
-    val file: File,
+    private val plugin: BasicsPlugin,
+    val file: File
     //val tagResolverFactory: TagResolverFactory
-    val messageFactory: MessageFactory
+    //val messageFactory: MessageFactory
 ) : YamlConfiguration() {
 
     private val logger: Logger = BasicsLoggerFactory.getConfigLogger(file)
+    private val messageFactory: MessageFactory = plugin.messageFactory
 
     /**
      * Saves this configuration to the file.

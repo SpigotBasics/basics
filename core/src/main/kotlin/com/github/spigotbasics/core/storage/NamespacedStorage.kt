@@ -3,8 +3,8 @@ package com.github.spigotbasics.core.storage
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.google.gson.JsonObject
 import java.util.*
+import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutorCompletionService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
@@ -40,39 +40,35 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
         return future
     }
 
-    fun shutdown(timeout: Long, unit: TimeUnit) {
+    fun shutdown(timeout: Long, unit: TimeUnit): CompletableFuture<Void?> {
         isShutdown = true
-        synchronized(futures) {
-            val executorService = Executors.newCachedThreadPool()
-            val completionService = ExecutorCompletionService<Void?>(executorService)
-
-            futures.forEach { future ->
-                completionService.submit {
-                    future.get(timeout, unit)
-                    return@submit null
+        return CompletableFuture.supplyAsync({
+            synchronized(futures) {
+                val executorService = Executors.newCachedThreadPool()
+                futures.forEach { future ->
+                    executorService.submit(Callable<Void?> {
+                        future.get(timeout, unit)
+                        return@Callable null
+                    })
                 }
-            }
-
-            executorService.shutdown() // No more tasks will be submitted
-
-            try {
-                // Wait for tasks to complete or timeout
-                executorService.awaitTermination(timeout, unit)
-            } catch (e: InterruptedException) {
-                logger.log(Level.WARNING, "Interrupted while waiting for tasks to complete", e)
-            }
-
-            // Force complete any remaining futures
-            futures.forEach { future ->
-                if (!future.isDone) {
-                    future.completeExceptionally(RuntimeException("Forced completion due to shutdown"))
-                    logger.warning("Forcefully completed future $future due to shutdown")
+                executorService.shutdown()
+                try {
+                    executorService.awaitTermination(timeout, unit)
+                } catch (e: InterruptedException) {
+                    logger.log(Level.WARNING, "Interrupted while waiting for tasks to complete", e)
                 }
-            }
 
-            futures.clear()
-            hasShutdown = true
-        }
+                futures.forEach { future ->
+                    if (!future.isDone) {
+                        future.completeExceptionally(RuntimeException("Forced completion due to shutdown"))
+                        logger.warning("Forcefully completed future $future due to shutdown")
+                    }
+                }
+                hasShutdown = true
+                futures.clear()
+            }
+            return@supplyAsync null
+        }, Executors.newSingleThreadExecutor()) // Execute the shutdown logic in a separate thread
     }
 
     //    fun shutdown() {
