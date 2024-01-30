@@ -31,10 +31,8 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
     fun setJsonObject(user: String, value: JsonObject?): CompletableFuture<Void?> {
         println("NamespacedStorage.setJsonObject($user, $value)")
         if (hasShutdown) {
-            println("hasShutdown == true")
             throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
         }
-        println("hasShutdown == false")
         return track(backend.setJsonObject(namespace, user, value))
     }
 
@@ -42,7 +40,7 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
 
     private fun <T> track(future: CompletableFuture<T>): CompletableFuture<T> {
         futures.add(future)
-        future.whenComplete { _, _ -> futures.remove(future) }
+        future.thenRun { futures.remove(future) }
         return future
     }
 
@@ -78,17 +76,4 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
             return@supplyAsync null
         }, Executors.newSingleThreadExecutor()) // Execute the shutdown logic in a separate thread
     }
-
-    //    fun shutdown() {
-//        synchronized(futures) {
-//            futures.forEach { future ->
-//                if (!future.isDone) {
-//                    // Handle incomplete futures, e.g., by completing them exceptionally
-//                    // TODO: Give them some time to complete normally
-//                    future.completeExceptionally(RuntimeException("Forced completion due to shutdown"))
-//                }
-//            }
-//            futures.clear()
-//        }
-//    }
 }
