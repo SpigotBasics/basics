@@ -21,4 +21,4 @@ mysql:
   password: "password"
 
 debug:
-  io-delay: 500 ms
+  artificial-io-delay: 0 ms
