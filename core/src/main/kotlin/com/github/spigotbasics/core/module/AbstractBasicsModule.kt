@@ -9,6 +9,8 @@ import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
 
@@ -84,16 +86,16 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     )
 
     override fun createStorage(name: String?): NamespacedStorage {
-        if(!isEnabled) {
+        if (!isEnabled) {
             throw IllegalStateException("Cannot create storage while module is disabled")
         }
         val toReplaceRegex = "[^a-zA-Z0-9]".toRegex()
         var namespacedName = "m_${info.name.replace(toReplaceRegex, "_")}"
-        if(name != null) {
+        if (name != null) {
             namespacedName += "__${name.replace(toReplaceRegex, "_")}"
         }
 
-        if(storages.containsKey(namespacedName)) {
+        if (storages.containsKey(namespacedName)) {
             throw IllegalArgumentException("Storage with name '$namespacedName' already exists")
         }
 
@@ -129,9 +131,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     }
 
     final override fun disable(): CompletableFuture<Void?> {
-        val storageShutdownFuture =
-            CompletableFuture.allOf(*storages.values.map { it.shutdown(10, java.util.concurrent.TimeUnit.SECONDS) }
-                .toTypedArray()) // TODO: Configurable timeout
+        val storageShutdownFuture = shutdownAllStorages() // TODO: Configurable timeout
         scheduler.killAll()
         eventBus.dispose()
         commandManager.unregisterAll()
@@ -139,6 +139,14 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         isEnabled = false
         return storageShutdownFuture
     }
+
+    private fun shutdownAllStorages(): CompletableFuture<Void?> =
+        CompletableFuture.allOf(*storages.values.map {
+            it.shutdown(10, TimeUnit.SECONDS).whenComplete { _, ex ->
+                if (ex != null) logger.log(Level.SEVERE, "Failed to shutdown storage ${it.namespace}", ex)
+                storages.remove(it.namespace)
+            }
+        }.toTypedArray())
 
     override fun isEnabled(): Boolean {
         return isEnabled
