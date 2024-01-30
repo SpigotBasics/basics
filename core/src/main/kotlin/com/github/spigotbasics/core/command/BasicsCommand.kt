@@ -42,7 +42,6 @@ class BasicsCommand(
             val returned = executor!!.execute(context)
 
             if (!returned) {
-                "Command Executor returned false, printing usage now...")
                 sender.sendMessage("Usage: $usage") // TODO: Use messages instead of Strings
                 return false
             }

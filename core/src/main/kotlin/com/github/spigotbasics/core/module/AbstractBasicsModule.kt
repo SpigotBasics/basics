@@ -84,11 +84,10 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     )
 
     override fun createStorage(name: String?): NamespacedStorage {
-        // TODO: name must match regex [a-z0-9-_]+ (or something like that)
-        val namespacedName = if (name == null) {
-            "module.${info.name}"
-        } else {
-            "module.${info.name}.$name"
+        val toReplaceRegex = "[^a-zA-Z0-9]".toRegex()
+        var namespacedName = "m_${info.name.replace(toReplaceRegex, "_")}"
+        if(name != null) {
+            namespacedName += "__${name.replace(toReplaceRegex, "_")}"
         }
 
         if(storages.containsKey(namespacedName)) {

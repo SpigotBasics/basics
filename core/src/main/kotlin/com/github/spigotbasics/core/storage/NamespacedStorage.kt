@@ -18,6 +18,15 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
     private var isShutdown = false
     private var hasShutdown = false
 
+    init {
+        try {
+            backend.setupNamespace(namespace)
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "Failed to setup namespace $namespace", e)
+            hasShutdown = true
+        }
+    }
+
     fun getJsonObject(user: String): CompletableFuture<JsonObject?> {
         if (hasShutdown) {
             throw IllegalStateException("Storage has been shutdown, not accepting new get requests")
@@ -29,7 +38,6 @@ class NamespacedStorage(private val backend: StorageBackend, private val namespa
     }
 
     fun setJsonObject(user: String, value: JsonObject?): CompletableFuture<Void?> {
-        println("NamespacedStorage.setJsonObject($user, $value)")
         if (hasShutdown) {
             throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
         }
