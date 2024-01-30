@@ -63,7 +63,7 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         try {
             val map = yaml.getValues(true).mapValues {
                 val value: String = it.value?.toString() ?: ""
-                println("tag <${it.key}> = $value")
+                //println("tag <${it.key}> = $value")
 
                 return@mapValues value
             }

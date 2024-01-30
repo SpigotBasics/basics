@@ -7,9 +7,11 @@ import com.github.spigotbasics.core.module.InvalidModuleException
 import com.github.spigotbasics.core.module.ModuleAlreadyLoadedException
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.loader.ModuleLoader
+import org.jetbrains.annotations.Blocking
 import java.io.File
 import java.io.FileNotFoundException
 import java.lang.Thread.sleep
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import kotlin.coroutines.suspendCoroutine
 
@@ -62,6 +64,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     // TODO: Switch back to this when issues happen
     @Throws(ModuleAlreadyLoadedException::class, InvalidModuleException::class)
     fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
+        logger.info("Loading module ${moduleFile.absolutePath}")
         val loader = try {
             ModuleLoader(plugin, moduleFile)
         } catch (e: InvalidModuleException) {
@@ -111,6 +114,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 //    }
 
     fun enableModule(module: BasicsModule, reloadConfig: Boolean) {
+        logger.info("Enabling module ${module.info.nameAndVersion}")
         //if(enabledModules.contains(module)) {
         if(module.isEnabled()) {
             error("Module ${module.info.name} is already enabled")
@@ -131,21 +135,24 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         //enabledModules.add(module)
     }
 
-    fun disableModule(module: BasicsModule) {
+    fun disableModule(module: BasicsModule): CompletableFuture<Void?> {
+        logger.info("Disabling module ${module.info.nameAndVersion}")
         //if(!enabledModules.contains(module)) {
         if(!module.isEnabled()) {
             error("Module ${module.info.name} is not enabled")
         }
-        module.disable()
+
         try {
             module.onDisable()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Failed to disable module ${module.info.name}", e)
+            logger.log(Level.SEVERE, "Error while disabling module ${module.info.name}", e)
         }
-        //enabledModules.remove(module)
+
+        return module.disable()
     }
 
     fun unloadModule(module: BasicsModule, forceGc: Boolean = false) {
+        logger.info("Unloading module ${module.info.nameAndVersion}")
         if(module.isEnabled()) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
@@ -169,17 +176,18 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     }
 
-    fun disableAllModules() {
-        for(module in enabledModules) {
-            disableModule(module)
+    fun disableAllModules(): CompletableFuture<Void?> {
+        val futures = mutableListOf<CompletableFuture<Void?>>()
+        for(module in enabledModules.toList()) {
+            futures += disableModule(module)
         }
+        return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
-    fun disableAndUnloadAllModules() {
+    @Blocking
+    fun disableAndUnloadAllModules() { // TODO: disable/unload should happen after each other, instead of first disabling all modules, then unloading all modules
+        disableAllModules().get()
         for(module in myLoadedModules.toList()) {
-            if(module.isEnabled()) {
-                disableModule(module)
-            }
             unloadModule(module, false)
         }
         forceGc()
