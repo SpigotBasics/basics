@@ -35,7 +35,8 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
 
     private fun console2player(sender: CommandSender, player: Player, message: String) {
         val msg = module.formatConsole
-        msg.concerns(player).tags("message" to message).sendToPlayer(player)
+        msg.tags("message" to message).sendToPlayer(player)
+        module.formatSent.concerns(player).tags("message" to message).sendToSender(sender)
     }
 
     private fun player2player(

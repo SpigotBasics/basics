@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.CoreConfigManager
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.backends.JsonBackend
 import com.github.spigotbasics.core.storage.backends.MySQLBackend
 import com.github.spigotbasics.core.storage.backends.SQLiteBackend
@@ -12,6 +13,8 @@ import com.github.spigotbasics.core.storage.backends.SQLiteBackend
 // TODO: Plugins shall be notified about player joins instead of listening on their own, so they can fetch playerdata if needed
 class StorageManager(configManager: CoreConfigManager) {
 
+    private val logger = BasicsLoggerFactory.getCoreLogger(StorageManager::class)
+
     val namespaceRegex = "^[_a-zA-Z][_a-zA-Z0-9]{0,63}\$".toRegex()
 
     val config = configManager.getConfig(
@@ -21,10 +24,15 @@ class StorageManager(configManager: CoreConfigManager) {
         StorageConfig::class.java
     )
 
-    private val backend: StorageBackend = when (config.storageType) {
-        StorageType.JSON -> JsonBackend(config.jsonDirectory, config.ioDelay)
-        StorageType.SQLITE -> SQLiteBackend(config.sqliteFile, config.ioDelay)
-        StorageType.MYSQL -> MySQLBackend(config.mysqlInfo, config.ioDelay)
+    private val backend: StorageBackend = createBackend()
+
+    private fun createBackend(): StorageBackend {
+        logger.info("Initializing ${config.storageType} storage backend ...")
+        return when (config.storageType) {
+            StorageType.JSON -> JsonBackend(config.jsonDirectory, config.ioDelay)
+            StorageType.SQLITE -> SQLiteBackend(config.sqliteFile, config.ioDelay)
+            StorageType.MYSQL -> MySQLBackend(config.mysqlInfo, config.ioDelay)
+        }
     }
 
     internal fun createStorage(namespace: String): NamespacedStorage {
