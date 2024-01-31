@@ -1,7 +1,5 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 

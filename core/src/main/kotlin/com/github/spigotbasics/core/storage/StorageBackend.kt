@@ -1,16 +1,18 @@
 package com.github.spigotbasics.core.storage
 
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import java.util.concurrent.CompletableFuture
 
 interface StorageBackend {
 
     val type: StorageType
 
-    fun getJsonObject(namespace: String, keyId: String): CompletableFuture<JsonObject?>
+    fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?>
 
-    fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?>
+    fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?>
 
     fun setupNamespace(namespace: String)
+
+    fun shutdown(): CompletableFuture<Void?>
 
 }

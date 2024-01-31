@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.storage.backends
 
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.github.spigotbasics.core.storage.StorageType
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import java.io.File
 import java.io.IOException
@@ -18,7 +18,7 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
         }
     }
 
-    override fun getJsonObject(namespace: String, keyId: String): CompletableFuture<JsonObject?> {
+    override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
         return CompletableFuture.supplyAsync {
             val file = getFile(namespace, keyId)
             if (!file.parentFile.isDirectory) {
@@ -30,14 +30,14 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
             } else {
                 file.reader().use { reader ->
                     val json = JsonParser.parseReader(reader)
-                    return@supplyAsync json.asJsonObject
+                    return@supplyAsync json
                 }
             }
         }
     }
 
 
-    override fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?> {
+    override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             val file = getFile(namespace, keyId)
             ioDelay()
@@ -62,4 +62,7 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
     }
 
     private fun getFile(key: String, user: String) = File(File(directory, key), "$user.json")
+
+    override fun shutdown(): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
+
 }
