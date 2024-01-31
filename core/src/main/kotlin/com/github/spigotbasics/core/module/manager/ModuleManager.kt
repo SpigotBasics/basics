@@ -132,6 +132,12 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             }
             return
         }
+        module.loadAllOnlinePlayerData().whenComplete { _, e ->
+            if(e != null) {
+                logger.log(Level.SEVERE, "Failed to load all online player data for module ${module.info.name}", e)
+            }
+            logger.info("Enabled module ${module.info.nameAndVersion}")
+        }
         //enabledModules.add(module)
     }
 
@@ -148,7 +154,14 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             logger.log(Level.SEVERE, "Error while disabling module ${module.info.name}", e)
         }
 
-        return module.disable()
+        return module.saveAndForgetAllOnlinePlayerData().whenComplete { _, e ->
+            if(e != null) {
+                logger.log(Level.SEVERE, "Failed to save and forget all online player data for module ${module.info.name}", e)
+            }
+        }.whenComplete { _, _ ->
+            module.disable().get()
+            logger.info("Disabled module ${module.info.nameAndVersion}")
+        }
     }
 
     fun unloadModule(module: BasicsModule, forceGc: Boolean = false) {

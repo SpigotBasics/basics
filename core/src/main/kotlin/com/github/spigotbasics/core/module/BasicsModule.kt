@@ -12,11 +12,9 @@ import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
-import org.bukkit.permissions.Permission
-import org.bukkit.permissions.PermissionDefault
 import java.io.File
+import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Logger
 
 /**
  * Common interfaces to be used by all modules. Implementations require a public constructor that takes in a [BasicsPlugin] and a [ModuleInfo].
@@ -97,6 +95,38 @@ interface BasicsModule {
     }
 
     fun createStorage(name: String? = null): NamespacedStorage
+
+    fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
+
+    fun savePlayerData(uuid: UUID): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
+
+    fun forgetPlayerData(uuid: UUID) = Unit
+
+    fun loadAllOnlinePlayerData(): CompletableFuture<Void?> {
+        val futures = mutableListOf<CompletableFuture<Void?>>()
+        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+            futures += loadPlayerData(player.uniqueId)
+        }
+        return CompletableFuture.allOf(*futures.toTypedArray())
+    }
+
+    private fun saveAllOnlinePlayerData(): CompletableFuture<Void?> {
+        val futures = mutableListOf<CompletableFuture<Void?>>()
+        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+            futures += savePlayerData(player.uniqueId)
+        }
+        return CompletableFuture.allOf(*futures.toTypedArray())
+    }
+
+    fun saveAndForgetAllOnlinePlayerData(): CompletableFuture<Void?> {
+        val futures = mutableListOf<CompletableFuture<Void?>>()
+        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+            futures += savePlayerData(player.uniqueId).whenComplete { _, _ ->
+                forgetPlayerData(player.uniqueId)
+            }
+        }
+        return CompletableFuture.allOf(*futures.toTypedArray())
+    }
 
 
 
