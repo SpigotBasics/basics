@@ -1,0 +1,4 @@
+home-set: "<green>Set home <gold><home></gold> to your current location.</green>"
+home-teleported: "<green>Teleported to home <gold><home></gold>.</green>"
+home-not-found: "<red>Home <gold><home></gold> not found.</red>"
+home-limit-reached: "<red>You cannot set more than <gold><limit></gold> homes.</red>"
