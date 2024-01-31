@@ -2,6 +2,7 @@ package com.github.spigotbasics.core
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import com.google.gson.JsonSyntaxException
 
 object Serialization {
     private val gson = GsonBuilder()
@@ -10,6 +11,7 @@ object Serialization {
 
     fun <T> toJson(obj: T): JsonElement = gson.toJsonTree(obj)
 
+    @Throws(JsonSyntaxException::class)
     fun <T> fromJson(json: JsonElement, clazz: Class<T>): T = gson.fromJson(json, clazz)
 
 

@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
+import com.github.spigotbasics.core.listener.JoinQuitListener
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -83,6 +84,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
+        server.pluginManager.registerEvents(JoinQuitListener(moduleManager), this)
     }
 
 
