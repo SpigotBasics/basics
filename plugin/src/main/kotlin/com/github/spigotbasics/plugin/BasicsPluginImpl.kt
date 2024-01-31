@@ -12,11 +12,14 @@ import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.storage.StorageManager
+import com.github.spigotbasics.core.util.ClassLoaderFix
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
@@ -63,8 +66,12 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
+        ClassLoaderFix.trickOnEnable()
+
         if (isRustySpigot()) {
-            logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty. Please update to at least Spigot $rustySpigotThreshold!")
+            logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty.")
+            logger.severe("Please update to at least Spigot $rustySpigotThreshold!")
+            logger.severe("")
             logger.severe("See here for more information:")
             logger.severe("- https://j3f.de/downloadspigotlatest")
             logger.severe("- https://j3f.de/howtoupdatespigot")
@@ -77,6 +84,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
     }
+
 
     private fun reloadCustomTags() {
         tagResolverFactory.loadCustomTags(
@@ -94,7 +102,17 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onDisable() {
+        ClassLoaderFix.setSuperEnabled(this, true)
         moduleManager.disableAndUnloadAllModules()
+        storageManager.shutdown().whenComplete { _, e ->
+            if (e != null) {
+                logger.log(Level.SEVERE, "Failed to shutdown storage backend", e)
+            } else {
+                logger.info("Storage backend shutdown completed")
+            }
+        }.get()
+        ClassLoaderFix.setSuperEnabled(this, false)
     }
+
 
 }

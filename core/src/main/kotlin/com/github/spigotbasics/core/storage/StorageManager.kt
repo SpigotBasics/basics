@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.backends.JsonBackend
 import com.github.spigotbasics.core.storage.backends.MySQLBackend
 import com.github.spigotbasics.core.storage.backends.SQLiteBackend
+import java.util.concurrent.CompletableFuture
 
 // TODO: Storages saved in vals will be closed when a module is disabled and then enabled again.
 // Possible fix: Prevent storages from being created before isEnabled is true.
@@ -41,5 +42,7 @@ class StorageManager(configManager: CoreConfigManager) {
         }
         return NamespacedStorage(backend, namespace)
     }
+
+    fun shutdown(): CompletableFuture<Void?> = backend.shutdown()
 
 }

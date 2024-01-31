@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.storage.backends
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
@@ -7,9 +8,11 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.io.IOException
 import java.sql.SQLException
-import java.util.concurrent.CompletableFuture
+import java.util.concurrent.*
 
 abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : StorageBackend {
+
+    private val logger = BasicsLoggerFactory.getCoreLogger(HikariBackend::class)
 
     protected val dataSource = HikariDataSource(config)
 
@@ -28,7 +31,7 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
                 }
             }
         } catch (e: SQLException) {
-            throw(IOException(e))
+            throw (IOException(e))
         }
     }
 
@@ -53,6 +56,25 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
             }
             null
         }
+    }
+
+    override fun shutdown(): CompletableFuture<Void?> {
+        logger.info("Waiting up to 10 seconds for Hikari DataSource to close ...")
+        val future = CompletableFuture.runAsync {
+            dataSource.close()
+        }
+
+        val scheduler = Executors.newScheduledThreadPool(1)
+        scheduler.schedule({
+            if (!future.isDone) {
+                future.completeExceptionally(
+                    TimeoutException("Couldn't close Hikari DataSource in time.")
+                )
+            }
+        }, 10, TimeUnit.SECONDS)
+
+        scheduler.shutdown()
+        return future
     }
 
 }

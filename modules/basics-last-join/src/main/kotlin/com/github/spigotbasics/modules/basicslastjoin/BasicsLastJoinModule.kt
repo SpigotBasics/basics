@@ -40,4 +40,8 @@ class BasicsLastJoinModule(context: ModuleInstantiationContext) : AbstractBasics
         }
     }
 
+    override fun onDisable() {
+        storage?.setJsonElement("module", Serialization.toJson(LastJoin()))
+    }
+
 }
