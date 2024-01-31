@@ -13,4 +13,6 @@ interface StorageBackend {
 
     fun setupNamespace(namespace: String)
 
+    fun shutdown(): CompletableFuture<Void?>
+
 }

@@ -62,4 +62,7 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
     }
 
     private fun getFile(key: String, user: String) = File(File(directory, key), "$user.json")
+
+    override fun shutdown(): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
+
 }
