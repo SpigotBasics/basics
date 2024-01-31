@@ -1,6 +1,7 @@
 package com.github.spigotbasics.pipe
 
 import com.github.spigotbasics.common.Either
+import org.bukkit.Location
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
