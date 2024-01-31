@@ -1,15 +1,22 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.extensions.debug
-import org.bukkit.ChatColor
+import com.github.spigotbasics.core.messages.CoreMessages
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 
-class BasicsCommand(
+
+/**
+ * Represents a registered command. This is what is actually registered to Bukkit.
+ *
+ * @property info Command info
+ * @property executor Command executor
+ */
+class BasicsCommand internal constructor (
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
+    val coreMessages: CoreMessages
 ) :
     Command(info.name) {
 
@@ -35,7 +42,7 @@ class BasicsCommand(
             )
 
             if(executor == null) {
-                sender.sendMessage(ChatColor.RED.toString() + "The module that registered this command has been disabled.")
+                coreMessages.commandModuleDisabled.sendToSender(sender)
                 return true
             }
 
@@ -77,10 +84,11 @@ class BasicsCommand(
         return result ?: super.tabComplete(sender, alias, args, location)
     }
 
-    override fun getPermission(): String {
-        return info.permission.name
-    }
-
+    /**
+     * Disable this command's executor by setting it to null. Disabled commands will always return true and
+     * print a message to the sender.
+     *
+     */
     fun disableExecutor() {
         executor = null
     }

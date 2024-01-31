@@ -1,15 +1,18 @@
 package com.github.spigotbasics.core.storage.backends
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.StorageBackend
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.io.IOException
 import java.sql.SQLException
-import java.util.concurrent.CompletableFuture
+import java.util.concurrent.*
 
 abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : StorageBackend {
+
+    private val logger = BasicsLoggerFactory.getCoreLogger(HikariBackend::class)
 
     protected val dataSource = HikariDataSource(config)
 
@@ -28,12 +31,12 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
                 }
             }
         } catch (e: SQLException) {
-            throw(IOException(e))
+            throw (IOException(e))
         }
     }
 
 
-    override fun getJsonObject(namespace: String, keyId: String): CompletableFuture<JsonObject?> {
+    override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
         return CompletableFuture.supplyAsync {
             try {
                 val sql = "SELECT data FROM $namespace WHERE key_id = ?"
@@ -43,7 +46,7 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
                         stmt.executeQuery().use { rs ->
                             if (rs.next()) {
                                 val jsonData = rs.getString("data")
-                                return@supplyAsync JsonParser.parseString(jsonData).asJsonObject
+                                return@supplyAsync JsonParser.parseString(jsonData)
                             }
                         }
                     }
@@ -55,30 +58,23 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
         }
     }
 
+    override fun shutdown(): CompletableFuture<Void?> {
+        logger.info("Waiting up to 10 seconds for Hikari DataSource to close ...")
+        val future = CompletableFuture.runAsync {
+            dataSource.close()
+        }
 
-    // TODO: FOllowing code is for MySQL
-//    override fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?> {
-//        return CompletableFuture.runAsync {
-//            try {
-//                val sql = if (value == null) {
-//                    "DELETE FROM $namespace WHERE key_id = ?"
-//                } else {
-//                    "INSERT INTO $namespace (key_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)"
-//                }
-//
-//                dataSource.connection.use { conn ->
-//                    conn.prepareStatement(sql).use { stmt ->
-//                        stmt.setString(1, keyId)
-//                        value?.let {
-//                            stmt.setString(2, it.toString())
-//                        }
-//                        stmt.executeUpdate()
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
-//    }
+        val scheduler = Executors.newScheduledThreadPool(1)
+        scheduler.schedule({
+            if (!future.isDone) {
+                future.completeExceptionally(
+                    TimeoutException("Couldn't close Hikari DataSource in time.")
+                )
+            }
+        }, 10, TimeUnit.SECONDS)
+
+        scheduler.shutdown()
+        return future
+    }
 
 }

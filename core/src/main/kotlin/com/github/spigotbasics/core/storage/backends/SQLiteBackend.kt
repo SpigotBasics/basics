@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.storage.backends
 
 import com.github.spigotbasics.core.storage.StorageType
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 
 import java.io.File
 import java.util.concurrent.CompletableFuture
@@ -10,7 +10,7 @@ class SQLiteBackend (file: File, ioDelay: Long): HikariBackend(HikariConfigFacto
 
     override val type = StorageType.SQLITE
 
-    override fun setJsonObject(namespace: String, keyId: String, value: JsonObject?): CompletableFuture<Void?> {
+    override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             try {
                 val sql = if (value == null) {
