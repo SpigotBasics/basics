@@ -1,29 +1,35 @@
 package com.github.spigotbasics.core.extensions
 
 import org.bukkit.permissions.Permissible
-import java.util.regex.Pattern
 
 enum class Strategy() {
     HIGHEST,
     LOWEST
 }
 
+val numberRegex = "\\d+".toRegex()
+
 /**
  * Gets a permission value
  *
- * @param basePermission The permission to get the value of, for example `basics.homes` for `basics.homes.10`
+ * @param basePermission The permission to get the value of, for example `basics.sethome.multiple` for `basics.sethome.multiple.10`
  * @param strategy The strategy to use when getting the value
  */
 fun Permissible.getPermissionNumberValue(basePermission: String, strategy: Strategy = Strategy.HIGHEST): Int? {
-    val regex = "^${Pattern.quote(basePermission)}\\.{\\d}+$".toRegex()
+
+    val basePermissionWithDot = if (basePermission.endsWith('.')) basePermission else "$basePermission."
+    val prefixLength = basePermissionWithDot.length
+
     val values = effectivePermissions
-        .filter { it.value }
-        .map { it.permission }
-        .filter { it.matches(regex) }
-        .map { it.substringAfterLast(".") }
+        .asSequence()
+        .filter { it.value } // Only permission that are true
+        .map { it.permission } // Get the permission string
+        .filter { it.startsWith(basePermissionWithDot) }
+        .map { it.substring(prefixLength) }
+        .filter { it.matches(numberRegex) }
         .map { it.toInt() }
 
-    return when(strategy) {
+    return when (strategy) {
         Strategy.HIGHEST -> values.maxOrNull()
         Strategy.LOWEST -> values.minOrNull()
     }
