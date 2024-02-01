@@ -2,8 +2,6 @@ package com.github.spigotbasics.modules.basicsbroadcast
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.extensions.debug
-import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.util.StringUtil
 
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {

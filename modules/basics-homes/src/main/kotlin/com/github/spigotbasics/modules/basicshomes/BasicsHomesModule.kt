@@ -38,6 +38,8 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     val msgHomeNotFound get() = messages.getMessage("home-not-found")
     val msgHomeNoneSet get() = messages.getMessage("home-none-set")
     val msgHomeLimitReached get() = messages.getMessage("home-limit-reached")
+    val msgHomeListEntry get() = messages.getMessage("home-list-entry")
+    val msgHomeListSeparator get() = messages.getMessage("home-list-separator")
 
     override fun onEnable() {
         storage = createStorage()
