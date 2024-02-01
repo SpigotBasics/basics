@@ -1,5 +1,8 @@
 package com.github.spigotbasics.core.util
 
+import com.github.spigotbasics.core.module.AbstractBasicsModule
+import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
 
@@ -36,6 +39,15 @@ object ClassLoaderFix {
      */
     fun trickOnEnable() {
         emptyList<Void?>().iterator().apply { }
+
+        println("Force load BasicsModule")
+        forceLoadClassesForEnclosingClass(BasicsModule::class.java)
+
+        println("Force load AbstractBasicsModule")
+        forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
+
+        println("Force load ModuleManager")
+        forceLoadClassesForEnclosingClass(ModuleManager::class.java)
     }
 
 
@@ -48,5 +60,36 @@ object ClassLoaderFix {
      */
     fun setSuperEnabled(plugin: JavaPlugin, enabled: Boolean) { // This is called in onDisable()
         isSuperEnabledField?.set(plugin, enabled)
+    }
+
+
+    fun forceLoadClassesForEnclosingClass(enclosingClass: Class<*>) {
+        // Attempt to force load classes for fields
+        for (field in enclosingClass.declaredFields) {
+            try {
+                // Ensure the field is accessible
+                field.isAccessible = true
+                // Access the field value; this might force loading the class of the field's object
+                val value = field[null]
+                //println("Accessed field: " + field.name + ", Type: " + field.type.name)
+            } catch (e: Throwable) {
+                //println("Could not access field: " + field.name)
+            }
+        }
+
+        // Attempt to force load classes by invoking methods
+        for (method in enclosingClass.declaredMethods) {
+            // Check if the method is safe to invoke (no parameters, for simplicity)
+            if (method.parameterCount === 0 && method.returnType !== Void.TYPE) {
+                try {
+                    method.isAccessible = true
+                    // Invoke the method; this might force loading the class if the method returns an instance of an anonymous or lambda class
+                    val returnValue = method.invoke(null)
+                    //System.out.println(("Invoked method: " + method.name).toString() + ", Return type: " + method.returnType.name)
+                } catch (e: Throwable) {
+                    //.out.println("Could not invoke method: " + method.name)
+                }
+            }
+        }
     }
 }

@@ -11,11 +11,13 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
 
     private val cachedLoginData = mutableMapOf<UUID, CompletableFuture<Void?>>()
+    private val scheduledClearCacheFutures = mutableMapOf<UUID, ScheduledFuture<*>>()
     // TODO: Another list for loaded playerdata to avoid "no future found" when the future loads successfully between PreLogin and JoinEvent
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
@@ -26,40 +28,40 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
         }
         val uuid = event.uniqueId
 
-        println("Player is joining, checking if we already try to get their data...")
+        //println("Player is joining, checking if we already try to get their data...")
 
         val future = if(cachedLoginData.containsKey(uuid)) {
-            println("Yes, we already try to get their data, getting existing future ...")
+            //println("Yes, we already try to get their data, getting existing future ...")
             cachedLoginData[uuid]!!
         } else {
-            println("No, we don't try to get their data, creating new future ...")
+            //println("No, we don't try to get their data, creating new future ...")
             val newFuture = loadAll(uuid)
             cachedLoginData[uuid] = newFuture
-            scheduler.schedule({ // TODO: We must also store this task and cancel it to prevent issues with "No future found" message
-                println("10 seconds over, removing future from cache...")
+            scheduledClearCacheFutures[uuid] = scheduler.schedule({ // TODO: We must also store this task and cancel it to prevent issues with "No future found" message
+                //println("10 seconds over, removing future from cache...")
                 if(cachedLoginData.containsKey(uuid)) {
-                    println("Future still in cache, cancelling it and forgetting all...")
+                    //println("Future still in cache, cancelling it and forgetting all...")
                     cachedLoginData.remove(uuid)?.cancel(true)
                     forgetAll(uuid)
                 } else {
-                    println("Future not in cache anymore, looks like the player joined successfully.")
+                    //println("Future not in cache anymore, looks like the player joined successfully.")
                 }
             }, 10, TimeUnit.SECONDS) // TODO: Configurable cache duration
             newFuture
         }
         var secondsTaken = 0.0
         while(!future.isDone && secondsTaken < 1) { // TODO: Configurable timeout
-            println("Waiting 100ms for player data to load...") // TODO: Print this only in debug
-            Thread.sleep(100)
-            secondsTaken += 0.1
+            //println("Waiting 100ms for player data to load...") // TODO: Print this only in debug
+            Thread.sleep(20)
+            secondsTaken += 0.02
         }
-        println("1 second over, checking if future is done...")
+        //println("1 second over, checking if future is done...")
         if(!future.isDone) {
-            println("Future not done, disallowing join...")
+            //println("Future not done, disallowing join...")
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "[Basics] Failed to load your data, please try again.")
             return
         } else {
-            println("Future done, allowing join!")
+            //println("Future done, allowing join!")
         }
     }
 
@@ -90,17 +92,19 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val future = cachedLoginData.remove(event.player.uniqueId)
+        val removeFuture = scheduledClearCacheFutures.remove(event.player.uniqueId)
+        removeFuture?.cancel(true)
 
         // TODO: Bypass permission to join anyway
-        println("ACTUAL JOIN EVENT")
+        //println("ACTUAL JOIN EVENT")
 
         if(future == null) {
-            println("NO FUTURE FOUND")
+            //println("NO FUTURE FOUND")
             event.player.sendMessage("[Basics] Failed to load your data, please try again. (No future found)")
             return
         }
         if(!future.isDone) {
-            println("FUTURE NOT DONE")
+            //println("FUTURE NOT DONE")
             event.player.sendMessage("[Basics] Failed to load your data, please try again. (Future not done)")
             return
         }
