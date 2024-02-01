@@ -9,13 +9,10 @@ import org.bukkit.util.StringUtil
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {
     override fun execute(context: BasicsCommandContext): Boolean {
 
-        debug("Executing broadcast command")
         context.readFlags()
 
         val parseMini = context.popFlag("--parsed")
-        debug("parseMini: $parseMini")
         failIfFlagsLeft(context)
-        debug("Flags: ${context.flags}")
 
         val args = context.args
 
@@ -23,9 +20,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
         var message = messageFactory.createPlainMessage(text)
 
         if(parseMini) {
-            debug("Parsing message w/ mini")
             requirePermission(context.sender, module.parsedPerm)
-            debug("permission check passed")
             message = messageFactory.createMessage(text)
         }
 
