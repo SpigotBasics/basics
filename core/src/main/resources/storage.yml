@@ -19,6 +19,7 @@ mysql:
   database: "minecraft"
   username: "username"
   password: "password"
+  table-prefix: "basics_"
 
 debug:
   artificial-io-delay: 0 ms

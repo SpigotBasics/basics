@@ -43,6 +43,10 @@ class StorageManager(configManager: CoreConfigManager) {
         return NamespacedStorage(backend, namespace)
     }
 
+    internal fun createCoreStorage(namespace: String): NamespacedStorage {
+        return createStorage("_$namespace")
+    }
+
     fun shutdown(): CompletableFuture<Void?> = backend.shutdown()
 
 }
