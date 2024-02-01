@@ -98,7 +98,7 @@ class PlayerDataListener(
 
         if (future == null) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: No future found)")
-            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loader (No future found), kicking them now.")
+            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future found), kicking them now.")
             return
         }
         if (!future.isDone) {
