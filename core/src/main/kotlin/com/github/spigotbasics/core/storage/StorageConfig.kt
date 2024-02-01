@@ -49,7 +49,14 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
         get() = getDurationAsMillis("debug.artificial-io-delay", 0L)
 
     val sqlSleep: Double
-        get() = getDurationAsMillis("debug.sql-sleep-delay", 0L) / 1000.0
+        get() = getDurationAsMillis("debug.sql-sleep-delay", 0L) / 1_000.0
+
+    val joinTimeOut: Long
+        get() = getDurationAsMillis("load-player-data-on-join.timeout", 2_000)
+
+    val joinCacheDuration: Long
+        get() = getDurationAsMillis("load-player-data-on-join.cache-duration", 60_000)
+
 
     val mysqlInfo: MySQLDatabaseInfo
         get() {

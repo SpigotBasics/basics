@@ -1,5 +1,7 @@
 package com.github.spigotbasics.core.listener
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -14,11 +16,13 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
-class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
+class PlayerDataListener(private val joinTimeOut: Long, private val joinCacheDuration: Long, private val moduleManager: ModuleManager, private val messages: CoreMessages) : Listener {
+
+    private val logger = BasicsLoggerFactory.getCoreLogger(PlayerDataListener::class)
 
     private val cachedLoginData = mutableMapOf<UUID, CompletableFuture<Void?>>()
     private val scheduledClearCacheFutures = mutableMapOf<UUID, ScheduledFuture<*>>()
-    // TODO: Another list for loaded playerdata to avoid "no future found" when the future loads successfully between PreLogin and JoinEvent
+
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
     @EventHandler(ignoreCancelled = true)
@@ -37,7 +41,7 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
             //println("No, we don't try to get their data, creating new future ...")
             val newFuture = loadAll(uuid)
             cachedLoginData[uuid] = newFuture
-            scheduledClearCacheFutures[uuid] = scheduler.schedule({ // TODO: We must also store this task and cancel it to prevent issues with "No future found" message
+            scheduledClearCacheFutures[uuid] = scheduler.schedule({
                 //println("10 seconds over, removing future from cache...")
                 if(cachedLoginData.containsKey(uuid)) {
                     //println("Future still in cache, cancelling it and forgetting all...")
@@ -46,22 +50,19 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
                 } else {
                     //println("Future not in cache anymore, looks like the player joined successfully.")
                 }
-            }, 10, TimeUnit.SECONDS) // TODO: Configurable cache duration
+            }, joinCacheDuration, TimeUnit.MILLISECONDS)
             newFuture
         }
         var secondsTaken = 0.0
-        while(!future.isDone && secondsTaken < 1) { // TODO: Configurable timeout
-            //println("Waiting 100ms for player data to load...") // TODO: Print this only in debug
+        while(!future.isDone && secondsTaken < joinTimeOut * 1000) {
             Thread.sleep(20)
             secondsTaken += 0.02
         }
-        //println("1 second over, checking if future is done...")
+
         if(!future.isDone) {
-            //println("Future not done, disallowing join...")
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "[Basics] Failed to load your data, please try again.")
+            logger.warning("Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined in storage.yml), kicking them now.")
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacy())
             return
-        } else {
-            //println("Future done, allowing join!")
         }
     }
 
@@ -96,16 +97,15 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
         removeFuture?.cancel(true)
 
         // TODO: Bypass permission to join anyway
-        //println("ACTUAL JOIN EVENT")
 
         if(future == null) {
-            //println("NO FUTURE FOUND")
-            event.player.sendMessage("[Basics] Failed to load your data, please try again. (No future found)")
+            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: No future found)")
+            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loader (No future found), kicking them now.")
             return
         }
         if(!future.isDone) {
-            //println("FUTURE NOT DONE")
-            event.player.sendMessage("[Basics] Failed to load your data, please try again. (Future not done)")
+            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: Future not done)")
+            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (Future not done), kicking them now.")
             return
         }
     }
@@ -115,7 +115,6 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
         saveAndForgetAll(event.player.uniqueId)
     }
 
-    // TODO: Call this
     fun shutdownScheduler() {
         scheduler.shutdown()
     }
