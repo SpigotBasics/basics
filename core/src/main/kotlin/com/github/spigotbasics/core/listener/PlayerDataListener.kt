@@ -26,7 +26,7 @@ class PlayerDataListener(
 
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     fun onPlayerLogin(event: AsyncPlayerPreLoginEvent) {
         if (event.loginResult != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             return
