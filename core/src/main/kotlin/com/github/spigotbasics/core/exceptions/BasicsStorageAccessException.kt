@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.storage
+package com.github.spigotbasics.core.exceptions
 
 import java.io.IOException
 

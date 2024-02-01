@@ -1,5 +1,6 @@
-package com.github.spigotbasics.core.module
+package com.github.spigotbasics.core.exceptions
 
+import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import kotlin.reflect.KProperty1
 

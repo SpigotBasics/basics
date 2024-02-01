@@ -1,5 +1,7 @@
 package com.github.spigotbasics.core.messages
 
+import com.github.spigotbasics.core.messages.tags.TagResolverFactory
+
 private const val UNPARSED = "__unparsed__"
 private const val UNPARSED_TAG = "<$UNPARSED>"
 

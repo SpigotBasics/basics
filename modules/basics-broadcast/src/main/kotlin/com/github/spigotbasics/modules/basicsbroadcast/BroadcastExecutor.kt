@@ -2,6 +2,7 @@ package com.github.spigotbasics.modules.basicsbroadcast
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {
@@ -19,7 +20,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
 
         if(parseMini) {
             requirePermission(context.sender, module.parsedPerm)
-            message = messageFactory.createMessage(text)
+            message = messageFactory.createMessage(text).concerns(context.sender as? Player)
         }
 
         message.sendToAllPlayers()

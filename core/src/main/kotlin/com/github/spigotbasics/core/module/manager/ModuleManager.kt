@@ -3,8 +3,8 @@ package com.github.spigotbasics.core.module.manager
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.BasicsModule
-import com.github.spigotbasics.core.module.InvalidModuleException
-import com.github.spigotbasics.core.module.ModuleAlreadyLoadedException
+import com.github.spigotbasics.core.exceptions.InvalidModuleException
+import com.github.spigotbasics.core.exceptions.ModuleAlreadyLoadedException
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.loader.ModuleLoader
 import org.jetbrains.annotations.Blocking
@@ -13,7 +13,6 @@ import java.io.FileNotFoundException
 import java.lang.Thread.sleep
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
-import kotlin.coroutines.suspendCoroutine
 
 class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 

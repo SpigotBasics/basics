@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.storage
 
+import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
 import com.google.gson.JsonElement
 import java.util.concurrent.CompletableFuture
 

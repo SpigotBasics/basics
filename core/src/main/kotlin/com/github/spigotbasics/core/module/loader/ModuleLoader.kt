@@ -1,16 +1,13 @@
 package com.github.spigotbasics.core.module.loader
 
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.Constants.MODULE_YML_FILE_NAME
 import com.github.spigotbasics.core.module.BasicsModule
-import com.github.spigotbasics.core.module.InvalidModuleException
+import com.github.spigotbasics.core.exceptions.InvalidModuleException
 import com.github.spigotbasics.core.module.ModuleInfo
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
-import java.util.jar.JarFile
 
 class ModuleLoader
 @Throws(InvalidModuleException::class)

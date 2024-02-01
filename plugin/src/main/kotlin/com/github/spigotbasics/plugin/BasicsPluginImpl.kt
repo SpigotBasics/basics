@@ -11,7 +11,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.TagResolverFactory
+import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.playerdata.CorePlayerDataListener

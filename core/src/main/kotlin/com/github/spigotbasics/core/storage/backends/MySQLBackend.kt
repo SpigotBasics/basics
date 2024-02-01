@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.storage.backends
 
-import com.github.spigotbasics.core.storage.BasicsStorageAccessException
+import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.MySQLDatabaseInfo
 import com.github.spigotbasics.core.storage.StorageType
 import com.google.gson.JsonElement

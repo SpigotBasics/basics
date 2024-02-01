@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsmsg
 
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -26,8 +26,7 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     )
 
     override fun onEnable() {
-        createCommand().name("msg")
-            .permission(permission)
+        createCommand("msg", permission)
             .description("Sends a private message to another player")
             .usage("/msg <player> <message>")
             .executor(MsgExecutor(this))
