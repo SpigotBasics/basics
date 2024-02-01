@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.util
 
+import com.github.spigotbasics.core.config.FixClassLoadingConfig
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.manager.ModuleManager
@@ -25,7 +26,7 @@ import java.lang.reflect.Field
  * the classloader is not removed from the list and closed before onDisable() completes, and it loads classes
  * that are known to cause issues right during onEnable().
  */
-object ClassLoaderFix {
+class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
 
     private val isSuperEnabledField: Field? = try {
         JavaPlugin::class.java.getDeclaredField("isEnabled").apply { isAccessible = true }
@@ -38,16 +39,26 @@ object ClassLoaderFix {
      * created any.
      */
     fun trickOnEnable() {
-        emptyList<Void?>().iterator().apply { }
 
-        //println("Force load BasicsModule")
-        forceLoadClassesForEnclosingClass(BasicsModule::class.java)
+        if (config.callIteratorOnEmptyList)
+            emptyList<Void?>().iterator().apply { }
 
-        //println("Force load AbstractBasicsModule")
-        forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
+        if (config.abuseClassBasicsModule)
+            forceLoadClassesForEnclosingClass(BasicsModule::class.java)
 
-        //println("Force load ModuleManager")
-        forceLoadClassesForEnclosingClass(ModuleManager::class.java)
+        if (config.abuseClassAbstractBasicsModule)
+            forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
+
+        if (config.abuseClassModuleManager)
+            forceLoadClassesForEnclosingClass(ModuleManager::class.java)
+
+        for (className in config.abuseClassesList) {
+            try {
+                val clazz = Class.forName(className)
+                forceLoadClassesForEnclosingClass(clazz)
+            } catch (_: Throwable) {
+            }
+        }
     }
 
 
@@ -59,7 +70,9 @@ object ClassLoaderFix {
      * The workaround is to set isEnabled to true in onDisable() and then set it back to false at the end of onDisable().
      */
     fun setSuperEnabled(plugin: JavaPlugin, enabled: Boolean) { // This is called in onDisable()
-        isSuperEnabledField?.set(plugin, enabled)
+        if (config.setEnabledDuringOnDisable) {
+            isSuperEnabledField?.set(plugin, enabled)
+        }
     }
 
     /**

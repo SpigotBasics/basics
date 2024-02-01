@@ -22,7 +22,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     private val myLoadedModules: MutableList<BasicsModule> = mutableListOf()
 
     val loadedModules: List<BasicsModule>
-        get() = myLoadedModules.sortedBy { it.info.name } // TODO: Maybe have to call toList before calling sortedBy
+        get() = myLoadedModules.sortedBy { it.info.name }
 
     val enabledModules: List<BasicsModule>
         get() = myLoadedModules.filter { it.isEnabled() }
