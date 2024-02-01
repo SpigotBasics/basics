@@ -6,7 +6,7 @@ import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import com.github.spigotbasics.core.extensions.partialMatches
-import com.github.spigotbasics.core.extensions.toLocation
+import com.github.spigotbasics.core.model.toLocation
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent

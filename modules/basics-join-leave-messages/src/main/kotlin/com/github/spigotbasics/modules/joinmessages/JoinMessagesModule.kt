@@ -1,8 +1,7 @@
 package com.github.spigotbasics.modules.joinmessages
 
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import org.bukkit.event.EventHandler
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent

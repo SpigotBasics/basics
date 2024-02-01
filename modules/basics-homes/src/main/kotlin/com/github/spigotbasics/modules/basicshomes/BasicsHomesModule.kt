@@ -5,14 +5,13 @@ import com.github.spigotbasics.core.Serialization
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import com.github.spigotbasics.core.storage.NamespacedStorage
 import com.github.spigotbasics.modules.basicshomes.commands.DelHomeCommand
 import com.github.spigotbasics.modules.basicshomes.commands.HomeCommand
 import com.github.spigotbasics.modules.basicshomes.commands.SetHomeCommand
 import com.github.spigotbasics.modules.basicshomes.data.Home
 import com.github.spigotbasics.modules.basicshomes.data.HomeList
-import com.google.gson.TypeAdapter
 import org.bukkit.entity.Player
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -46,25 +45,19 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     override fun onEnable() {
         storage = createStorage()
 
-        createCommand()
-            .name("home")
-            .permission(permissionHome)
+        createCommand("home", permissionHome)
             .description("Teleports you to one of your homes")
             .usage("/home [name]")
             .executor(HomeCommand(this))
             .register()
 
-        createCommand()
-            .name("sethome")
-            .permission(permissionSetHome)
+        createCommand("sethome", permissionSetHome)
             .description("Sets a home")
             .usage("/sethome [name]")
             .executor(SetHomeCommand(this))
             .register()
 
-        createCommand()
-            .name("delhome")
-            .permission(permissionDelHome)
+        createCommand("delhome", permissionDelHome)
             .description("Deletes a home")
             .usage("/delhome [name]")
             .executor(DelHomeCommand(this))

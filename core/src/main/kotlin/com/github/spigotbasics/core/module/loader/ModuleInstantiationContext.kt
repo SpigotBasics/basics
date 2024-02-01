@@ -1,8 +1,7 @@
-package com.github.spigotbasics.core.module
+package com.github.spigotbasics.core.module.loader
 
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
+import com.github.spigotbasics.core.module.ModuleInfo
 import java.io.File
 
 /**

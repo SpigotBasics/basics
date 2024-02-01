@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.extensions.getAsNewLineSeparatedString
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.AsyncPlayerChatEvent
 

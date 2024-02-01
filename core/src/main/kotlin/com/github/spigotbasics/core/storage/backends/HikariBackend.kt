@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.storage.backends
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.storage.BasicsStorageAccessException
+import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser

@@ -3,7 +3,7 @@ package com.github.spigotbasics.modules.basicsgamemode
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.GameMode
 import org.bukkit.permissions.Permission
 
@@ -32,9 +32,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     }
 
     override fun onEnable() {
-        createCommand()
-            .name("gamemode")
-            .permission(perm)
+        createCommand("gamemode", perm)
             .description("Changes the player's game mode")
             .usage("/gamemode <mode> [player]")
             .executor(GamemodeExecutor(this))
