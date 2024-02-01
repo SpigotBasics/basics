@@ -41,7 +41,7 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
         }
         var secondsTaken = 0.0
         while(!future.isDone && secondsTaken < 1) { // TODO: Configurable timeout
-            println("Waiting for player data to load...")
+            println("Waiting for player data to load...") // TODO: Print this only in debug
             Thread.sleep(100)
             secondsTaken += 0.1
         }
@@ -78,6 +78,9 @@ class PlayerDataListener(private val moduleManager: ModuleManager) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val future = cachedLoginData.remove(event.player.uniqueId)
+
+        // TODO: Bypass permission to join anyway
+
         if(future == null) {
             event.player.kickPlayer("[Basics] Failed to load your data, please try again. (No future found)")
             return
