@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.storage.MySQLDatabaseInfo
 import com.zaxxer.hikari.HikariConfig
 import java.io.File
 
-object HikariConfigFactory {
+internal object HikariConfigFactory {
 
     fun createSqliteConfig(file: File): HikariConfig {
         val config = HikariConfig()

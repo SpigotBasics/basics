@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
+import com.github.spigotbasics.core.listener.PlayerDataListener
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -18,7 +19,6 @@ import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
@@ -45,6 +45,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+
+    private val playerDataListener = PlayerDataListener(moduleManager)
     //override fun getLogger() = logger
 
     /**
@@ -83,6 +85,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
+        server.pluginManager.registerEvents(playerDataListener, this)
     }
 
 
@@ -112,6 +115,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             }
         }.get()
         ClassLoaderFix.setSuperEnabled(this, false)
+        playerDataListener.shutdownScheduler()
     }
 
 

@@ -22,3 +22,4 @@ mysql:
 
 debug:
   artificial-io-delay: 0 ms
+  sql-sleep-delay: 0 ms

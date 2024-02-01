@@ -13,7 +13,6 @@ class BasicsPermissionManager(val logger: BasicsLogger) {
         permission: String,
         description: String? = null,
         defaultValue: PermissionDefault = PermissionDefault.OP
-
     ): Permission {
 
         if (permissions.any { it.name == permission }) {
