@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.listener
+package com.github.spigotbasics.core.playerdata
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -13,13 +13,13 @@ import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 import java.util.concurrent.*
 
-class PlayerDataListener(
+class ModulePlayerDataLoader(
     storageConfig: StorageConfig,
     private val moduleManager: ModuleManager,
     private val messages: CoreMessages
 ) : Listener {
 
-    private val logger = BasicsLoggerFactory.getCoreLogger(PlayerDataListener::class)
+    private val logger = BasicsLoggerFactory.getCoreLogger(ModulePlayerDataLoader::class)
 
     private val joinCacheDuration = storageConfig.joinCacheDuration
     private val joinTimeOut = storageConfig.joinTimeOut
@@ -73,6 +73,7 @@ class PlayerDataListener(
         }
     }
 
+    // TODO: Call this on shutdown - and on /reload? What about /module disable ?
     private fun saveAndForgetAll(uuid: UUID): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
         moduleManager.enabledModules.forEach { module ->

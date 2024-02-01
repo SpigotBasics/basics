@@ -5,16 +5,18 @@ import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
-import com.github.spigotbasics.core.listener.PlayerDataListener
+import com.github.spigotbasics.core.config.FixClassLoadingConfig
+import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
-import com.github.spigotbasics.core.playerdata.PlayerUUIDCache
+import com.github.spigotbasics.core.playerdata.CorePlayerData
+import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
 import com.github.spigotbasics.core.storage.StorageManager
-import com.github.spigotbasics.core.util.ClassLoaderFix
+import com.github.spigotbasics.core.util.ClassLoaderFixer
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
@@ -43,14 +45,22 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
     override val messages: CoreMessages =
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
-    override val storageManager: StorageManager /*by lazy*/ =  StorageManager(coreConfigManager)
+    override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
-    override val playerUUIDCache: PlayerUUIDCache = PlayerUUIDCache(storageManager)
+    override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
-    internal val playerDataListener = PlayerDataListener(storageManager.config, moduleManager, messages)
-    //override fun getLogger() = logger
+    internal val modulePlayerDataLoader by lazy {ModulePlayerDataLoader(storageManager.config, moduleManager, messages) }
+
+    private val classLoaderFixer = ClassLoaderFixer(
+        coreConfigManager.getConfig(
+            "fix-class-loading.yml",
+            "fix-class-loading.yml",
+            ClassLoaderFixer::class.java,
+            FixClassLoadingConfig::class.java
+        )
+    )
 
     /**
      * Checks if this server is running a rusty version of Spigot.
@@ -71,7 +81,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
-        ClassLoaderFix.trickOnEnable()
+        classLoaderFixer.trickOnEnable()
 
         if (isRustySpigot()) {
             logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty.")
@@ -85,11 +95,11 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         }
 
         // ::storageManager.get()
-        server.pluginManager.registerEvents(playerUUIDCache, this)
+        server.pluginManager.registerEvents(CorePlayerDataListener(corePlayerData), this)
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
-        server.pluginManager.registerEvents(playerDataListener, this)
+        server.pluginManager.registerEvents(modulePlayerDataLoader, this)
 
         getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }
@@ -111,7 +121,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onDisable() {
-        ClassLoaderFix.setSuperEnabled(this, true)
+        classLoaderFixer.setSuperEnabled(this, true)
         moduleManager.disableAndUnloadAllModules()
         storageManager.shutdown().whenComplete { _, e ->
             if (e != null) {
@@ -120,8 +130,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
                 logger.info("Storage backend shutdown completed")
             }
         }.get()
-        ClassLoaderFix.setSuperEnabled(this, false)
-        playerDataListener.shutdownScheduler()
+        classLoaderFixer.setSuperEnabled(this, false)
+        modulePlayerDataLoader.shutdownScheduler()
     }
 
 

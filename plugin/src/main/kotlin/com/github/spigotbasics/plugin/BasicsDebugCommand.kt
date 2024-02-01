@@ -71,17 +71,16 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
     }
 
     private fun showForSender(sender: CommandSender) {
-        val cachedLoginData = plugin.playerDataListener.cachedLoginData
-        val scheduledClearCacheFutures = plugin.playerDataListener.scheduledClearCacheFutures
+        val cachedLoginData = plugin.modulePlayerDataLoader.cachedLoginData
+        val scheduledClearCacheFutures = plugin.modulePlayerDataLoader.scheduledClearCacheFutures
 
         val output = """
-                
-                PlayerDataListener:
-                  -             cached login data: <cached-login-data>
-                  - scheduled clear cache futures: <scheduled-clear-cache-futures>
-                
-                
-            """.trimIndent()
+
+PlayerDataListener:
+  -             cached login data: <cached-login-data>
+  - scheduled clear cache futures: <scheduled-clear-cache-futures>
+
+"""
 
         val message = plugin.messageFactory.createMessage(output)
             .tagMessage("cached-login-data", shouldBe(cachedLoginData.size, 0))

@@ -32,14 +32,16 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
     val permissionDelHome = permissionManager.createSimplePermission("basics.delhome", "Allows to access the /delhome command")
 
-    val msgHomeSet get() = messages.getMessage("home-set")
-    val msgHomeDeleted get() = messages.getMessage("home-deleted")
-    val msgHomeTeleported get() = messages.getMessage("home-teleported")
-    val msgHomeNotFound get() = messages.getMessage("home-not-found")
+    fun msgHomeSet(home: Home) = messages.getMessage("home-set").tagUnparsed("home", home.name)
+    fun msgHomeDeleted(home: Home) = messages.getMessage("home-deleted").tagUnparsed("home", home.name)
+    fun msgHomeTeleported(home: Home) = messages.getMessage("home-teleported").tagUnparsed("home", home.name)
+    fun msgHomeNotFound(name: String) = messages.getMessage("home-not-found").tagUnparsed("home", name)
     val msgHomeNoneSet get() = messages.getMessage("home-none-set")
-    val msgHomeLimitReached get() = messages.getMessage("home-limit-reached")
+    fun msgHomeLimitReached(limit: Int) = messages.getMessage("home-limit-reached").tagUnparsed("limit", limit.toString())
     val msgHomeListEntry get() = messages.getMessage("home-list-entry")
     val msgHomeListSeparator get() = messages.getMessage("home-list-separator")
+
+    fun msgWorldNotLoaded(worldName: String) = messages.getMessage("home-world-not-loaded").tagUnparsed("world", worldName)
 
     override fun onEnable() {
         storage = createStorage()
@@ -137,7 +139,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         val home = homeList.getHome(homeName)
 
         if(home == null) {
-            msgHomeNotFound.tagUnparsed("home", homeName).sendToSender(player)
+            msgHomeNotFound(homeName).sendToSender(player)
             return Either.Right(true)
         }
 
