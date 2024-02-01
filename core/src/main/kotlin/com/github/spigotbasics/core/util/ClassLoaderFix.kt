@@ -40,13 +40,13 @@ object ClassLoaderFix {
     fun trickOnEnable() {
         emptyList<Void?>().iterator().apply { }
 
-        println("Force load BasicsModule")
+        //println("Force load BasicsModule")
         forceLoadClassesForEnclosingClass(BasicsModule::class.java)
 
-        println("Force load AbstractBasicsModule")
+        //println("Force load AbstractBasicsModule")
         forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
 
-        println("Force load ModuleManager")
+        //println("Force load ModuleManager")
         forceLoadClassesForEnclosingClass(ModuleManager::class.java)
     }
 
@@ -62,33 +62,38 @@ object ClassLoaderFix {
         isSuperEnabledField?.set(plugin, enabled)
     }
 
-
+    /**
+     * Tries to force load all classes that are referenced in the given class. This is needed to avoid NoClassDefFoundErrors
+     * regarding lambdas and anonymous classes in CompletableFutures in onDisable().
+     *
+     * @param enclosingClass
+     */
     fun forceLoadClassesForEnclosingClass(enclosingClass: Class<*>) {
-        // Attempt to force load classes for fields
-        for (field in enclosingClass.declaredFields) {
-            try {
-                // Ensure the field is accessible
-                field.isAccessible = true
-                // Access the field value; this might force loading the class of the field's object
-                val value = field[null]
-                //println("Accessed field: " + field.name + ", Type: " + field.type.name)
-            } catch (e: Throwable) {
-                //println("Could not access field: " + field.name)
-            }
-        }
+        touchFields(enclosingClass)
+        touchMethods(enclosingClass)
+        enclosingClass.classes.forEach { forceLoadClassesForEnclosingClass(it) }
+    }
 
-        // Attempt to force load classes by invoking methods
+    private fun touchMethods(enclosingClass: Class<*>) {
         for (method in enclosingClass.declaredMethods) {
-            // Check if the method is safe to invoke (no parameters, for simplicity)
-            if (method.parameterCount === 0 && method.returnType !== Void.TYPE) {
+            if (method.parameterCount == 0 && method.returnType != Void.TYPE) {
                 try {
                     method.isAccessible = true
-                    // Invoke the method; this might force loading the class if the method returns an instance of an anonymous or lambda class
-                    val returnValue = method.invoke(null)
-                    //System.out.println(("Invoked method: " + method.name).toString() + ", Return type: " + method.returnType.name)
-                } catch (e: Throwable) {
-                    //.out.println("Could not invoke method: " + method.name)
+                    @Suppress("UNUSED_VARIABLE")
+                    val value = method.invoke(null)
+                } catch (_: Throwable) {
                 }
+            }
+        }
+    }
+
+    private fun touchFields(enclosingClass: Class<*>) {
+        for (field in enclosingClass.declaredFields) {
+            try {
+                field.isAccessible = true
+                @Suppress("UNUSED_VARIABLE")
+                val value = field[null]
+            } catch (_: Throwable) {
             }
         }
     }

@@ -8,14 +8,23 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
-class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) : StorageBackend {
+internal class JsonBackend(private val directory: File) : StorageBackend {
 
     override val type = StorageType.JSON
 
-    private fun ioDelay() {
-        if(ioDelay > 0L) {
-            Thread.sleep(ioDelay)
+    init {
+        if(directory.exists() && !directory.isDirectory) {
+            throw IOException("Storage directory $directory exists but is not a directory")
         }
+        if(!directory.exists()) {
+            val success = directory.mkdirs()
+            if(!success) {
+                throw IOException("Could not create storage directory $directory")
+            }
+        }
+        val testFile = File(directory, "__test.json")
+        testFile.writeText("{}")
+        testFile.delete()
     }
 
     override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
@@ -24,7 +33,6 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
             if (!file.parentFile.isDirectory) {
                 file.parentFile.mkdirs()
             }
-            ioDelay()
             if (!file.exists()) {
                 return@supplyAsync null
             } else {
@@ -40,7 +48,6 @@ class JsonBackend(private val directory: File, private val ioDelay: Long = 0L) :
     override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             val file = getFile(namespace, keyId)
-            ioDelay()
             if (value == null) {
                 val deleted = file.delete()
                 if(!deleted) {

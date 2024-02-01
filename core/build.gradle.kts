@@ -28,3 +28,35 @@ tasks.processResources {
         expand("version" to libs.versions.spigot.get())
     }
 }
+
+tasks.register("deployDocs", Exec::class) {
+    dependsOn("dokkaHtml", "dokkaJavadoc")
+
+    group = "documentation"
+
+    doFirst {
+        // Access the build directory properly to avoid deprecation warnings
+        val buildDirectory = project.layout.buildDirectory.dir("dokka")
+
+        // Define the source directories for dokkaHtml and dokkaJavadoc outputs
+        val dokkaHtmlDir = buildDirectory.map { it.dir("html").asFile.absolutePath }.get()
+        val dokkaJavadocDir = buildDirectory.map { it.dir("javadoc").asFile.absolutePath }.get()
+
+        // Define the remote destination
+        val remoteDestination = "root@stomach:/mnt/web/var/www/hub.jeff-media.com/javadocs/basics-core/"
+
+        // Check if the source directories exist
+        if (file(dokkaHtmlDir).exists() && file(dokkaJavadocDir).exists()) {
+            executable = "sh"
+            args = listOf("-c", """
+                rsync -avz --progress $dokkaHtmlDir $remoteDestination &&
+                rsync -avz --progress $dokkaJavadocDir $remoteDestination
+            """.trimIndent())
+        } else {
+            println("Documentation directories not found:")
+            println(" - $dokkaHtmlDir")
+            println(" - $dokkaJavadocDir")
+            println("Ensure dokkaHtml and dokkaJavadoc tasks have been executed.")
+        }
+    }
+}
