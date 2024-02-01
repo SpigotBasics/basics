@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.storage.backends
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.storage.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
@@ -10,9 +11,11 @@ import java.io.IOException
 import java.sql.SQLException
 import java.util.concurrent.*
 
-abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : StorageBackend {
+internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : StorageBackend {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(HikariBackend::class)
+
+    protected val selectSleepFunction = if(sqlSleep > 0) "SELECT SLEEP($sqlSleep);" else null
 
     protected val dataSource = HikariDataSource(config)
 
@@ -39,6 +42,7 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
     override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
         return CompletableFuture.supplyAsync {
             try {
+                selectSleep()
                 val sql = "SELECT data FROM $namespace WHERE key_id = ?"
                 dataSource.connection.use { conn ->
                     conn.prepareStatement(sql).use { stmt ->
@@ -52,9 +56,19 @@ abstract class HikariBackend(config: HikariConfig, private val ioDelay: Long) : 
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                throw BasicsStorageAccessException("Could not SELECT from $namespace", e)
             }
             null
+        }
+    }
+
+    fun selectSleep() {
+        if (selectSleepFunction != null) {
+            dataSource.connection.use { conn ->
+                conn.createStatement().use { stmt ->
+                    stmt.execute(selectSleepFunction)
+                }
+            }
         }
     }
 

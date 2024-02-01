@@ -1,22 +1,23 @@
 package com.github.spigotbasics.core.storage.backends
 
+import com.github.spigotbasics.core.storage.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.StorageType
 import com.google.gson.JsonElement
 
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-class SQLiteBackend (file: File, ioDelay: Long): HikariBackend(HikariConfigFactory.createSqliteConfig(file), ioDelay) {
+internal class SQLiteBackend (file: File, sqlSleep: Double): HikariBackend(HikariConfigFactory.createSqliteConfig(file), sqlSleep) {
 
     override val type = StorageType.SQLITE
 
     override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             try {
+                selectSleep()
                 val sql = if (value == null) {
                     "DELETE FROM $namespace WHERE key_id = ?"
                 } else {
-                    // SQLite syntax for upsert (insert or replace)
                     "INSERT OR REPLACE INTO $namespace (key_id, data) VALUES (?, ?)"
                 }
 
@@ -30,7 +31,7 @@ class SQLiteBackend (file: File, ioDelay: Long): HikariBackend(HikariConfigFacto
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                throw BasicsStorageAccessException("Could not INSERT into $namespace", e)
             }
         }
     }

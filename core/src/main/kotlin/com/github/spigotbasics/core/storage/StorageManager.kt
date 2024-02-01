@@ -8,10 +8,6 @@ import com.github.spigotbasics.core.storage.backends.MySQLBackend
 import com.github.spigotbasics.core.storage.backends.SQLiteBackend
 import java.util.concurrent.CompletableFuture
 
-// TODO: Storages saved in vals will be closed when a module is disabled and then enabled again.
-// Possible fix: Prevent storages from being created before isEnabled is true.
-
-// TODO: Plugins shall be notified about player joins instead of listening on their own, so they can fetch playerdata if needed
 class StorageManager(configManager: CoreConfigManager) {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(StorageManager::class)
@@ -25,14 +21,18 @@ class StorageManager(configManager: CoreConfigManager) {
         StorageConfig::class.java
     )
 
-    private val backend: StorageBackend = createBackend()
+    private val backend: StorageBackend = IODelayedStorageBackend(createBackend(), config.ioDelay)
 
     private fun createBackend(): StorageBackend {
-        logger.info("Initializing ${config.storageType} storage backend ...")
-        return when (config.storageType) {
-            StorageType.JSON -> JsonBackend(config.jsonDirectory, config.ioDelay)
-            StorageType.SQLITE -> SQLiteBackend(config.sqliteFile, config.ioDelay)
-            StorageType.MYSQL -> MySQLBackend(config.mysqlInfo, config.ioDelay)
+        try {
+            logger.info("Initializing ${config.storageType} storage backend ...")
+            return when (config.storageType) {
+                StorageType.JSON -> JsonBackend(config.jsonDirectory)
+                StorageType.SQLITE -> SQLiteBackend(config.sqliteFile, config.sqlSleep)
+                StorageType.MYSQL -> MySQLBackend(config.mysqlInfo, config.sqlSleep)
+            }
+        } catch (e: Exception) {
+            throw BasicsStorageInitializeException(e)
         }
     }
 
