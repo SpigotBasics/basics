@@ -49,7 +49,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
-    private val playerDataListener = PlayerDataListener(moduleManager)
+    internal val playerDataListener = PlayerDataListener(storageManager.config, moduleManager, messages)
     //override fun getLogger() = logger
 
     /**
@@ -90,6 +90,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
         server.pluginManager.registerEvents(playerDataListener, this)
+
+        getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }
 
 
