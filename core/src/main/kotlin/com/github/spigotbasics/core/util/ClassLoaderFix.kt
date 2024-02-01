@@ -1,5 +1,8 @@
 package com.github.spigotbasics.core.util
 
+import com.github.spigotbasics.core.module.AbstractBasicsModule
+import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
 
@@ -36,6 +39,15 @@ object ClassLoaderFix {
      */
     fun trickOnEnable() {
         emptyList<Void?>().iterator().apply { }
+
+        //println("Force load BasicsModule")
+        forceLoadClassesForEnclosingClass(BasicsModule::class.java)
+
+        //println("Force load AbstractBasicsModule")
+        forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
+
+        //println("Force load ModuleManager")
+        forceLoadClassesForEnclosingClass(ModuleManager::class.java)
     }
 
 
@@ -48,5 +60,41 @@ object ClassLoaderFix {
      */
     fun setSuperEnabled(plugin: JavaPlugin, enabled: Boolean) { // This is called in onDisable()
         isSuperEnabledField?.set(plugin, enabled)
+    }
+
+    /**
+     * Tries to force load all classes that are referenced in the given class. This is needed to avoid NoClassDefFoundErrors
+     * regarding lambdas and anonymous classes in CompletableFutures in onDisable().
+     *
+     * @param enclosingClass
+     */
+    fun forceLoadClassesForEnclosingClass(enclosingClass: Class<*>) {
+        touchFields(enclosingClass)
+        touchMethods(enclosingClass)
+        enclosingClass.classes.forEach { forceLoadClassesForEnclosingClass(it) }
+    }
+
+    private fun touchMethods(enclosingClass: Class<*>) {
+        for (method in enclosingClass.declaredMethods) {
+            if (method.parameterCount == 0 && method.returnType != Void.TYPE) {
+                try {
+                    method.isAccessible = true
+                    @Suppress("UNUSED_VARIABLE")
+                    val value = method.invoke(null)
+                } catch (_: Throwable) {
+                }
+            }
+        }
+    }
+
+    private fun touchFields(enclosingClass: Class<*>) {
+        for (field in enclosingClass.declaredFields) {
+            try {
+                field.isAccessible = true
+                @Suppress("UNUSED_VARIABLE")
+                val value = field[null]
+            } catch (_: Throwable) {
+            }
+        }
     }
 }

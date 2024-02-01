@@ -45,6 +45,9 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
     val ioDelay: Long
         get() = getDurationAsMillis("debug.artificial-io-delay", 0L)
 
+    val sqlSleep: Double
+        get() = getDurationAsMillis("debug.sql-sleep-delay", 0L) / 1000.0
+
     val mysqlInfo: MySQLDatabaseInfo
         get() {
             val host = mysqlHost ?: error("MySQL host not set")
