@@ -9,33 +9,31 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
+import java.util.*
+import java.util.concurrent.*
 
-class PlayerDataListener(private val joinTimeOut: Long, private val joinCacheDuration: Long, private val moduleManager: ModuleManager, private val messages: CoreMessages) : Listener {
+class PlayerDataListener(
+    private val joinTimeOut: Long,
+    private val joinCacheDuration: Long,
+    private val moduleManager: ModuleManager,
+    private val messages: CoreMessages
+) : Listener {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(PlayerDataListener::class)
 
-    private val cachedLoginData = mutableMapOf<UUID, CompletableFuture<Void?>>()
-    private val scheduledClearCacheFutures = mutableMapOf<UUID, ScheduledFuture<*>>()
+    private val cachedLoginData = ConcurrentHashMap<UUID, CompletableFuture<Void?>>()
+    private val scheduledClearCacheFutures = ConcurrentHashMap<UUID, ScheduledFuture<*>>()
 
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
     @EventHandler(ignoreCancelled = true)
     fun onPlayerLogin(event: AsyncPlayerPreLoginEvent) {
-        if(event.loginResult != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
+        if (event.loginResult != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             return
         }
         val uuid = event.uniqueId
 
-        //println("Player is joining, checking if we already try to get their data...")
-
-        val future = if(cachedLoginData.containsKey(uuid)) {
-            //println("Yes, we already try to get their data, getting existing future ...")
+        val future = if (cachedLoginData.containsKey(uuid)) {
             cachedLoginData[uuid]!!
         } else {
             //println("No, we don't try to get their data, creating new future ...")
@@ -43,7 +41,7 @@ class PlayerDataListener(private val joinTimeOut: Long, private val joinCacheDur
             cachedLoginData[uuid] = newFuture
             scheduledClearCacheFutures[uuid] = scheduler.schedule({
                 //println("10 seconds over, removing future from cache...")
-                if(cachedLoginData.containsKey(uuid)) {
+                if (cachedLoginData.containsKey(uuid)) {
                     //println("Future still in cache, cancelling it and forgetting all...")
                     cachedLoginData.remove(uuid)?.cancel(true)
                     forgetAll(uuid)
@@ -54,12 +52,12 @@ class PlayerDataListener(private val joinTimeOut: Long, private val joinCacheDur
             newFuture
         }
         var secondsTaken = 0.0
-        while(!future.isDone && secondsTaken < joinTimeOut * 1000) {
+        while (!future.isDone && secondsTaken < joinTimeOut * 1000) {
             Thread.sleep(20)
             secondsTaken += 0.02
         }
 
-        if(!future.isDone) {
+        if (!future.isDone) {
             logger.warning("Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined in storage.yml), kicking them now.")
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacy())
             return
@@ -98,12 +96,12 @@ class PlayerDataListener(private val joinTimeOut: Long, private val joinCacheDur
 
         // TODO: Bypass permission to join anyway
 
-        if(future == null) {
+        if (future == null) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: No future found)")
             logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loader (No future found), kicking them now.")
             return
         }
-        if(!future.isDone) {
+        if (!future.isDone) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: Future not done)")
             logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (Future not done), kicking them now.")
             return
