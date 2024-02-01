@@ -12,6 +12,7 @@ import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.playerdata.PlayerUUIDCache
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.core.util.ClassLoaderFix
 import com.github.spigotbasics.pipe.SpigotPaperFacade
@@ -42,7 +43,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
     override val messages: CoreMessages =
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
-    override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
+    override val storageManager: StorageManager /*by lazy*/ =  StorageManager(coreConfigManager)
+
+    override val playerUUIDCache: PlayerUUIDCache = PlayerUUIDCache(storageManager)
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
@@ -81,7 +84,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             return
         }
 
-        ::storageManager.get()
+        // ::storageManager.get()
+        server.pluginManager.registerEvents(playerUUIDCache, this)
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()

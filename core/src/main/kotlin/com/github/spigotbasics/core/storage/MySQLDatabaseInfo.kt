@@ -5,5 +5,6 @@ data class MySQLDatabaseInfo(
     val port: Int,
     val database: String,
     val username: String,
-    val password: String
+    val password: String,
+    val tablePrefix: String
 )

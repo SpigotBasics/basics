@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.playerdata.PlayerUUIDCache
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import org.bukkit.plugin.Plugin
@@ -54,6 +55,8 @@ interface BasicsPlugin: Plugin {
      * Storage manager
      */
     val storageManager: StorageManager
+
+    val playerUUIDCache: PlayerUUIDCache
 
     /**
      * Reloads the core configuration settings of the plugin.

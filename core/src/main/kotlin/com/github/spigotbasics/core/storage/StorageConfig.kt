@@ -42,6 +42,9 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
     val mysqlPassword: String?
         get() = getString("mysql.password")
 
+    val mysqlTablePrefix: String
+        get() = getString("mysql.table-prefix") ?: "basics_"
+
     val ioDelay: Long
         get() = getDurationAsMillis("debug.artificial-io-delay", 0L)
 
@@ -55,7 +58,8 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
             val database = mysqlDatabase ?: error("MySQL database not set")
             val username = mysqlUsername ?: error("MySQL username not set")
             val password = mysqlPassword ?: error("MySQL password not set")
-            return MySQLDatabaseInfo(host, port, database, username, password)
+            val tablePrefix = mysqlTablePrefix
+            return MySQLDatabaseInfo(host, port, database, username, password, tablePrefix)
         }
 
     private fun replaceDir(dir: String): String {
