@@ -1,0 +1,4 @@
+main-class: com.github.spigotbasics.modules.basicsworld.BasicsWorldModule
+name: basics-world
+version: ${moduleVersion}
+description: "Allows switching worlds using /world"
