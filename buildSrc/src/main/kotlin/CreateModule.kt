@@ -61,7 +61,7 @@ open class CreateModule : DefaultTask() {
             package com.github.spigotbasics.modules.${nameLower}
             
             import com.github.spigotbasics.core.module.AbstractBasicsModule
-            import com.github.spigotbasics.core.module.ModuleInstantiationContext
+            import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
             
             class ${nameUpper}Module(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
             
