@@ -47,7 +47,7 @@ data class Message(
     }
 
     fun sendToPlayers(players: Collection<Player>) {
-        players.forEach() {
+        players.forEach {
             sendToPlayer(it)
         }
     }

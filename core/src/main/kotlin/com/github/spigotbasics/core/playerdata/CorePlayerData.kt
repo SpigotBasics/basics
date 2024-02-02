@@ -2,10 +2,6 @@ package com.github.spigotbasics.core.playerdata
 
 import com.github.spigotbasics.core.storage.StorageManager
 import com.google.gson.JsonPrimitive
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

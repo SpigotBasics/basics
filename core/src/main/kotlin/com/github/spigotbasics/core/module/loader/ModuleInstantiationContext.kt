@@ -14,12 +14,10 @@ import java.io.File
  * @property classLoader the class loader
  * @constructor Create empty Module context
  */
-data class ModuleInstantiationContext constructor(
+data class ModuleInstantiationContext(
     val plugin: BasicsPlugin,
     val server: Server,
     val info: ModuleInfo,
     val file: File,
     val classLoader: ModuleJarClassLoader
-) {
-
-}
+)

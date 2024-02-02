@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core
 
-import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
 import org.bukkit.NamespacedKey
 import org.bukkit.plugin.Plugin

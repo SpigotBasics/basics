@@ -6,14 +6,14 @@ import org.bukkit.plugin.Plugin
 // TODO: Make this use FoliaLib
 class BasicsScheduler(private val plugin: Plugin) {
 
-    private val taskIds: MutableSet<Int> = HashSet();
+    private val taskIds: MutableSet<Int> = HashSet()
 
     fun runTask(task: () -> Unit): Int {
-        return runnable(task).runTask();
+        return runnable(task).runTask()
     }
 
     fun runTaskAsync(task: () -> Unit): Int {
-        return runnable(task).runTaskAsync();
+        return runnable(task).runTaskAsync()
     }
 
     fun runLater(delay: Long, task: () -> Unit): Int {

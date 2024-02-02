@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.storage
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.extensions.getDurationAsMillis
