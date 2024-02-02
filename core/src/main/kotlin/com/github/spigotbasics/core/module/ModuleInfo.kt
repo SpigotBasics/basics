@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.module
 
+import com.github.spigotbasics.core.exceptions.InvalidModuleException
 import org.bukkit.configuration.file.YamlConfiguration
 
 data class ModuleInfo(

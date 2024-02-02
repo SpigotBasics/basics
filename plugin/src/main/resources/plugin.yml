@@ -2,5 +2,9 @@ name: Basics
 version: "${pluginVersion}"
 main: com.github.spigotbasics.plugin.BasicsPluginImpl
 api-version: "1.13"
-authors:
-  - cool people
+authors: [ "https://github.com/SpigotBasics/basics/graphs/contributors" ]
+commands:
+  basicsdebug:
+    description: "Debugging commands for Basics"
+    permission: basics.debug
+    usage: "/<command> [start <interval>|stop]"

@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.CoreConfigManager
+import com.github.spigotbasics.core.exceptions.BasicsStorageInitializeException
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.backends.JsonBackend
 import com.github.spigotbasics.core.storage.backends.MySQLBackend
@@ -41,6 +42,10 @@ class StorageManager(configManager: CoreConfigManager) {
             throw IllegalArgumentException("Namespace '$namespace' does not match regex ${namespaceRegex.pattern}")
         }
         return NamespacedStorage(backend, namespace)
+    }
+
+    internal fun createCoreStorage(namespace: String): NamespacedStorage {
+        return createStorage("_$namespace")
     }
 
     fun shutdown(): CompletableFuture<Void?> = backend.shutdown()

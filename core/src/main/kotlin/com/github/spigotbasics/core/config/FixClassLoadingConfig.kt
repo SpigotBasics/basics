@@ -1,0 +1,37 @@
+package com.github.spigotbasics.core.config
+
+import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import java.io.File
+
+class FixClassLoadingConfig(plugin: BasicsPlugin, file: File) : SavedConfig(plugin, file) {
+
+    private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+
+    val setEnabledDuringOnDisable
+        get() = getBooleanAndLog("set-enabled-during-ondisable")
+
+    val abuseClassesList
+        get() = getStringList("abuse-classes.others")
+
+    val abuseClassBasicsModule
+        get() = getBooleanAndLog("abuse-classes.BasicsModule")
+
+    val abuseClassAbstractBasicsModule
+        get() = getBooleanAndLog("abuse-classes.AbstractBasicsModule")
+
+    val abuseClassModuleManager
+        get() = getBooleanAndLog("abuse-classes.ModuleManager")
+
+    val callIteratorOnEmptyList
+        get() = getBooleanAndLog("call-iterator-on-empty-list")
+
+    private fun getBooleanAndLog(key: String): Boolean {
+        val value = getBoolean(key)
+        if(!value) {
+            logger.warning("$key is set to false")
+        }
+        return value
+    }
+
+}

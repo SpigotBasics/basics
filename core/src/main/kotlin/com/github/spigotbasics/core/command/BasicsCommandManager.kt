@@ -3,6 +3,11 @@ package com.github.spigotbasics.core.command
 import org.bukkit.Bukkit
 import org.bukkit.command.SimpleCommandMap
 
+/**
+ * Responsible for registering and keeping track of commands.
+ *
+ * @property serverCommandMap The server command map
+ */
 class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
 
     private val registeredCommands: MutableList<BasicsCommand> = mutableListOf()
@@ -15,7 +20,6 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     fun unregisterAll() {
-        // TODO: SimpleCommandMap uses an unmodifiable collection
         registeredCommands.toList().forEach { command ->
             unregisterCommand(command, false)
         }
@@ -31,7 +35,6 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     fun unregisterCommand(command: BasicsCommand, update: Boolean = true) {
-        //TODO("SimpleCommandMap uses an unmodifiable collection")
         registeredCommands -= command
         removeFromServerCommandMap(command)
         if (update) {
@@ -50,7 +53,6 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
         if(!success) {
             serverCommandMap.commands.forEach { existing ->
                 if(existing.name == command.name) {
-                    //serverCommandMap.commands.remove(existing)
                     if(existing is BasicsCommand) {
                         existing.replaceCommand(command)
                     }

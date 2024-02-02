@@ -43,7 +43,7 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
 
                 } else {
                     // ... and they're not replacing that one, that's not okay.
-                    module.msgHomeLimitReached.tagUnparsed("limit", "1")
+                    module.msgHomeLimitReached(1)
                         .sendToSender(player)
 
                     return true
@@ -60,14 +60,14 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         }
 
         if (!isOkay) {
-            module.msgHomeLimitReached.tagUnparsed("limit", maxAllowed.toString()).sendToSender(player)
+            module.msgHomeLimitReached(maxAllowed).sendToSender(player)
             return true
         }
 
         val home = Home(homeName, location)
 
         homeList.addHome(home)
-        module.msgHomeSet.tagUnparsed("home", homeName).sendToSender(player)
+        module.msgHomeSet(home).sendToSender(player)
         return true
     }
 

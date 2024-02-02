@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.storage.backends
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.storage.BasicsStorageAccessException
+import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
@@ -10,12 +10,13 @@ import com.zaxxer.hikari.HikariDataSource
 import java.io.IOException
 import java.sql.SQLException
 import java.util.concurrent.*
+import java.util.logging.Level
 
 internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : StorageBackend {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(HikariBackend::class)
 
-    protected val selectSleepFunction = if(sqlSleep > 0) "SELECT SLEEP($sqlSleep);" else null
+    protected val selectSleepFunction = if(sqlSleep > 0) "SELECT SLEEP($sqlSleep);" else null // TODO: Get rid of this
 
     protected val dataSource = HikariDataSource(config)
 
@@ -34,6 +35,7 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
                 }
             }
         } catch (e: SQLException) {
+            logger.log(Level.SEVERE, "Could not execute create statement for namespace $namespace", e)
             throw (IOException(e))
         }
     }
@@ -56,6 +58,7 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
                     }
                 }
             } catch (e: Exception) {
+                logger.log(Level.SEVERE, "Could not SELECT from $namespace", e)
                 throw BasicsStorageAccessException("Could not SELECT from $namespace", e)
             }
             null

@@ -1,0 +1,8 @@
+set-enabled-during-ondisable: true
+call-iterator-on-empty-list: true
+abuse-classes:
+  BasicsModule: true
+  AbstractBasicsModule: true
+  ModuleManager: true
+  others:
+    # - java.lang.String

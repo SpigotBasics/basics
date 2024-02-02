@@ -172,7 +172,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
     private fun filesNamesUnloadedModules(): List<String> {
         return moduleManager.modulesDirectory.listFiles()?.filter {
             for (module in moduleManager.loadedModules) {
-                if (module.moduleFile == it) {
+                if (module.file == it) {
                     return@filter false
                 }
             }

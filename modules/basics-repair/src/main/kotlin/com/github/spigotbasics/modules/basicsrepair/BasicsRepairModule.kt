@@ -3,7 +3,7 @@ package com.github.spigotbasics.modules.basicsrepair
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
 class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
@@ -26,9 +26,8 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     val permissionOthers = permissionManager.createSimplePermission("basics.repair.others", "Allows to repair other players' items")
 
     override fun onEnable() {
-        createCommand().name("repair")
+        createCommand("repair", permission)
             .usage("/repair [--all] [player]")
-            .permission(permission)
             .description("Repairs an item")
             .executor(RepairCommand(this))
             .register()
