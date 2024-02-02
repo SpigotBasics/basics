@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.logger
 
 import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.module.ModuleInfo
 import com.github.spigotbasics.core.storage.StorageType
 import org.bukkit.Bukkit
 import java.io.File
@@ -14,8 +15,8 @@ object BasicsLoggerFactory {
         return BasicsLogger(Bukkit.getLogger(),"Basics/$name")
     }
 
-    fun getModuleLogger(module: BasicsModule): BasicsLogger {
-        return getLogger("Module/${module.info.name}")
+    fun getModuleLogger(module: ModuleInfo): BasicsLogger {
+        return getLogger("Module/${module.name}")
     }
 
     fun getModuleLogger(module: BasicsModule, clazz: KClass<*>): BasicsLogger {

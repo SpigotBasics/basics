@@ -25,7 +25,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val moduleClassLoader = context.classLoader
     final override val file = context.file
     final override val info = context.info
-    final override val logger = BasicsLoggerFactory.getModuleLogger(this)
+    final override val logger = BasicsLoggerFactory.getModuleLogger(context.info)
     final override val plugin = context.plugin
     final override val eventBus = BasicsEventBus(context.plugin)
     final override val config = getConfig(ConfigName.CONFIG)
@@ -101,6 +101,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
+    // TODO: This is unused - is that correct?
     private fun saveAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
         plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
