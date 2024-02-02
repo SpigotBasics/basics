@@ -99,6 +99,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
         moduleManager.loadAndEnableAllModulesFromModulesFolder()
         reloadCustomTags()
+        server.pluginManager.registerEvents(tagResolverFactory.Listener(), this)
         server.pluginManager.registerEvents(modulePlayerDataLoader, this)
 
         getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
@@ -106,7 +107,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
 
     private fun reloadCustomTags() {
-        tagResolverFactory.loadCustomTags(
+        tagResolverFactory.loadAndCacheAllTagResolvers(
             coreConfigManager.getConfig(
                 Constants.CUSTOM_TAGS_FILE_NAME,
                 Constants.CUSTOM_TAGS_FILE_NAME,

@@ -1,10 +1,12 @@
 # This file allows you to add custom tags (basically like custom placeholders) in messages.
 
 # The following tags are included by default:
-#
 # <player-name>                  - Player's username
 # <player-name-genitive-suffix>  - Genitive suffix for player's username ('s or ')
 # <player-display-name>          - Player's display name
+
+# If you have PlaceholderAPI installed, you can also use any placeholders using the <papi:placeholder> tag:
+# <papi:%...%>                   - Any PlaceholderAPI placeholder
 
 ########################################################################################################################
 
@@ -18,7 +20,7 @@
 # <tag-type>  - The type of the tag. This can be either 'parsed' (default), 'unparsed', or 'color'.
 #                 - Unparsed tags are not processed any further (plain text)
 #                 - Parsed tags can contain other tags that will be evaluated
-#                 - Color tags are used to define colors and acn be used like <mycolor>text</mycolor>
+#                 - Color tags are used to define colors and can be used like <mycolor>text</mycolor>
 # <tag-value> - The value of the tag. This is the text that will be inserted into the message when the tag is used.
 
 ########################################################################################################################
@@ -35,5 +37,4 @@ player-name-gold:
 
 bright-green:
   type: color
-  value: "#55FF55"
-
+  value: "#77FF77"
