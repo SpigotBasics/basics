@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.module
 
-import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.NamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
@@ -25,7 +25,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val moduleClassLoader = context.classLoader
     final override val file = context.file
     final override val info = context.info
-    final override val logger = BasicsLoggerFactory.getModuleLogger(this)
+    final override val logger = BasicsLoggerFactory.getModuleLogger(context.info)
     final override val plugin = context.plugin
     final override val eventBus = BasicsEventBus(context.plugin)
     final override val config = getConfig(ConfigName.CONFIG)
@@ -34,6 +34,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val messageFactory = plugin.messageFactory
     final override val tagResolverFactory /*get()*/ = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
+    final override val keyFactory = NamespacedKeyFactory.forModule(context.plugin, context.info)
 
     private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
 
@@ -100,6 +101,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
+    // TODO: This is unused - is that correct?
     private fun saveAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
         plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
