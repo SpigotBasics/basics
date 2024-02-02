@@ -7,7 +7,7 @@ import com.google.gson.JsonElement
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-internal class SQLiteBackend (file: File, sqlSleep: Double): HikariBackend(HikariConfigFactory.createSqliteConfig(file), sqlSleep) {
+internal class SQLiteBackend (file: File, sqlSleep: Double): HikariBackend(HikariConfigFactory.createSqliteConfig(file), "", sqlSleep) {
 
     override val type = StorageType.SQLITE
 
@@ -16,9 +16,9 @@ internal class SQLiteBackend (file: File, sqlSleep: Double): HikariBackend(Hikar
             try {
                 selectSleep()
                 val sql = if (value == null) {
-                    "DELETE FROM $namespace WHERE key_id = ?"
+                    "DELETE FROM $tablePrefix$namespace WHERE key_id = ?"
                 } else {
-                    "INSERT OR REPLACE INTO $namespace (key_id, data) VALUES (?, ?)"
+                    "INSERT OR REPLACE INTO $tablePrefix$namespace (key_id, data) VALUES (?, ?)"
                 }
 
                 dataSource.connection.use { conn ->
@@ -31,7 +31,7 @@ internal class SQLiteBackend (file: File, sqlSleep: Double): HikariBackend(Hikar
                     }
                 }
             } catch (e: Exception) {
-                throw BasicsStorageAccessException("Could not INSERT into $namespace", e)
+                throw BasicsStorageAccessException("Could not INSERT into $tablePrefix$namespace", e)
             }
         }
     }
