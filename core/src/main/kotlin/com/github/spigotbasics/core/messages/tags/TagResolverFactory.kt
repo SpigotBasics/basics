@@ -33,7 +33,8 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         return listOf(
             Placeholder.parsed("player-name", player.name),
             Placeholder.parsed("player-name-genitive-suffix", player.name.genitiveSuffix()),
-            createDisplayNameTagResolver(player)
+            createDisplayNameTagResolver(player),
+            PlaceholderAPITagFactory.getPapiTagResolver()
         )
     }
 
@@ -71,12 +72,6 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
      */
     fun loadCustomTags(yaml: YamlConfiguration) {
         try {
-//            val simplePlaceholders = yaml.getValues(true).mapValues {
-//                val value: String = it.value?.toString() ?: ""
-//                return@mapValues value
-//            }
-
-
             customTagResolvers = yaml.getValues(false).mapNotNull { (key, value) ->
                 try {
                     val tag = CustomTag.parse(key, value)
@@ -87,10 +82,7 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
                 }
             }.toList()
 
-            //customTagsMap = map
-            //customParsedTagResolvers = simplePlaceholders.map { Placeholder.parsed(it.key, it.value) }
             defaultNonPlayerTagResolverList = createDefaultNonPlayerTagResolverList()
-
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "Failed to load custom tags", e)
         }

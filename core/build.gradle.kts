@@ -6,9 +6,12 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
+// api            = shaded, exposed to modules
+// apiCompileOnly = not shaded, exposed to modules
+// implementation = shaded, internal use only
+// compileOnly    = not shaded, internal use only
+//
 dependencies {
-    api(libs.gson)
-    testImplementation(libs.gson)
     implementation(libs.hikari)
     implementation(libs.adventure.api)
     implementation(libs.adventure.bukkit)
@@ -16,8 +19,11 @@ dependencies {
     implementation(libs.adventure.text.serializer.legacy)
     implementation(libs.paperlib)
     implementation(libs.folialib)
+    compileOnly(libs.placeholderapi)
     api(project(":common"))
     api(project(":pipe:facade"))
+    testImplementation(libs.gson)
+    api(libs.gson)
 
 
 }
