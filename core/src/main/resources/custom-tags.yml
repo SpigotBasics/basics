@@ -18,9 +18,9 @@
 
 # <tag-name>  - The name of the tag. This is the <thing> that you will use in your messages.
 # <tag-type>  - The type of the tag. This can be either 'parsed' (default), 'unparsed', or 'color'.
-#                 - Unparsed tags are not processed any further (plain text)
-#                 - Parsed tags can contain other tags that will be evaluated
-#                 - Color tags are used to define colors and can be used like <mycolor>text</mycolor>
+#                 - Unparsed tags ('type: unparsed') are not processed any further (plain text)
+#                 - Parsed tags ('type: parsed') can contain other tags that will be evaluated
+#                 - Color tags ('type: color') are used to define colors and can be used like <mycolor>text</mycolor>
 # <tag-value> - The value of the tag. This is the text that will be inserted into the message when the tag is used.
 
 ########################################################################################################################
