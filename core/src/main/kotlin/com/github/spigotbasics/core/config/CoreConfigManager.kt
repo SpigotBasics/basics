@@ -42,8 +42,7 @@ class CoreConfigManager(
         clazzToGetFrom: Class<*>,
         configurationClass: Class<T>
     ): T {
-        val configName = fileName
-        val file = File(dataFolder, configName)
+        val file = File(dataFolder, fileName)
         val context = ConfigInstantiationContext(file, dataFolder, messageFactory)
 
         val configuration = createInstance(configurationClass, context)
@@ -69,7 +68,7 @@ class CoreConfigManager(
                 configuration.load(file)
             }
         } catch (e: InvalidConfigurationException) {
-            logger.log(Level.SEVERE, "Failed to load invalid config file $configName", e)
+            logger.log(Level.SEVERE, "Failed to load invalid config file $fileName", e)
         }
 
         return configuration

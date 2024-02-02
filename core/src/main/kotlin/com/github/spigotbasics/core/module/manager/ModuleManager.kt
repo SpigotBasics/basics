@@ -15,7 +15,7 @@ import java.lang.Thread.sleep
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 
-class ModuleManager constructor(
+class ModuleManager(
     private val plugin: BasicsPlugin,
     private val server: Server,
     val modulesDirectory: File

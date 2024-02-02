@@ -1,8 +1,5 @@
 package com.github.spigotbasics.core.messages.tags
 
-import net.kyori.adventure.text.format.StyleBuilderApplicable
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.ConfigurationSection
 

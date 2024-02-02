@@ -1,7 +1,5 @@
 package com.github.spigotbasics.core.exceptions
 
-import java.io.IOException
-
 /**
  * Thrown when attempting to load an invalid module file
  *

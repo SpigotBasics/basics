@@ -3,7 +3,6 @@ package com.github.spigotbasics.core
 import io.papermc.lib.PaperLib
 import org.bukkit.Location
 import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause
 
 /**

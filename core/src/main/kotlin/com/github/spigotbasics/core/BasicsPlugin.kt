@@ -1,15 +1,14 @@
 package com.github.spigotbasics.core
 
 import com.github.spigotbasics.core.config.CoreConfigManager
-import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.AudienceProvider
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.pipe.SpigotPaperFacade
-import org.bukkit.plugin.Plugin
 import java.io.File
 
 /**

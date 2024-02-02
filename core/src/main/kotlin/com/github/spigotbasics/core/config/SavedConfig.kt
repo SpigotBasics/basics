@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -8,7 +7,6 @@ import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Represents a [YamlConfiguration] that is backed by a file. Instances of this class should only be obtained using
