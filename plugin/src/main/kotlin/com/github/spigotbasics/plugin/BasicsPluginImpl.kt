@@ -1,9 +1,6 @@
 package com.github.spigotbasics.plugin
 
-import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.Constants
-import com.github.spigotbasics.core.MinecraftVersion
-import com.github.spigotbasics.core.Spiper
+import com.github.spigotbasics.core.*
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
 import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
@@ -74,6 +71,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onLoad() {
+        Basics.setPlugin(this)
         if (!moduleFolder.isDirectory) {
             logger.info("Creating modules folder at ${moduleFolder.absolutePath}")
             moduleFolder.mkdirs()
