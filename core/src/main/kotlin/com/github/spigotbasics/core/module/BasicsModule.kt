@@ -19,7 +19,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
- * Common interfaces to be used by all modules. Implementations require a public constructor that takes in a [BasicsPlugin] and a [ModuleInfo].
+ * Represents a module. Implementations require a public constructor that takes in a [com.github.spigotbasics.core.module.loader.ModuleInstantiationContext].
  *
  * @constructor Create empty Basics plugin
  */
@@ -84,10 +84,13 @@ interface BasicsModule {
      */
     val eventBus: BasicsEventBus
 
-
-
+    /**
+     * This module's permission manager
+     */
     val permissionManager: BasicsPermissionManager
 
+
+    // ----- Module lifecycle -----
     /**
      * Called when the module is enabled
      *
@@ -96,9 +99,12 @@ interface BasicsModule {
 
     /**
      * Called when the module is disabled
-     *
      */
     fun onDisable() = Unit
+
+    fun reloadConfig()
+
+    // ----- Enabling / disabling methods -----
 
     fun enable(reloadConfig: Boolean)
 
@@ -106,11 +112,7 @@ interface BasicsModule {
 
     fun isEnabled(): Boolean
 
-    fun reloadConfig()
-
-    fun createCommand(name: String, permission: Permission): BasicsCommandBuilder
-
-    fun createStorage(name: String? = null): NamespacedStorage
+    // ----- PlayerData methods -----
 
     fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
 
@@ -121,6 +123,12 @@ interface BasicsModule {
     fun loadAllOnlinePlayerData(): CompletableFuture<Void?>
 
     fun saveAndForgetAllOnlinePlayerData(): CompletableFuture<Void?>
+
+    // ----- Utility methods -----
+
+    fun createCommand(name: String, permission: Permission): BasicsCommandBuilder
+
+    fun createStorage(name: String? = null): NamespacedStorage
 
     fun getConfig(configName: ConfigName): SavedConfig
 

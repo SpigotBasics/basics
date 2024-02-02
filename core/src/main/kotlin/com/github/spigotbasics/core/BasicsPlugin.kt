@@ -13,12 +13,18 @@ import org.bukkit.plugin.Plugin
 import java.io.File
 
 /**
- * Represents the Basics Bukkit Plugin instance.
+ * Represents the Basics Bukkit Plugin instance - this is equivalent to the Bukkit [org.bukkit.Server] class.
  */
 interface BasicsPlugin: Plugin {
 
+    /**
+     * Provides MiniMessage audiences
+     */
     val audienceProvider: AudienceProvider
 
+    /**
+     * Facade to uniformly access Spigot and Paper specific features.
+     */
     val facade: SpigotPaperFacade
 
     /**

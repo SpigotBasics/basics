@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.module
 
+import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
@@ -15,6 +16,9 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
+/**
+ * Represents the main class of a module. Extending classes require a public constructor that takes in a [ModuleInstantiationContext].
+ */
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
 
 
