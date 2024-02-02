@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.module.loader
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.module.ModuleInfo
+import org.bukkit.Server
 import java.io.File
 
 /**
@@ -13,8 +14,9 @@ import java.io.File
  * @property classLoader the class loader
  * @constructor Create empty Module context
  */
-data class ModuleInstantiationContext(
+data class ModuleInstantiationContext constructor(
     val plugin: BasicsPlugin,
+    val server: Server,
     val info: ModuleInfo,
     val file: File,
     val classLoader: ModuleJarClassLoader

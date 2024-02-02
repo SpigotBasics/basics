@@ -1,10 +1,9 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.SafeResourceGetter
-import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.exceptions.InvalidModuleException
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -12,33 +11,42 @@ import java.io.FileOutputStream
 import java.util.logging.Level
 
 class CoreConfigManager(
-    private val plugin: BasicsPlugin,
-    private val messageFactory: MessageFactory
-    ) {
+    private val messageFactory: MessageFactory,
+    private val dataFolder: File
+) {
 
     companion object {
         private val logger = BasicsLoggerFactory.getCoreLogger(CoreConfigManager::class)
     }
 
-    private fun <T : SavedConfig> createInstance(clazz: Class<T>, plugin: BasicsPlugin, file: File): T {
+    private fun <T : SavedConfig> createInstance(clazz: Class<T>, context: ConfigInstantiationContext): T {
         try {
-            return clazz.getConstructor(BasicsPlugin::class.java, File::class.java).newInstance(plugin, file)
-        } catch(e: NoSuchMethodException) {
-            throw RuntimeException("Failed to create config instance of class ${clazz.name}, no visible constructor with (BasicsPlugin, File) found", e)
+            return clazz.getConstructor(ConfigInstantiationContext::class.java).newInstance(context)
+        } catch (e: NoSuchMethodException) {
+            throw RuntimeException(
+                "Failed to create config instance of class ${clazz.name}, no visible constructor with (ConfigInstantiationContext) found",
+                e
+            )
         } catch (e: Exception) {
             throw RuntimeException("Failed to create config instance of class ${clazz.name}", e)
         }
     }
 
-    fun getConfig (resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>): SavedConfig {
+    fun getConfig(resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>): SavedConfig {
         return getConfig(resourceFileName, fileName, clazzToGetFrom, SavedConfig::class.java)
     }
 
-    fun <T: SavedConfig> getConfig(resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>, configurationClass: Class<T>): T {
+    fun <T : SavedConfig> getConfig(
+        resourceFileName: String,
+        fileName: String,
+        clazzToGetFrom: Class<*>,
+        configurationClass: Class<T>
+    ): T {
         val configName = fileName
-        val file = File(plugin.dataFolder, configName)
+        val file = File(dataFolder, configName)
+        val context = ConfigInstantiationContext(file, dataFolder, messageFactory)
 
-        val configuration = createInstance(configurationClass, plugin, file)
+        val configuration = createInstance(configurationClass, context)
 
         try {
             // If a default config exists, set it as defaults

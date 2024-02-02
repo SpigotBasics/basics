@@ -1,12 +1,13 @@
 package com.github.spigotbasics.core.module.manager
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.exceptions.InvalidModuleException
 import com.github.spigotbasics.core.exceptions.ModuleAlreadyLoadedException
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.loader.ModuleLoader
+import org.bukkit.Server
 import org.jetbrains.annotations.Blocking
 import java.io.File
 import java.io.FileNotFoundException
@@ -14,7 +15,11 @@ import java.lang.Thread.sleep
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 
-class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
+class ModuleManager constructor(
+    private val plugin: BasicsPlugin,
+    private val server: Server,
+    val modulesDirectory: File
+) {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(ModuleLoader::class)
 
@@ -50,7 +55,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     }
 
     fun enableAllLoadedModules() {
-        for(module in myLoadedModules) {
+        for (module in myLoadedModules) {
             enableModule(module, false)
         }
     }
@@ -65,14 +70,14 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     fun loadModuleFromFile(moduleFile: File): Result<BasicsModule> {
         logger.info("Loading module ${moduleFile.absolutePath}")
         val loader = try {
-            ModuleLoader(plugin, moduleFile)
+            ModuleLoader(plugin, server, moduleFile)
         } catch (e: InvalidModuleException) {
             logger.log(Level.SEVERE, "Failed to load module ${moduleFile.absolutePath}", e)
             return Result.failure(e)
         }
         val info = loader.info
 
-        if(getModule(info.name) != null) {
+        if (getModule(info.name) != null) {
             throw ModuleAlreadyLoadedException(info)
         }
 
@@ -115,7 +120,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     fun enableModule(module: BasicsModule, reloadConfig: Boolean) {
         logger.info("Enabling module ${module.info.nameAndVersion}")
         //if(enabledModules.contains(module)) {
-        if(module.isEnabled()) {
+        if (module.isEnabled()) {
             error("Module ${module.info.name} is already enabled")
         }
         module.enable(reloadConfig)
@@ -132,7 +137,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
             return
         }
         module.loadAllOnlinePlayerData().whenComplete { _, e ->
-            if(e != null) {
+            if (e != null) {
                 logger.log(Level.SEVERE, "Failed to load all online player data for module ${module.info.name}", e)
             }
             logger.info("Enabled module ${module.info.nameAndVersion}")
@@ -143,7 +148,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     fun disableModule(module: BasicsModule): CompletableFuture<Void?> {
         logger.info("Disabling module ${module.info.nameAndVersion}")
         //if(!enabledModules.contains(module)) {
-        if(!module.isEnabled()) {
+        if (!module.isEnabled()) {
             error("Module ${module.info.name} is not enabled")
         }
 
@@ -154,8 +159,12 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
         }
 
         return module.saveAndForgetAllOnlinePlayerData().whenComplete { _, e ->
-            if(e != null) {
-                logger.log(Level.SEVERE, "Failed to save and forget all online player data for module ${module.info.name}", e)
+            if (e != null) {
+                logger.log(
+                    Level.SEVERE,
+                    "Failed to save and forget all online player data for module ${module.info.name}",
+                    e
+                )
             }
         }.whenComplete { _, _ ->
             module.disable().get()
@@ -165,13 +174,13 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     fun unloadModule(module: BasicsModule, forceGc: Boolean = false) {
         logger.info("Unloading module ${module.info.nameAndVersion}")
-        if(module.isEnabled()) {
+        if (module.isEnabled()) {
             throw IllegalArgumentException("Module ${module.info.name} is enabled, hence can't be unloaded")
         }
         myLoadedModules.remove(module)
         module.moduleClassLoader.close()
 
-        if(forceGc) {
+        if (forceGc) {
             forceGc()
         }
 
@@ -190,7 +199,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
 
     fun disableAllModules(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
-        for(module in enabledModules.toList()) {
+        for (module in enabledModules.toList()) {
             futures += disableModule(module)
         }
         return CompletableFuture.allOf(*futures.toTypedArray())
@@ -199,7 +208,7 @@ class ModuleManager(val plugin: BasicsPlugin, val modulesDirectory: File) {
     @Blocking
     fun disableAndUnloadAllModules() { // TODO: disable/unload should happen after each other, instead of first disabling all modules, then unloading all modules
         disableAllModules().get()
-        for(module in myLoadedModules.toList()) {
+        for (module in myLoadedModules.toList()) {
             unloadModule(module, false)
         }
         forceGc()

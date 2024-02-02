@@ -12,6 +12,7 @@ import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
 import org.bukkit.permissions.Permission
+import org.bukkit.plugin.Plugin
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
@@ -21,20 +22,20 @@ import java.util.logging.Level
  */
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
 
-
+    final override val server = context.server
     final override val moduleClassLoader = context.classLoader
     final override val file = context.file
     final override val info = context.info
     final override val logger = BasicsLoggerFactory.getModuleLogger(context.info)
     final override val plugin = context.plugin
-    final override val eventBus = BasicsEventBus(context.plugin)
+    final override val eventBus = BasicsEventBus(context.plugin as Plugin)
     final override val config = getConfig(ConfigName.CONFIG)
-    final override val scheduler = BasicsScheduler(plugin)
-    final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(plugin.server.pluginManager))
+    final override val scheduler = BasicsScheduler(plugin as Plugin)
+    final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(server.pluginManager))
     final override val messageFactory = plugin.messageFactory
     final override val tagResolverFactory /*get()*/ = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
-    final override val keyFactory = NamespacedKeyFactory.forModule(context.plugin, context.info)
+    final override val keyFactory = NamespacedKeyFactory.forModule(context.plugin as Plugin, context.info)
 
     private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
 
@@ -95,7 +96,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     final override fun loadAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
-        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+        server.onlinePlayers.forEach { player -> // TODO: Log exceptions
             futures += loadPlayerData(player.uniqueId)
         }
         return CompletableFuture.allOf(*futures.toTypedArray())
@@ -104,7 +105,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     // TODO: This is unused - is that correct?
     private fun saveAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
-        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+        server.onlinePlayers.forEach { player -> // TODO: Log exceptions
             futures += savePlayerData(player.uniqueId)
         }
         return CompletableFuture.allOf(*futures.toTypedArray())
@@ -112,7 +113,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     final override fun saveAndForgetAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
-        plugin.server.onlinePlayers.forEach { player -> // TODO: Log exceptions
+        server.onlinePlayers.forEach { player -> // TODO: Log exceptions
             // TODO: See comment below
             futures += savePlayerData(player.uniqueId).whenComplete { _, _ -> // This was line 124 from below stacktrace
                 forgetPlayerData(player.uniqueId)

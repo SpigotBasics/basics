@@ -3,7 +3,6 @@ package com.github.spigotbasics.plugin
 import com.github.spigotbasics.core.*
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
-import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -12,6 +11,7 @@ import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
+import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.core.util.ClassLoaderFixer
 import com.github.spigotbasics.pipe.SpigotPaperFacade
@@ -36,10 +36,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override val moduleFolder = File(dataFolder, "modules")
-    override val moduleManager = ModuleManager(this, moduleFolder)
+    override val moduleManager = ModuleManager(this, server, moduleFolder)
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
     override val messageFactory: MessageFactory = MessageFactory(audienceProvider, tagResolverFactory)
-    override val coreConfigManager: CoreConfigManager = CoreConfigManager(this, messageFactory)
+    override val coreConfigManager: CoreConfigManager = CoreConfigManager(messageFactory, dataFolder)
     override val messages: CoreMessages =
         coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
@@ -48,7 +48,13 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
-    internal val modulePlayerDataLoader by lazy {ModulePlayerDataLoader(storageManager.config, moduleManager, messages) }
+    internal val modulePlayerDataLoader by lazy {
+        ModulePlayerDataLoader(
+            storageManager.config,
+            moduleManager,
+            messages
+        )
+    }
 
     private val classLoaderFixer = ClassLoaderFixer(
         coreConfigManager.getConfig(

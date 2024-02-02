@@ -15,7 +15,7 @@ import java.io.File
 /**
  * Represents the Basics Bukkit Plugin instance - this is equivalent to the Bukkit [org.bukkit.Server] class.
  */
-interface BasicsPlugin: Plugin {
+interface BasicsPlugin {
 
     /**
      * Provides MiniMessage audiences
