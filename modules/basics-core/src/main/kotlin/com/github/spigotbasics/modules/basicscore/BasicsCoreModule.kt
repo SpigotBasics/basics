@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicscore
 
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -13,7 +13,7 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     )
 
     override fun onEnable() {
-        createCommand().name("module").permission(permission).usage("/module [command]").executor(ModulesCommand(this)).register()
+        createCommand("module", permission).usage("/module [command]").executor(ModulesCommand(this)).register()
     }
 
 }

@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.module.loader
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.module.BasicsModule
-import com.github.spigotbasics.core.module.ForbiddenFruitException
+import com.github.spigotbasics.core.exceptions.ForbiddenFruitException
 import org.bukkit.plugin.PluginManager
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler

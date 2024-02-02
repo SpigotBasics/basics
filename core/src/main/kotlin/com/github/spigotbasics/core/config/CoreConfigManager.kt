@@ -4,8 +4,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.SafeResourceGetter
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.TagResolverFactory
-import com.github.spigotbasics.core.module.InvalidModuleException
+import com.github.spigotbasics.core.exceptions.InvalidModuleException
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File

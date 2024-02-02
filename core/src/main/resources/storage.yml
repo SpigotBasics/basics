@@ -19,6 +19,16 @@ mysql:
   database: "minecraft"
   username: "username"
   password: "password"
+  table-prefix: "basics_"
+
+
+load-player-data-on-join:
+  # Time to wait on player join for player data to be loaded. If this time is exceeded, the player will be kicked
+  # and must join again. This is to prevent issues with player data not being loaded in time.
+  timeout: 2 s
+  # Time to wait for the player to rejoin after being kicked for not having their data loaded in time.
+  # If this time is exceeded, their data will be unloaded again.
+  cache-duration: 60 s
 
 debug:
   artificial-io-delay: 0 ms

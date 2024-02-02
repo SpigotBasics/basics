@@ -1,8 +1,7 @@
 package com.github.spigotbasics.modules.basicsbroadcast
 
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
-import org.bukkit.Bukkit
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
 class BasicsBroadcastModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
@@ -10,9 +9,7 @@ class BasicsBroadcastModule(context: ModuleInstantiationContext) : AbstractBasic
     val parsedPerm = permissionManager.createSimplePermission("basics.broadcast.parsed", "Allows the user to broadcast parsed messages")
 
     override fun onEnable() {
-        createCommand()
-            .name("broadcast")
-            .permission(commandPerm)
+        createCommand("broadcast", commandPerm)
             .description("Broadcasts a message to all players")
             .usage("/broadcast [--parsed] <message>")
             .executor(BroadcastExecutor(this))

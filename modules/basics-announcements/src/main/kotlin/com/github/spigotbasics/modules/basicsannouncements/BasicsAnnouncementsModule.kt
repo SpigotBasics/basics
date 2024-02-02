@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsannouncements
 
 import com.github.spigotbasics.core.extensions.getDurationAsTicks
 import com.github.spigotbasics.core.module.AbstractBasicsModule
-import com.github.spigotbasics.core.module.ModuleInstantiationContext
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import java.util.concurrent.ThreadLocalRandom
 
 class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {

@@ -21,7 +21,7 @@ class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         val player = requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
 
         module.getHomeList(player.uniqueId).removeHome(home)
-        module.msgHomeDeleted.tagUnparsed("home", home.name).sendToSender(player)
+        module.msgHomeDeleted(home).sendToSender(player)
         return true
     }
 

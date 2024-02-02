@@ -1,8 +1,9 @@
 interval: 2 minutes
-pick-random: false
+pick-random: true
 messages:
   - "<i><gradient:#00ff00:#00cc00>\"OMG YOU'RE USING BASICS???!!!\"</gradient></i> Basics makes players wet since 2024!"
   - "<rainbow>Check out the Basics repo on <click:open_url:https://github.com/SpigotBasics/basics><hover:show_text:'Click to visit GitHub'><red>GitHub</red></hover>!</rainbow>"
   - "\"With <bold>Basics</bold>, server management has never been this simple. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)"
   - "<gradient:#ff0000:#cc0000>\"Basics is the best plugin ever!\"</gradient>\n- <gradient:#0000ff:#0000cc>mfnalex</gradient>"
   - "<gray>(You can customize these messages in the basics-announcements module)</gray>"
+  - "<green2>If you got PlaceholderAPI installed, you can use any placeholder: <papi:%server_tps%></green2>"
