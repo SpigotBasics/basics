@@ -17,7 +17,14 @@ enum class CustomTagType {
     /**
      * Color codes that can be used with <cute-pink>opening and closing tags</cute-pink>
      */
-    COLOR;
+    COLOR,
+
+//    /**
+//     * Placeholder tags are placeholders from PlaceholderAPI
+//     */
+//    PLACEHOLDER;
+
+    ;
 
     companion object {
 
@@ -34,6 +41,7 @@ enum class CustomTagType {
                 "PARSED" -> PARSED
                 "UNPARSED" -> UNPARSED
                 "COLOR" -> COLOR
+                //"PAPI", "PLACEHOLDER", "PLACEHOLDERAPI" -> PLACEHOLDER
                 else -> throw IllegalArgumentException("Unknown tag type '$string' - valid types are ${entries.joinToString()}")
             }
         }

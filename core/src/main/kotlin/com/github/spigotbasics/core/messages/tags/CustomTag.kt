@@ -69,6 +69,7 @@ data class CustomTag(val name: String, val value: String, val type: CustomTagTyp
             CustomTagType.PARSED -> Placeholder.parsed(name, value)
             CustomTagType.UNPARSED -> Placeholder.unparsed(name, value)
             CustomTagType.COLOR -> createColorTagResolver()
+            //CustomTagType.PLACEHOLDER -> createPlaceholderApiTagResolver()
         }
     }
 
