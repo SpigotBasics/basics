@@ -38,7 +38,7 @@ tasks.processResources {
 tasks.register("deployDocs", Exec::class) {
     dependsOn("dokkaHtml", "dokkaJavadoc")
 
-    group = "documentation"
+    group = "basics"
 
     doFirst {
         // Access the build directory properly to avoid deprecation warnings
