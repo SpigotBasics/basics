@@ -65,20 +65,10 @@ data class CustomTag(val name: String, val value: String, val type: CustomTagTyp
     }
 
     fun toTagResolver(): TagResolver {
-        return when(type) {
-            CustomTagType.PARSED -> Placeholder.parsed(name, value)
-            CustomTagType.UNPARSED -> Placeholder.unparsed(name, value)
-            CustomTagType.COLOR -> createColorTagResolver()
-            //CustomTagType.PLACEHOLDER -> createPlaceholderApiTagResolver()
-        }
+        return CustomTagToTagResolverFactory.createTagResolverForCustomTag(this)
     }
 
-    private fun createColorTagResolver(): TagResolver {
-        if(hexRegex.matches(value)) {
-            val color = TextColor.fromHexString(value)!!
-            return Placeholder.styling(name, color)
-        } else {
-            throw IllegalArgumentException("Invalid hex color for tag '$name': $value - must be in format #RRGGBB")
-        }
-    }
+
+
+
 }
