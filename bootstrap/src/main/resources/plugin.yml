@@ -1,0 +1,4 @@
+name: BasicsBootstrap
+version: 1.0
+main: com.github.spigotbasics.bootstrap.BasicsBootstrap
+softdepend: [Basics]

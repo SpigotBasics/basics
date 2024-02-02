@@ -1,3 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicsgamemode.BasicsGamemodeModule
 name: basics-gamemode
 version: ${moduleVersion}
+description: "Provides the /gamemode command"

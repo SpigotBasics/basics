@@ -31,6 +31,9 @@ include("plugin")
 // Parent for all modules
 include("modules")
 
+// Bootstrap plugin, so people don't have to extract a zip file (70% of people would just put it into the plugins folder)
+include("bootstrap")
+
 // Import subprojects from modules folder
 val moduleFolders: Array<File> = file("modules").listFiles(FileFilter { it.isDirectory })
     ?: throw RuntimeException("Couldn't find modules folder")
