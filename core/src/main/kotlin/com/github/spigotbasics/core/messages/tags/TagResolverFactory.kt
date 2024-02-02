@@ -43,13 +43,10 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
     }
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
-        val result = facade.getDisplayName(player)
-        return if (result is Either.Right) {
-            Placeholder.component("player-display-name", miniMessage.deserialize(result.value.value))
-        } else if (result is Either.Left) {
-            Placeholder.unparsed("player-display-name", result.value)
-        } else {
-            error("Unknown result type: ${result::class.qualifiedName}")
+        return when (val result = facade.getDisplayName(player)) {
+            is Either.Right -> Placeholder.component("player-display-name", miniMessage.deserialize(result.value.value))
+            is Either.Left -> Placeholder.unparsed("player-display-name", result.value)
+            else -> error("Unknown result type: ${result::class.qualifiedName}")
         }
     }
 
