@@ -12,8 +12,8 @@ class NamespacedKeyFactory(private val plugin: Plugin, private val namespace: St
             return NamespacedKeyFactory(plugin, "module/" + module.name)
         }
 
-        fun forCore(): NamespacedKeyFactory {
-            return NamespacedKeyFactory(Basics.plugin, "core")
+        fun forCore(plugin: Plugin): NamespacedKeyFactory {
+            return NamespacedKeyFactory(plugin,"core")
         }
 
     }

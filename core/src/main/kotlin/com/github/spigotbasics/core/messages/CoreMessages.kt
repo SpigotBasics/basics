@@ -1,17 +1,13 @@
 package com.github.spigotbasics.core.messages
 
-import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
 import org.bukkit.permissions.Permission
-import java.io.File
 
 /**
  * Provides messages used by the core classes, or are commonly used in other modules
- *
- * @param plugin
- * @param file messages.yml
  */
-class CoreMessages(plugin: BasicsPlugin, file: File) : SavedConfig(plugin, file) {
+class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     val noPermission get() = getMessage("no-permission")
     val commandNotFromConsole get() = getMessage("command-not-from-console")
     val mustSpecifyPlayerFromConsole get() = getMessage("must-specify-player-from-console")

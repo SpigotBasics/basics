@@ -1,14 +1,16 @@
 package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.extensions.getDurationAsMillis
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import java.io.File
 
-class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(plugin, file) {
+class StorageConfig(context: ConfigInstantiationContext) : SavedConfig(context) {
 
-    private val logger = BasicsLoggerFactory.getConfigLogger(file)
+    private val logger = BasicsLoggerFactory.getConfigLogger(context.file)
+    private val dataFolder: File = context.dataFolder
 
     val storageType: StorageType
         get() {
@@ -70,7 +72,7 @@ class StorageConfig(private val plugin: BasicsPlugin, file: File) : SavedConfig(
         }
 
     private fun replaceDir(dir: String): String {
-        return dir.replace("%plugindir%", plugin.dataFolder.absolutePath)
+        return dir.replace("%plugindir%", dataFolder.absolutePath)
     }
 
 }

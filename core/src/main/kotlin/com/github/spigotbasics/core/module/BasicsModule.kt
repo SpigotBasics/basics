@@ -14,6 +14,7 @@ import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
+import org.bukkit.Server
 import org.bukkit.permissions.Permission
 import java.io.File
 import java.util.*
@@ -42,6 +43,11 @@ interface BasicsModule {
      * The global Tag Resolver Factory
      */
     val tagResolverFactory: TagResolverFactory
+
+    /**
+     * Bukkit Server instance
+     */
+    val server: Server
 
     // ----- Module instances -----
 
