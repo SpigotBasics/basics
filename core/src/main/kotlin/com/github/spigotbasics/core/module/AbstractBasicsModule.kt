@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.module
 
-import com.github.spigotbasics.core.NamespacedKeyFactory
+import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
@@ -35,7 +35,10 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val messageFactory = plugin.messageFactory
     final override val tagResolverFactory /*get()*/ = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
-    final override val keyFactory = NamespacedKeyFactory.forModule(context.plugin as Plugin, context.info)
+    final override val keyFactory =
+        NamespacedNamespacedKeyFactory
+            .NamespacedNamespacedKeyFactoryFactory
+            .forModule(context.plugin as Plugin, context.info)
 
     private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
 

@@ -10,7 +10,7 @@ import org.bukkit.permissions.Permission
 
 abstract class BasicsCommandExecutor(module: BasicsModule) {
 
-    private val coreMessages: CoreMessages = module.plugin.messages
+    protected val coreMessages: CoreMessages = module.plugin.messages
     protected val messageFactory: MessageFactory = module.plugin.messageFactory
 
     abstract fun execute(context: BasicsCommandContext): Boolean
@@ -29,6 +29,15 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
             throw BasicsCommandException("Player $name not found")
         }
         return player
+    }
+
+    @Throws(BasicsCommandException::class)
+    fun notFromConsole(sender: CommandSender): Player {
+        if(sender !is Player) {
+            coreMessages.commandNotFromConsole.sendToSender(sender)
+            throw BasicsCommandException("Must be player")
+        }
+        return sender
     }
 
     @Throws(BasicsCommandException::class)

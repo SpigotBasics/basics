@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.NamespacedKeyFactory
+import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
@@ -99,7 +99,7 @@ interface BasicsModule {
     /**
      * This module's key factory
      */
-    val keyFactory: NamespacedKeyFactory
+    val keyFactory: NamespacedNamespacedKeyFactory
 
 
     // ----- Module lifecycle -----
