@@ -35,7 +35,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
 
         val translatedTargetLocation = TeleportUtils.getScaledLocationInOtherWorld(origin, newWorld)
 
-        if(force) {
+        if (force) {
             Spiper.teleportAsync(player, translatedTargetLocation)
             return true
         }
@@ -47,15 +47,16 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         )
 
         future.thenAccept { safeLocation ->
+
+            module.messageFactory.createPlainMessage("").sendToPlayerActionBar(player)
+
             if (safeLocation == null) {
                 coreMessages.noSafeLocationFound.sendToSender(player)
-                module.logger.warning("NO SAFE LOCATION FOUND!!!")
             } else {
                 module.scheduler.runTask {
                     Spiper.teleportAsync(player, safeLocation).whenComplete { success, throwable ->
                         if (throwable != null || !success) {
                             module.msgUnsuccessful(newWorld.name).sendToSender(player)
-                            module.logger.warning("Could not teleport player to world ${newWorld.name}")
                             throwable?.let {
                                 module.logger.log(
                                     Level.SEVERE,
@@ -64,7 +65,6 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
                                 )
                             }
                         } else if (success) {
-                            module.logger.info("Teleported player ${player.name} to world ${newWorld.name}")
                             module.msgSuccess(newWorld.name).sendToSender(player)
                         }
                     }
@@ -95,8 +95,8 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         if (args.size == 1) {
             return allWorldsAnd012().addAnd("--force").addAnd("-f").partialMatches(args[0])
         }
-        if(args.size == 2) {
-            if(args[0] == "--force" || args[0] == "-f") {
+        if (args.size == 2) {
+            if (args[0] == "--force" || args[0] == "-f") {
                 return allWorldsAnd012().partialMatches(args[1])
             }
         }
