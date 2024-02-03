@@ -9,7 +9,7 @@ import java.util.function.Predicate
 object TeleportUtils {
 
     fun findSafeLocationInSameChunkAsync(origin: Location, minY: Int, maxY: Int): CompletableFuture<Location?> {
-        println("MinY: $minY, MaxY: $maxY")
+        //println("MinY: $minY, MaxY: $maxY")
         return Spiper.getChunkAt(origin).thenApply { chunk ->
             chunk?.chunkSnapshot ?: throw IllegalStateException("Chunk not loaded")
         }
@@ -42,7 +42,7 @@ object TeleportUtils {
             if (step % 2 == 0) { // Even steps: move upwards
                 increment++
                 if (increment <= maxY && !reachedMax) {
-                    println("Now checking inc Y = $increment")
+                    //println("Now checking inc Y = $increment")
                     loopInSquare(origin.chunk, origin.x, origin.z, increment, minY, maxY, safeSpotPredicate)?.let {
                         return it
                     }
@@ -53,7 +53,7 @@ object TeleportUtils {
             } else { // Odd steps: move downwards
                 decrement--
                 if (decrement >= minY && !reachedMin) {
-                    println("Now checking dec Y = $decrement")
+                    //println("Now checking dec Y = $decrement")
                     loopInSquare(origin.chunk, origin.x, origin.z, decrement, minY, maxY, safeSpotPredicate)?.let {
                         return it
                     }
@@ -74,7 +74,7 @@ object TeleportUtils {
 
     val safeSpotPredicate = Predicate<BlockInChunkSnapshot> { block ->
 
-        println("Checking block: $block")
+        //println("Checking block: $block")
 
         val below = block.getRelativeY(-1).getType()
         val pos = block.getType()
