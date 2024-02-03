@@ -9,7 +9,7 @@ import java.util.function.Predicate
 object TeleportUtils {
 
     fun findSafeLocationInSameChunkAsync(origin: Location, minY: Int, maxY: Int): CompletableFuture<Location?> {
-        //println("MinY: $minY, MaxY: $maxY")
+        // TODO: Check the surrounding 8 chunks if none was found here.
         return Spiper.getChunkAt(origin).thenApply { chunk ->
             chunk?.chunkSnapshot ?: throw IllegalStateException("Chunk not loaded")
         }
