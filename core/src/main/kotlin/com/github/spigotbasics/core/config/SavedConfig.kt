@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -8,30 +7,18 @@ import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Represents a [YamlConfiguration] that is backed by a file. Instances of this class should only be obtained using
  * [com.github.spigotbasics.core.module.AbstractBasicsModule.getConfig].
  * It is fine to keep this object around and pass it around, it will automatically get updated
  * on module reload instead of replaced.
- *
- * @property file File backing this configuration
- * @constructor Create empty Saved config
  */
-open class SavedConfig internal constructor(
+open class SavedConfig internal constructor(context: ConfigInstantiationContext) : YamlConfiguration() {
 
-    /**
-     * File backing this configuration.
-     */
-    private val plugin: BasicsPlugin,
-    val file: File
-    //val tagResolverFactory: TagResolverFactory
-    //val messageFactory: MessageFactory
-) : YamlConfiguration() {
-
-    private val logger = BasicsLoggerFactory.getConfigLogger(file)
-    private val messageFactory: MessageFactory = plugin.messageFactory
+    private val file = context.file
+    private val logger = BasicsLoggerFactory.getConfigLogger(context.file)
+    private val messageFactory: MessageFactory = context.messageFactory
 
     /**
      * Saves this configuration to the file.

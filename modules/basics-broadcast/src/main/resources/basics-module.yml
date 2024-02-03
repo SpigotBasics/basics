@@ -1,3 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicsbroadcast.BasicsBroadcastModule
 name: basics-broadcast
 version: ${moduleVersion}
+description: "Lets your broadcast messages to all players"

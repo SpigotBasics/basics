@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.extensions
 
 import org.bukkit.permissions.Permissible
 
-enum class Strategy() {
+enum class Strategy {
     HIGHEST,
     LOWEST
 }

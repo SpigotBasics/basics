@@ -1,0 +1,7 @@
+world-teleported: "<green>Teleported to world <color:#88FF88><world></color>!</green>"
+already-in-world: "<gray>You are already in world <gold><world></gold>!</gray>"
+
+starting-teleport: "<gray>Teleporting to world <gold><world></gold> ...</gray>"
+
+# This can happen when other plugins cancel the event
+teleport-unsuccessful: "<red>Teleportation to world <gold><world></gold> was unsuccessful!</red>"

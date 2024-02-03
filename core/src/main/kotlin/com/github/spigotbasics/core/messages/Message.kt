@@ -34,6 +34,10 @@ data class Message(
         audiences.player(player).sendMessage(toComponent())
     }
 
+    fun sendToPlayerActionBar(player: Player) {
+        audiences.player(player).sendActionBar(toComponent())
+    }
+
     fun sendToAllPlayers() {
         audiences.players().sendMessage(toComponent())
     }
@@ -47,7 +51,7 @@ data class Message(
     }
 
     fun sendToPlayers(players: Collection<Player>) {
-        players.forEach() {
+        players.forEach {
             sendToPlayer(it)
         }
     }

@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.model
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.World
 
 /**
  * Represents a [Location] that references a [org.bukkit.World] by name.
@@ -43,5 +44,15 @@ fun Location.toSimpleLocation(): SimpleLocation {
 @Throws(WorldNotLoadedException::class)
 fun SimpleLocation.toLocation(): Location {
     val world = Bukkit.getWorld(this.world) ?: throw WorldNotLoadedException(this.world)
+    return Location(world, x, y, z, yaw, pitch)
+}
+
+/**
+ * Turns a [SimpleLocation] into a [Location] for the given world.
+ *
+ * @param world The world to use.
+ * @return The [Location] representation of the [SimpleLocation].
+ */
+fun SimpleLocation.toLocation(world: World): Location {
     return Location(world, x, y, z, yaw, pitch)
 }

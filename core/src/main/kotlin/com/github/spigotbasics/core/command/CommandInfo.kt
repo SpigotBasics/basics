@@ -16,8 +16,4 @@ data class CommandInfo (
     val aliases: List<String>,
     //val executor: (CommandSender, BasicsCommand, String, List<String>) -> Boolean
     //val executor: BasicsCommandExecutor
-) {
-
-
-
-}
+)

@@ -11,11 +11,11 @@ import java.util.EnumMap
 class BasicsEventBus(private val plugin: Plugin) {
 
     private val listeners: MutableList<Listener> = ArrayList()
-    private val priorityBusses: MutableMap<EventPriority, PriorityEventBus> = EnumMap(EventPriority::class.java);
+    private val priorityBusses: MutableMap<EventPriority, PriorityEventBus> = EnumMap(EventPriority::class.java)
 
     fun subscribe(listener: Listener) {
         listeners.add(listener)
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
+        Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
 
     fun <T : Event> subscribe(eventClass: Class<T>, action: (T) -> Unit) {
@@ -43,7 +43,7 @@ class BasicsEventBus(private val plugin: Plugin) {
 
     fun dispose() {
         listeners.forEach(HandlerList::unregisterAll)
-        listeners.clear();
+        listeners.clear()
 
         priorityBusses.values.forEach(PriorityEventBus::dispose)
         priorityBusses.clear()

@@ -1,3 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
 name: basics-homes
 version: ${moduleVersion}
+description: "Simple home management"

@@ -2,23 +2,28 @@ package com.github.spigotbasics.core.module.loader
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants.MODULE_YML_FILE_NAME
-import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.exceptions.InvalidModuleException
+import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
+import org.bukkit.Server
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 class ModuleLoader
 @Throws(InvalidModuleException::class)
-constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
+constructor(
+    private val plugin: BasicsPlugin,
+    private val server: Server,
+    val file: File
+) : AutoCloseable {
 
-    val path = file.absolutePath
+    private val path: String = file.absolutePath
 
     //val jarFile: JarFile
     val info: ModuleInfo
-    val classLoader: ModuleJarClassLoader;
-    val bMainClass: Class<out BasicsModule> by lazy {
+    private val classLoader: ModuleJarClassLoader
+    private val bMainClass: Class<out BasicsModule> by lazy {
         try {
             getMainClass()
         } catch (e: InvalidModuleException) {
@@ -102,6 +107,7 @@ constructor(val plugin: BasicsPlugin, val file: File) : AutoCloseable {
         val moduleInstantiationContext = try {
             ModuleInstantiationContext(
                 plugin = plugin,
+                server = server,
                 info = info,
                 file = file,
                 classLoader = classLoader
