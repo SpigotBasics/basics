@@ -15,6 +15,9 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     private val messages
         get() = config.getStringList("messages")
 
+    private val showInConsole
+        get() = config.getBoolean("show-in-console")
+
     private val localRandom = ThreadLocalRandom.current()
 
     private var msgIndex = 0
@@ -38,8 +41,10 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     private fun broadcastAnnouncement() {
         if (messages.isEmpty()) return
         if (pickRandom) msgIndex = localRandom.nextInt(messages.size)
-        val message = messages[msgIndex]
-        messageFactory.createMessage(message).sendToAllPlayers()
+        val message = messageFactory.createMessage(messages[msgIndex])
         msgIndex = (msgIndex + 1).mod(messages.size)
+
+        if (showInConsole) message.sendToConsole()
+        message.sendToAllPlayers()
     }
 }

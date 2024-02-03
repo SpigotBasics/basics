@@ -18,20 +18,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
             .register()
     }
 
-    private fun getCoordFactor(from: World, to: World): Double {
-        val fromEnv = from.environment
-        val toEnv = to.environment
-        return when {
-            fromEnv == World.Environment.NETHER && toEnv != World.Environment.NETHER -> 8.0
-            fromEnv != World.Environment.NETHER && toEnv == World.Environment.NETHER -> 0.125
-            else -> 1.0
-        }
-    }
 
-    private fun getScaledLocationInOtherWorld(origin: Location, newWorld: World): Location {
-        val factor = getCoordFactor(origin.world!!, newWorld)
-        return Location(newWorld, origin.x * factor, origin.y + .5, origin.z * factor, origin.yaw, origin.pitch)
-    }
 
 
 }
