@@ -3,10 +3,12 @@ package com.github.spigotbasics.modules.basicsworld
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
 import org.bukkit.Bukkit
 import org.bukkit.World
+import java.util.logging.Level
 
 class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module) {
     override fun execute(context: BasicsCommandContext): Boolean {
@@ -15,6 +17,10 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         if (args.isEmpty()) {
             return false
         }
+
+        context.readFlags()
+        val force = (context.popFlag("-f") or context.popFlag("--force"))
+
         val origin = player.location
         val newWorld = getWorld(args[0])
         if (newWorld == null) {
@@ -22,31 +28,55 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
             return true
         }
 
+        if (newWorld == origin.world) {
+            module.msgAlreadyInWorld(newWorld.name).sendToSender(player)
+            return true
+        }
+
         val translatedTargetLocation = TeleportUtils.getScaledLocationInOtherWorld(origin, newWorld)
-        val future = TeleportUtils.getSafeTeleportLocationAsync(translatedTargetLocation, 16)
+
+        if(force) {
+            Spiper.teleportAsync(player, translatedTargetLocation)
+            return true
+        }
+
+        val future = TeleportUtils.findSafeLocationInSameChunkAsync(
+            translatedTargetLocation,
+            newWorld.minHeight,
+            newWorld.maxHeight
+        )
 
         future.thenAccept { safeLocation ->
             if (safeLocation == null) {
-                println("No safe location found")
                 coreMessages.noSafeLocationFound.sendToSender(player)
+                module.logger.warning("NO SAFE LOCATION FOUND!!!")
             } else {
-                println("Teleporting!")
-                try {
-                    module.scheduler.runTask {
-                        try {
-                            Spiper.teleportAsync(player, safeLocation)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                module.scheduler.runTask {
+                    Spiper.teleportAsync(player, safeLocation).whenComplete { success, throwable ->
+                        if (throwable != null || !success) {
+                            module.msgUnsuccessful(newWorld.name).sendToSender(player)
+                            module.logger.warning("Could not teleport player to world ${newWorld.name}")
+                            throwable?.let {
+                                module.logger.log(
+                                    Level.SEVERE,
+                                    "Could not teleport player to world ${newWorld.name}",
+                                    it
+                                )
+                            }
+                        } else if (success) {
+                            module.logger.info("Teleported player ${player.name} to world ${newWorld.name}")
+                            module.msgSuccess(newWorld.name).sendToSender(player)
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
-        }.exceptionally { e ->
-            e.printStackTrace()
+        }.exceptionally { throwable ->
+            module.logger.log(Level.SEVERE, "Could not find safe location for player", throwable)
+            module.msgUnsuccessful(newWorld.name).sendToSender(player)
             null
         }
+
+        module.msgStartingTeleport(newWorld.name).sendToPlayerActionBar(player)
         return true
     }
 
@@ -63,7 +93,12 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
         val args = context.args
         if (args.size == 1) {
-            return allWorldsAnd012().partialMatches(args[0])
+            return allWorldsAnd012().addAnd("--force").addAnd("-f").partialMatches(args[0])
+        }
+        if(args.size == 2) {
+            if(args[0] == "--force" || args[0] == "-f") {
+                return allWorldsAnd012().partialMatches(args[1])
+            }
         }
         return mutableListOf()
     }
