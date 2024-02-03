@@ -17,5 +17,6 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     fun unknownOption(option: String) = getMessage("unknown-option").tagUnparsed("option", option)
     fun invalidArgument(argument: String) = getMessage("invalid-argument").tagUnparsed("argument", argument)
     fun playerNotFound(name: String) = getMessage("player-not-found").tagUnparsed("argument", name)
+    fun worldNotFound(name: String) = getMessage("world-not-found").tagUnparsed("argument", name)
 
 }
