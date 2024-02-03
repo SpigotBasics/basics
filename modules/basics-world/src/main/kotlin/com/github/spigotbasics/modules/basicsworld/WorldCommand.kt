@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
+import com.github.spigotbasics.core.util.WorldUtils
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.permissions.Permissible
@@ -116,10 +117,16 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
             val hasPerm = sender.hasPermission(module.getWorldPermission(it.name))
             return@filter hasPerm
         }.map { it.name }.toMutableList()
-        // TODO: Only add 0, 1, 2 if the sender has permission to go to those worlds
-        list.add("0")
-        list.add("1")
-        list.add("2")
+
+        if(list.contains(WorldUtils.defaultWorldName)) {
+            list.add("0")
+        }
+        if(list.contains(WorldUtils.netherWorldName)) {
+            list.add("1")
+        }
+        if(list.contains(WorldUtils.endWorldName)) {
+            list.add("2")
+        }
         return list
     }
 
