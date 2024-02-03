@@ -1,228 +1,159 @@
 package com.github.spigotbasics.core.util
 
-import com.github.spigotbasics.core.Spiper.getSurroundingChunksAsync
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
-import org.bukkit.block.Block
+import com.github.spigotbasics.core.Spiper
+import com.github.spigotbasics.core.model.BlockInChunkSnapshot
+import org.bukkit.*
 import java.util.concurrent.CompletableFuture
-import kotlin.math.abs
+import java.util.function.Predicate
 
 object TeleportUtils {
 
-    fun getSafeTeleportLocationAsync(location: Location, maxDistanceXZ: Int): CompletableFuture<Location?> {
-        val result = CompletableFuture<Location?>()
-        val distanceInChunks = calculateChunksRequired(maxDistanceXZ)
-
-        println("Loading surrounding chunks for safe teleportation...")
-
-        // Load necessary surrounding chunks
-        // TODO: ChunkTicketManager to keep these chunks loaded until we're done
-        getSurroundingChunksAsync(location, distanceInChunks).thenAccept { _ ->
-            println("Surrounding Chunks all loaded, now spiraling outwards to find a safe location.")
-            // Once chunks are loaded, start spiraling outwards to find a safe location
-            spiralOutwardsAsync(location, maxDistanceXZ, result)
+    fun findSafeLocationInSameChunkAsync(origin: Location, minY: Int, maxY: Int): CompletableFuture<Location?> {
+        println("MinY: $minY, MaxY: $maxY")
+        return Spiper.getChunkAt(origin).thenApply { chunk ->
+            chunk?.chunkSnapshot ?: throw IllegalStateException("Chunk not loaded")
         }
-
-        println("DONE!!!")
-
-        return result
+            .thenApplyAsync { snapshot ->
+                findSafeLocationInSameChunk(
+                    BlockInChunkSnapshot.fromLocation(origin, snapshot),
+                    minY,
+                    maxY
+                )
+            }
+            .thenApply { it?.toLocation(origin.world!!) }
     }
 
-    private fun spiralOutwardsAsync(location: Location, maxDistance: Int, result: CompletableFuture<Location?>) {
-        val originalX = location.blockX
-        val originalZ = location.blockZ
-        var dx = 0
-        var dz = -1
-        val maxI = maxDistance * 2 * maxDistance * 2
-        var i = 0
-        var x = 0
-        var z = 0
+    fun findSafeLocationInSameChunk(origin: BlockInChunkSnapshot, minY: Int, maxY: Int): BlockInChunkSnapshot? {
 
-        fun checkNext() {
-            if (i >= maxI) {
-                result.complete(null) // No safe location found within the given distance
-                return
-            }
 
-            if ((-maxDistance / 2 <= x) && (x <= maxDistance / 2) && (-maxDistance / 2 <= z) && (z <= maxDistance / 2)) {
-                val checkingLocation =
-                    Location(location.world, (originalX + x).toDouble(), location.y, (originalZ + z).toDouble())
-                CompletableFuture.supplyAsync {
-                    getSafeTeleportLocation(checkingLocation, maxDistance)
-                }.thenAccept { safeLocation ->
-                    if (safeLocation != null) {
-                        result.complete(safeLocation)
-                        return@thenAccept
-                    } else {
-                        // Spiral outwards logic
-                        if (x == z || (x < 0 && x == -z) || (x > 0 && x == 1 - z)) {
-                            val temp = dx
-                            dx = -dz
-                            dz = temp
-                        }
-                        x += dx
-                        z += dz
-                        i++
-                        checkNext()
+        var reachedMin = false
+        var reachedMax = false
+        var step = 0 // To alternate between incrementing and decrementing
+
+        val y = if(origin.y in minY..maxY) origin.y else if(origin.y < minY) minY else maxY
+        var increment = y
+        var decrement = y
+
+        loopInSquare(origin.chunk, origin.x, origin.z, y, minY, maxY, safeSpotPredicate)?.let {
+            return it
+        }
+
+        while (!reachedMin || !reachedMax) {
+            if (step % 2 == 0) { // Even steps: move upwards
+                increment++
+                if (increment <= maxY && !reachedMax) {
+                    println("Now checking inc Y = $increment")
+                    loopInSquare(origin.chunk, origin.x, origin.z, increment, minY, maxY, safeSpotPredicate)?.let {
+                        return it
+                    }
+                    if (increment == maxY) {
+                        reachedMax = true
                     }
                 }
-            } else {
-                // Spiral outwards logic
-                if (x == z || (x < 0 && x == -z) || (x > 0 && x == 1 - z)) {
-                    val temp = dx
-                    dx = -dz
-                    dz = temp
+            } else { // Odd steps: move downwards
+                decrement--
+                if (decrement >= minY && !reachedMin) {
+                    println("Now checking dec Y = $decrement")
+                    loopInSquare(origin.chunk, origin.x, origin.z, decrement, minY, maxY, safeSpotPredicate)?.let {
+                        return it
+                    }
+                    if (decrement == minY) {
+                        reachedMin = true
+                    }
                 }
-                x += dx
-                z += dz
-                i++
-                checkNext()
+            }
+            step++
+
+            // Break the loop if both minY and maxY are reached or if we are out of bounds
+            if ((increment >= maxY && decrement <= minY) || increment < minY || decrement > maxY) {
+                break
             }
         }
-
-        checkNext()
-    }
-
-    fun getSafeTeleportLocation(target: Location, maxDistanceXZ: Int): Location? {
-
-        println("GetSafeTeleportLocation @ ${target}")
-
-        // First, try to get a safe location with fixed XZ directly
-        getSafeTeleportLocationFixedXZ(target)?.let {
-            return it // If a safe location is found, return it
-        }
-
-        // If not found, start searching around the target location
-        val world = target.world ?: return null
-        val startX = target.x.toInt()
-        val startZ = target.z.toInt()
-
-        // Iterate in a spiral starting from the target location
-        var dx = 0
-        var dz = 0
-        var stage = 0
-        var stageStep = 0
-
-        while (abs(dx) <= maxDistanceXZ && abs(dz) <= maxDistanceXZ) {
-            val x = startX + dx
-            val z = startZ + dz
-
-            // Check the location at the current offset
-            val location = Location(world, x.toDouble(), target.y, z.toDouble())
-            getSafeTeleportLocationFixedXZ(location)?.let {
-                return it // If a safe location is found, return it
-            }
-
-            // Spiral logic to move to the next location
-            if (stage % 2 == 0) {
-                dx += if (stageStep % 2 == 0) 1 else -1
-            } else {
-                dz += if (stageStep % 2 == 0) 1 else -1
-            }
-
-            // Update stage and step counters
-            if ((stage % 2 == 0 && dx == dz) || (stage % 2 == 1 && dx == -dz)) {
-                stage++
-            }
-            stageStep = (stageStep + 1) % 4
-        }
-
-        // No safe location found within the maxDistanceXZ
         return null
     }
 
-    fun calculateChunksRequired(maxDistanceXZ: Int): Int {
-        // Each chunk is 16 blocks in X and Z.
-        // Add 15 to maxDistanceXZ to ensure covering the worst case (being at the far edge of a chunk).
-        // Divide by 16 (size of a chunk) to get the distance in chunks.
-        // Add 1 to ensure we include the center chunk itself.
-        // Divide by 2 since the calculation gives total span, but we need distance from center to edge.
-        val chunksDistance = ((maxDistanceXZ + 15) / 16) + 1
+    val safeSpotPredicate = Predicate<BlockInChunkSnapshot> { block ->
 
-        return chunksDistance
+        println("Checking block: $block")
+
+        val below = block.getRelativeY(-1).getType()
+        val pos = block.getType()
+        val head = block.getRelativeY(1).getType()
+
+        if (!isSafeToStandOn(below)) {
+            return@Predicate false
+        }
+        if (!isSafeToStandInside(pos)) {
+            return@Predicate false
+        }
+        if (!isSafeToStandInside(head)) {
+            return@Predicate false
+        }
+
+        return@Predicate true
     }
 
-    fun getSafeTeleportLocationFixedXZ(target: Location): Location? {
+    fun loopInSquare(
+        chunk: ChunkSnapshot,
+        startX: Int,
+        startZ: Int,
+        y: Int,
+        minY: Int,
+        maxY: Int,
+        predicate: Predicate<BlockInChunkSnapshot>
+    ): BlockInChunkSnapshot? {
+        val size = 16 // Grid size
+        val maxDistance = startX.coerceAtLeast(size - startX - 1).coerceAtLeast(startZ.coerceAtLeast(size - startZ - 1))
 
-        println("GetSafeTeleportLocationFixedXZ @ ${target}")
+        for (distance in 0..maxDistance) {
+            for (i in -distance..distance) {
+                val x1 = startX + i
+                val z1 = startZ + distance
+                if (x1 in 0 until size && z1 in 0 until size) {
 
-        // Ensure the location is at a full block position to prevent glitching into blocks
-        val fixedLocation = normalizeLocation(target)
+                        val block = BlockInChunkSnapshot(x1, y, z1, chunk, minY, maxY)
+                        if (predicate.test(block)) {
+                            return block
+                        }
 
-        val world = fixedLocation.world ?: return null
-        val startY = fixedLocation.y.toInt()
-        val lowestY = startY.coerceAtLeast(world.minHeight)
-        val highestY = startY.coerceAtMost(world.maxHeight)
-        val x = fixedLocation.x
-        val z = fixedLocation.z
+                }
 
-        for (y in lowestY..world.maxHeight) {
-            val location = Location(world, x, y.toDouble(), z)
-            if (isLocationSafe(location)) {
-                return location
+                val x2 = startX + i
+                val z2 = startZ - distance
+                if (x2 in 0 until size && z2 in 0 until size && distance != 0) { // Avoid double-counting the center
+
+                        val block = BlockInChunkSnapshot(x2, y, z2, chunk, minY, maxY)
+                        if (predicate.test(block)) {
+                            return block
+                        }
+
+                }
+            }
+            for (i in -(distance - 1)..<distance) {
+                val x1 = startX + distance
+                val z1 = startZ + i
+                if (x1 in 0 until size && z1 in 0 until size) {
+
+                        val block = BlockInChunkSnapshot(x1, y, z1, chunk, minY, maxY)
+                        if (predicate.test(block)) {
+                            return block
+                        }
+
+                }
+
+                val x2 = startX - distance
+                val z2 = startZ + i
+                if (x2 in 0 until size && z2 in 0 until size && distance != 0) { // Avoid double-counting the center
+
+                        val block = BlockInChunkSnapshot(x2, y, z2, chunk, minY, maxY)
+                        if (predicate.test(block)) {
+                            return block
+                        }
+                    }
+
             }
         }
-
-        for (y in highestY downTo world.minHeight) {
-            val location = Location(world, x, y.toDouble(), z)
-            if (isLocationSafe(location)) {
-                return location
-            }
-        }
-
         return null
-    }
-
-    fun normalizeLocation(location: Location): Location = Location(
-        location.world,
-        location.x.toInt() + .5,
-        location.y.toInt().toDouble(),
-        location.z.toInt() + .5
-    )
-
-
-    fun isLocationSafe(normalizedLocation: Location): Boolean {
-        val world = normalizedLocation.world ?: return false
-
-        // Block at the player's feet must be solid
-        val feet: Block = world.getBlockAt(normalizedLocation.clone().add(0.0, -1.0, 0.0))
-        if (!feet.type.isSolid) {
-            return false
-        }
-
-        // Block for the player's body must not be solid
-        val body: Block = world.getBlockAt(normalizedLocation)
-        if (!isSafeToStandInside(body.type)) {
-            return false
-        }
-
-        // Block for the player's head must not be solid
-        val head: Block = world.getBlockAt(normalizedLocation.clone().add(0.0, 1.0, 0.0))
-        if (!isSafeToStandInside(head.type)) {
-            return false
-        }
-
-        // Check if the block under the feet is hazardous
-        val underFeet: Block = world.getBlockAt(normalizedLocation.clone().subtract(0.0, 1.0, 0.0))
-        if (isSafeToStandOn(underFeet.type)) {
-            return false
-        }
-
-        // Location is considered safe
-        return true
-    }
-
-    fun isSafeToStandInside(material: Material): Boolean {
-        return material.isAir || material == Material.WATER
-    }
-
-    fun isSafeToStandOn(material: Material): Boolean {
-        return material == Material.LAVA
-                || material == Material.MAGMA_BLOCK
-                || material == Material.FIRE
-                || material == Material.CAMPFIRE
-                || material == Material.SOUL_CAMPFIRE
     }
 
     fun getCoordinateTranslationFactor(from: World, to: World): Double {
@@ -238,6 +169,30 @@ object TeleportUtils {
     fun getScaledLocationInOtherWorld(origin: Location, newWorld: World): Location {
         val factor = getCoordinateTranslationFactor(origin.world!!, newWorld)
         return Location(newWorld, origin.x * factor, origin.y + .5, origin.z * factor, origin.yaw, origin.pitch)
+    }
+
+    fun normalizeLocation(location: Location): Location = Location(
+        location.world,
+        location.x.toInt() + .5,
+        location.y.toInt().toDouble(),
+        location.z.toInt() + .5
+    )
+
+    fun isSafeToStandInside(material: Material): Boolean {
+//        return material.isAir || material == Material.WATER
+        return material != Material.LAVA && material != Material.FIRE && Tag.REPLACEABLE.isTagged(material)
+    }
+
+    fun isSafeToStandOn(material: Material): Boolean {
+        if (material == Material.LAVA
+            || material == Material.MAGMA_BLOCK
+            || material == Material.FIRE
+            || material == Material.CAMPFIRE
+            || material == Material.SOUL_CAMPFIRE
+        ) {
+            return false
+        }
+        return material.isSolid
     }
 
 }

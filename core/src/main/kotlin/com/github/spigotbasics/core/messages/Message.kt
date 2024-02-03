@@ -34,6 +34,10 @@ data class Message(
         audiences.player(player).sendMessage(toComponent())
     }
 
+    fun sendToPlayerActionBar(player: Player) {
+        audiences.player(player).sendActionBar(toComponent())
+    }
+
     fun sendToAllPlayers() {
         audiences.players().sendMessage(toComponent())
     }

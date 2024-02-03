@@ -40,6 +40,8 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
             .NamespacedNamespacedKeyFactoryFactory
             .forModule(context.plugin as Plugin, context.info)
 
+    final override val coreMessages get() = plugin.messages
+
     private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
 
     private var isEnabled = false

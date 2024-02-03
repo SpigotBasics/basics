@@ -16,8 +16,8 @@ object Spiper {
 
     val isPaper = PaperLib.isPaper()
 
-    fun teleportAsync(entity: Entity, location: Location) {
-        PaperLib.teleportAsync(entity, location)
+    fun teleportAsync(entity: Entity, location: Location): CompletableFuture<Boolean> {
+        return PaperLib.teleportAsync(entity, location)
     }
 
     fun teleportAsync(entity: Entity, location: Location, reason: TeleportCause) {

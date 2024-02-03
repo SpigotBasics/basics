@@ -8,6 +8,7 @@ import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.logger.BasicsLogger
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
@@ -38,6 +39,11 @@ interface BasicsModule {
      * The global Message Factory
      */
     val messageFactory: MessageFactory
+
+    /**
+     * The CoreMessages instance
+     */
+    val coreMessages: CoreMessages
 
     /**
      * The global Tag Resolver Factory
