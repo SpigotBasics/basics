@@ -1,19 +1,21 @@
 package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
-import com.github.spigotbasics.core.NamespacedKeyFactory
+import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.logger.BasicsLogger
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
+import org.bukkit.Server
 import org.bukkit.permissions.Permission
 import java.io.File
 import java.util.*
@@ -39,9 +41,19 @@ interface BasicsModule {
     val messageFactory: MessageFactory
 
     /**
+     * The CoreMessages instance
+     */
+    val coreMessages: CoreMessages
+
+    /**
      * The global Tag Resolver Factory
      */
     val tagResolverFactory: TagResolverFactory
+
+    /**
+     * Bukkit Server instance
+     */
+    val server: Server
 
     // ----- Module instances -----
 
@@ -93,7 +105,7 @@ interface BasicsModule {
     /**
      * This module's key factory
      */
-    val keyFactory: NamespacedKeyFactory
+    val keyFactory: NamespacedNamespacedKeyFactory
 
 
     // ----- Module lifecycle -----

@@ -11,7 +11,7 @@ internal class BasicsRunnable(
 ) : BukkitRunnable() {
 
     override fun run() {
-        task.invoke();
+        task.invoke()
     }
 
     override fun cancel() {
@@ -26,7 +26,7 @@ internal class BasicsRunnable(
     }
 
     fun runTaskAsync(): Int {
-        runTaskAsynchronously(plugin);
+        runTaskAsynchronously(plugin)
         taskIds.add(taskId)
         return taskId
     }

@@ -1,3 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicscore.BasicsCoreModule
 name: basics-core
 version: ${moduleVersion}
+description: "Core commands for Basics (such as /module)"

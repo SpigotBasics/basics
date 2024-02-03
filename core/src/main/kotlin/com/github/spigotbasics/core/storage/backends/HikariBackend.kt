@@ -12,7 +12,7 @@ import java.sql.SQLException
 import java.util.concurrent.*
 import java.util.logging.Level
 
-internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : StorageBackend {
+internal abstract class HikariBackend(config: HikariConfig, protected val tablePrefix: String, sqlSleep: Double) : StorageBackend {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(HikariBackend::class)
 
@@ -22,7 +22,7 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
 
     override fun setupNamespace(namespace: String) {
         val sql = """
-            CREATE TABLE IF NOT EXISTS $namespace (
+            CREATE TABLE IF NOT EXISTS $tablePrefix$namespace (
                 key_id VARCHAR(255) PRIMARY KEY,
                 data TEXT
             )
@@ -35,7 +35,7 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
                 }
             }
         } catch (e: SQLException) {
-            logger.log(Level.SEVERE, "Could not execute create statement for namespace $namespace", e)
+            logger.log(Level.SEVERE, "Could not execute create statement for namespace $tablePrefix$namespace", e)
             throw (IOException(e))
         }
     }
@@ -45,7 +45,7 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
         return CompletableFuture.supplyAsync {
             try {
                 selectSleep()
-                val sql = "SELECT data FROM $namespace WHERE key_id = ?"
+                val sql = "SELECT data FROM $tablePrefix$namespace WHERE key_id = ?"
                 dataSource.connection.use { conn ->
                     conn.prepareStatement(sql).use { stmt ->
                         stmt.setString(1, keyId)
@@ -58,8 +58,8 @@ internal abstract class HikariBackend(config: HikariConfig, sqlSleep: Double) : 
                     }
                 }
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Could not SELECT from $namespace", e)
-                throw BasicsStorageAccessException("Could not SELECT from $namespace", e)
+                logger.log(Level.SEVERE, "Could not SELECT from $tablePrefix$namespace", e)
+                throw BasicsStorageAccessException("Could not SELECT from $tablePrefix$namespace", e)
             }
             null
         }

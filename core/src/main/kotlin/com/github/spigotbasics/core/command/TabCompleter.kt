@@ -11,7 +11,7 @@ object TabCompleter {
         val names = mutableListOf<String>()
         Bukkit.getOnlinePlayers()
             .filter { canSee(sender, it) && StringUtil.startsWithIgnoreCase(it.name, string) }
-            .forEach() { names.add(it.name) }
+            .forEach { names.add(it.name) }
         Collections.sort(names, String.CASE_INSENSITIVE_ORDER)
         return names
     }

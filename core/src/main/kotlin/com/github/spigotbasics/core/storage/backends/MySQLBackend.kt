@@ -6,7 +6,7 @@ import com.github.spigotbasics.core.storage.StorageType
 import com.google.gson.JsonElement
 import java.util.concurrent.CompletableFuture
 
-internal class MySQLBackend(dbInfo: MySQLDatabaseInfo, sqlSleep: Double): HikariBackend(HikariConfigFactory.createMysqlConfig(dbInfo), sqlSleep) {
+internal class MySQLBackend(dbInfo: MySQLDatabaseInfo, sqlSleep: Double): HikariBackend(HikariConfigFactory.createMysqlConfig(dbInfo), dbInfo.tablePrefix, sqlSleep) {
 
     override val type = StorageType.MYSQL
 
@@ -15,9 +15,9 @@ internal class MySQLBackend(dbInfo: MySQLDatabaseInfo, sqlSleep: Double): Hikari
             try {
                 selectSleep()
                 val sql = if (value == null) {
-                    "DELETE FROM $namespace WHERE key_id = ?"
+                    "DELETE FROM $tablePrefix$namespace WHERE key_id = ?"
                 } else {
-                    "INSERT INTO $namespace (key_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)"
+                    "INSERT INTO $tablePrefix$namespace (key_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)"
                 }
 
                 dataSource.connection.use { conn ->
@@ -30,7 +30,7 @@ internal class MySQLBackend(dbInfo: MySQLDatabaseInfo, sqlSleep: Double): Hikari
                     }
                 }
             } catch (e: Exception) {
-                throw BasicsStorageAccessException("Could not INSERT into $namespace", e)
+                throw BasicsStorageAccessException("Could not INSERT into $tablePrefix$namespace", e)
             }
         }
     }

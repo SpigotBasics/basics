@@ -1,17 +1,15 @@
 package com.github.spigotbasics.core.config
 
-import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
-import java.io.File
 
-class FixClassLoadingConfig(plugin: BasicsPlugin, file: File) : SavedConfig(plugin, file) {
+class FixClassLoadingConfig(context: ConfigInstantiationContext) : SavedConfig(context) {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
     val setEnabledDuringOnDisable
         get() = getBooleanAndLog("set-enabled-during-ondisable")
 
-    val abuseClassesList
+    val abuseClassesList: List<String>
         get() = getStringList("abuse-classes.others")
 
     val abuseClassBasicsModule
@@ -28,7 +26,7 @@ class FixClassLoadingConfig(plugin: BasicsPlugin, file: File) : SavedConfig(plug
 
     private fun getBooleanAndLog(key: String): Boolean {
         val value = getBoolean(key)
-        if(!value) {
+        if (!value) {
             logger.warning("$key is set to false")
         }
         return value

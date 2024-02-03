@@ -1,3 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicsannouncements.BasicsAnnouncementsModule
 name: basics-announcements
 version: ${moduleVersion}
+description: "Simple automatic chat announcements"
