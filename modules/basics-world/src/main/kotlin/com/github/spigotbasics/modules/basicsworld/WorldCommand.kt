@@ -35,6 +35,8 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
 
         val translatedTargetLocation = TeleportUtils.getScaledLocationInOtherWorld(origin, newWorld)
 
+        requirePermission(player, module.getWorldPermission(newWorld.name))
+
         if (force) {
             Spiper.teleportAsync(player, translatedTargetLocation)
             return true
