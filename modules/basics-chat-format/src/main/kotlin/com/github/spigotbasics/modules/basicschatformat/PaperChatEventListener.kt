@@ -23,7 +23,7 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
 
     fun formatMessage(player: Player, message: Component): Component {
         val serialized = module.format.concerns(player)
-            .tags("message" to SerializedMiniMessage(mini.serialize(message)))
+            .tagMiniMessage("message", SerializedMiniMessage(mini.serialize(message)))
             .serialize()
         val component = NativeComponentConverter.toNativeComponent(serialized)
         return component

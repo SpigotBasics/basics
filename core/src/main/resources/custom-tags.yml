@@ -23,6 +23,15 @@
 #                 - Color tags ('type: color') are used to define colors and can be used like <mycolor>text</mycolor>
 # <tag-value> - The value of the tag. This is the text that will be inserted into the message when the tag is used.
 
+# Important: Unparsed tags will not work inside <click:run_command> tags. If you want to be able to use a tag inside
+# a <click> tag, you will have to use a parsed tag for that.
+
+########################################################################################################################
+
+# Some messages contain builtin, message-specific tags, for example <#home>, <#limit>, <#world>, <#x>, <#y>, <#z>, etc.
+# These tags will always start with a # symbol and are not declared in this file. They are listed in their respective
+# module's message.yml files.
+
 ########################################################################################################################
 
 # This example lets you use <player-dm> to insert a clickable version of a player's name

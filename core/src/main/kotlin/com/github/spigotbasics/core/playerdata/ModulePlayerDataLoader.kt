@@ -54,7 +54,7 @@ class ModulePlayerDataLoader(
 
         if (!future.isDone) {
             logger.warning("Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined in storage.yml), kicking them now.")
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacy())
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
             return
         }
     }
@@ -93,12 +93,12 @@ class ModulePlayerDataLoader(
         // TODO: Bypass permission to join anyway
 
         if (future == null) {
-            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: No future found)")
+            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: No future found)")
             logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future found), kicking them now.")
             return
         }
         if (!future.isDone) {
-            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacy() + " (Error: Future not done)")
+            event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: Future not done)")
             logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (Future not done), kicking them now.")
             return
         }
