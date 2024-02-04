@@ -64,6 +64,11 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
             return true
         }
 
+        if(!homeName.matches(module.regex.toRegex())) {
+            module.msgHomeInvalidName.sendToSender(player)
+            return true
+        }
+
         val home = Home(homeName, location)
 
         homeList.addHome(home)
@@ -76,6 +81,6 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
             return mutableListOf()
         }
         val player = context.sender as Player
-        return module.getHomeList(player.uniqueId).listHomes().partialMatches(context.args[0])
+        return module.getHomeList(player.uniqueId).listHomeNames().partialMatches(context.args[0])
     }
 }
