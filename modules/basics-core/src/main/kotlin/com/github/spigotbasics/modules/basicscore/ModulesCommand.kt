@@ -144,7 +144,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             list.add(messageFactory.createMessage("$color${module.info.name}$colorEnd"))
         }
         messageFactory.createMessage("<gold>Loaded Modules:</gold>").sendToSender(sender)
-        sender.sendMessage(list.joinToString { it.toLegacy() })
+        sender.sendMessage(list.joinToString { it.toLegacyString() })
         return true
     }
 

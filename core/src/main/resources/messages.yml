@@ -1,11 +1,11 @@
 # These are the messages used by the core plugin. You can use all tags from custom-tags.yml here.
 # Some messages have additional available tags, which are listed for each message.
 
-# Tags: <permission-name>
-no-permission: "<hover:show_text:'<gray>Permission missing:</gray> <permission>'><red>You don't have permission to do that!</red></hover>"
+# Tags: <#permission>
+no-permission: "<hover:show_text:'<gray>Permission missing:</gray> <#permission>'><red>You don't have permission to do that!</red></hover>"
 
 # Tags: <option>
-unknown-option: "<red>Unknown option: </red><color:#FF8888><option></color>"
+unknown-option: "<red>Unknown option: </red><color:#FF8888><#option></color>"
 
 # Tags: <argument>
 invalid-argument: "<red>Invalid argument: </red><color:#FF8888><argument></color>"

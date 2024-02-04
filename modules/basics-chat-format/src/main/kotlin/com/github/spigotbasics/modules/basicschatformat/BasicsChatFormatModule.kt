@@ -33,7 +33,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
         event.format = format
             .concerns(event.player)
             .tagUnparsed("message", event.message) // TODO: To allow MiniMessage in chat, this should be parsed.
-            .toLegacy().escapeFormat()
+            .toLegacyString().escapeFormat()
     }
 
 }

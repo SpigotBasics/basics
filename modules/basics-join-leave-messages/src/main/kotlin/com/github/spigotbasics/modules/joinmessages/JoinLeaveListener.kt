@@ -17,12 +17,12 @@ class JoinLeaveListener(
 
     fun joinMessage(event: PlayerJoinEvent) {
         val msg = joinMsg.concerns(event.player)
-        facade.setJoinMessage(event, msg.toLegacy(), msg.serialize())
+        facade.setJoinMessage(event, msg.toLegacyString(), msg.serialize())
     }
 
     fun leaveMessage(event: PlayerQuitEvent) {
         val msg = quitMsg.concerns(event.player)
-        facade.setQuitMessage(event, msg.toLegacy(), msg.serialize())
+        facade.setQuitMessage(event, msg.toLegacyString(), msg.serialize())
     }
 
 }
