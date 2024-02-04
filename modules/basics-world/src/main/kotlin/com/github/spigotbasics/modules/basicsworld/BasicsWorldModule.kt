@@ -17,7 +17,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     fun msgAlreadyInWorld(world: String) = messages.getMessage("already-in-world").tagUnparsed("world", world)
     fun msgSuccess(world: String) = messages.getMessage("world-teleported").tagUnparsed("world", world)
     fun msgUnsuccessful(world: String) = messages.getMessage("teleport-unsuccessful").tagUnparsed("world", world)
-    fun msgStartingTeleport(world: String) = messages.getMessage("starting-teleport").tagUnparsed("world", world)
+    fun msgStartingTeleport(world: String) = messages.getMessage("starting-teleport").tagUnparsed("world", world) // TODO: This shows __unparsed__ ??
 
     val worldPermissions = mutableMapOf<String, Permission>()
 

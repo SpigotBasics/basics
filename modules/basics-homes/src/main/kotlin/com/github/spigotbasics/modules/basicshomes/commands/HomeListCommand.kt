@@ -30,7 +30,7 @@ class HomeListCommand(private val module: BasicsHomesModule) : BasicsCommandExec
 
     fun allHomes2msg(homes: List<Home>): Message {
         val messageList =
-            messageFactory.createMessage(List(homes.size) { index -> "<home${index + 1}>" }.joinToString("<separator>"))
+            messageFactory.createMessage(List(homes.size) { index -> "<#home${index + 1}>" }.joinToString("<#separator>"))
 
         homes.mapIndexed() { index, home -> messageList.tagMessage("home${index + 1}", home2msg(home)) }
         messageList.tagMessage("separator", module.msgHomeListSeparator)

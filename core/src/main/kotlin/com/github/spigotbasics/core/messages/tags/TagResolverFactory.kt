@@ -3,7 +3,9 @@ package com.github.spigotbasics.core.messages.tags
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.extensions.genitiveSuffix
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.pipe.SpigotPaperFacade
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -131,6 +133,22 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
             list.addAll(nonPlayerResolvers)
             return@computeIfAbsent list
         }
+    }
+
+    internal fun createMessageSpecificPlaceholderUnparsed(key: String, value: String): TagResolver {
+        return Placeholder.unparsed(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
+    }
+
+    internal fun createMessageSpecificPlaceholderParsed(key: String, value: String): TagResolver {
+        return Placeholder.parsed(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
+    }
+
+    internal fun createMessageSpecificPlaceholderMessage(key: String, value: Message): TagResolver {
+        return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value.toAdventureComponent())
+    }
+
+    internal fun createMessageSpecificPlaceholderComponent(key: String, value: Component): TagResolver {
+        return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
     }
 
 }

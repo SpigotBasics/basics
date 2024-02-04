@@ -25,7 +25,7 @@ class BasicsCommand internal constructor (
             permission = permString
             description = info.description ?: ""
             usage = info.usage ?: "/$name"
-            permissionMessage = info.permissionMessage.tagUnparsed("permission", permString).toLegacy()
+            permissionMessage = info.permissionMessage.tagUnparsed("permission", permString).toLegacyString()
         }
 
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>?): Boolean {
