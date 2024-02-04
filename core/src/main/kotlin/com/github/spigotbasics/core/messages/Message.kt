@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.messages
 
-import com.github.spigotbasics.core.messages.tags.AdventureTagResolverFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import net.kyori.adventure.text.Component
