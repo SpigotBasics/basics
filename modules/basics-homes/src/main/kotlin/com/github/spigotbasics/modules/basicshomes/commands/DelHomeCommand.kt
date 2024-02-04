@@ -1,13 +1,11 @@
 package com.github.spigotbasics.modules.basicshomes.commands
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent
 
 class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
 
@@ -29,7 +27,7 @@ class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         val sender = context.sender
         if (sender is Player) {
             if (context.args.size == 1) {
-                return module.getHomeList(sender.uniqueId).listHomes().partialMatches(context.args[0])
+                return module.getHomeList(sender.uniqueId).listHomeNames().partialMatches(context.args[0])
             }
         }
         return mutableListOf()

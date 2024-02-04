@@ -25,6 +25,8 @@ data class HomeList(private val homes: MutableMap<String, Home> = mutableMapOf()
         return homes.containsKey(name.lowercase())
     }
 
-    fun listHomes(): List<String> = homes.keys.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
+    fun listHomeNames(): List<String> = homes.keys.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
+
+    fun listHomes(): List<Home> = homes.values.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
 }
