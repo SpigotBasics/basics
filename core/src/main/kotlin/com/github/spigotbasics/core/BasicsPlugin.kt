@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.tags.TagResolverFactory
+import com.github.spigotbasics.core.messages.tags.AdventureTagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.storage.StorageManager
@@ -39,7 +39,7 @@ interface BasicsPlugin {
     /**
      * Factory for creating and getting tag resolvers for MiniMessage
      */
-    val tagResolverFactory: TagResolverFactory
+    val tagResolverFactory: AdventureTagResolverFactory
 
     /**
      * Message factory

@@ -7,7 +7,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.tags.TagResolverFactory
+import com.github.spigotbasics.core.messages.tags.AdventureTagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
@@ -37,7 +37,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, server, moduleFolder)
-    override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
+    override val tagResolverFactory: AdventureTagResolverFactory = AdventureTagResolverFactory(facade)
     override val messageFactory: MessageFactory = MessageFactory(audienceProvider, tagResolverFactory)
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(messageFactory, dataFolder)
     override val messages: CoreMessages =
@@ -115,7 +115,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             coreConfigManager.getConfig(
                 Constants.CUSTOM_TAGS_FILE_NAME,
                 Constants.CUSTOM_TAGS_FILE_NAME,
-                TagResolverFactory::class.java
+                AdventureTagResolverFactory::class.java
             )
         )
     }

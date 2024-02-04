@@ -1,13 +1,13 @@
 package com.github.spigotbasics.core.messages
 
-import com.github.spigotbasics.core.messages.tags.TagResolverFactory
+import com.github.spigotbasics.core.messages.tags.AdventureTagResolverFactory
 
 private const val UNPARSED = "__unparsed__"
 private const val UNPARSED_TAG = "<$UNPARSED>"
 
 class MessageFactory(
     private val audienceProvider: AudienceProvider,
-    private val tagResolverFactory: TagResolverFactory
+    private val tagResolverFactory: AdventureTagResolverFactory
 ) {
 
     //private val miniMessage = MiniMessage.miniMessage()
