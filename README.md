@@ -46,7 +46,8 @@ Contributions are always welcome from anyone!
 > Contributions from CMarco, however, are not welcome and will be rejected.
 
 ## Create a new module
-To create a new module, use the `createModule` task. It will ask you for the module name, which should be `[a-z0-9_-]+`.
+Modules can be written in Java or Kotlin. To create a new module, use the `createModule` task.
+It will ask you which language (`kotlin` or `java`) you want to use, asks you for the module name, which should be `[a-z0-9_-]+`.
 
 <!--## Custom forks of other repositories used
 - ACF

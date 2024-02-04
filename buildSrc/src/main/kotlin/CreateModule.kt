@@ -53,7 +53,8 @@ open class CreateModule : DefaultTask() {
         println("Replacing placeholders in files and filenames ...")
         replaceInFilesAndFilenames(folder, replacements)
 
-        println("Module $moduleName created successfully")
+        println("Module $moduleName created successfully at:")
+        println(folder.absolutePath)
 
     }
 
