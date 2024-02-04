@@ -88,8 +88,13 @@ data class Message(
         return tags(tagResolverFactory.createMessageSpecificPlaceholderMessage(tag, value))
     }
 
+    fun tagMiniMessage(tag: String, value: SerializedMiniMessage): Message {
+        return tags(tagResolverFactory.createMessageSpecificPlaceholderComponent(tag, miniMessage.deserialize(value.value)))
+    }
+
     @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
     fun tags(vararg tags: Pair<String, Any>): Message {
+        @Suppress("DEPRECATION")
         return tags(tags.map { (key, value) -> toPlaceholder(key, value) })
     }
 
@@ -107,6 +112,7 @@ data class Message(
             return tagResolverFactory.createMessageSpecificPlaceholderMessage(key, value)
         }
         if(value is SerializedMiniMessage) {
+            @Suppress("DEPRECATION")
             return tagResolverFactory.createMessageSpecificPlaceholderComponent(key, miniMessage.deserialize(value.value))
         }
         error("Unsupported Placeholder value type: ${value::class}")
@@ -152,6 +158,8 @@ data class Message(
     fun toBungeeComponents(): Array<net.md_5.bungee.api.chat.BaseComponent> {
         return bungeeComponentSerializer.serialize(toAdventureComponent())
     }
+
+
 
 
 }

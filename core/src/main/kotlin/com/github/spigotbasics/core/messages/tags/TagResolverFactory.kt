@@ -147,7 +147,6 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value.toAdventureComponent())
     }
 
-    @Deprecated("Use createMessageSpecificPlaceholderMessage or createMessageSpecificPlaceholderParsed", ReplaceWith("createMessageSpecificPlaceholderMessage(key, value)"))
     internal fun createMessageSpecificPlaceholderComponent(key: String, value: Component): TagResolver {
         return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
     }

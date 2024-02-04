@@ -1,2 +1,2 @@
-# Tags: <message>
-chat-format: "<player-dm> <gray>»<reset> <message>"
+# Tags: <#message>
+chat-format: "<player-dm> <gray>»<reset> <#message>"

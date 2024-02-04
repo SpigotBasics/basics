@@ -4,13 +4,13 @@
 # Tags: <#permission>
 no-permission: "<hover:show_text:'<gray>Permission missing:</gray> <#permission>'><red>You don't have permission to do that!</red></hover>"
 
-# Tags: <option>
+# Tags: <#option>
 unknown-option: "<red>Unknown option: </red><color:#FF8888><#option></color>"
 
-# Tags: <argument>
-invalid-argument: "<red>Invalid argument: </red><color:#FF8888><argument></color>"
-player-not-found: "<red>Player not found: </red><color:#FF8888><argument></color>"
-world-not-found: "<red>World not found: </red><color:#FF8888><argument></color>"
+# Tags: <#argument>
+invalid-argument: "<red>Invalid argument: </red><color:#FF8888><#argument></color>"
+player-not-found: "<red>Player not found: </red><color:#FF8888><#argument></color>"
+world-not-found: "<red>World not found: </red><color:#FF8888><#argument></color>"
 
 no-safe-location-found: "<red>Couldn't find a safe location to teleport to!</red>"
 
