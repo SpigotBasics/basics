@@ -5,8 +5,8 @@ import com.github.spigotbasics.pipe.SerializedMiniMessage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -22,8 +22,7 @@ import org.bukkit.entity.Player
 data class Message(
     var lines: List<String>,
     val audienceProvider: AudienceProvider,
-    //val miniMessage: MiniMessage,
-    var tagResolverFactory: TagResolverFactory?,
+    var tagResolverFactory: TagResolverFactory,
     var concerns: Player? = null,
     val customTagResolvers: MutableList<TagResolver> = mutableListOf()
 ) {
@@ -31,23 +30,23 @@ data class Message(
     private val audiences by lazy { audienceProvider.audience }
 
     fun sendToPlayer(player: Player) {
-        audiences.player(player).sendMessage(toComponent())
+        audiences.player(player).sendMessage(toAdventureComponent())
     }
 
     fun sendToPlayerActionBar(player: Player) {
-        audiences.player(player).sendActionBar(toComponent())
+        audiences.player(player).sendActionBar(toAdventureComponent())
     }
 
     fun sendToAllPlayers() {
-        audiences.players().sendMessage(toComponent())
+        audiences.players().sendMessage(toAdventureComponent())
     }
 
     fun sendToConsole() {
-        audiences.console().sendMessage(toComponent())
+        audiences.console().sendMessage(toAdventureComponent())
     }
 
     fun sendToSender(sender: CommandSender) {
-        audiences.sender(sender).sendMessage(toComponent())
+        audiences.sender(sender).sendMessage(toAdventureComponent())
     }
 
     fun sendToPlayers(players: Collection<Player>) {
@@ -78,34 +77,37 @@ data class Message(
     }
 
     fun tagUnparsed(tag: String, value: String): Message {
-        return tags(Placeholder.unparsed(tag, value))
+        return tags(tagResolverFactory.createMessageSpecificPlaceholderUnparsed(tag, value))
     }
 
     fun tagParsed(tag: String, value: String): Message {
-        return tags(Placeholder.parsed(tag, value))
+        return tags(tagResolverFactory.createMessageSpecificPlaceholderParsed(tag, value))
     }
 
     fun tagMessage(tag: String, value: Message): Message {
-        return tags(Placeholder.component(tag, value.toComponent()))
+        return tags(tagResolverFactory.createMessageSpecificPlaceholderMessage(tag, value))
     }
 
+    @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
     fun tags(vararg tags: Pair<String, Any>): Message {
         return tags(tags.map { (key, value) -> toPlaceholder(key, value) })
     }
 
+    @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
     fun tags(tags: Map<String, String>): Message {
-        return tags(tags.map { (key, value) -> Placeholder.unparsed(key, value) })
+        return tags(tags.map { (key, value) -> tagResolverFactory.createMessageSpecificPlaceholderUnparsed(key, value) })
     }
 
+    @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
     private fun toPlaceholder(key: String, value: Any): TagResolver {
         if(value is String) {
-            return Placeholder.unparsed(key, value)
+            return tagResolverFactory.createMessageSpecificPlaceholderUnparsed(key, value)
         }
         if(value is Message) {
-            return Placeholder.component(key, value.toComponent())
+            return tagResolverFactory.createMessageSpecificPlaceholderMessage(key, value)
         }
         if(value is SerializedMiniMessage) {
-            return Placeholder.component(key, miniMessage.deserialize(value.value))
+            return tagResolverFactory.createMessageSpecificPlaceholderComponent(key, miniMessage.deserialize(value.value))
         }
         error("Unsupported Placeholder value type: ${value::class}")
     }
@@ -114,27 +116,18 @@ data class Message(
         return tags(tags.toList())
     }
 
-//    /**
-//     * Parses the message from MiniMessage format to Components and sends them to the given audience
-//     *
-//     * @param receiver Audience to send the message to
-//     */
-//    fun sendTo(receiver: Audience) {
-//        receiver.sendMessage(toComponent())
-//    }
-
     private fun getAllTagResolvers(): Array<TagResolver> {
-        val defaultResolvers = tagResolverFactory?.getTagResolvers(concerns) ?: emptyList()
+        val defaultResolvers = tagResolverFactory.getTagResolvers(concerns)
         return (defaultResolvers + customTagResolvers).toTypedArray()
     }
 
 
-    private fun toComponents(): List<Component> {
+    internal fun toAdventureComponents(): List<Component> {
         return lines.map { miniMessage.deserialize(it, *getAllTagResolvers()) }
     }
 
-    private fun toComponent(): Component {
-        return Component.join(JoinConfiguration.newlines(), toComponents())
+    internal fun toAdventureComponent(): Component {
+        return Component.join(JoinConfiguration.newlines(), toAdventureComponents())
     }
 
     companion object {
@@ -144,14 +137,20 @@ data class Message(
             .builder()
             .useUnusualXRepeatedCharacterHexFormat() // They are not unusual
             .build()
+
+        private val bungeeComponentSerializer = BungeeComponentSerializer.get()
     }
 
     fun serialize(): SerializedMiniMessage {
-        return SerializedMiniMessage(miniMessage.serialize(toComponent()))
+        return SerializedMiniMessage(miniMessage.serialize(toAdventureComponent()))
     }
 
-    fun toLegacy(): String {
-        return legacyComponentSerializer.serialize(toComponent())
+    fun toLegacyString(): String {
+        return legacyComponentSerializer.serialize(toAdventureComponent())
+    }
+
+    fun toBungeeComponents(): Array<net.md_5.bungee.api.chat.BaseComponent> {
+        return bungeeComponentSerializer.serialize(toAdventureComponent())
     }
 
 
