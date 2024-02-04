@@ -36,7 +36,7 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
         }
         val player = context.sender as Player
         val homeList = module.getHomeList(player.uniqueId)
-        return homeList.listHomes().partialMatches(context.args[0])
+        return homeList.listHomeNames().partialMatches(context.args[0])
     }
 
 
