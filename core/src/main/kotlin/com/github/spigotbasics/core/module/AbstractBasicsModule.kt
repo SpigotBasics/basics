@@ -84,6 +84,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         eventBus.dispose()
         commandManager.unregisterAll()
         permissionManager.unregisterAll()
+        plugin.chunkTicketManager.removeAllTickets(this)
         isEnabled = false
         return storageShutdownFuture
     }

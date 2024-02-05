@@ -2,9 +2,7 @@ package com.github.spigotbasics.core
 
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import com.github.spigotbasics.core.model.SimpleChunkLocation
-import com.github.spigotbasics.core.model.toSimpleChunkLocation
 import com.github.spigotbasics.core.module.BasicsModule
-import org.bukkit.Chunk
 import org.bukkit.plugin.Plugin
 import java.util.concurrent.ConcurrentHashMap
 
@@ -14,7 +12,7 @@ class ChunkTicketManager {
 
     @Throws(WorldNotLoadedException::class)
     fun addTicket(module: BasicsModule, chunk: SimpleChunkLocation) {
-        if(perChunkTickets.computeIfAbsent(chunk) { mutableSetOf() }.add(module)) {
+        if (perChunkTickets.computeIfAbsent(chunk) { mutableSetOf() }.add(module)) {
             chunk.getWorld().addPluginChunkTicket(chunk.x, chunk.z, module.plugin as Plugin)
         }
         perModuleTickets.computeIfAbsent(module) { mutableSetOf() }.add(chunk)
@@ -23,15 +21,15 @@ class ChunkTicketManager {
     @Throws(WorldNotLoadedException::class)
     fun removeTicket(module: BasicsModule, chunk: SimpleChunkLocation) {
         val modules = perChunkTickets[chunk]
-        if(modules != null) {
+        if (modules != null) {
             modules.remove(module)
-            if(modules.isEmpty()) {
+            if (modules.isEmpty()) {
                 chunk.getWorld().removePluginChunkTicket(chunk.x, chunk.z, module.plugin as Plugin)
                 perChunkTickets.remove(chunk)
             }
         }
         perModuleTickets[module]?.remove(chunk)
-        if(perModuleTickets[module]?.isEmpty() == true) {
+        if (perModuleTickets[module]?.isEmpty() == true) {
             perModuleTickets.remove(module)
         }
     }
