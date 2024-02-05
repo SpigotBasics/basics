@@ -67,6 +67,11 @@ interface BasicsPlugin {
     val corePlayerData: CorePlayerData
 
     /**
+     * Chunk ticket manager
+     */
+    val chunkTicketManager: ChunkTicketManager
+
+    /**
      * Reloads the core configuration settings of the plugin.
      */
     fun reloadCoreConfig()

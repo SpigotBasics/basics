@@ -112,7 +112,6 @@ data class Message(
             return tagResolverFactory.createMessageSpecificPlaceholderMessage(key, value)
         }
         if(value is SerializedMiniMessage) {
-            @Suppress("DEPRECATION")
             return tagResolverFactory.createMessageSpecificPlaceholderComponent(key, miniMessage.deserialize(value.value))
         }
         error("Unsupported Placeholder value type: ${value::class}")

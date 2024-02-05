@@ -57,17 +57,17 @@ open class SavedConfig internal constructor(context: ConfigInstantiationContext)
      * @return Message
      */
     fun getMessage(path: String): Message {
-        if(isList(path)) {
-//            return Message(tagResolverFactory = tagResolverFactory,
-//                lines = getStringList(path))
-            return messageFactory.createMessage(getStringList(path))
+        return if(isList(path)) {
+    //            return Message(tagResolverFactory = tagResolverFactory,
+    //                lines = getStringList(path))
+            messageFactory.createMessage(getStringList(path))
         } else if (isString(path)) {
-//            return Message(
-//                tagResolverFactory = tagResolverFactory,
-//                line = getString(path)!!)
-            return messageFactory.createMessage(getString(path)!!)
+    //            return Message(
+    //                tagResolverFactory = tagResolverFactory,
+    //                line = getString(path)!!)
+            messageFactory.createMessage(getString(path)!!)
         } else {
-            return messageFactory.createMessage(emptyList())
+            messageFactory.createMessage(emptyList())
         }
     }
 
