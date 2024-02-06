@@ -17,10 +17,10 @@ object TabCompleter {
     }
 
     private fun canSee(sender: CommandSender, player: Player): Boolean {
-        if(sender is Player) {
-            return sender.canSee(player)
+        return if(sender is Player) {
+            sender.canSee(player)
         } else {
-            return true
+            true
         }
     }
 }

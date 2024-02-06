@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.util
 
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.World
 

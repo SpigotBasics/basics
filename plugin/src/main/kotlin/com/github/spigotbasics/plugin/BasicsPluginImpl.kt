@@ -45,6 +45,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
+    override val chunkTicketManager: ChunkTicketManager = ChunkTicketManager()
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 

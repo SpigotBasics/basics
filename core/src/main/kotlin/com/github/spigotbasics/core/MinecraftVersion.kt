@@ -56,17 +56,17 @@ data class MinecraftVersion(
         } else if (major < other.major) {
             return -1
         } else {
-            if (minor > other.minor) {
-                return 1
+            return if (minor > other.minor) {
+                1
             } else if (minor < other.minor) {
-                return -1
+                -1
             } else {
                 if (patch > other.patch) {
-                    return 1
+                    1
                 } else if (patch < other.patch) {
-                    return -1
+                    -1
                 } else {
-                    return 0
+                    0
                 }
             }
         }

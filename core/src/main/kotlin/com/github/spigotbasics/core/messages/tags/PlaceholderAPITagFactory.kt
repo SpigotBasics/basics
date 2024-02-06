@@ -28,10 +28,10 @@ object PlaceholderAPITagFactory {
     }
 
     fun replacePlaceholders(message: String, player: OfflinePlayer? = null): String {
-        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            return PlaceholderAPI.setPlaceholders(player, message)
+        return if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            PlaceholderAPI.setPlaceholders(player, message)
         } else {
-            return message
+            message
         }
     }
 

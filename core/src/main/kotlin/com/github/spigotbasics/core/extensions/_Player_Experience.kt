@@ -18,7 +18,6 @@ fun Player.getTrueExperience(): Int {
 /**
  * Change a Player's experience.
  *
- *
  * This method is preferred over [Player.giveExp].
  * <br></br>In older versions the method does not take differences in exp per level into account.
  * This leads to overlevelling when granting players large amounts of experience.

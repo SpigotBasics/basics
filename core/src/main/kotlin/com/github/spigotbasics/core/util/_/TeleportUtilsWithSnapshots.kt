@@ -1,4 +1,4 @@
-//package com.github.spigotbasics.core.util.`_`
+package com.github.spigotbasics.core.util.`_`
 //
 //import com.github.spigotbasics.core.Spiper
 //import org.bukkit.ChunkSnapshot
