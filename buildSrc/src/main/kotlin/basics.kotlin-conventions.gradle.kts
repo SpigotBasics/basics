@@ -7,6 +7,7 @@ version = "1.0-SNAPSHOT"
 
 plugins {
     kotlin("jvm")
+    `maven-publish`
 }
 
 dependencies {
@@ -81,4 +82,12 @@ tasks.compileKotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
