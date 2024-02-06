@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicscore
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandException
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
@@ -30,13 +31,13 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private val moduleManager = module.plugin.moduleManager
 
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
 
         val args = context.args
         val sender = context.sender
         if (args.isEmpty()) {
             showMainHelp(sender)
-            return true
+            return CommandResult.SUCCESS
         }
 
         val subCommand = args[0]
@@ -47,8 +48,9 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
         args.removeAt(0)
         if (args.isEmpty()) {
-            messageFactory.createMessage("<red>Usage: /module $subCommand <module></red>").sendToSender(sender)
-            return true
+            //messageFactory.createMessage("<red>Usage: /module $subCommand <module></red>").sendToSender(sender)
+            //return CommandResult.SUCCESS
+            return CommandResult.usage("$subCommand <module>")
         }
 
         when (subCommand) {
@@ -60,33 +62,33 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             "unload" -> return unloadModule(sender, requireModule(sender, args[0]))
             "load" -> return loadModule(sender, context)
             else -> {
-                failInvalidArgument(sender, subCommand)
+                failInvalidArgument(subCommand)
             }
         }
 
         msgNotImplemented.sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun showInfo(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun showInfo(sender: CommandSender, module: BasicsModule): CommandResult {
         val provider = ModuleTagProvider(module)
-        val message = messageFactory.createMessage(listOf(
+        messageFactory.createMessage(listOf(
             "<gold>Module Info:</gold>",
             "<gold>Name:</gold> <gray><#module></gray>",
             "<gold>Version:</gold> <gray><#version></gray>",
             "<gold>Description:</gold> <gray><#module_description></gray>",
         )).tags(provider).sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun loadModule(sender: CommandSender, context: BasicsCommandContext): Boolean {
+    private fun loadModule(sender: CommandSender, context: BasicsCommandContext): CommandResult {
         context.readFlags()
         val enable = context.popFlag("--enable") or context.popFlag("-e")
         val arg = context.args[0]
         val file = moduleManager.modulesDirectory.resolve(arg)
         if (!file.exists()) {
             messageFactory.createMessage("<red>File $arg not found.</red>").sendToSender(sender)
-            return true
+            return CommandResult.SUCCESS
         }
         val result = moduleManager.loadModuleFromFile(file)
         val message = if (result.isSuccess)
@@ -100,10 +102,10 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             enableModule(sender, result.getOrThrow())
         }
 
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun unloadModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun unloadModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if(module.isEnabled()) {
             moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
             messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
@@ -111,30 +113,30 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         }
         moduleManager.unloadModule(module, true)
         messageFactory.createMessage("<gold>Module ${module.info.name} <red><bold>UNLOADED</bold></red>.</gold>").sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
     private fun requireModule(sender: CommandSender, arg: String): BasicsModule {
         val module = moduleManager.getModule(arg)
         if (module == null) {
             messageFactory.createMessage("<red>Module $arg not found").sendToSender(sender)
-            throw BasicsCommandException("Module $arg not found")
+            throw BasicsCommandException(CommandResult.SUCCESS)
         }
         return module
     }
 
-    private fun reloadModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun reloadModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if (!module.isEnabled()) {
             messageFactory.createMessage("<red>Module ${module.info.name} is not enabled.</red>").sendToSender(sender)
-            return true
+            return CommandResult.SUCCESS
         }
         module.reloadConfig()
         messageFactory.createMessage("<gold>Module ${module.info.name} <green>reloaded</green>.</gold>")
             .sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun reloadJar(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun reloadJar(sender: CommandSender, module: BasicsModule): CommandResult {
         val enable = module.isEnabled()
         val file = module.file
         unloadModule(sender, module)
@@ -151,36 +153,36 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             enableModule(sender, result.getOrThrow())
         }
 
-        return true
+        return CommandResult.SUCCESS
 
     }
 
 
-    private fun enableModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun enableModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if (module.isEnabled()) {
             messageFactory.createMessage("<red>Module ${module.info.name} is already enabled.</red>")
                 .sendToSender(sender)
-            return true
+            return CommandResult.SUCCESS
         }
         moduleManager.enableModule(module, true)
         messageFactory.createMessage("<gold>Module ${module.info.name} <green>enabled</green>.</gold>")
             .sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun disableModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun disableModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if (!module.isEnabled()) {
             messageFactory.createMessage("<red>Module ${module.info.name} is already disabled.</red>")
                 .sendToSender(sender)
-            return true
+            return CommandResult.SUCCESS
         }
         moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
         messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
             .sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun listModules(sender: CommandSender): Boolean {
+    private fun listModules(sender: CommandSender): CommandResult {
         val list = mutableListOf<Message>()
         moduleManager.loadedModules.sortedBy { it.info.name }.forEach { module ->
             val color = if (module.isEnabled()) "<green>" else "<red>"
@@ -189,7 +191,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         }
         messageFactory.createMessage("<gold>Loaded Modules:</gold>").sendToSender(sender)
         sender.sendMessage(list.joinToString { it.toLegacyString() })
-        return true
+        return CommandResult.SUCCESS
     }
 
     private fun showMainHelp(sender: CommandSender) {

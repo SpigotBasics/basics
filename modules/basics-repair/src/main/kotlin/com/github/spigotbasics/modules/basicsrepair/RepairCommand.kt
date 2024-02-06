@@ -2,6 +2,7 @@ package com.github.spigotbasics.modules.basicsrepair
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.command.TabCompleter
 import com.github.spigotbasics.core.extensions.startsWithIgnoreCase
 import org.bukkit.command.CommandSender
@@ -12,7 +13,7 @@ import org.bukkit.util.StringUtil
 
 class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecutor(module) {
 
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         context.readFlags()
         val args = context.args
         val repairAll = context.popFlag("--all")
@@ -45,7 +46,7 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
             }
         }
 
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {

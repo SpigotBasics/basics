@@ -23,7 +23,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
     override fun onEnable() {
         createCommand("world", permission)
-            .usage("/world <world>")
+            .usage("<world>")
             .description("Teleport to another world")
             .executor(WorldCommand(this))
             .register()
