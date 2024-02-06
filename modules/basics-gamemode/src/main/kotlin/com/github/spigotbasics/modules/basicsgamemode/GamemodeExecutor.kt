@@ -2,24 +2,25 @@ package com.github.spigotbasics.modules.basicsgamemode
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         val args = context.args
         val sender = context.sender
         var target: Player
 
         if(args.isEmpty() || args.size > 2) {
-            return false
+            return CommandResult.USAGE
         }
 
         val gameModeName = args[0]
         val gameMode = module.toGameMode(gameModeName)
         if(gameMode == null) {
-            return failInvalidArgument(sender, gameModeName)
+            return failInvalidArgument(gameModeName)
         }
 
         requirePermission(sender, module.getPermission(gameMode))
@@ -30,7 +31,7 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
             requirePermission(sender, module.permOthers)
             target = requirePlayer(sender, args[1])
         } else {
-            return false
+            return CommandResult.USAGE
         }
 
         target.gameMode = gameMode
@@ -40,7 +41,7 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
             .concerns(target)
 
         message.sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {

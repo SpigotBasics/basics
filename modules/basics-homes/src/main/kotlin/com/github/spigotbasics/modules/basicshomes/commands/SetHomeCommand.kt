@@ -2,6 +2,7 @@ package com.github.spigotbasics.modules.basicshomes.commands
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.extensions.getPermissionNumberValue
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
@@ -12,16 +13,15 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
 
     private val messages = module.messages
 
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         if (context.sender !is Player) {
-            module.plugin.messages.commandNotFromConsole.sendToSender(context.sender)
-            return true
+            return CommandResult.NOT_FROM_CONSOLE
         }
 
         var homeName = "home"
 
         if (context.args.size > 1) {
-            return false
+            return CommandResult.USAGE
         }
 
         val player = context.sender as Player
@@ -49,7 +49,7 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
                     messages.homeLimitReached(1)
                         .sendToSender(player)
 
-                    return true
+                    return CommandResult.SUCCESS
                 }
             }
 
@@ -64,19 +64,19 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
 
         if (!isOkay) {
             messages.homeLimitReached(maxAllowed).sendToSender(player)
-            return true
+            return CommandResult.SUCCESS
         }
 
         if(!homeName.matches(module.regex.toRegex())) {
             messages.homeInvalidName(module.regex).sendToSender(player)
-            return true
+            return CommandResult.SUCCESS
         }
 
         val home = Home(homeName, location)
 
         homeList.addHome(home)
         messages.homeSet(home).sendToSender(player)
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {

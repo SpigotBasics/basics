@@ -2,14 +2,15 @@ package com.github.spigotbasics.modules.basicsmsg
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         val sender = context.sender
         if(context.args.size < 2) {
-            return false
+            return CommandResult.USAGE
         }
         val player = requirePlayer(sender, context.args[0])
         val message = context.args.drop(1).joinToString(" ")
@@ -22,7 +23,7 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
         } else {
             console2player(sender, player, message)
         }
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
