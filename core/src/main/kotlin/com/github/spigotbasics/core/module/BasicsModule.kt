@@ -10,6 +10,7 @@ import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.logger.BasicsLogger
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
+import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
