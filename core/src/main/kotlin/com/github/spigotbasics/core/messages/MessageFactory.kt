@@ -13,8 +13,8 @@ class MessageFactory(
         private const val UNPARSED_TAG = "<$UNPARSED>"
     }
 
-    fun createMessage(text: String): Message {
-        return Message(listOf(text), audienceProvider, tagResolverFactory)
+    fun createMessage(vararg text: String): Message {
+        return Message(text.asList(), audienceProvider, tagResolverFactory)
     }
 
     fun createPlainMessage(text: String): Message {
