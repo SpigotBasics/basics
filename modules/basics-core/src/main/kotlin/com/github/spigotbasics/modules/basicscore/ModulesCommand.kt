@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicscore
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandException
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
@@ -21,6 +22,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         <gold><click:suggest_command:/module reload >/module reload <module></click></gold> - <gray>Reload a module's config</gray>
         <gold><click:suggest_command:/module unload >/module unload <module></click></gold> - <gray>Unload a module</gray>
         <gold><click:suggest_command:/module load >/module load <file></click></gold> - <gray>Load a module</gray>
+        <gold><click:suggest_command:/module reloadjar >/module reloadjar <module></click></gold> - <gray>Reload a module's jar</gray>
     """.trimIndent()
     )
 
@@ -53,9 +55,10 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             "info" -> return showInfo(sender, requireModule(sender, args[0]))
             "enable" -> return enableModule(sender, requireModule(sender, args[0]))
             "disable" -> return disableModule(sender, requireModule(sender, args[0]))
+            "reloadjar" -> return reloadJar(sender, requireModule(sender, args[0]))
             "reload" -> return reloadModule(sender, requireModule(sender, args[0]))
             "unload" -> return unloadModule(sender, requireModule(sender, args[0]))
-            "load" -> return loadModule(sender, args[0])
+            "load" -> return loadModule(sender, context)
             else -> {
                 failInvalidArgument(sender, subCommand)
             }
@@ -66,10 +69,20 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
     }
 
     private fun showInfo(sender: CommandSender, module: BasicsModule): Boolean {
-        TODO()
+        val provider = ModuleTagProvider(module)
+        val message = messageFactory.createMessage(listOf(
+            "<gold>Module Info:</gold>",
+            "<gold>Name:</gold> <gray><#module></gray>",
+            "<gold>Version:</gold> <gray><#version></gray>",
+            "<gold>Description:</gold> <gray><#module_description></gray>",
+        )).tags(provider).sendToSender(sender)
+        return true
     }
 
-    private fun loadModule(sender: CommandSender, arg: String): Boolean {
+    private fun loadModule(sender: CommandSender, context: BasicsCommandContext): Boolean {
+        context.readFlags()
+        val enable = context.popFlag("--enable") or context.popFlag("-e")
+        val arg = context.args[0]
         val file = moduleManager.modulesDirectory.resolve(arg)
         if (!file.exists()) {
             messageFactory.createMessage("<red>File $arg not found.</red>").sendToSender(sender)
@@ -82,6 +95,11 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             "<red>Failed to load module $arg.</red>"
 
         messageFactory.createMessage(message).sendToSender(sender)
+
+        if (result.isSuccess && enable) {
+            enableModule(sender, result.getOrThrow())
+        }
+
         return true
     }
 
@@ -114,6 +132,27 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         messageFactory.createMessage("<gold>Module ${module.info.name} <green>reloaded</green>.</gold>")
             .sendToSender(sender)
         return true
+    }
+
+    private fun reloadJar(sender: CommandSender, module: BasicsModule): Boolean {
+        val enable = module.isEnabled()
+        val file = module.file
+        unloadModule(sender, module)
+
+        val result = moduleManager.loadModuleFromFile(file)
+        val message = if (result.isSuccess)
+            "<gold>Module ${result.getOrThrow().info.name} <green><bold>LOADED</bold></green>.</gold>"
+        else
+            "<red>Failed to load module $file.</red>"
+
+        messageFactory.createMessage(message).sendToSender(sender)
+
+        if (result.isSuccess && enable) {
+            enableModule(sender, result.getOrThrow())
+        }
+
+        return true
+
     }
 
 
@@ -161,16 +200,24 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
         val args = context.args
         if (args.size == 1) {
-            return listOf("list", "info", "enable", "disable", "reload", "unload", "load").partialMatches(args[0])
+            return listOf("list", "info", "enable", "disable", "reload", "unload", "load", "reloadjar").partialMatches(args[0])
         }
         if (args.size == 2) {
             when (args[0]) {
                 "disable", "reload" -> return enabledModules().partialMatches(args[1])
-                "enable" -> return disabledModules().partialMatches(args[1])
-                "info", "unload" -> return allModules().partialMatches(args[1])
-                "load" -> return filesNamesUnloadedModules().partialMatches(args[1])
+                "info", "unload", "reloadjar" -> return allModules().partialMatches(args[1])
+                "load" -> return filesNamesUnloadedModules().partialMatches(args[1]).addAnd("-e").addAnd("--enable")
+                "enable" ->  return disabledModules().partialMatches(args[1])
             }
         }
+        if(args.size == 3) {
+            if(args[0] == "load") {
+                if(args[1] == "-e" || args[1] == "--enable") {
+                    return filesNamesUnloadedModules().partialMatches(args[2])
+                }
+            }
+        }
+
         return mutableListOf()
     }
 
