@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.messages
 
+import com.github.spigotbasics.core.messages.tags.MESSAGE_SPECIFIC_TAG_PREFIX
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 
 
@@ -10,7 +11,7 @@ class MessageFactory(
 
     companion object {
         private const val UNPARSED = "__unparsed__"
-        private const val UNPARSED_TAG = "<$UNPARSED>"
+        private const val UNPARSED_TAG = "<${MESSAGE_SPECIFIC_TAG_PREFIX}${UNPARSED}>"
     }
 
     fun createMessage(vararg text: String): Message {

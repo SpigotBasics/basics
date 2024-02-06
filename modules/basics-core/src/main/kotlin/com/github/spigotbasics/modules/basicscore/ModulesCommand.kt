@@ -62,7 +62,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             "unload" -> return unloadModule(sender, requireModule(sender, args[0]))
             "load" -> return loadModule(sender, context)
             else -> {
-                failInvalidArgument(sender, subCommand)
+                failInvalidArgument(subCommand)
             }
         }
 
@@ -72,7 +72,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private fun showInfo(sender: CommandSender, module: BasicsModule): CommandResult {
         val provider = ModuleTagProvider(module)
-        val message = messageFactory.createMessage(listOf(
+        messageFactory.createMessage(listOf(
             "<gold>Module Info:</gold>",
             "<gold>Name:</gold> <gray><#module></gray>",
             "<gold>Version:</gold> <gray><#version></gray>",
@@ -105,7 +105,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         return CommandResult.SUCCESS
     }
 
-    private fun unloadModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun unloadModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if(module.isEnabled()) {
             moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
             messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
@@ -113,30 +113,30 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         }
         moduleManager.unloadModule(module, true)
         messageFactory.createMessage("<gold>Module ${module.info.name} <red><bold>UNLOADED</bold></red>.</gold>").sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
     private fun requireModule(sender: CommandSender, arg: String): BasicsModule {
         val module = moduleManager.getModule(arg)
         if (module == null) {
             messageFactory.createMessage("<red>Module $arg not found").sendToSender(sender)
-            throw BasicsCommandException("Module $arg not found")
+            throw BasicsCommandException(CommandResult.SUCCESS)
         }
         return module
     }
 
-    private fun reloadModule(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun reloadModule(sender: CommandSender, module: BasicsModule): CommandResult {
         if (!module.isEnabled()) {
             messageFactory.createMessage("<red>Module ${module.info.name} is not enabled.</red>").sendToSender(sender)
-            return true
+            return CommandResult.SUCCESS
         }
         module.reloadConfig()
         messageFactory.createMessage("<gold>Module ${module.info.name} <green>reloaded</green>.</gold>")
             .sendToSender(sender)
-        return true
+        return CommandResult.SUCCESS
     }
 
-    private fun reloadJar(sender: CommandSender, module: BasicsModule): Boolean {
+    private fun reloadJar(sender: CommandSender, module: BasicsModule): CommandResult {
         val enable = module.isEnabled()
         val file = module.file
         unloadModule(sender, module)
@@ -153,7 +153,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             enableModule(sender, result.getOrThrow())
         }
 
-        return true
+        return CommandResult.SUCCESS
 
     }
 

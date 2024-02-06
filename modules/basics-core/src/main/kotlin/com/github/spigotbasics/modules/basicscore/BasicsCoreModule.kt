@@ -13,7 +13,7 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     )
 
     override fun onEnable() {
-        createCommand("module", permission).usage("/module [command]").executor(ModulesCommand(this)).register()
+        createCommand("module", permission).usage("<command>").executor(ModulesCommand(this)).register()
     }
 
 }

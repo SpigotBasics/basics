@@ -28,7 +28,7 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     override fun onEnable() {
         createCommand("msg", permission)
             .description("Sends a private message to another player")
-            .usage("/msg <player> <message>")
+            .usage("<player> <message>")
             .executor(MsgExecutor(this))
             .register()
     }
