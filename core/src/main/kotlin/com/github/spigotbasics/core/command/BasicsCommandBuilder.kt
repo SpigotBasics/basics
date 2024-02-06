@@ -4,7 +4,11 @@ import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.permissions.Permission
 
-class BasicsCommandBuilder(private val module: BasicsModule, private val name: String, private val permission: Permission) {
+class BasicsCommandBuilder(
+    private val module: BasicsModule,
+    private val name: String,
+    private val permission: Permission
+) {
 
     private var permissionMessage: Message = module.plugin.messages.noPermission
     private var description: String? = null
@@ -18,9 +22,9 @@ class BasicsCommandBuilder(private val module: BasicsModule, private val name: S
     fun aliases(aliases: List<String>) = apply { this.aliases = aliases }
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
-    fun executor(executor: (BasicsCommandContext) -> Boolean) = apply {
+    fun executor(executor: (BasicsCommandContext) -> CommandResult?) = apply {
         this.executor = object : BasicsCommandExecutor(module) {
-            override fun execute(context: BasicsCommandContext): Boolean {
+            override fun execute(context: BasicsCommandContext): CommandResult? {
                 return executor(context)
             }
         }
@@ -41,7 +45,12 @@ class BasicsCommandBuilder(private val module: BasicsModule, private val name: S
             usage = usage,
             aliases = aliases,
         )
-        return BasicsCommand(info, executor ?: error("Executor must be set"), module.plugin.messages)
+        return BasicsCommand(
+            info,
+            executor ?: error("Executor must be set"),
+            module.plugin.messages,
+            module.plugin.messageFactory
+        )
     }
 
 

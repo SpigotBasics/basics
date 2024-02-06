@@ -2,11 +2,12 @@ package com.github.spigotbasics.modules.basicsbroadcast
 
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
 
         context.readFlags()
 
@@ -25,7 +26,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
 
         message.sendToAllPlayers()
         message.sendToConsole()
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {

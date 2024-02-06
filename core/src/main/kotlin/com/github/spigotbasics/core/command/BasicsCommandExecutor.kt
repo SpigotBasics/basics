@@ -13,7 +13,7 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     protected val coreMessages: CoreMessages = module.plugin.messages
     protected val messageFactory: MessageFactory = module.plugin.messageFactory
 
-    abstract fun execute(context: BasicsCommandContext): Boolean
+    abstract fun execute(context: BasicsCommandContext): CommandResult?
 
     open fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
         return null
