@@ -9,6 +9,8 @@ import org.bukkit.entity.Player
 
 class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
 
+    private val messages = module.messages
+
     override fun execute(context: BasicsCommandContext): Boolean {
         val result = module.parseHomeCmd(context)
         if(result is Either.Right) {
@@ -19,7 +21,7 @@ class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         val player = requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
 
         module.getHomeList(player.uniqueId).removeHome(home)
-        module.msgHomeDeleted(home).sendToSender(player)
+        messages.homeDeleted(home).sendToSender(player)
         return true
     }
 

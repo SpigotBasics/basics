@@ -4,6 +4,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.github.spigotbasics.core.storage.StorageType
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import java.io.File
@@ -15,6 +16,7 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
 
     override val type = StorageType.JSON
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+    private val prettyGson = GsonBuilder().setPrettyPrinting().create()
 
     init {
         if(directory.exists() && !directory.isDirectory) {
@@ -64,7 +66,7 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
                         throw BasicsStorageAccessException("Could not delete file $file")
                     }
                 } else {
-                    file.writeText(value.toString())
+                    file.writeText(prettyGson.toJson(value))
                 }
             } catch (e: Exception) {
                 logger.log(Level.SEVERE, "Could not write file $namespace/$keyId.json", e) // TODO: Properly propagate exceptions in the async methods
