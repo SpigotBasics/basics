@@ -22,7 +22,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         <gold><click:suggest_command:/module reload >/module reload <module></click></gold> - <gray>Reload a module's config</gray>
         <gold><click:suggest_command:/module unload >/module unload <module></click></gold> - <gray>Unload a module</gray>
         <gold><click:suggest_command:/module load >/module load <file></click></gold> - <gray>Load a module</gray>
-        <gold>click:suggest_command:/module reloadjar >/module reloadjar <module></click></gold> - <gray>Reload a module's jar</gray>
+        <gold><click:suggest_command:/module reloadjar >/module reloadjar <module></click></gold> - <gray>Reload a module's jar</gray>
     """.trimIndent()
     )
 
