@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.messages
 
+import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import net.kyori.adventure.text.Component
@@ -73,6 +74,13 @@ data class Message(
 
     private fun tags(tags: Collection<TagResolver>): Message {
         customTagResolvers.addAll(tags)
+        return this
+    }
+
+    fun tags(`object`: MessageTagProvider): Message {
+        `object`.getMessageTags().forEach {
+            tags(it.toTagResolver())
+        }
         return this
     }
 

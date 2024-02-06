@@ -50,6 +50,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         }
 
         when (subCommand) {
+            "info" -> return showInfo(sender, requireModule(sender, args[0]))
             "enable" -> return enableModule(sender, requireModule(sender, args[0]))
             "disable" -> return disableModule(sender, requireModule(sender, args[0]))
             "reload" -> return reloadModule(sender, requireModule(sender, args[0]))
@@ -62,6 +63,10 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
         msgNotImplemented.sendToSender(sender)
         return true
+    }
+
+    private fun showInfo(sender: CommandSender, module: BasicsModule): Boolean {
+        TODO()
     }
 
     private fun loadModule(sender: CommandSender, arg: String): Boolean {

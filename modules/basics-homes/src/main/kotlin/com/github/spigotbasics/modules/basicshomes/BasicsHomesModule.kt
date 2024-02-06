@@ -13,6 +13,7 @@ import com.github.spigotbasics.modules.basicshomes.commands.HomeListCommand
 import com.github.spigotbasics.modules.basicshomes.commands.SetHomeCommand
 import com.github.spigotbasics.modules.basicshomes.data.Home
 import com.github.spigotbasics.modules.basicshomes.data.HomeList
+import com.google.gson.reflect.TypeToken
 import org.bukkit.entity.Player
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -20,9 +21,11 @@ import java.util.logging.Level
 
 class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
+    private val listType = object : TypeToken<MutableList<Home>>() {}
+
     private var storage: NamespacedStorage? = null
     private val homes = mutableMapOf<UUID, HomeList>()
-    private val messages = getConfig(ConfigName.MESSAGES)
+    val messages = getConfig(ConfigName.MESSAGES, Messages::class.java)
 
     val permissionHome = permissionManager.createSimplePermission("basics.home", "Allows to access the /home command")
 
@@ -34,18 +37,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
     val regex get() = config.getString("regex", "[a-zA-Z_0-9-]+")!!
 
-    fun msgHomeSet(home: Home) = messages.getMessage("home-set").tagUnparsed("home", home.name)
-    fun msgHomeDeleted(home: Home) = messages.getMessage("home-deleted").tagUnparsed("home", home.name)
-    fun msgHomeTeleported(home: Home) = messages.getMessage("home-teleported").tagUnparsed("home", home.name)
-    fun msgHomeNotFound(name: String) = messages.getMessage("home-not-found").tagUnparsed("home", name)
-    val msgHomeNoneSet get() = messages.getMessage("home-none-set")
-    fun msgHomeLimitReached(limit: Int) = messages.getMessage("home-limit-reached").tagUnparsed("limit", limit.toString())
-    val msgHomeList get() = messages.getMessage("home-list")
-    val msgHomeListEntry get() = messages.getMessage("home-list-entry")
-    val msgHomeListSeparator get() = messages.getMessage("home-list-separator")
-    val msgHomeInvalidName get() = messages.getMessage("home-invalid-name").tagParsed("regex", regex)
 
-    fun msgWorldNotLoaded(worldName: String) = messages.getMessage("home-world-not-loaded").tagUnparsed("world", worldName)
 
     override fun onEnable() {
         storage = createStorage()
@@ -86,7 +78,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
             return if (json == null) {
                 HomeList()
             } else {
-                Serialization.fromJson(json, HomeList::class.java)
+                HomeList.fromList(Serialization.fromJson(json, listType))
             }
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "Failed to load home list for $uuid", e)
@@ -107,7 +99,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
             val homes = homes[uuid] ?: error("Homes is null")
             val storage = storage ?: error("Storage is null")
             try {
-                storage.setJsonElement(uuid.toString(), Serialization.toJson(homes)).get()
+                storage.setJsonElement(uuid.toString(), Serialization.toJson(homes.toList())).get()
             } catch (e: Exception) {
                 logger.log(Level.SEVERE, "Failed to save home list for $uuid", e)
             }
@@ -141,14 +133,14 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         val homeList = getHomeList(player.uniqueId)
 
         if(homeList.isEmpty()) {
-            msgHomeNoneSet.sendToSender(player)
+            messages.homeNoneSet.sendToSender(player)
             return Either.Right(true)
         }
 
         val home = homeList.getHome(homeName)
 
         if(home == null) {
-            msgHomeNotFound(homeName).sendToSender(player)
+            messages.homeNotFound(homeName).sendToSender(player)
             return Either.Right(true)
         }
 

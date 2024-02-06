@@ -3,11 +3,15 @@ package com.github.spigotbasics.core.messages.tags
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.ConfigurationSection
 
-data class CustomTag(val name: String, val value: String, val type: CustomTagType) {
+data class CustomTag internal constructor(val name: String, val value: String, val type: CustomTagType) {
     companion object {
         val defaultTagType = CustomTagType.PARSED
 
         val hexRegex = Regex("#[0-9a-fA-F]{6}")
+
+        fun parsed(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.PARSED)
+        fun unparsed(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.UNPARSED)
+        fun hex(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.COLOR)
 
         /**
          * Parses a tag from the given... whatever it is.
@@ -16,7 +20,7 @@ data class CustomTag(val name: String, val value: String, val type: CustomTagTyp
          * @param value The tag value
          * @return The parsed tag
          */
-        fun parse(key: String, value: Any): CustomTag {
+        fun fromConfig(key: String, value: Any): CustomTag {
             @Suppress("UNCHECKED_CAST")
             return when (value) {
                 is String -> fromString(key, value)

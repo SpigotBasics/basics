@@ -14,7 +14,7 @@ import java.util.logging.Level
  * It is fine to keep this object around and pass it around, it will automatically get updated
  * on module reload instead of replaced.
  */
-open class SavedConfig internal constructor(context: ConfigInstantiationContext) : YamlConfiguration() {
+open class SavedConfig (context: ConfigInstantiationContext) : YamlConfiguration() {
 
     private val file = context.file
     private val logger = BasicsLoggerFactory.getConfigLogger(context.file)
