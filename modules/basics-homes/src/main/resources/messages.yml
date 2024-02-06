@@ -20,5 +20,5 @@ home-invalid-name: "<red>Invalid home name. Home names must match the following 
 home-list: "<green>Available homes: <gold><#homes></gold></green>"
 
 # Tags: <#name> <#x> <#y> <#z> <#world>
-home-list-entry: "<hover:show_text:'<gold><#name></gold>\nX: <gold><#x></gold> <gray>|</gray> Y: <gold><#y></gold> <gray>|</gray> Z: <gold><#z></gold> <gray>|</gray> <gold><#world></gold>\n<color:#994499>Click to teleport</color>'><gold><click:run_command:'/home <#name>'><#name></click></gold></hover>"
+home-list-entry: "<hover:show_text:'<gold><#home></gold>\nX: <gold><#x></gold> <gray>|</gray> Y: <gold><#y></gold> <gray>|</gray> Z: <gold><#z></gold> <gray>|</gray> <gold><#world></gold>\n<color:#994499>Click to teleport</color>'><gold><click:run_command:'/home <#home>'><#home></click></gold></hover>"
 home-list-separator: "<gray>, </gray>"

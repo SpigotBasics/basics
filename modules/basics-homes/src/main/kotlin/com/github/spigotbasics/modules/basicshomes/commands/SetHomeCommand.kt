@@ -9,6 +9,9 @@ import com.github.spigotbasics.modules.basicshomes.data.Home
 import org.bukkit.entity.Player
 
 class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
+
+    private val messages = module.messages
+
     override fun execute(context: BasicsCommandContext): Boolean {
         if (context.sender !is Player) {
             module.plugin.messages.commandNotFromConsole.sendToSender(context.sender)
@@ -43,7 +46,7 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
 
                 } else {
                     // ... and they're not replacing that one, that's not okay.
-                    module.msgHomeLimitReached(1)
+                    messages.homeLimitReached(1)
                         .sendToSender(player)
 
                     return true
@@ -60,19 +63,19 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         }
 
         if (!isOkay) {
-            module.msgHomeLimitReached(maxAllowed).sendToSender(player)
+            messages.homeLimitReached(maxAllowed).sendToSender(player)
             return true
         }
 
         if(!homeName.matches(module.regex.toRegex())) {
-            module.msgHomeInvalidName.sendToSender(player)
+            messages.homeInvalidName(module.regex).sendToSender(player)
             return true
         }
 
         val home = Home(homeName, location)
 
         homeList.addHome(home)
-        module.msgHomeSet(home).sendToSender(player)
+        messages.homeSet(home).sendToSender(player)
         return true
     }
 

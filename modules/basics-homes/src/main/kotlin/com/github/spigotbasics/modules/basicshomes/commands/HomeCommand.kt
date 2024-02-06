@@ -12,6 +12,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 
 class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
+
+    private val messages = module.messages
+
     override fun execute(context: BasicsCommandContext): Boolean {
         val result = module.parseHomeCmd(context)
         if(result is Either.Right) {
@@ -23,9 +26,9 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
 
         try {
             Spiper.teleportAsync(player, home.location.toLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN)
-            module.msgHomeTeleported(home).sendToSender(player)
+            messages.homeTeleported(home).sendToSender(player)
         } catch (e: WorldNotLoadedException) {
-            module.msgWorldNotLoaded(home.location.world).sendToSender(player)
+            messages.homeWorldNotLoaded(home.location.world).sendToSender(player)
         }
         return true
     }

@@ -2,6 +2,14 @@ package com.github.spigotbasics.modules.basicshomes.data
 
 data class HomeList(private val homes: MutableMap<String, Home> = mutableMapOf()) {
 
+    companion object {
+        fun fromList(homes: List<Home>): HomeList {
+            val homeList = HomeList()
+            homes.forEach { homeList.addHome(it) }
+            return homeList
+        }
+    }
+
     fun addHome(home: Home) {
         homes[home.name.lowercase()] = home
     }
@@ -27,6 +35,6 @@ data class HomeList(private val homes: MutableMap<String, Home> = mutableMapOf()
 
     fun listHomeNames(): List<String> = homes.keys.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
 
-    fun listHomes(): List<Home> = homes.values.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+    fun toList(): List<Home> = homes.values.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
 }
