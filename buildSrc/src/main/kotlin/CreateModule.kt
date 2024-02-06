@@ -59,8 +59,8 @@ open class CreateModule : DefaultTask() {
     }
 
     fun copySkeletonTo(skeleton: String, target: File) {
-        val skeleton = File(project.projectDir, skeleton)
-        skeleton.copyRecursively(target)
+        val skeletonDir = File(project.projectDir, skeleton)
+        skeletonDir.copyRecursively(target)
     }
 
     fun replaceInFilesAndFilenames(rootDirectory: File, replacements: Map<String, String>) {

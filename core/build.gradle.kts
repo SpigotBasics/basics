@@ -24,9 +24,19 @@ dependencies {
     api(project(":pipe:facade"))
     testImplementation(libs.gson)
     api(libs.gson)
-
-
 }
+
+tasks.shadowJar {
+    listOf(
+        "net.kyori",
+        "com.tcoded",
+        "com.zaxxer",
+        "io.papermc.lib",
+        ).forEach {
+        relocate(it, "com.github.spigotbasics.shaded.$it")
+    }
+}
+
 
 
 tasks.processResources {
