@@ -44,25 +44,25 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
         createCommand("home", permissionHome)
             .description("Teleports you to one of your homes")
-            .usage("/home [name]")
+            .usage("[name]")
             .executor(HomeCommand(this))
             .register()
 
         createCommand("homes", permissionHome)
             .description("Lists your homes")
-            .usage("/homes")
+            //.usage("/homes")
             .executor(HomeListCommand(this))
             .register()
 
         createCommand("sethome", permissionSetHome)
             .description("Sets a home")
-            .usage("/sethome [name]")
+            .usage("[name]")
             .executor(SetHomeCommand(this))
             .register()
 
         createCommand("delhome", permissionDelHome)
             .description("Deletes a home")
-            .usage("/delhome [name]")
+            .usage("[name]")
             .executor(DelHomeCommand(this))
             .register()
     }

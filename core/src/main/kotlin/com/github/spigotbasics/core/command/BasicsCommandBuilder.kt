@@ -12,12 +12,14 @@ class BasicsCommandBuilder(
 
     private var permissionMessage: Message = module.plugin.messages.noPermission
     private var description: String? = null
-    private var usage: String? = null
+    private var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
 
     fun description(description: String) = apply { this.description = description }
-    fun usage(usage: String) = apply { this.usage = usage }
+    fun usage(usage: String) = apply {
+        if(usage.startsWith("/")) error("Usage should not start with /<command> - only pass the arguments.")
+        this.usage = usage }
     fun permissionMessage(permissionMessage: Message) = apply { this.permissionMessage = permissionMessage }
     fun aliases(aliases: List<String>) = apply { this.aliases = aliases }
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }

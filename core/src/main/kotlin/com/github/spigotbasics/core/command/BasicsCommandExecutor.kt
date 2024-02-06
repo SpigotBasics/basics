@@ -25,8 +25,7 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     fun requirePlayer(sender: CommandSender, name: String): Player {
         val player = Bukkit.getPlayer(name)
         if(player == null) {
-            coreMessages.playerNotFound(name).sendToSender(sender)
-            throw BasicsCommandException("Player $name not found")
+            throw BasicsCommandException(CommandResult.playerNotFound(name))
         }
         return player
     }
@@ -34,28 +33,16 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     @Throws(BasicsCommandException::class)
     fun notFromConsole(sender: CommandSender): Player {
         if(sender !is Player) {
-            coreMessages.commandNotFromConsole.sendToSender(sender)
-            throw BasicsCommandException("Must be player")
+            throw BasicsCommandException(CommandResult.notFromConsole())
         }
         return sender
-    }
-
-    @Throws(BasicsCommandException::class)
-    fun requirePlayerExact(sender: CommandSender, name: String): Player {
-        val player = Bukkit.getPlayerExact(name)
-        if(player == null) {
-            coreMessages.playerNotFound(name).sendToSender(sender)
-            throw BasicsCommandException("Player $name not found")
-        }
-        return player
     }
 
     @Throws(BasicsCommandException::class)
     fun requirePlayerOrMustSpecifyPlayerFromConsole(sender: CommandSender): Player {
         val player = sender as? Player
         if(player == null) {
-            coreMessages.mustSpecifyPlayerFromConsole.sendToSender(sender)
-            throw BasicsCommandException("Must specify player from console")
+            throw BasicsCommandException(CommandResult.mustBePlayerOrSpecifyPlayerFromConsole())
         }
         return player
     }
@@ -63,20 +50,17 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     @Throws(BasicsCommandException::class)
     fun failIfFlagsLeft(context: BasicsCommandContext) {
         if(context.flags.isEmpty()) return
-        coreMessages.unknownOption(context.flags[0]).sendToSender(context.sender)
-        throw BasicsCommandException("Unknown option: ${context.flags[0]}")
+        throw BasicsCommandException(CommandResult.unknownFlag(context.flags[0]))
     }
 
     @Throws(BasicsCommandException::class)
-    fun failInvalidArgument(sender: CommandSender, argument: String): Boolean {
-        coreMessages.invalidArgument(argument).sendToSender(sender)
-        throw BasicsCommandException("Invalid argument: $argument")
+    fun failInvalidArgument(argument: String): CommandResult {
+        throw BasicsCommandException(CommandResult.invalidArgument(argument))
     }
 
     fun requirePermission(sender: CommandSender, permission: Permission) {
         if(!sender.hasPermission(permission)) {
-            coreMessages.noPermission(permission).sendToSender(sender)
-            throw BasicsCommandException("${sender.name} does not have permission $permission")
+            throw BasicsCommandException(CommandResult.noPermission(permission))
         }
     }
 

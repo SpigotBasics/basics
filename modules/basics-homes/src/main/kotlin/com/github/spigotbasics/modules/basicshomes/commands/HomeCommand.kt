@@ -4,6 +4,7 @@ import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.model.toLocation
@@ -15,10 +16,10 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
 
     private val messages = module.messages
 
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         val result = module.parseHomeCmd(context)
         if(result is Either.Right) {
-            return result.value
+            return if(result.value) CommandResult.SUCCESS else CommandResult.USAGE
         }
 
         val home = (result as Either.Left).value
@@ -30,7 +31,7 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
         } catch (e: WorldNotLoadedException) {
             messages.homeWorldNotLoaded(home.location.world).sendToSender(player)
         }
-        return true
+        return CommandResult.SUCCESS
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {

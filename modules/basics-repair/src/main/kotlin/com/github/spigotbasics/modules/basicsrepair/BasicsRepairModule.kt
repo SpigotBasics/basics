@@ -27,7 +27,7 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
 
     override fun onEnable() {
         createCommand("repair", permission)
-            .usage("/repair [--all] [player]")
+            .usage("[--all] [player]")
             .description("Repairs an item")
             .executor(RepairCommand(this))
             .register()

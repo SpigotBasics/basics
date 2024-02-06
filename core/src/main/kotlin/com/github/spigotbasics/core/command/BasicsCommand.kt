@@ -32,7 +32,7 @@ class BasicsCommand internal constructor(
         val permString = info.permission.name
         permission = permString
         description = info.description ?: ""
-        usage = info.usage ?: "/$name"
+        usage = info.usage
         permissionMessage = info.permissionMessage.tagUnparsed("permission", permString).toLegacyString()
     }
 
@@ -42,7 +42,7 @@ class BasicsCommand internal constructor(
 //    ).tagParsed("usage", usage).tagParsed("command", name)
 
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>): Boolean {
-        try {
+
 
             val args = origArgs.toMutableList() ?: mutableListOf()
 
@@ -59,23 +59,25 @@ class BasicsCommand internal constructor(
                 return true
             }
 
-            val returned = executor!!.execute(context)
+        var returned: CommandResult?
+        try {
 
-//            if (returned == CommandResult.GENERIC_USAGE) {
-//                customUsageMessage.sendToSender(sender)
-//                return false
-//            }
+            returned = executor!!.execute(context)
 
             try {
                 returned?.process(context)
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Error processing command result for ${info.name}", e)
+                logger.log(Level.SEVERE, "Error processing returned command result for ${info.name}", e)
             }
 
             return true
 
         } catch (e: BasicsCommandException) {
-            // These exceptions are expected to be thrown
+            try {
+                e.commandResult.process(context)
+            } catch (e: Exception) {
+                logger.log(Level.SEVERE, "Error processing thrown command result for ${info.name}", e)
+            }
             return true
         }
     }

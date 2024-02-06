@@ -11,7 +11,7 @@ class BasicsBroadcastModule(context: ModuleInstantiationContext) : AbstractBasic
     override fun onEnable() {
         createCommand("broadcast", commandPerm)
             .description("Broadcasts a message to all players")
-            .usage("/broadcast [--parsed] <message>")
+            .usage("[--parsed] <message>")
             .executor(BroadcastExecutor(this))
             .register()
     }

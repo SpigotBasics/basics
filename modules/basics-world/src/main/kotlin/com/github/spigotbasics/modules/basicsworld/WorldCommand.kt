@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicsworld
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
@@ -13,11 +14,11 @@ import org.bukkit.permissions.Permissible
 import java.util.logging.Level
 
 class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): Boolean {
+    override fun execute(context: BasicsCommandContext): CommandResult {
         val player = notFromConsole(context.sender)
         val args = context.args
         if (args.isEmpty()) {
-            return false
+            return CommandResult.USAGE
         }
 
         context.readFlags()
@@ -27,12 +28,12 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         val newWorld = getWorld(args[0])
         if (newWorld == null) {
             coreMessages.worldNotFound(args[0]).sendToSender(player)
-            return true
+            return CommandResult.SUCCESS // TODO: CommandResult.worldNotFound(String)
         }
 
         if (newWorld == origin.world) {
             module.msgAlreadyInWorld(newWorld.name).sendToSender(player)
-            return true
+            return CommandResult.SUCCESS
         }
 
         val translatedTargetLocation = TeleportUtils.getScaledLocationInOtherWorld(origin, newWorld)
@@ -41,7 +42,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
 
         if (force) {
             Spiper.teleportAsync(player, translatedTargetLocation)
-            return true
+            return CommandResult.SUCCESS
         }
 
         val future = TeleportUtils.findSafeLocationInSameChunkAsync(
@@ -81,7 +82,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         }
 
         module.msgStartingTeleport(newWorld.name).sendToPlayerActionBar(player)
-        return true
+        return CommandResult.SUCCESS
     }
 
     fun getWorld(name: String): World? {
