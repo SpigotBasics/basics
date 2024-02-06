@@ -1,4 +1,4 @@
-//package com.github.spigotbasics.core.util.`_`
+package com.github.spigotbasics.core.util.`_`
 //
 //import com.github.spigotbasics.core.Spiper.getSurroundingChunksAsync
 //import org.bukkit.Location
