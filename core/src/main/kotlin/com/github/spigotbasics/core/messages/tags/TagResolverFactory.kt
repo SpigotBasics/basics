@@ -81,7 +81,7 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         try {
             val customTagResolvers = customTagsConfig.getValues(false).mapNotNull { (key, value) ->
                 try {
-                    val tag = CustomTag.parse(key, value)
+                    val tag = CustomTag.fromConfig(key, value)
                     return@mapNotNull tag.toTagResolver()
                 } catch (e: Exception) {
                     e.message?.let { logger.warning(it) } ?: logger.warning("Failed to parse tag '$key'")

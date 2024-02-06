@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.command
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.util.ChatPaginator
 import org.bukkit.util.StringUtil
 import java.util.Collections
 
