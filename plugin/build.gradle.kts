@@ -33,9 +33,10 @@ tasks.jar {
 tasks.shadowJar {
     archiveBaseName = "basics"
     archiveClassifier = "shaded"
-    // Needs proper setup to not exclude unused API minimize() {}
 
-    //relocate("kotlin", "$SHADED.kotlin")
+    minimize {
+        exclude(project(":core"))
+    }
 }
 
 tasks.register("copyPluginToTestServer", Copy::class) {
