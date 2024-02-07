@@ -1,4 +1,4 @@
 main-class: com.github.spigotbasics.modules.basicsworkbench.BasicsWorkbenchModule
 name: basics-workbench
 version: ${moduleVersion}
-description: Adds a /workbench command
+description: Adds /craftingtable, /cartographytable, /grindstone, /loom, /smithingtable, /stonecutter and /anvil commands
