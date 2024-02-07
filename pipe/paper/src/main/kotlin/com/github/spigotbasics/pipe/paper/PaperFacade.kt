@@ -1,6 +1,7 @@
 package com.github.spigotbasics.pipe.paper
 
 import com.github.spigotbasics.common.Either
+import com.github.spigotbasics.pipe.OpenInventoryFacade
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -29,4 +30,6 @@ class PaperFacade : SpigotPaperFacade {
     override fun getCommandMap(pluginManager: PluginManager): SimpleCommandMap {
         return Bukkit.getCommandMap() as SimpleCommandMap
     }
+
+    override val openInventoryFacade: OpenInventoryFacade = PaperOpenInventoryFacade
 }

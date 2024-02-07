@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.module.loader
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.Constants.MODULE_YML_FILE_NAME
 import com.github.spigotbasics.core.exceptions.InvalidModuleException
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.ModuleInfo
 import org.bukkit.Server
@@ -19,6 +20,7 @@ constructor(
 ) : AutoCloseable {
 
     private val path: String = file.absolutePath
+    private val logger = BasicsLoggerFactory.getCoreLogger(ModuleLoader::class)
 
     //val jarFile: JarFile
     val info: ModuleInfo
@@ -40,6 +42,7 @@ constructor(
         }
         if (!file.name.lowercase().endsWith(".jar")) {
             throw InvalidModuleException("Module file $path is not a jar file")
+            //logger.warning("Module file $path is not a jar file - trying to load it anyway...")
         }
 
 //        try {

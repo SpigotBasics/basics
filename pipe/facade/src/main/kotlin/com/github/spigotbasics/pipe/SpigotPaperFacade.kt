@@ -18,4 +18,6 @@ interface SpigotPaperFacade {
 
     fun getCommandMap(pluginManager: PluginManager): SimpleCommandMap
 
+    val openInventoryFacade: OpenInventoryFacade
+
 }

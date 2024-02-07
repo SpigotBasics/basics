@@ -17,7 +17,7 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
         args: Array<out String>
     ): MutableList<String> {
         if (args.size == 1) {
-            return listOf("start", "stop").partialMatches(args.get(0))
+            return listOf("start", "stop", "resendcommands").partialMatches(args.get(0))
         } else {
             return mutableListOf()
         }
@@ -48,7 +48,7 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
                 return true
             }
 
-            1 -> return when (args[0]) {
+            1 -> return when (args[0].lowercase()) {
                 "start" -> {
                     startTask(sender, 20)
                     true
@@ -56,6 +56,13 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
 
                 "stop" -> {
                     stopTask(sender)
+                    true
+                }
+
+                "resendcommands" -> {
+                    for(player in plugin.server.onlinePlayers) {
+                        player.updateCommands()
+                    }
                     true
                 }
 

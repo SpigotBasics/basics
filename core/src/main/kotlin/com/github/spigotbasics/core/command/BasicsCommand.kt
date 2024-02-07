@@ -3,8 +3,7 @@ package com.github.spigotbasics.core.command
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.tags.CustomTag
-import com.github.spigotbasics.core.messages.tags.MessageTagProvider
+import com.github.spigotbasics.pipe.exceptions.UnsupportedServerSoftwareException
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -24,7 +23,7 @@ class BasicsCommand internal constructor(
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory
 ) :
-    Command(info.name)/*, MessageTagProvider */{
+    Command(info.name)/*, MessageTagProvider */ {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(BasicsCommand::class)
 
@@ -44,24 +43,23 @@ class BasicsCommand internal constructor(
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>): Boolean {
 
 
-            val args = origArgs.toMutableList() ?: mutableListOf()
+        val args = origArgs.toMutableList() ?: mutableListOf()
 
-            val context = BasicsCommandContext(
-                sender = sender,
-                command = this,
-                label = commandLabel,
-                args = args,
-                location = if (sender is Entity) sender.location else null
-            )
+        val context = BasicsCommandContext(
+            sender = sender,
+            command = this,
+            label = commandLabel,
+            args = args,
+            location = if (sender is Entity) sender.location else null
+        )
 
-            if (executor == null) {
-                coreMessages.commandModuleDisabled.sendToSender(sender)
-                return true
-            }
+        if (executor == null) {
+            coreMessages.commandModuleDisabled.sendToSender(sender)
+            return true
+        }
 
         var returned: CommandResult?
         try {
-
             returned = executor!!.execute(context)
 
             try {
@@ -79,6 +77,14 @@ class BasicsCommand internal constructor(
                 logger.log(Level.SEVERE, "Error processing thrown command result for ${info.name}", e)
             }
             return true
+        } catch (e: UnsupportedServerSoftwareException) { // Also want to catch NoSuchMethod and NoSuchField exception here
+            coreMessages.unsupportedServerSoftware(e.feature).sendToSender(sender)
+            return true
+        } catch (e: Throwable) {
+            coreMessages.errorExecutingCommand(sender, e).sendToSender(sender)
+            logger.log(Level.SEVERE, "Error executing command ${info.name}", e)
+            return true
+
         }
     }
 

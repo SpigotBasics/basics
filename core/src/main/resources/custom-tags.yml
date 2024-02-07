@@ -44,6 +44,9 @@ player-name-gold:
   type: parsed
   value: "<gold><player-name></gold>"
 
-bright-green:
+bright_green:
   type: color
   value: "#77FF77"
+bright_red:
+  type: color
+  value: "#FF7777"
