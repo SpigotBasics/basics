@@ -1,6 +1,7 @@
 package com.github.spigotbasics.pipe.spigot
 
 import com.github.spigotbasics.common.Either
+import com.github.spigotbasics.pipe.OpenInventoryFacade
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import org.bukkit.command.CommandMap
@@ -30,4 +31,6 @@ class SpigotFacade : SpigotPaperFacade {
         field.isAccessible = true
         return field.get(spm) as SimpleCommandMap
     }
+
+    override val openInventoryFacade: OpenInventoryFacade = SpigotOpenInventoryFacade
 }

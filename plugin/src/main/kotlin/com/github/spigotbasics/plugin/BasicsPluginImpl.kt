@@ -18,8 +18,13 @@ import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.logging.Level
+import java.util.stream.Collectors
+
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
@@ -86,6 +91,10 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
+
+//        logger.info("Showing all classes in pacakge com.github.spigotbasics.core:")
+//        findAllClassesUsingClassLoader("com.github.spigotbasics.core").forEach(System.out::println)
+
         classLoaderFixer.trickOnEnable()
 
         if (isRustySpigot()) {
@@ -139,6 +148,34 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         classLoaderFixer.setSuperEnabled(this, false)
         modulePlayerDataLoader.shutdownScheduler()
     }
+
+
+//    fun findAllClassesUsingClassLoader(packageName: String): Set<Class<*>?> {
+//        val stream: InputStream = this.classLoader
+//            .getResourceAsStream(packageName.replace("[.]".toRegex(), "/"))
+//        val reader = BufferedReader(InputStreamReader(stream))
+//        return reader.lines()
+//            .filter({ line: String -> line.endsWith(".class") })
+//            .map({ line: String ->
+//                getClass(
+//                    line,
+//                    packageName
+//                )
+//            })
+//            .collect(Collectors.toSet())
+//    }
+//
+//    private fun getClass(className: String, packageName: String): Class<*>? {
+//        try {
+//            return Class.forName(
+//                packageName + "."
+//                        + className.substring(0, className.lastIndexOf('.'))
+//            )
+//        } catch (e: ClassNotFoundException) {
+//            // handle the exception
+//        }
+//        return null
+//    }
 
 
 }
