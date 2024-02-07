@@ -23,7 +23,7 @@ dependencies {
     api(project(":common"))
     api(project(":pipe:facade"))
     testImplementation(libs.gson)
-    api(libs.gson)
+    compileOnlyApi(libs.gson)
 }
 
 tasks.shadowJar {
@@ -58,10 +58,8 @@ tasks.register("deployDocs", Exec::class) {
         val dokkaHtmlDir = buildDirectory.map { it.dir("html").asFile.absolutePath }.get()
         val dokkaJavadocDir = buildDirectory.map { it.dir("javadoc").asFile.absolutePath }.get()
 
-        // Define the remote destination
         val remoteDestination = "root@stomach:/mnt/web/var/www/hub.jeff-media.com/javadocs/basics-core/"
 
-        // Check if the source directories exist
         if (file(dokkaHtmlDir).exists() && file(dokkaJavadocDir).exists()) {
             executable = "sh"
             args = listOf("-c", """
@@ -69,10 +67,7 @@ tasks.register("deployDocs", Exec::class) {
                 rsync -avz --progress $dokkaJavadocDir $remoteDestination
             """.trimIndent())
         } else {
-            println("Documentation directories not found:")
-            println(" - $dokkaHtmlDir")
-            println(" - $dokkaJavadocDir")
-            println("Ensure dokkaHtml and dokkaJavadoc tasks have been executed.")
+            error("Dokka outputs not found: $dokkaHtmlDir, $dokkaJavadocDir")
         }
     }
 }
