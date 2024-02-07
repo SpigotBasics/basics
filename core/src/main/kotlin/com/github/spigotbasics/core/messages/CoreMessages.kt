@@ -2,6 +2,9 @@ package com.github.spigotbasics.core.messages
 
 import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
+import com.github.spigotbasics.core.extensions.toCompactStackTrace
+import org.bukkit.command.CommandSender
+import org.bukkit.permissions.Permissible
 import org.bukkit.permissions.Permission
 
 /**
@@ -19,5 +22,13 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     fun invalidArgument(argument: String) = getMessage("invalid-argument").tagUnparsed("argument", argument)
     fun playerNotFound(name: String) = getMessage("player-not-found").tagUnparsed("argument", name)
     fun worldNotFound(name: String) = getMessage("world-not-found").tagUnparsed("argument", name)
+    fun unsupportedServerSoftware(feature: String) = getMessage("unsupported-server-software").tagParsed("argument", feature)
+    fun errorExecutingCommand(receiver: Permissible, error: Throwable): Message {
+        return if(receiver.isOp) {
+            getMessage("error-executing-command-op").tagParsed("stacktrace", error.toCompactStackTrace())
+        } else {
+            getMessage("error-executing-command")
+        }
+    }
 
 }

@@ -11,6 +11,7 @@ unknown-option: "<red>Unknown option: </red><color:#FF8888><#option></color>"
 invalid-argument: "<red>Invalid argument: </red><color:#FF8888><#argument></color>"
 player-not-found: "<red>Player not found: </red><color:#FF8888><#argument></color>"
 world-not-found: "<red>World not found: </red><color:#FF8888><#argument></color>"
+unsupported-server-software: "<red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
 
 no-safe-location-found: "<red>Couldn't find a safe location to teleport to!</red>"
 
@@ -19,3 +20,5 @@ must-specify-player-from-console: "<red>You must specify a player when running t
 command-module-disabled: "<red>The module that registered this command is disabled!</red>"
 
 failed-to-load-data-on-join: "<red>[Basics] Failed to load player data in time - please try to join again!</red>"
+error-executing-command: "<red>An error occured while executing this command!</red>"
+error-executing-command-op: "<hover:show_text:'<#stacktrace>'><red>An error occured while executing this command!</red> <gray>(Hover for stacktrace - only visible to OPs)</gray></hover>"
