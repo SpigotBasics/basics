@@ -208,7 +208,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             when (args[0]) {
                 "disable", "reload" -> return enabledModules().partialMatches(args[1])
                 "info", "unload", "reloadjar" -> return allModules().partialMatches(args[1])
-                "load" -> return filesNamesUnloadedModules().partialMatches(args[1]).addAnd("-e").addAnd("--enable")
+                "load" -> return filesNamesUnloadedModules().addAnd("-e").addAnd("--enable").partialMatches(args[1])
                 "enable" ->  return disabledModules().partialMatches(args[1])
             }
         }

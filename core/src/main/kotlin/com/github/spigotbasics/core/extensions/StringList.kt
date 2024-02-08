@@ -7,7 +7,8 @@ fun List<String>.partialMatches(
     completions: MutableList<String> = mutableListOf()
 ): MutableList<String> = StringUtil.copyPartialMatches(string, this, completions)
 
-fun MutableList<String>.addAnd(value: String): MutableList<String> {
-    add(value)
-    return this
+fun List<String>.addAnd(value: String): MutableList<String> {
+    val list = if(this is MutableList) this else this.toMutableList()
+    list.add(value)
+    return list
 }
