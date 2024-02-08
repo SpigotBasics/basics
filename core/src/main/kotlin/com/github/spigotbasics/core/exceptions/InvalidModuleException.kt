@@ -6,7 +6,7 @@ package com.github.spigotbasics.core.exceptions
  * @constructor Create empty Invalid module exception
  */
 class InvalidModuleException : Exception {
-        constructor(message: String) : super(message)
-        constructor(message: String, cause: Throwable) : super(message, cause)
-        constructor(cause: Throwable) : super(cause)
+    constructor(message: String) : super(message)
+    constructor(message: String, cause: Throwable) : super(message, cause)
+    constructor(cause: Throwable) : super(cause)
 }

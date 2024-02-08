@@ -14,8 +14,7 @@ import java.util.logging.Level
  * It is fine to keep this object around and pass it around, it will automatically get updated
  * on module reload instead of replaced.
  */
-open class SavedConfig (context: ConfigInstantiationContext) : YamlConfiguration() {
-
+open class SavedConfig(context: ConfigInstantiationContext) : YamlConfiguration() {
     private val file = context.file
     private val logger = BasicsLoggerFactory.getConfigLogger(context.file)
     private val messageFactory: MessageFactory = context.messageFactory
@@ -36,7 +35,7 @@ open class SavedConfig (context: ConfigInstantiationContext) : YamlConfiguration
     }
 
     fun reload() {
-        if(file.isFile) {
+        if (file.isFile) {
             load(file)
         }
     }
@@ -57,18 +56,17 @@ open class SavedConfig (context: ConfigInstantiationContext) : YamlConfiguration
      * @return Message
      */
     fun getMessage(path: String): Message {
-        return if(isList(path)) {
-    //            return Message(tagResolverFactory = tagResolverFactory,
-    //                lines = getStringList(path))
+        return if (isList(path)) {
+            //            return Message(tagResolverFactory = tagResolverFactory,
+            //                lines = getStringList(path))
             messageFactory.createMessage(getStringList(path))
         } else if (isString(path)) {
-    //            return Message(
-    //                tagResolverFactory = tagResolverFactory,
-    //                line = getString(path)!!)
+            //            return Message(
+            //                tagResolverFactory = tagResolverFactory,
+            //                line = getString(path)!!)
             messageFactory.createMessage(getString(path)!!)
         } else {
             messageFactory.createMessage(emptyList())
         }
     }
-
 }

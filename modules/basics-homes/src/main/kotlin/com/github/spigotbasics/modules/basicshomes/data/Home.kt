@@ -9,13 +9,13 @@ import org.bukkit.Location
 data class Home(val name: String, val location: SimpleLocation) : MessageTagProvider {
     constructor(name: String, location: Location) : this(name, location.toSimpleLocation())
 
-    //@Transient
-    override fun getMessageTags() = listOf(
-        CustomTag.parsed("home", name),
-        CustomTag.parsed("x", location.x.toInt().toString()),
-        CustomTag.parsed("y", location.y.toInt().toString()),
-        CustomTag.parsed("z", location.z.toInt().toString()),
-        CustomTag.parsed("world", location.world)
-    )
-
+    // @Transient
+    override fun getMessageTags() =
+        listOf(
+            CustomTag.parsed("home", name),
+            CustomTag.parsed("x", location.x.toInt().toString()),
+            CustomTag.parsed("y", location.y.toInt().toString()),
+            CustomTag.parsed("z", location.z.toInt().toString()),
+            CustomTag.parsed("world", location.world),
+        )
 }

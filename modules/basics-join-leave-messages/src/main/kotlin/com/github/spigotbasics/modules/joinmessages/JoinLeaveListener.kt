@@ -9,7 +9,6 @@ class JoinLeaveListener(
     private val facade: SpigotPaperFacade,
     private val config: SavedConfig,
 ) {
-
     val joinMsg
         get() = config.getMessage("join")
     val quitMsg
@@ -24,5 +23,4 @@ class JoinLeaveListener(
         val msg = quitMsg.concerns(event.player)
         facade.setQuitMessage(event, msg.toLegacyString(), msg.serialize())
     }
-
 }

@@ -6,9 +6,8 @@ import java.util.concurrent.TimeUnit
 class SimpleCooldown<T, Z>(
     private val mapper: (T) -> Z,
     private val defaultDuration: Long = INFINITE,
-    private val defaultUnit: TimeUnit = TimeUnit.MILLISECONDS
+    private val defaultUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ) : Cooldown<T> {
-
     companion object {
         const val EXPIRED = 0L
         const val INFINITE = Long.MAX_VALUE
@@ -16,12 +15,18 @@ class SimpleCooldown<T, Z>(
 
     private val cooldowns = ConcurrentHashMap<Z, Long>()
 
-    override fun startCooldown(key: T, duration: Long, unit: TimeUnit) {
+    override fun startCooldown(
+        key: T,
+        duration: Long,
+        unit: TimeUnit,
+    ) {
         val mappedKey = mapper(key)
-        val expiryTime = if (duration == INFINITE)
-            INFINITE
-        else
-            System.currentTimeMillis() + unit.toMillis(duration)
+        val expiryTime =
+            if (duration == INFINITE) {
+                INFINITE
+            } else {
+                System.currentTimeMillis() + unit.toMillis(duration)
+            }
         cooldowns[mappedKey] = expiryTime
     }
 
@@ -46,13 +51,20 @@ class SimpleCooldown<T, Z>(
         return getAndRemoveIfExpired(mappedKey) != EXPIRED
     }
 
-    override fun getRemainingTime(key: T, unit: TimeUnit): Long {
+    override fun getRemainingTime(
+        key: T,
+        unit: TimeUnit,
+    ): Long {
         val mappedKey = mapper(key)
         val expiryTime = getAndRemoveIfExpired(mappedKey)
-        return if (expiryTime == EXPIRED) 0L else unit.convert(
-            expiryTime - System.currentTimeMillis(),
-            TimeUnit.MILLISECONDS
-        )
+        return if (expiryTime == EXPIRED) {
+            0L
+        } else {
+            unit.convert(
+                expiryTime - System.currentTimeMillis(),
+                TimeUnit.MILLISECONDS,
+            )
+        }
     }
 
     override fun removeCooldown(key: T) {

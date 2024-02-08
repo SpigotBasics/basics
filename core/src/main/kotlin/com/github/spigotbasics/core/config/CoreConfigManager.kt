@@ -12,27 +12,33 @@ import java.util.logging.Level
 
 class CoreConfigManager(
     private val messageFactory: MessageFactory,
-    private val dataFolder: File
+    private val dataFolder: File,
 ) {
-
     companion object {
         private val logger = BasicsLoggerFactory.getCoreLogger(CoreConfigManager::class)
     }
 
-    private fun <T : SavedConfig> createInstance(clazz: Class<T>, context: ConfigInstantiationContext): T {
+    private fun <T : SavedConfig> createInstance(
+        clazz: Class<T>,
+        context: ConfigInstantiationContext,
+    ): T {
         try {
             return clazz.getConstructor(ConfigInstantiationContext::class.java).newInstance(context)
         } catch (e: NoSuchMethodException) {
             throw RuntimeException(
                 "Failed to create config instance of class ${clazz.name}, no visible constructor with (ConfigInstantiationContext) found",
-                e
+                e,
             )
         } catch (e: Exception) {
             throw RuntimeException("Failed to create config instance of class ${clazz.name}", e)
         }
     }
 
-    fun getConfig(resourceFileName: String, fileName: String, clazzToGetFrom: Class<*>): SavedConfig {
+    fun getConfig(
+        resourceFileName: String,
+        fileName: String,
+        clazzToGetFrom: Class<*>,
+    ): SavedConfig {
         return getConfig(resourceFileName, fileName, clazzToGetFrom, SavedConfig::class.java)
     }
 
@@ -40,7 +46,7 @@ class CoreConfigManager(
         resourceFileName: String,
         fileName: String,
         clazzToGetFrom: Class<*>,
-        configurationClass: Class<T>
+        configurationClass: Class<T>,
     ): T {
         val file = File(dataFolder, fileName)
         val context = ConfigInstantiationContext(file, dataFolder, messageFactory)
@@ -58,7 +64,7 @@ class CoreConfigManager(
 
         // If the file does not exist, save the included default config if it exists
         if (!file.exists()) {
-            //logger.info("Saving default config file $configName to ${file.absolutePath}")
+            // logger.info("Saving default config file $configName to ${file.absolutePath}")
             SafeResourceGetter.getResourceAsStream(clazzToGetFrom, resourceFileName)?.copyTo(FileOutputStream(file))
         }
 

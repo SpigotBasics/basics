@@ -6,9 +6,11 @@ import java.util.concurrent.CompletableFuture
 
 // TODO: Get rid of this
 // TODO: Properly propagate exceptions in the async methods
-class IODelayedStorageBackend(private val backend: StorageBackend, private val ioDelay: Long): StorageBackend by backend {
-
-    override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
+class IODelayedStorageBackend(private val backend: StorageBackend, private val ioDelay: Long) : StorageBackend by backend {
+    override fun getJsonElement(
+        namespace: String,
+        keyId: String,
+    ): CompletableFuture<JsonElement?> {
         return CompletableFuture.supplyAsync {
             try {
                 Thread.sleep(ioDelay)
@@ -19,7 +21,11 @@ class IODelayedStorageBackend(private val backend: StorageBackend, private val i
         }
     }
 
-    override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
+    override fun setJsonElement(
+        namespace: String,
+        keyId: String,
+        value: JsonElement?,
+    ): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             try {
                 Thread.sleep(ioDelay)
@@ -29,5 +35,4 @@ class IODelayedStorageBackend(private val backend: StorageBackend, private val i
             }
         }
     }
-
 }

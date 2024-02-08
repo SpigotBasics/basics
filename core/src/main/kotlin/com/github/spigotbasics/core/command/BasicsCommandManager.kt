@@ -1,6 +1,5 @@
 package com.github.spigotbasics.core.command
 
-import org.bukkit.Bukkit
 import org.bukkit.command.SimpleCommandMap
 
 /**
@@ -16,7 +15,6 @@ import org.bukkit.command.SimpleCommandMap
 //      module is enabled/disabled, but not when they're bulk enabled/disabled
 //   3. Modules that register a command later aren't added to the commandmap properly - gotta refresh that manually
 class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
-
     private val registeredCommands: MutableList<BasicsCommand> = mutableListOf()
 
     fun registerAll(commands: List<BasicsCommand>) {
@@ -33,7 +31,10 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
         updateCommandsToPlayers()
     }
 
-    fun registerCommand(command: BasicsCommand, update: Boolean = true) {
+    fun registerCommand(
+        command: BasicsCommand,
+        update: Boolean = true,
+    ) {
         registeredCommands += command
         injectToServerCommandMap(command)
         if (update) {
@@ -41,7 +42,10 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
         }
     }
 
-    fun unregisterCommand(command: BasicsCommand, update: Boolean = true) {
+    fun unregisterCommand(
+        command: BasicsCommand,
+        update: Boolean = true,
+    ) {
         registeredCommands -= command
         removeFromServerCommandMap(command)
         if (update) {
@@ -76,9 +80,7 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     private fun removeFromServerCommandMap(command: BasicsCommand) {
-        //serverCommandMap.commands.remove(command)
+        // serverCommandMap.commands.remove(command)
         command.disableExecutor()
     }
-
-
 }

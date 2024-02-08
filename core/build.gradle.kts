@@ -32,12 +32,10 @@ tasks.shadowJar {
         "com.tcoded",
         "com.zaxxer",
         "io.papermc.lib",
-        ).forEach {
+    ).forEach {
         relocate(it, "com.github.spigotbasics.shaded.$it")
     }
 }
-
-
 
 tasks.processResources {
     filesMatching("rusty-spigot-threshold") {
@@ -62,10 +60,14 @@ tasks.register("deployDocs", Exec::class) {
 
         if (file(dokkaHtmlDir).exists() && file(dokkaJavadocDir).exists()) {
             executable = "sh"
-            args = listOf("-c", """
-                rsync -avz --progress $dokkaHtmlDir $remoteDestination &&
-                rsync -avz --progress $dokkaJavadocDir $remoteDestination
-            """.trimIndent())
+            args =
+                listOf(
+                    "-c",
+                    """
+                    rsync -avz --progress $dokkaHtmlDir $remoteDestination &&
+                    rsync -avz --progress $dokkaJavadocDir $remoteDestination
+                    """.trimIndent(),
+                )
         } else {
             error("Dokka outputs not found: $dokkaHtmlDir, $dokkaJavadocDir")
         }
