@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 
 abstract class BasicsCommandExecutor(module: BasicsModule) {
@@ -33,16 +34,17 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     @Throws(BasicsCommandException::class)
     fun notFromConsole(sender: CommandSender): Player {
         if(sender !is Player) {
-            throw BasicsCommandException(CommandResult.notFromConsole())
+            throw CommandResult.NOT_FROM_CONSOLE.asException()
         }
         return sender
     }
 
     @Throws(BasicsCommandException::class)
+    // TODO: In 99% of cases, we should just use requirePlayer(CommandSender) instead of this method
     fun requirePlayerOrMustSpecifyPlayerFromConsole(sender: CommandSender): Player {
         val player = sender as? Player
         if(player == null) {
-            throw BasicsCommandException(CommandResult.mustBePlayerOrSpecifyPlayerFromConsole())
+            throw CommandResult.MUST_BE_PLAYER_OR_SPECIFY_PLAYER_FROM_CONSOLE.asException()
         }
         return player
     }
@@ -50,18 +52,29 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     @Throws(BasicsCommandException::class)
     fun failIfFlagsLeft(context: BasicsCommandContext) {
         if(context.flags.isEmpty()) return
-        throw BasicsCommandException(CommandResult.unknownFlag(context.flags[0]))
+        throw CommandResult.unknownFlag(context.flags[0]).asException()
     }
 
     @Throws(BasicsCommandException::class)
     fun failInvalidArgument(argument: String): CommandResult {
-        throw BasicsCommandException(CommandResult.invalidArgument(argument))
+        throw CommandResult.invalidArgument(argument).asException()
     }
 
     fun requirePermission(sender: CommandSender, permission: Permission) {
         if(!sender.hasPermission(permission)) {
-            throw BasicsCommandException(CommandResult.noPermission(permission))
+            throw CommandResult.noPermission(permission).asException()
         }
+    }
+
+    //@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
+
+    fun requireItemInHand(player: Player): ItemStack {
+        val item = player.inventory.itemInMainHand
+        if(item.type.isAir) {
+            throw CommandResult.MUST_HOLD_ITEM_IN_HAND.asException()
+        }
+        return item
     }
 
 }
