@@ -29,7 +29,7 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
             target = requirePlayerOrMustSpecifyPlayerFromConsole(sender)
         } else if(args.size == 2) {
             requirePermission(sender, module.permOthers)
-            target = requirePlayer(sender, args[1])
+            target = requirePlayer(args[1])
         } else {
             return CommandResult.USAGE
         }

@@ -23,7 +23,7 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
         }
 
         val target = if(args.size > 0) {
-            requirePlayer(context.sender, args[0])
+            requirePlayer(args[0])
         } else {
             requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
         }

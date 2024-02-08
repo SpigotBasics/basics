@@ -23,7 +23,7 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     // TODO: Move these methods into own CommandParser object
 
     @Throws(BasicsCommandException::class)
-    fun requirePlayer(sender: CommandSender, name: String): Player {
+    fun requirePlayer(name: String): Player {
         val player = Bukkit.getPlayer(name)
         if(player == null) {
             throw BasicsCommandException(CommandResult.playerNotFound(name))

@@ -12,7 +12,7 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
         if(context.args.size < 2) {
             return CommandResult.USAGE
         }
-        val player = requirePlayer(sender, context.args[0])
+        val player = requirePlayer(context.args[0])
         val message = context.args.drop(1).joinToString(" ")
         if (sender is Player) {
             if (player.player == sender) {
