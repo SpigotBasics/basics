@@ -17,9 +17,9 @@ dependencies {
     compileOnly(project(":core"))
 }
 
-tasks.build {
-    dependsOn("shadowJar")
-}
+// tasks.build {
+//     dependsOn("shadowJar")
+// }
 
 tasks.getByName("shadowJar", ShadowJar::class).apply {
     archiveClassifier = "shaded"

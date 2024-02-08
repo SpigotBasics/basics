@@ -37,19 +37,13 @@ tasks.register<Zip>("zipDistribution") {
     archiveFileName = "basics-$version.zip"
     destinationDirectory = file("build/dist")
 
-    println(1)
     from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
-    println(2)
     for (module in project(":modules").subprojects) {
-        println(module.name)
         module.tasks.withType<ShadowJar>().forEach { shadowTask ->
             from(shadowTask.archiveFile) {
                 into("Basics/modules")
             }
         }
-//        from(module.tasks.getByName("shadowJar", ShadowJar::class).archiveFile) {
-//            into("Basics/modules")
-//        }
     }
 }
 
