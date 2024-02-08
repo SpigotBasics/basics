@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
+import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 
 abstract class CommandResult private constructor() {
@@ -44,8 +45,8 @@ abstract class CommandResult private constructor() {
             msg.mustSpecifyPlayerFromConsole
         }
 
-        val MUST_HOLD_ITEM_IN_HAND = fromMessage { msg ->
-            msg.mustHoldItemInHand
+        val NO_ITEM_IN_HAND = fromMessage { msg ->
+            msg.notHavingItemInHand
         }
 
 
@@ -92,6 +93,12 @@ abstract class CommandResult private constructor() {
                 override fun process(context: BasicsCommandContext) {
                     context.command.coreMessages.noPermission(permission).sendToSender(context.sender)
                 }
+            }
+        }
+
+        fun noItemInHandOthers(player: Player): CommandResult {
+            return fromMessage { msg ->
+                msg.notHavingItemInHand(player)
             }
         }
     }
