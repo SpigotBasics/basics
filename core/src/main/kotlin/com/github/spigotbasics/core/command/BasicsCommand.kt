@@ -22,7 +22,7 @@ class BasicsCommand internal constructor(
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory,
 ) :
-    Command(info.name)/*, MessageTagProvider */ {
+    Command(info.name) {
         private val logger = BasicsLoggerFactory.getCoreLogger(BasicsCommand::class)
 
         init {

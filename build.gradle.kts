@@ -1,8 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+version = "git-${getGitCommitHash()}"
+
 plugins {
     base
-    id("basics.kotlin-conventions")
+    // id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") apply false
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
@@ -10,6 +12,10 @@ plugins {
 allprojects {
     repositories {
         mavenCentral()
+    }
+    tasks.withType<ShadowJar> {
+        archiveVersion = ""
+        archiveClassifier = "shaded"
     }
 }
 
@@ -21,7 +27,7 @@ tasks.register("copyAllToTestServer") {
     group = "basics"
     description = "Copies the plugin and all modules to the test server"
     dependsOn("plugin:copyPluginToTestServer")
-    dependsOn("modules:copyAllModulesToTestServer")
+    dependsOn("copyAllModulesToTestServer")
 }
 
 tasks.register<Zip>("zipDistribution") {
@@ -31,11 +37,34 @@ tasks.register<Zip>("zipDistribution") {
     archiveFileName = "basics-$version.zip"
     destinationDirectory = file("build/dist")
 
+    println(1)
     from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
-
+    println(2)
     for (module in project(":modules").subprojects) {
-        from(module.tasks.getByName("shadowJar", ShadowJar::class).archiveFile) {
-            into("Basics/modules")
+        println(module.name)
+        module.tasks.withType<ShadowJar>().forEach { shadowTask ->
+            from(shadowTask.archiveFile) {
+                into("Basics/modules")
+            }
+        }
+//        from(module.tasks.getByName("shadowJar", ShadowJar::class).archiveFile) {
+//            into("Basics/modules")
+//        }
+    }
+}
+
+tasks.register("copyAllModulesToTestServer") {
+    group = "basics-test"
+    description = "Copies all modules to the test server"
+    val copyAllModulesTask = this
+    subprojects.forEach { module ->
+        module.tasks.withType(CopyModule::class).forEach { copyModuleTask ->
+            copyAllModulesTask.dependsOn(copyModuleTask)
         }
     }
+}
+
+tasks.register("createModule", CreateModule::class) {
+    group = "basics"
+    description = "Creates a new module"
 }

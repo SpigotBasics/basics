@@ -32,7 +32,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val scheduler = BasicsScheduler(plugin as Plugin)
     final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(server.pluginManager))
     final override val messageFactory = plugin.messageFactory
-    final override val tagResolverFactory /*get()*/ = plugin.tagResolverFactory
+    final override val tagResolverFactory = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
     final override val keyFactory =
         NamespacedNamespacedKeyFactory

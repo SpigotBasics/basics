@@ -18,7 +18,7 @@ import com.github.spigotbasics.core.storage.NamespacedStorage
 import org.bukkit.Server
 import org.bukkit.permissions.Permission
 import java.io.File
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 /**

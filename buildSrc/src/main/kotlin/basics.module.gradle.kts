@@ -22,7 +22,7 @@ tasks.build {
 }
 
 tasks.getByName("shadowJar", ShadowJar::class).apply {
-    archiveClassifier.set("shaded")
+    archiveClassifier = "shaded"
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         exclude(dependency("org.jetbrains:annotations"))
