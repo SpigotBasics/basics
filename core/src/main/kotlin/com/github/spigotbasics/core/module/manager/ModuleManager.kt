@@ -210,8 +210,10 @@ class ModuleManager(
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
+    // TODO: disable/unload should happen after each other, instead of first disabling all modules,
+    //  then unloading all modules
     @Blocking
-    fun disableAndUnloadAllModules() { // TODO: disable/unload should happen after each other, instead of first disabling all modules, then unloading all modules
+    fun disableAndUnloadAllModules() {
         disableAllModules().get()
         for (module in myLoadedModules.toList()) {
             unloadModule(module, false)

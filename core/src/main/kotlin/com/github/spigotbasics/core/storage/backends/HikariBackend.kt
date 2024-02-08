@@ -9,7 +9,10 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.io.IOException
 import java.sql.SQLException
-import java.util.concurrent.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.logging.Level
 
 internal abstract class HikariBackend(config: HikariConfig, protected val tablePrefix: String, sqlSleep: Double) : StorageBackend {

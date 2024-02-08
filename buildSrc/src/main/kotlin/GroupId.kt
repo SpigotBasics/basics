@@ -5,7 +5,7 @@ import java.io.File
  * Returns a proper group ID for this subproject, e.g. "com.github.spigotbasics.modules" for modules/tpa
  */
 fun Project.getGroupId(): String {
-    val groupId = "com.github.spigotbasics"
+    val groupId = "com.github.spigotbasics.basics"
     val myParentDir = projectDir.parentFile
     if (rootDir == myParentDir) {
         return groupId

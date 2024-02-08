@@ -3,7 +3,7 @@
  */
 
 group = getGroupId()
-version = "1.0-SNAPSHOT"
+version = "git-${getGitCommitHash()}"
 
 plugins {
     kotlin("jvm")
