@@ -1,8 +1,6 @@
 //import gradle.kotlin.dsl.accessors._e054d9723d982fdb55b1e388b8ab0cbf.versionCatalogs
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
-import org.gradle.api.artifacts.MinimalExternalModuleDependency
-import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.kotlin.dsl.the
 
 // Gradle stupid. Need to make libs available to scripts in BuildSrc like this:

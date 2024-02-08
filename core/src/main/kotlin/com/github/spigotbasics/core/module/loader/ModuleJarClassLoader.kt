@@ -41,7 +41,8 @@ class ModuleJarClassLoader(val file: File, parentLoader: ClassLoader) :
         val dangerous = DANGEROUS_CLASSES.any { name == it }
         if (dangerous) {
             logger.warning(
-                "Module from file ${file.name} is accessing class \"$name\" which might be dangerous - consider exposing needed functionality directly to modules!",
+                "Module from file ${file.name} is accessing class \"$name\" which might be dangerous - consider " +
+                    "exposing needed functionality directly to modules!",
             )
         }
 

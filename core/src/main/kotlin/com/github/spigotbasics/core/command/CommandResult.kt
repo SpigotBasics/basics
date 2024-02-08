@@ -53,7 +53,8 @@ abstract class CommandResult private constructor() {
             return object : CommandResult() {
                 override fun process(context: BasicsCommandContext) {
                     context.command.messageFactory
-                        .createMessage( // TODO: Configurable
+                        // TODO: Configurable
+                        .createMessage(
                             "<red>Invalid command usage.</red>",
                             "<red>Usage: </red><gold>/<#command> <#usage></gold>",
                         ).tagUnparsed("usage", usage ?: context.command.info.usage)
