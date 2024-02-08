@@ -4,7 +4,6 @@
 
 <p align="center">
   <img src="https://static.jeff-media.com/img/basics/logo1_512.png" alt="Basics Logo">
-
 </p>
 
 
@@ -14,6 +13,8 @@
 - [SpigotMC Discord Thread](https://discord.com/channels/690411863766466590/1196562355912446094)
 - [Trello Board](https://trello.com/b/QjvNuXEO/basics)
 - [Discord Server](https://discord.gg/GDaTvneshw)
+
+<a href="https://discord.gg/GDaTvneshw">![image](https://github.com/SpigotBasics/basics/assets/1122571/e815f75d-7e86-4142-a00a-22b5b093d81e)</a>
 
 ## Compile
 To compile, use `gradlew build` on the root project.
