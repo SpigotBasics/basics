@@ -39,6 +39,7 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
                 runAllOther(context.sender, target)
             }
         } else {
+            requireItemInHand(target)
             if(target == context.sender) {
                 runHandSelf(target)
             } else {
