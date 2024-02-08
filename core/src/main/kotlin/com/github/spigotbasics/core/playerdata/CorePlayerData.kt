@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.playerdata
 
 import com.github.spigotbasics.core.storage.StorageManager
 import com.google.gson.JsonPrimitive
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 class CorePlayerData(storageManager: StorageManager) {

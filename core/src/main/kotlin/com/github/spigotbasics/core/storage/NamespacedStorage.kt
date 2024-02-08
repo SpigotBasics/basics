@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.google.gson.JsonElement
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors

@@ -2,18 +2,18 @@ package com.github.spigotbasics.core.command
 
 import org.bukkit.command.SimpleCommandMap
 
-/**
- * Responsible for registering and keeping track of commands.
- *
- * @property serverCommandMap The server command map
- */
-
 // TODO: Fix updateCommandsToPlayers logic
 //   1. Must not be called async
 //   2. in /reload, this would get called for each player and command, which is unnecessary
 //      It's enough to call it once in onEnable for all online players, and otherwise only call it when a single
 //      module is enabled/disabled, but not when they're bulk enabled/disabled
 //   3. Modules that register a command later aren't added to the commandmap properly - gotta refresh that manually
+
+/**
+ * Responsible for registering and keeping track of commands.
+ *
+ * @property serverCommandMap The server command map
+ */
 class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     private val registeredCommands: MutableList<BasicsCommand> = mutableListOf()
 

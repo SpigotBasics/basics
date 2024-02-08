@@ -10,8 +10,13 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.*
-import java.util.concurrent.*
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 class ModulePlayerDataLoader(
     storageConfig: StorageConfig,
@@ -55,7 +60,8 @@ class ModulePlayerDataLoader(
 
         if (!future.isDone) {
             logger.warning(
-                "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined in storage.yml), kicking them now.",
+                "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined " +
+                    "in storage.yml), kicking them now.",
             )
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
             return
@@ -99,14 +105,16 @@ class ModulePlayerDataLoader(
         if (future == null) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: No future found)")
             logger.severe(
-                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future found), kicking them now.",
+                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future " +
+                    "found), kicking them now.",
             )
             return
         }
         if (!future.isDone) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: Future not done)")
             logger.severe(
-                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (Future not done), kicking them now.",
+                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded " +
+                    "(Future not done), kicking them now.",
             )
             return
         }

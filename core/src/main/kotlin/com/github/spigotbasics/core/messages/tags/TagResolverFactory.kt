@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.*
+import java.util.UUID
 import java.util.logging.Level
 
 /**
@@ -71,12 +71,14 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         }
     }
 
+    // TODO: Use getConfig(...) instead of passing a YamlConfiguration
+
     /**
      * Loads and caches all TagResolvers, including default, custom and player-specific resolvers
      *
      * @param customTagsConfig Configuration for custom tags
      */
-    fun loadAndCacheAllTagResolvers(customTagsConfig: YamlConfiguration) { // TODO: Use getConfig(...) instead of passing a YamlConfiguration
+    fun loadAndCacheAllTagResolvers(customTagsConfig: YamlConfiguration) {
         try {
             val customTagResolvers =
                 customTagsConfig.getValues(false).mapNotNull { (key, value) ->
