@@ -72,7 +72,15 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     fun requireItemInHand(player: Player): ItemStack {
         val item = player.inventory.itemInMainHand
         if(item.type.isAir) {
-            throw CommandResult.MUST_HOLD_ITEM_IN_HAND.asException()
+            throw CommandResult.NO_ITEM_IN_HAND.asException()
+        }
+        return item
+    }
+
+    fun requireItemInHandOther(player: Player): ItemStack {
+        val item = player.inventory.itemInMainHand
+        if(item.type.isAir) {
+            throw CommandResult.noItemInHandOthers(player).asException()
         }
         return item
     }

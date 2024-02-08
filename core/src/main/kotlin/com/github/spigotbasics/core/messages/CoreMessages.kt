@@ -3,7 +3,7 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.extensions.toCompactStackTrace
-import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.permissions.Permissible
 import org.bukkit.permissions.Permission
 
@@ -17,7 +17,8 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     val mustSpecifyPlayerFromConsole get() = getMessage("must-specify-player-from-console")
     val commandModuleDisabled get() = getMessage("command-module-disabled")
     val failedToLoadDataOnJoin get() = getMessage("failed-to-load-data-on-join")
-    val mustHoldItemInHand get() = getMessage("must-hold-item-in-hand")
+    val notHavingItemInHand get() = getMessage("not-having-item-in-hand")
+    fun notHavingItemInHand(player: Player) = getMessage("others-not-having-item-in-hand").concerns(player)
     fun noPermission(permission: Permission) = getMessage("no-permission").tagParsed("permission", permission.name)
     fun unknownOption(option: String) = getMessage("unknown-option").tagUnparsed("option", option)
     fun invalidArgument(argument: String) = getMessage("invalid-argument").tagUnparsed("argument", argument)
