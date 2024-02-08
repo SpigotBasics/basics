@@ -1,0 +1,4 @@
+main-class: com.github.spigotbasics.modules.basicsenchant.BasicsEnchantModule
+name: basics-enchant
+version: ${moduleVersion}
+description: Allows enchanting items using /enchant
