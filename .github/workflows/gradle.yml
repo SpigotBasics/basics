@@ -22,15 +22,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
 
-      - name: Run tests with Gradle Wrapper
-        run: ./gradlew test ktlintCheck
-
       - name: Build with Gradle Wrapper
-        run: ./gradlew build zipDistribution
+        run: ./gradlew clean ktlintCheck test build zipDistribution
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Basics-dist
+          #name: Basics-dist
           path: build/dist
 
   dependency-submission:
