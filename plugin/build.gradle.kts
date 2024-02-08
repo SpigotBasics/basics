@@ -14,11 +14,11 @@ dependencies {
     implementation(kotlin("reflect"))
 }
 
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-}
+// tasks {
+//     build {
+//         dependsOn(shadowJar)
+//     }
+// }
 
 tasks.processResources {
     filesMatching("plugin.yml") {
