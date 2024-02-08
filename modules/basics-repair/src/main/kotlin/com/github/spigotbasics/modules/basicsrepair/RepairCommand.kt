@@ -23,7 +23,7 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
         }
 
         val target = if(args.size > 0) {
-            requirePlayer(context.sender, args[0])
+            requirePlayer(args[0])
         } else {
             requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
         }
@@ -39,7 +39,6 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
                 runAllOther(context.sender, target)
             }
         } else {
-            requireItemInHand(target)
             if(target == context.sender) {
                 runHandSelf(target)
             } else {
@@ -74,12 +73,14 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
     }
 
     fun runHandSelf(player: Player) {
+        requireItemInHand(player)
         repairHand(player)
         module.msgRepairHandSelf.concerns(player).sendToPlayer(player)
     }
 
 
     fun runHandOther(sender: CommandSender, player: Player) {
+        requireItemInHandOther(player)
         repairHand(player)
         module.msgRepairHandOther.concerns(player.player).sendToSender(sender)
     }
