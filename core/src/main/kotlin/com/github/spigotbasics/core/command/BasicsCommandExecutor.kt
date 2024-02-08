@@ -65,6 +65,7 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
         }
     }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     fun requireItemInHand(player: Player): ItemStack {
         val item: ItemStack? = player.inventory.itemInMainHand
         if(item == null || item.type.isAir) {
