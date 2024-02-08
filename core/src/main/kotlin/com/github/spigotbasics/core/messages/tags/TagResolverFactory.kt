@@ -21,7 +21,6 @@ import java.util.logging.Level
  * Allows easy construction of custom tag resolvers for MiniMessage
  */
 class TagResolverFactory(private val facade: SpigotPaperFacade) {
-
     private val logger = BasicsLoggerFactory.getCoreLogger(TagResolverFactory::class)
     private val miniMessage = MiniMessage.miniMessage()
 
@@ -40,7 +39,7 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
             Placeholder.parsed("player-name", player.name),
             Placeholder.parsed("player-name-genitive-suffix", player.name.genitiveSuffix()),
             createDisplayNameTagResolver(player),
-            PlaceholderAPITagFactory.playerPapi(player)
+            PlaceholderAPITagFactory.playerPapi(player),
         )
     }
 
@@ -79,15 +78,16 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
      */
     fun loadAndCacheAllTagResolvers(customTagsConfig: YamlConfiguration) { // TODO: Use getConfig(...) instead of passing a YamlConfiguration
         try {
-            val customTagResolvers = customTagsConfig.getValues(false).mapNotNull { (key, value) ->
-                try {
-                    val tag = CustomTag.fromConfig(key, value)
-                    return@mapNotNull tag.toTagResolver()
-                } catch (e: Exception) {
-                    e.message?.let { logger.warning(it) } ?: logger.warning("Failed to parse tag '$key'")
-                    return@mapNotNull null
-                }
-            }.toList()
+            val customTagResolvers =
+                customTagsConfig.getValues(false).mapNotNull { (key, value) ->
+                    try {
+                        val tag = CustomTag.fromConfig(key, value)
+                        return@mapNotNull tag.toTagResolver()
+                    } catch (e: Exception) {
+                        e.message?.let { logger.warning(it) } ?: logger.warning("Failed to parse tag '$key'")
+                        return@mapNotNull null
+                    }
+                }.toList()
 
             nonPlayerResolvers.clear()
             nonPlayerResolvers.addAll(customTagResolvers)
@@ -135,20 +135,31 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
         }
     }
 
-    internal fun createMessageSpecificPlaceholderUnparsed(key: String, value: String): TagResolver {
+    internal fun createMessageSpecificPlaceholderUnparsed(
+        key: String,
+        value: String,
+    ): TagResolver {
         return Placeholder.unparsed(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
     }
 
-    internal fun createMessageSpecificPlaceholderParsed(key: String, value: String): TagResolver {
+    internal fun createMessageSpecificPlaceholderParsed(
+        key: String,
+        value: String,
+    ): TagResolver {
         return Placeholder.parsed(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
     }
 
-    internal fun createMessageSpecificPlaceholderMessage(key: String, value: Message): TagResolver {
+    internal fun createMessageSpecificPlaceholderMessage(
+        key: String,
+        value: Message,
+    ): TagResolver {
         return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value.toAdventureComponent())
     }
 
-    internal fun createMessageSpecificPlaceholderComponent(key: String, value: Component): TagResolver {
+    internal fun createMessageSpecificPlaceholderComponent(
+        key: String,
+        value: Component,
+    ): TagResolver {
         return Placeholder.component(MESSAGE_SPECIFIC_TAG_PREFIX + key, value)
     }
-
 }

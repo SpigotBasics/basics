@@ -11,7 +11,10 @@ class ChunkTicketManager {
     private val perModuleTickets = ConcurrentHashMap<BasicsModule, MutableSet<SimpleChunkLocation>>()
 
     @Throws(WorldNotLoadedException::class)
-    fun addTicket(module: BasicsModule, chunk: SimpleChunkLocation) {
+    fun addTicket(
+        module: BasicsModule,
+        chunk: SimpleChunkLocation,
+    ) {
         if (perChunkTickets.computeIfAbsent(chunk) { mutableSetOf() }.add(module)) {
             chunk.getWorld().addPluginChunkTicket(chunk.x, chunk.z, module.plugin as Plugin)
         }
@@ -19,7 +22,10 @@ class ChunkTicketManager {
     }
 
     @Throws(WorldNotLoadedException::class)
-    fun removeTicket(module: BasicsModule, chunk: SimpleChunkLocation) {
+    fun removeTicket(
+        module: BasicsModule,
+        chunk: SimpleChunkLocation,
+    ) {
         val modules = perChunkTickets[chunk]
         if (modules != null) {
             modules.remove(module)

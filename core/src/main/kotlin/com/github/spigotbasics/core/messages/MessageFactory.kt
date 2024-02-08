@@ -3,15 +3,13 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.messages.tags.MESSAGE_SPECIFIC_TAG_PREFIX
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 
-
 class MessageFactory(
     private val audienceProvider: AudienceProvider,
-    private val tagResolverFactory: TagResolverFactory
+    private val tagResolverFactory: TagResolverFactory,
 ) {
-
     companion object {
         private const val UNPARSED = "__unparsed__"
-        private const val UNPARSED_TAG = "<${MESSAGE_SPECIFIC_TAG_PREFIX}${UNPARSED}>"
+        private const val UNPARSED_TAG = "<${MESSAGE_SPECIFIC_TAG_PREFIX}$UNPARSED>"
     }
 
     fun createMessage(vararg text: String): Message {
@@ -25,5 +23,4 @@ class MessageFactory(
     fun createMessage(text: List<String>): Message {
         return Message(text, audienceProvider, tagResolverFactory)
     }
-
 }

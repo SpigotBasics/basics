@@ -3,7 +3,6 @@ package com.github.spigotbasics.core.config
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 
 class FixClassLoadingConfig(context: ConfigInstantiationContext) : SavedConfig(context) {
-
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
     val setEnabledDuringOnDisable
@@ -31,5 +30,4 @@ class FixClassLoadingConfig(context: ConfigInstantiationContext) : SavedConfig(c
         }
         return value
     }
-
 }

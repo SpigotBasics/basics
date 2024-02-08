@@ -5,7 +5,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 object CustomTagToTagResolverFactory {
-
     fun createTagResolverForCustomTag(tag: CustomTag): TagResolver {
         return tag.convert()
     }
@@ -26,5 +25,4 @@ object CustomTagToTagResolverFactory {
             throw IllegalArgumentException("Invalid hex color for tag '$name': $value - must be in format #RRGGBB")
         }
     }
-
 }

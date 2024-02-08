@@ -13,13 +13,21 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.PluginManager
 
 class PaperFacade : SpigotPaperFacade {
-
     private val mini = MiniMessage.miniMessage()
-    override fun setJoinMessage(event: PlayerJoinEvent, legacy: String, miniMessage: SerializedMiniMessage) {
+
+    override fun setJoinMessage(
+        event: PlayerJoinEvent,
+        legacy: String,
+        miniMessage: SerializedMiniMessage,
+    ) {
         event.joinMessage(mini.deserialize(miniMessage.value))
     }
 
-    override fun setQuitMessage(event: PlayerQuitEvent, legacy: String, miniMessage: SerializedMiniMessage) {
+    override fun setQuitMessage(
+        event: PlayerQuitEvent,
+        legacy: String,
+        miniMessage: SerializedMiniMessage,
+    ) {
         event.quitMessage(mini.deserialize(miniMessage.value))
     }
 

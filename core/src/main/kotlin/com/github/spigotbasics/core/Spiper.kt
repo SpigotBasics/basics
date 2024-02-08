@@ -13,20 +13,29 @@ import java.util.stream.Collectors
  * Facade for PaperLib
  */
 object Spiper {
-
     val isPaper = PaperLib.isPaper()
 
-    fun teleportAsync(entity: Entity, location: Location): CompletableFuture<Boolean> {
+    fun teleportAsync(
+        entity: Entity,
+        location: Location,
+    ): CompletableFuture<Boolean> {
         return PaperLib.teleportAsync(entity, location)
     }
 
-    fun teleportAsync(entity: Entity, location: Location, reason: TeleportCause) {
+    fun teleportAsync(
+        entity: Entity,
+        location: Location,
+        reason: TeleportCause,
+    ) {
         PaperLib.teleportAsync(entity, location, reason)
     }
 
     fun getChunkAt(location: Location): CompletableFuture<Chunk?> = PaperLib.getChunkAtAsync(location)
 
-    fun getSurroundingChunksAsync(location: Location, distance: Int): CompletableFuture<List<Chunk?>> {
+    fun getSurroundingChunksAsync(
+        location: Location,
+        distance: Int,
+    ): CompletableFuture<List<Chunk?>> {
         val futures = mutableListOf<CompletableFuture<Chunk?>>()
 
         // Calculate the range of chunks to load
@@ -49,5 +58,4 @@ object Spiper {
                 .collect(Collectors.toList<Chunk?>()) // Collect the results into a list
         }
     }
-
 }

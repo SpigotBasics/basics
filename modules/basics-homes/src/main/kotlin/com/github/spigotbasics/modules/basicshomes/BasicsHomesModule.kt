@@ -15,12 +15,11 @@ import com.github.spigotbasics.modules.basicshomes.data.Home
 import com.github.spigotbasics.modules.basicshomes.data.HomeList
 import com.google.gson.reflect.TypeToken
 import org.bukkit.entity.Player
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 
 class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     private val listType = object : TypeToken<MutableList<Home>>() {}
 
     private var storage: NamespacedStorage? = null
@@ -30,14 +29,20 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     val permissionHome = permissionManager.createSimplePermission("basics.home", "Allows to access the /home command")
 
     val permissionSetHome = permissionManager.createSimplePermission("basics.sethome", "Allows to access the /sethome command")
-    val permissionSetHomeMultiple = permissionManager.createSimplePermission("basics.sethome.multiple", "Allows to set multiple named homes")
-    val permissionSetHomeUnlimited = permissionManager.createSimplePermission("basics.sethome.multiple.unlimited", "Allows to set unlimited homes")
+    val permissionSetHomeMultiple =
+        permissionManager.createSimplePermission(
+            "basics.sethome.multiple",
+            "Allows to set multiple named homes",
+        )
+    val permissionSetHomeUnlimited =
+        permissionManager.createSimplePermission(
+            "basics.sethome.multiple.unlimited",
+            "Allows to set unlimited homes",
+        )
 
     val permissionDelHome = permissionManager.createSimplePermission("basics.delhome", "Allows to access the /delhome command")
 
     val regex get() = config.getString("regex", "[a-zA-Z_0-9-]+")!!
-
-
 
     override fun onEnable() {
         storage = createStorage()
@@ -50,7 +55,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
         createCommand("homes", permissionHome)
             .description("Lists your homes")
-            //.usage("/homes")
+            // .usage("/homes")
             .executor(HomeListCommand(this))
             .register()
 
@@ -86,7 +91,6 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         }
     }
 
-
     override fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             val homeList = loadHomeListBlocking(uuid)
@@ -115,37 +119,34 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         messages.reload()
     }
 
-
     fun parseHomeCmd(context: BasicsCommandContext): Either<Home, Boolean> {
-        if(context.sender !is Player) {
+        if (context.sender !is Player) {
             plugin.messages.commandNotFromConsole.sendToSender(context.sender)
             return Either.Right(true)
         }
         val player = context.sender as Player
 
         var homeName = "home"
-        if(context.args.size == 1) {
+        if (context.args.size == 1) {
             homeName = context.args[0]
-        } else if(context.args.size > 1) {
+        } else if (context.args.size > 1) {
             return Either.Right(false)
         }
 
         val homeList = getHomeList(player.uniqueId)
 
-        if(homeList.isEmpty()) {
+        if (homeList.isEmpty()) {
             messages.homeNoneSet.sendToSender(player)
             return Either.Right(true)
         }
 
         val home = homeList.getHome(homeName)
 
-        if(home == null) {
+        if (home == null) {
             messages.homeNotFound(homeName).sendToSender(player)
             return Either.Right(true)
         }
 
         return Either.Left(home)
     }
-
-
 }

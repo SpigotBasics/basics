@@ -8,17 +8,14 @@ data class BasicsCommandContext(
     val command: BasicsCommand,
     val label: String,
     val args: MutableList<String>,
-    val location: Location?
+    val location: Location?,
 ) {
-
     private var flagsParsed = false
     val flags: MutableList<String> = mutableListOf()
         get() {
-            if(!flagsParsed) throw IllegalStateException("Flags not read yet")
+            if (!flagsParsed) throw IllegalStateException("Flags not read yet")
             return field
         }
-
-
 
     fun readFlags(): MutableList<String> {
         flagsParsed = true
@@ -29,8 +26,7 @@ data class BasicsCommandContext(
     }
 
     fun popFlag(flag: String): Boolean {
-        if(!flagsParsed) throw IllegalStateException("Flags not read yet")
+        if (!flagsParsed) throw IllegalStateException("Flags not read yet")
         return flags.remove(flag.lowercase())
     }
-
 }
