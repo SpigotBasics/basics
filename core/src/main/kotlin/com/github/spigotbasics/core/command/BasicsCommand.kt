@@ -43,7 +43,7 @@ class BasicsCommand internal constructor(
     override fun execute(sender: CommandSender, commandLabel: String, origArgs: Array<out String>): Boolean {
 
 
-        val args = origArgs.toMutableList() ?: mutableListOf()
+        val args = origArgs.toMutableList()
 
         val context = BasicsCommandContext(
             sender = sender,
@@ -103,7 +103,7 @@ class BasicsCommand internal constructor(
             sender = sender,
             command = this,
             label = alias,
-            args = args?.toMutableList() ?: mutableListOf(),
+            args = args.toMutableList(),
             location = location
         )
         if (executor == null) return mutableListOf()
