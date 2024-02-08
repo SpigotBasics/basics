@@ -9,13 +9,12 @@ import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
 import org.bukkit.entity.Player
 
 class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
-
     private val messages = module.messages
 
     override fun execute(context: BasicsCommandContext): CommandResult {
         val result = module.parseHomeCmd(context)
-        if(result is Either.Right) {
-            return if(result.value) CommandResult.SUCCESS else CommandResult.USAGE
+        if (result is Either.Right) {
+            return if (result.value) CommandResult.SUCCESS else CommandResult.USAGE
         }
 
         val home = (result as Either.Left).value

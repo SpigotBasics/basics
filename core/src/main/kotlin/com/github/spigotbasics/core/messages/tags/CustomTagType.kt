@@ -27,7 +27,6 @@ enum class CustomTagType {
     ;
 
     companion object {
-
         /**
          * Returns the tag type from the given string, case-insensitive
          *
@@ -37,11 +36,11 @@ enum class CustomTagType {
          */
         @Throws(IllegalArgumentException::class)
         fun fromString(string: String): CustomTagType {
-            return when(string.uppercase()) {
+            return when (string.uppercase()) {
                 "PARSED" -> PARSED
                 "UNPARSED" -> UNPARSED
                 "COLOR" -> COLOR
-                //"PAPI", "PLACEHOLDER", "PLACEHOLDERAPI" -> PLACEHOLDER
+                // "PAPI", "PLACEHOLDER", "PLACEHOLDERAPI" -> PLACEHOLDER
                 else -> throw IllegalArgumentException("Unknown tag type '$string' - valid types are ${entries.joinToString()}")
             }
         }

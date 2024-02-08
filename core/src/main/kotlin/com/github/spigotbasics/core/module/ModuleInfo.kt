@@ -20,7 +20,7 @@ data class ModuleInfo(
     /**
      * Module's Description
      */
-    val description: List<String>
+    val description: List<String>,
 ) {
     /**
      * Name and version
@@ -28,22 +28,23 @@ data class ModuleInfo(
     val nameAndVersion = "$name v$version"
 
     companion object {
-
         /**
          * Creates a [ModuleInfo] from a [YamlConfiguration]
          */
         @Throws(InvalidModuleException::class)
         fun fromYaml(moduleInfoYaml: YamlConfiguration): ModuleInfo {
-            val mainClass = moduleInfoYaml.getString("main-class")
-                ?: throw InvalidModuleException("Module info does not contain a main-class")
-            val name = moduleInfoYaml.getString("name")
-                ?: throw InvalidModuleException("Module info does not contain a name")
-            val version = moduleInfoYaml.getString("version")
-                ?: throw InvalidModuleException("Module info does not contain a version")
+            val mainClass =
+                moduleInfoYaml.getString("main-class")
+                    ?: throw InvalidModuleException("Module info does not contain a main-class")
+            val name =
+                moduleInfoYaml.getString("name")
+                    ?: throw InvalidModuleException("Module info does not contain a name")
+            val version =
+                moduleInfoYaml.getString("version")
+                    ?: throw InvalidModuleException("Module info does not contain a version")
             val description = moduleInfoYaml.getAsStringList("description")
 
             return ModuleInfo(mainClass, name, version, description)
         }
     }
-
 }

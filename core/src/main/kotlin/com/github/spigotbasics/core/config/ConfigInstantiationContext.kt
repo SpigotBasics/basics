@@ -6,5 +6,5 @@ import java.io.File
 data class ConfigInstantiationContext(
     val file: File,
     val dataFolder: File,
-    val messageFactory: MessageFactory
+    val messageFactory: MessageFactory,
 )

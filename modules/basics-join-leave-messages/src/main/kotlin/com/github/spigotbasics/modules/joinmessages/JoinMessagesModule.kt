@@ -13,5 +13,4 @@ class JoinMessagesModule(context: ModuleInstantiationContext) : AbstractBasicsMo
         eventBus.subscribe(PlayerJoinEvent::class.java, listener::joinMessage)
         eventBus.subscribe(PlayerQuitEvent::class.java, listener::leaveMessage)
     }
-
 }

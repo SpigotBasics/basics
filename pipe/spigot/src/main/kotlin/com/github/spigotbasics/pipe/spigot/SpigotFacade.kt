@@ -4,7 +4,6 @@ import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.pipe.OpenInventoryFacade
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import com.github.spigotbasics.pipe.SpigotPaperFacade
-import org.bukkit.command.CommandMap
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
@@ -13,11 +12,19 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.SimplePluginManager
 
 class SpigotFacade : SpigotPaperFacade {
-    override fun setJoinMessage(event: PlayerJoinEvent, legacy: String, miniMessage: SerializedMiniMessage) {
+    override fun setJoinMessage(
+        event: PlayerJoinEvent,
+        legacy: String,
+        miniMessage: SerializedMiniMessage,
+    ) {
         event.joinMessage = legacy
     }
 
-    override fun setQuitMessage(event: PlayerQuitEvent, legacy: String, miniMessage: SerializedMiniMessage) {
+    override fun setQuitMessage(
+        event: PlayerQuitEvent,
+        legacy: String,
+        miniMessage: SerializedMiniMessage,
+    ) {
         event.quitMessage = legacy
     }
 

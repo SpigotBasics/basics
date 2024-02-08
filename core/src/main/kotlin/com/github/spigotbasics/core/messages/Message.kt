@@ -25,9 +25,8 @@ data class Message(
     val audienceProvider: AudienceProvider,
     var tagResolverFactory: TagResolverFactory,
     var concerns: Player? = null,
-    val customTagResolvers: MutableList<TagResolver> = mutableListOf()
+    val customTagResolvers: MutableList<TagResolver> = mutableListOf(),
 ) {
-
     private val audiences by lazy { audienceProvider.audience }
 
     fun sendToPlayer(player: Player) {
@@ -84,19 +83,31 @@ data class Message(
         return this
     }
 
-    fun tagUnparsed(tag: String, value: String): Message {
+    fun tagUnparsed(
+        tag: String,
+        value: String,
+    ): Message {
         return tags(tagResolverFactory.createMessageSpecificPlaceholderUnparsed(tag, value))
     }
 
-    fun tagParsed(tag: String, value: String): Message {
+    fun tagParsed(
+        tag: String,
+        value: String,
+    ): Message {
         return tags(tagResolverFactory.createMessageSpecificPlaceholderParsed(tag, value))
     }
 
-    fun tagMessage(tag: String, value: Message): Message {
+    fun tagMessage(
+        tag: String,
+        value: Message,
+    ): Message {
         return tags(tagResolverFactory.createMessageSpecificPlaceholderMessage(tag, value))
     }
 
-    fun tagMiniMessage(tag: String, value: SerializedMiniMessage): Message {
+    fun tagMiniMessage(
+        tag: String,
+        value: SerializedMiniMessage,
+    ): Message {
         return tags(tagResolverFactory.createMessageSpecificPlaceholderComponent(tag, miniMessage.deserialize(value.value)))
     }
 
@@ -112,14 +123,17 @@ data class Message(
     }
 
     @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
-    private fun toPlaceholder(key: String, value: Any): TagResolver {
-        if(value is String) {
+    private fun toPlaceholder(
+        key: String,
+        value: Any,
+    ): TagResolver {
+        if (value is String) {
             return tagResolverFactory.createMessageSpecificPlaceholderUnparsed(key, value)
         }
-        if(value is Message) {
+        if (value is Message) {
             return tagResolverFactory.createMessageSpecificPlaceholderMessage(key, value)
         }
-        if(value is SerializedMiniMessage) {
+        if (value is SerializedMiniMessage) {
             return tagResolverFactory.createMessageSpecificPlaceholderComponent(key, miniMessage.deserialize(value.value))
         }
         error("Unsupported Placeholder value type: ${value::class}")
@@ -134,7 +148,6 @@ data class Message(
         return (defaultResolvers + customTagResolvers).toTypedArray()
     }
 
-
     internal fun toAdventureComponents(): List<Component> {
         return lines.map { miniMessage.deserialize(it, *getAllTagResolvers()) }
     }
@@ -146,10 +159,11 @@ data class Message(
     companion object {
         private val miniMessage = MiniMessage.miniMessage()
 
-        private val legacyComponentSerializer = LegacyComponentSerializer
-            .builder()
-            .useUnusualXRepeatedCharacterHexFormat() // They are not unusual
-            .build()
+        private val legacyComponentSerializer =
+            LegacyComponentSerializer
+                .builder()
+                .useUnusualXRepeatedCharacterHexFormat() // They are not unusual
+                .build()
 
         private val bungeeComponentSerializer = BungeeComponentSerializer.get()
     }
@@ -165,8 +179,4 @@ data class Message(
     fun toBungeeComponents(): Array<net.md_5.bungee.api.chat.BaseComponent> {
         return bungeeComponentSerializer.serialize(toAdventureComponent())
     }
-
-
-
-
 }

@@ -9,7 +9,6 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
 object PlaceholderAPITagFactory {
-
     val nonPlayerPapi = createNonPlayerPapi()
 
     private fun createNonPlayerPapi(): TagResolver {
@@ -17,7 +16,6 @@ object PlaceholderAPITagFactory {
             val content = args.popOr("string expected").value()
             Tag.inserting(Component.text().content(replacePlaceholders(content)))
         }
-
     }
 
     fun playerPapi(player: Player): TagResolver {
@@ -27,12 +25,14 @@ object PlaceholderAPITagFactory {
         }
     }
 
-    fun replacePlaceholders(message: String, player: OfflinePlayer? = null): String {
-        return if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    fun replacePlaceholders(
+        message: String,
+        player: OfflinePlayer? = null,
+    ): String {
+        return if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             PlaceholderAPI.setPlaceholders(player, message)
         } else {
             message
         }
     }
-
 }

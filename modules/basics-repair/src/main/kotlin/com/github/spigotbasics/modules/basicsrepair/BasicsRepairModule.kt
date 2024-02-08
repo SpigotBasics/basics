@@ -6,7 +6,6 @@ import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
 class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     val msgConfig = getConfig(ConfigName.MESSAGES)
 
     val msgRepairHandOther: Message
@@ -37,5 +36,4 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
         super.reloadConfig()
         msgConfig.reload()
     }
-
 }

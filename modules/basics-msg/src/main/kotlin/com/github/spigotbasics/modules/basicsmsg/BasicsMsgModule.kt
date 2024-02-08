@@ -6,7 +6,6 @@ import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     val formatReceived: Message
         get() = config.getMessage("format-received")
 
@@ -19,11 +18,12 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     val formatConsole: Message
         get() = config.getMessage("format-console")
 
-    val permission = permissionManager.createSimplePermission(
-        "basics.msg",
-        "Allows the player to send private messages",
-        PermissionDefault.TRUE
-    )
+    val permission =
+        permissionManager.createSimplePermission(
+            "basics.msg",
+            "Allows the player to send private messages",
+            PermissionDefault.TRUE,
+        )
 
     override fun onEnable() {
         createCommand("msg", permission)
@@ -32,5 +32,4 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
             .executor(MsgExecutor(this))
             .register()
     }
-
 }

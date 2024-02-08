@@ -4,7 +4,6 @@ import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
 import com.github.spigotbasics.core.util.WorldUtils
@@ -45,11 +44,12 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
             return CommandResult.SUCCESS
         }
 
-        val future = TeleportUtils.findSafeLocationInSameChunkAsync(
-            translatedTargetLocation,
-            newWorld.minHeight,
-            newWorld.maxHeight
-        )
+        val future =
+            TeleportUtils.findSafeLocationInSameChunkAsync(
+                translatedTargetLocation,
+                newWorld.minHeight,
+                newWorld.maxHeight,
+            )
 
         future.thenAccept { safeLocation ->
 
@@ -66,7 +66,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
                                 module.logger.log(
                                     Level.SEVERE,
                                     "Could not teleport player to world ${newWorld.name}",
-                                    it
+                                    it,
                                 )
                             }
                         } else if (success) {
@@ -99,7 +99,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         val args = context.args
         if (args.size == 1) {
             return allWorldsAnd012(context.sender).apply {
-                if(isNotEmpty()) {
+                if (isNotEmpty()) {
                     add("--force")
                     add("-f")
                 }
@@ -114,21 +114,21 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
     }
 
     private fun allWorldsAnd012(sender: Permissible): MutableList<String> {
-        val list = Bukkit.getWorlds().filter {
-            val hasPerm = sender.hasPermission(module.getWorldPermission(it.name))
-            return@filter hasPerm
-        }.map { it.name }.toMutableList()
+        val list =
+            Bukkit.getWorlds().filter {
+                val hasPerm = sender.hasPermission(module.getWorldPermission(it.name))
+                return@filter hasPerm
+            }.map { it.name }.toMutableList()
 
-        if(list.contains(WorldUtils.defaultWorldName)) {
+        if (list.contains(WorldUtils.defaultWorldName)) {
             list.add("0")
         }
-        if(list.contains(WorldUtils.netherWorldName)) {
+        if (list.contains(WorldUtils.netherWorldName)) {
             list.add("1")
         }
-        if(list.contains(WorldUtils.endWorldName)) {
+        if (list.contains(WorldUtils.endWorldName)) {
             list.add("2")
         }
         return list
     }
-
 }

@@ -10,17 +10,17 @@ import com.github.spigotbasics.core.storage.backends.SQLiteBackend
 import java.util.concurrent.CompletableFuture
 
 class StorageManager(configManager: CoreConfigManager) {
-
     private val logger = BasicsLoggerFactory.getCoreLogger(StorageManager::class)
 
     val namespaceRegex = "^[_a-zA-Z][_a-zA-Z0-9]{0,63}\$".toRegex()
 
-    val config = configManager.getConfig(
-        ConfigName.STORAGE.path,
-        ConfigName.STORAGE.path,
-        StorageManager::class.java,
-        StorageConfig::class.java
-    )
+    val config =
+        configManager.getConfig(
+            ConfigName.STORAGE.path,
+            ConfigName.STORAGE.path,
+            StorageManager::class.java,
+            StorageConfig::class.java,
+        )
 
     private val backend: StorageBackend = IODelayedStorageBackend(createBackend(), config.ioDelay)
 
@@ -49,5 +49,4 @@ class StorageManager(configManager: CoreConfigManager) {
     }
 
     fun shutdown(): CompletableFuture<Void?> = backend.shutdown()
-
 }

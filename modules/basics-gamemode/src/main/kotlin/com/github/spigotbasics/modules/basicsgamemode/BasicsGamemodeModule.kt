@@ -8,7 +8,6 @@ import org.bukkit.GameMode
 import org.bukkit.permissions.Permission
 
 class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     val msgConfig = getConfig(ConfigName.fromName("messages.yml"))
     val msgChangedOthers get() = msgConfig.getMessage("gamemode-changed-others")
     val msgChangedSelf get() = msgConfig.getMessage("gamemode-changed-self")
@@ -19,12 +18,32 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
 
     val perm = permissionManager.createSimplePermission("basics.gamemode", "Allows the player to change their game mode")
 
-    val permSurvival = permissionManager.createSimplePermission("basics.gamemode.survival", "Allows the player to change their game mode to survival")
-    val permCreative = permissionManager.createSimplePermission("basics.gamemode.creative", "Allows the player to change their game mode to creative")
-    val permAdventure = permissionManager.createSimplePermission("basics.gamemode.adventure", "Allows the player to change their game mode to adventure")
-    val permSpectator = permissionManager.createSimplePermission("basics.gamemode.spectator", "Allows the player to change their game mode to spectator")
+    val permSurvival =
+        permissionManager.createSimplePermission(
+            "basics.gamemode.survival",
+            "Allows the player to change their game mode to survival",
+        )
+    val permCreative =
+        permissionManager.createSimplePermission(
+            "basics.gamemode.creative",
+            "Allows the player to change their game mode to creative",
+        )
+    val permAdventure =
+        permissionManager.createSimplePermission(
+            "basics.gamemode.adventure",
+            "Allows the player to change their game mode to adventure",
+        )
+    val permSpectator =
+        permissionManager.createSimplePermission(
+            "basics.gamemode.spectator",
+            "Allows the player to change their game mode to spectator",
+        )
 
-    val permOthers = permissionManager.createSimplePermission("basics.gamemode.others", "Allows the player to change other players' game modes")
+    val permOthers =
+        permissionManager.createSimplePermission(
+            "basics.gamemode.others",
+            "Allows the player to change other players' game modes",
+        )
 
     override fun reloadConfig() {
         super.reloadConfig()
@@ -40,7 +59,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     }
 
     fun toGameMode(input: String): GameMode? {
-        return when(input) {
+        return when (input) {
             "survival", "s", "0" -> GameMode.SURVIVAL
             "creative", "c", "1" -> GameMode.CREATIVE
             "adventure", "a", "2" -> GameMode.ADVENTURE
@@ -50,7 +69,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     }
 
     fun getPermission(gameMode: GameMode): Permission {
-        return when(gameMode) {
+        return when (gameMode) {
             GameMode.SURVIVAL -> permSurvival
             GameMode.CREATIVE -> permCreative
             GameMode.ADVENTURE -> permAdventure
@@ -60,7 +79,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
     }
 
     fun getName(gameMode: GameMode): Message {
-        return when(gameMode) {
+        return when (gameMode) {
             GameMode.SURVIVAL -> nameSurvival
             GameMode.CREATIVE -> nameCreative
             GameMode.ADVENTURE -> nameAdventure
@@ -68,5 +87,4 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
             else -> throw IllegalArgumentException("Unknown game mode: $gameMode")
         }
     }
-    
 }
