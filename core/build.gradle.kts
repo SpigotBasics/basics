@@ -23,7 +23,7 @@ dependencies {
     api(project(":common"))
     api(project(":pipe:facade"))
     testImplementation(libs.gson)
-    api(libs.gson)
+    compileOnlyApi(libs.gson)
 }
 
 tasks.shadowJar {
