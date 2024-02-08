@@ -29,9 +29,9 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
     inner class EnchantExecutor : BasicsCommandExecutor(this@BasicsEnchantModule) {
         override fun execute(context: BasicsCommandContext): CommandResult {
             val player = requirePlayerOrMustSpecifyPlayerFromConsole(context.sender) // TODO: Create a requirePlayer(Sender) method
+            if(args.size == 0) return CommandResult.USAGE
             val item = requireItemInHand(player)
             val args = context.args
-            if(args.size == 0) return CommandResult.USAGE
             val enchantment = getEnchantment(args[0])
             if(enchantment == null) failInvalidArgument(args[0])
             var level = (item.itemMeta?.getEnchantLevel(enchantment!!) ?: 0) + 1
