@@ -3,11 +3,13 @@ package com.github.spigotbasics.modules.basicsenchant
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.Bukkit
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemStack
 
 class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
 
@@ -16,7 +18,15 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
         "Allows the player to enchant items"
     )
 
+    val msg = getConfig(ConfigName.MESSAGES)
+
     val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key }?.toList() ?: emptyList()
+
+    fun msgEnchantedSelf(item: ItemStack, enchantment: Enchantment, level: Int)
+    = msg.getMessage("enchanted-self")
+        .tagParsed("item", item.type.name)
+        .tagParsed("enchantment", enchantment.key.key)
+        .tagParsed("level", level.toString())
 
     override fun onEnable() {
         createCommand("enchant", permission)
@@ -42,8 +52,9 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
                 item.removeEnchantment(enchantment!!) // TODO: message "removed enchantment"
                 return CommandResult.SUCCESS
             }
-            // TODO: Message "enchanted with XY Level 123"
+
             item.addUnsafeEnchantment(enchantment!!, level) // TODO: Separate permission for unsafe enchants, separate permission for max-level and for enchantment type
+            msgEnchantedSelf(item, enchantment, level).sendToPlayer(player)
             return CommandResult.SUCCESS
         }
 
@@ -58,6 +69,11 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
         private fun getEnchantment(name: String): Enchantment? {
             return Bukkit.getRegistry(Enchantment::class.java)?.match(name.lowercase())
         }
+    }
+
+    override fun reloadConfig() {
+        super.reloadConfig()
+        msg.reload()
     }
 
 }
