@@ -10,14 +10,16 @@ import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 
 class PriorityEventBus(private val plugin: Plugin, private val priority: EventPriority) : Listener {
-
     private val handlers: MutableMap<Class<out Event>, List<SubscribedListener<out Event>>> = ConcurrentHashMap()
     private val subscribed: MutableSet<Class<out Event>> = ConcurrentHashMap.newKeySet()
 
-    fun <T : Event> subscribe(eventClass: Class<T>, action: (T) -> Unit): SubscribedListener<T> {
+    fun <T : Event> subscribe(
+        eventClass: Class<T>,
+        action: (T) -> Unit,
+    ): SubscribedListener<T> {
         val listener = SubscribedListener(this, action, priority, eventClass)
         (handlers.computeIfAbsent(eventClass) { _ -> LinkedList() } as MutableList).add(
-            listener
+            listener,
         )
         ensureSubscribed(eventClass)
         return listener
@@ -41,13 +43,17 @@ class PriorityEventBus(private val plugin: Plugin, private val priority: EventPr
 
         subscribed.add(eventClass)
         Bukkit.getPluginManager().registerEvent(
-            eventClass, this, priority,
+            eventClass,
+            this,
+            priority,
             { _, event ->
                 val listeners = handlers[eventClass] ?: return@registerEvent
                 for (subscribedListener in listeners) {
                     subscribedListener.call(event)
                 }
-            }, plugin, true
+            },
+            plugin,
+            true,
         )
     }
 }

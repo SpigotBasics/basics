@@ -1,9 +1,8 @@
 package com.github.spigotbasics.core.model
 
 object RomanNumerals {
-
     fun toRoman(value: Int): String {
-        return when(value) {
+        return when (value) {
             1 -> "I"
             2 -> "II"
             3 -> "III"
@@ -17,5 +16,4 @@ object RomanNumerals {
             else -> return value.toString()
         }
     }
-
 }

@@ -6,10 +6,8 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 class CorePlayerData(storageManager: StorageManager) {
-
     private val nameToUuid = storageManager.createStorage("player_name_to_uuid")
     private val uuidToName = storageManager.createStorage("player_uuid_to_name")
-
 
     fun getUuidForName(name: String): CompletableFuture<UUID?> {
         return nameToUuid.getJsonElement(name).thenApply {
@@ -27,11 +25,13 @@ class CorePlayerData(storageManager: StorageManager) {
         }
     }
 
-    fun storeNameAndUuid(name: String, uuid: UUID) {
+    fun storeNameAndUuid(
+        name: String,
+        uuid: UUID,
+    ) {
         val jsonName = JsonPrimitive(name)
         val jsonUuid = JsonPrimitive(uuid.toString())
         uuidToName.setJsonElement(uuid.toString(), jsonName)
         nameToUuid.setJsonElement(name, jsonUuid)
     }
-
 }

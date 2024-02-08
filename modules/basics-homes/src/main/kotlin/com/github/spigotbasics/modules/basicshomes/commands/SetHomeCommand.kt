@@ -10,7 +10,6 @@ import com.github.spigotbasics.modules.basicshomes.data.Home
 import org.bukkit.entity.Player
 
 class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
-
     private val messages = module.messages
 
     override fun execute(context: BasicsCommandContext): CommandResult {
@@ -32,18 +31,15 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         val allowUnlimited = player.hasPermission(module.permissionSetHomeUnlimited)
 
         if (context.args.size == 1) {
-
             homeName = context.args[0]
 
             if (!player.hasPermission(module.permissionSetHomeMultiple)) {
                 // Player can only set one home ...
 
-                if(homeList.isEmpty()) {
+                if (homeList.isEmpty()) {
                     // ... and they haven't set one yet, that's okay.
-
                 } else if (homeList.size == 1 && homeList.getHome(homeName) != null) {
                     // ... and they're replacing their only home, that's okay.
-
                 } else {
                     // ... and they're not replacing that one, that's not okay.
                     messages.homeLimitReached(1)
@@ -52,22 +48,29 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
                     return CommandResult.SUCCESS
                 }
             }
-
         }
 
-        val isOkay = when {
-            allowUnlimited -> true // Player may set unlimited homes
-            homeList.size < maxAllowed -> true // Player may set more homes
-            homeList.size == maxAllowed && homeList.getHome(homeName) != null -> true // Player already set max homes, but is replacing an existing one
-            else -> false // Buy a rank, ffs
-        }
+        val isOkay =
+            when {
+                // Player may set unlimited homes
+                allowUnlimited -> true
+
+                // Player may set more homes
+                homeList.size < maxAllowed -> true
+
+                // Player already set max homes, but is replacing an existing one
+                homeList.size == maxAllowed && homeList.getHome(homeName) != null -> true
+
+                // Buy a rank, ffs
+                else -> false
+            }
 
         if (!isOkay) {
             messages.homeLimitReached(maxAllowed).sendToSender(player)
             return CommandResult.SUCCESS
         }
 
-        if(!homeName.matches(module.regex.toRegex())) {
+        if (!homeName.matches(module.regex.toRegex())) {
             messages.homeInvalidName(module.regex).sendToSender(player)
             return CommandResult.SUCCESS
         }

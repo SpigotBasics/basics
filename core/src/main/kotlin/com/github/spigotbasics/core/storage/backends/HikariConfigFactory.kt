@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariConfig
 import java.io.File
 
 internal object HikariConfigFactory {
-
     fun createSqliteConfig(file: File): HikariConfig {
         val config = HikariConfig()
         config.jdbcUrl = "jdbc:sqlite:${file.absolutePath}"
@@ -31,5 +30,4 @@ internal object HikariConfigFactory {
         config.password = dbInfo.password
         return config
     }
-
 }

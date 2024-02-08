@@ -1,6 +1,11 @@
 package com.github.spigotbasics.plugin
 
-import com.github.spigotbasics.core.*
+import com.github.spigotbasics.core.Basics
+import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.ChunkTicketManager
+import com.github.spigotbasics.core.Constants
+import com.github.spigotbasics.core.MinecraftVersion
+import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
@@ -18,27 +23,24 @@ import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.util.logging.Level
-import java.util.stream.Collectors
-
 
 class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
-
     private val rustySpigotThreshold =
-        MinecraftVersion.fromBukkitVersion(getTextResource(Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
-            ?: error("Missing ${Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME} resource file"))
+        MinecraftVersion.fromBukkitVersion(
+            getTextResource(Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME)?.use { it.readText() }
+                ?: error("Missing ${Constants.RUSTY_SPIGOT_THRESHOLD_FILE_NAME} resource file"),
+        )
 
     override val audienceProvider: AudienceProvider = AudienceProvider(this)
 
-    override val facade: SpigotPaperFacade = if (Spiper.isPaper) {
-        PaperFacade()
-    } else {
-        SpigotFacade()
-    }
+    override val facade: SpigotPaperFacade =
+        if (Spiper.isPaper) {
+            PaperFacade()
+        } else {
+            SpigotFacade()
+        }
 
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, server, moduleFolder)
@@ -58,18 +60,19 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         ModulePlayerDataLoader(
             storageManager.config,
             moduleManager,
-            messages
+            messages,
         )
     }
 
-    private val classLoaderFixer = ClassLoaderFixer(
-        coreConfigManager.getConfig(
-            "fix-class-loading.yml",
-            "fix-class-loading.yml",
-            ClassLoaderFixer::class.java,
-            FixClassLoadingConfig::class.java
+    private val classLoaderFixer =
+        ClassLoaderFixer(
+            coreConfigManager.getConfig(
+                "fix-class-loading.yml",
+                "fix-class-loading.yml",
+                ClassLoaderFixer::class.java,
+                FixClassLoadingConfig::class.java,
+            ),
         )
-    )
 
     /**
      * Checks if this server is running a rusty version of Spigot.
@@ -79,7 +82,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
      */
     private fun isRustySpigot(): Boolean {
         val myVersion = MinecraftVersion.current()
-        return rustySpigotThreshold > myVersion;
+        return rustySpigotThreshold > myVersion
     }
 
     override fun onLoad() {
@@ -91,7 +94,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
-
 //        logger.info("Showing all classes in pacakge com.github.spigotbasics.core:")
 //        findAllClassesUsingClassLoader("com.github.spigotbasics.core").forEach(System.out::println)
 
@@ -119,14 +121,13 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }
 
-
     private fun reloadCustomTags() {
         tagResolverFactory.loadAndCacheAllTagResolvers(
             coreConfigManager.getConfig(
                 Constants.CUSTOM_TAGS_FILE_NAME,
                 Constants.CUSTOM_TAGS_FILE_NAME,
-                TagResolverFactory::class.java
-            )
+                TagResolverFactory::class.java,
+            ),
         )
     }
 
@@ -148,7 +149,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         classLoaderFixer.setSuperEnabled(this, false)
         modulePlayerDataLoader.shutdownScheduler()
     }
-
 
 //    fun findAllClassesUsingClassLoader(packageName: String): Set<Class<*>?> {
 //        val stream: InputStream = this.classLoader
@@ -176,6 +176,4 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 //        }
 //        return null
 //    }
-
-
 }

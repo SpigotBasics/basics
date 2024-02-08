@@ -12,7 +12,7 @@ object Basics {
      * @param plugin The plugin instance
      */
     fun setPlugin(plugin: BasicsPlugin) {
-        if(::basics.isInitialized) throw IllegalStateException("Plugin already set")
+        if (::basics.isInitialized) throw IllegalStateException("Plugin already set")
         this.basics = plugin
     }
 

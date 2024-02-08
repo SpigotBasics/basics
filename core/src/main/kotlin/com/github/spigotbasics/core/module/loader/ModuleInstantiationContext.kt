@@ -19,5 +19,5 @@ data class ModuleInstantiationContext(
     val server: Server,
     val info: ModuleInfo,
     val file: File,
-    val classLoader: ModuleJarClassLoader
+    val classLoader: ModuleJarClassLoader,
 )
