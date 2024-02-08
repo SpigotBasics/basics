@@ -14,7 +14,8 @@ world-not-found: "<red>World not found: </red><color:#FF8888><#argument></color>
 unsupported-server-software: "<red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
 
 no-safe-location-found: "<red>Couldn't find a safe location to teleport to!</red>"
-must-hold-item-in-hand: "<red>You must hold an item in your hand!</red>"
+not-having-item-in-hand: "<red>You're not holding any item in your hand!</red>"
+others-not-having-item-in-hand: "<red><gold><player-name></gold> is not holding any item in their hand!</red>"
 
 command-not-from-console: "<red>This command can't be run from console!</red>"
 must-specify-player-from-console: "<red>You must specify a player when running this command from console!</red>"
