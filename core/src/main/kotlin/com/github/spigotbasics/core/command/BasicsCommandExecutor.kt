@@ -40,6 +40,7 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
     }
 
     @Throws(BasicsCommandException::class)
+    // TODO: In 99% of cases, we should just use requirePlayer(CommandSender) instead of this method
     fun requirePlayerOrMustSpecifyPlayerFromConsole(sender: CommandSender): Player {
         val player = sender as? Player
         if(player == null) {
@@ -65,10 +66,12 @@ abstract class BasicsCommandExecutor(module: BasicsModule) {
         }
     }
 
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+    //@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
+
     fun requireItemInHand(player: Player): ItemStack {
-        val item: ItemStack? = player.inventory.itemInMainHand
-        if(item == null || item.type.isAir) {
+        val item = player.inventory.itemInMainHand
+        if(item.type.isAir) {
             throw CommandResult.MUST_HOLD_ITEM_IN_HAND.asException()
         }
         return item
