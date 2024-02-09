@@ -29,13 +29,14 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
 
     val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key.lowercase() }?.toList() ?: emptyList()
 
-    val enchantmentPermissions = Bukkit.getRegistry(Enchantment::class.java)?.associateWith { enchantment ->
-        val name = enchantment.key.key.lowercase()
-        permissionManager.createSimplePermission(
-            "basics.enchant.${name}",
-            "Allows the player to enchant items with the ${name.toHumanReadable()} enchantment",
-        )
-    } ?: emptyMap()
+    val enchantmentPermissions =
+        Bukkit.getRegistry(Enchantment::class.java)?.associateWith { enchantment ->
+            val name = enchantment.key.key.lowercase()
+            permissionManager.createSimplePermission(
+                "basics.enchant.$name",
+                "Allows the player to enchant items with the ${name.toHumanReadable()} enchantment",
+            )
+        } ?: emptyMap()
 
     fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = msg.getMessage("enchanted-self").tags(tag)
 
@@ -70,7 +71,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             }
 
             // Unsafe levels require extra perm
-            if(desiredLevel > maxLevel) {
+            if (desiredLevel > maxLevel) {
                 requirePermission(context.sender, permissionUnsafeLevels)
             }
 
