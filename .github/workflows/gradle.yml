@@ -33,6 +33,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v0.1.15
         with:
+          tag_name: ${{ env.SHORT_SHA }}
           files: |
             build/dist/basics-git-${{ env.SHORT_SHA }}.zip
           draft: false
