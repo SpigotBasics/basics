@@ -3,7 +3,7 @@ name: Basics Release
 on:
   push:
     tags:
-      - "v*"
+      - "*"
 
 jobs:
   release:
@@ -21,27 +21,32 @@ jobs:
           distribution: temurin
 #          cache: 'gradle'
 
-      - name: Fetch all history for all tags and branches
-        run: git fetch --prune --unshallow
+      - name: Get Tag name
+        uses: olegtarasov/get-tag@v2.1.2
+#        id: tagName
+
+#      - name: Fetch all history for all tags and branches
+#        run: git fetch --prune --unshallow
 
       - name: Update version in build.gradle.kts
         run: |
-          GIT_REF=$(git rev-parse --short HEAD)
-          sed -i "s/version = \".*\"/version = \"$GIT_REF\"/" build.gradle.kts
+#          GIT_REF=${{ steps.tagName.outputs.tag }}
+          echo "Project version adjusted to $GIT_TAG_NAME"
+          sed -i "s/version = \".*\"/version = \"$GIT_TAG_NAME\"/" build.gradle.kts
 
       - name: Build zip archive with Gradle Wrapper
         run: ./gradlew build zipDistribution --scan
 
-      - name: Run printVersion task and set env variable
-        run: |
-          VERSION=$(./gradlew printVersion --quiet)
-          echo "Project version is $VERSION"
-          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
+#      - name: Run printVersion task and set env variable
+#        run: |
+#          VERSION=$(./gradlew printVersion --quiet)
+#          echo "Project version is $VERSION"
+#          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Generate checksum
         run: |
           cd build/dist
-          CHECKSUM=`sha256sum basics-${{ env.PROJECT_VERSION }}.zip`
+          CHECKSUM=`sha256sum basics-$GIT_TAG_NAME.zip`
           cd ../..
           echo $CHECKSUM > checksum.txt
           echo -e "### SHA256 Checksum\n\`\`\`\n$CHECKSUM\n\`\`\`" > checksum_md.txt
@@ -50,7 +55,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            build/dist/basics-${{ env.PROJECT_VERSION }}.zip
+            build/dist/basics-${{ env.GIT_TAG_NAME }}.zip
             checksum.txt
           draft: false
           generate_release_notes: true
