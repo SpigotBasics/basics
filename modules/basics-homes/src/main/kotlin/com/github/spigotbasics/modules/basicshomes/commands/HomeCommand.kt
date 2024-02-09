@@ -13,13 +13,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 
 class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
-
     private val messages = module.messages
 
     override fun execute(context: BasicsCommandContext): CommandResult {
         val result = module.parseHomeCmd(context)
-        if(result is Either.Right) {
-            return if(result.value) CommandResult.SUCCESS else CommandResult.USAGE
+        if (result is Either.Right) {
+            return if (result.value) CommandResult.SUCCESS else CommandResult.USAGE
         }
 
         val home = (result as Either.Left).value
@@ -35,13 +34,11 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
-        if(context.sender !is Player) {
+        if (context.sender !is Player) {
             return mutableListOf()
         }
         val player = context.sender as Player
         val homeList = module.getHomeList(player.uniqueId)
         return homeList.listHomeNames().partialMatches(context.args[0])
     }
-
-
 }

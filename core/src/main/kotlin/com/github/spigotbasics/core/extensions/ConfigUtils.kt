@@ -5,17 +5,23 @@ import org.bukkit.configuration.MemorySection
 
 fun MemorySection.getAsNewLineSeparatedString(key: String): String {
     val value = get(key) ?: return ""
-    if(value is List<*>) {
+    if (value is List<*>) {
         return value.joinToString("\n")
     }
     return value.toString()
 }
 
-fun MemorySection.getDurationAsTicks(key: String, defaultValue: Long): Long {
+fun MemorySection.getDurationAsTicks(
+    key: String,
+    defaultValue: Long,
+): Long {
     return DurationParser.parseDurationToTicks(getString(key) ?: return defaultValue)
 }
 
-fun MemorySection.getDurationAsMillis(key: String, defaultValue: Long): Long {
+fun MemorySection.getDurationAsMillis(
+    key: String,
+    defaultValue: Long,
+): Long {
     return DurationParser.parseDurationToMillis(getString(key) ?: return defaultValue)
 }
 
@@ -27,10 +33,10 @@ fun MemorySection.getDurationAsMillis(key: String, defaultValue: Long): Long {
  */
 fun MemorySection.getAsStringList(key: String): List<String> {
     val value = get(key) ?: return emptyList()
-    if(value is List<*>) {
+    if (value is List<*>) {
         return value.map { it.toString() }
     }
-    if(value is String) {
+    if (value is String) {
         return value.split("\n")
     }
     return listOf(value.toString())

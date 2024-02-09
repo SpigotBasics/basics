@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 class PaperChatEventListener(private val module: BasicsChatFormatModule) : Listener {
-
     private val mini = MiniMessage.miniMessage()
 
     @EventHandler
@@ -18,17 +17,17 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
         event.renderer { player, _, message, _ ->
             formatMessage(player, message)
         }
-
     }
 
-    fun formatMessage(player: Player, message: Component): Component {
-        val serialized = module.format.concerns(player)
-            .tagMiniMessage("message", SerializedMiniMessage(mini.serialize(message)))
-            .serialize()
+    fun formatMessage(
+        player: Player,
+        message: Component,
+    ): Component {
+        val serialized =
+            module.format.concerns(player)
+                .tagMiniMessage("message", SerializedMiniMessage(mini.serialize(message)))
+                .serialize()
         val component = NativeComponentConverter.toNativeComponent(serialized)
         return component
     }
-
 }
-
-

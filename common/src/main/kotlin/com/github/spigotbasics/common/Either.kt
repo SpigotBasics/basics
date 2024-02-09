@@ -8,7 +8,6 @@ package com.github.spigotbasics.common
  * @param R Type of [Right] value.
  */
 sealed class Either<out L, out R> {
-
     /**
      * Represents the left side
      *
@@ -46,7 +45,10 @@ sealed class Either<out L, out R> {
      * @param fnR The function to apply if this is a [Right].
      * @return The result of applying the function.
      */
-    fun <T> fold(fnL: (L) -> T, fnR: (R) -> T): T =
+    fun <T> fold(
+        fnL: (L) -> T,
+        fnR: (R) -> T,
+    ): T =
         when (this) {
             is Left -> fnL(value)
             is Right -> fnR(value)

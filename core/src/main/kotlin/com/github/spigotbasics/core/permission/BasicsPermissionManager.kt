@@ -6,24 +6,23 @@ import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsPermissionManager(val logger: BasicsLogger) {
-
     private val permissions = mutableListOf<Permission>()
 
     fun createSimplePermission(
         permission: String,
         description: String? = null,
-        defaultValue: PermissionDefault = PermissionDefault.OP
+        defaultValue: PermissionDefault = PermissionDefault.OP,
     ): Permission {
-
         if (permissions.any { it.name == permission }) {
             error("Permission $permission already registered in this module")
         }
 
-        val perm = Permission(
-            permission,
-            description,
-            defaultValue
-        )
+        val perm =
+            Permission(
+                permission,
+                description,
+                defaultValue,
+            )
 
         val existing = Bukkit.getPluginManager().getPermission(permission)
 
@@ -52,5 +51,4 @@ class BasicsPermissionManager(val logger: BasicsLogger) {
         }
         permissions.clear()
     }
-
 }

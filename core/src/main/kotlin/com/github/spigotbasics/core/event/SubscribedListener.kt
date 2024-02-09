@@ -7,9 +7,8 @@ class SubscribedListener<T : Event>(
     private val bus: PriorityEventBus,
     private val action: (T) -> Unit,
     val priority: EventPriority,
-    val eventClass: Class<T>
+    val eventClass: Class<T>,
 ) {
-
     fun call(event: Event) {
         @Suppress("UNCHECKED_CAST")
         action.invoke(event as T)
@@ -18,5 +17,4 @@ class SubscribedListener<T : Event>(
     fun dispose() {
         bus.unsubscribe(this)
     }
-
 }

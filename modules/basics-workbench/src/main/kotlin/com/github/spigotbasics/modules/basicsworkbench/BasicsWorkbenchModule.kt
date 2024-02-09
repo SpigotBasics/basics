@@ -5,50 +5,51 @@ import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
-import com.github.spigotbasics.pipe.exceptions.UnsupportedServerSoftwareException
-import java.io.IOException
-import java.net.URL
-import java.util.zip.ZipInputStream
-
 
 class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     private val facade = plugin.facade.openInventoryFacade
 
-    val permissionCraftingTable = permissionManager.createSimplePermission(
-        "basics.craftingtable",
-        "Allows the player to open a crafting table using /craftingtable"
-    )
+    val permissionCraftingTable =
+        permissionManager.createSimplePermission(
+            "basics.craftingtable",
+            "Allows the player to open a crafting table using /craftingtable",
+        )
 
-    val permissionCartographyTable = permissionManager.createSimplePermission(
-        "basics.cartographytable",
-        "Allows the player to open a cartography table using /cartographytable"
-    )
+    val permissionCartographyTable =
+        permissionManager.createSimplePermission(
+            "basics.cartographytable",
+            "Allows the player to open a cartography table using /cartographytable",
+        )
 
-    val permissionLoom = permissionManager.createSimplePermission(
-        "basics.loom",
-        "Allows the player to open a loom using /loom"
-    )
+    val permissionLoom =
+        permissionManager.createSimplePermission(
+            "basics.loom",
+            "Allows the player to open a loom using /loom",
+        )
 
-    val permissionGrindstone = permissionManager.createSimplePermission(
-        "basics.grindstone",
-        "Allows the player to open a grindstone using /grindstone"
-    )
+    val permissionGrindstone =
+        permissionManager.createSimplePermission(
+            "basics.grindstone",
+            "Allows the player to open a grindstone using /grindstone",
+        )
 
-    val permissionSmithingTable = permissionManager.createSimplePermission(
-        "basics.smithingtable",
-        "Allows the player to open a loom using /smithingtable"
-    )
+    val permissionSmithingTable =
+        permissionManager.createSimplePermission(
+            "basics.smithingtable",
+            "Allows the player to open a loom using /smithingtable",
+        )
 
-    val permissionStonecutter = permissionManager.createSimplePermission(
-        "basics.stonecutter",
-        "Allows the player to open a stone cutter using /stonecutter"
-    )
+    val permissionStonecutter =
+        permissionManager.createSimplePermission(
+            "basics.stonecutter",
+            "Allows the player to open a stone cutter using /stonecutter",
+        )
 
-    val permissionAnvil = permissionManager.createSimplePermission(
-        "basics.anvil",
-        "Allows the player to open an anvil using /anvil"
-    )
+    val permissionAnvil =
+        permissionManager.createSimplePermission(
+            "basics.anvil",
+            "Allows the player to open an anvil using /anvil",
+        )
 
     override fun onEnable() {
         createCommand("craftingtable", permissionCraftingTable)
@@ -136,5 +137,4 @@ class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasic
             return CommandResult.SUCCESS
         }
     }
-
 }

@@ -17,12 +17,12 @@ dependencies {
     compileOnly(project(":core"))
 }
 
-tasks.build {
-    dependsOn("shadowJar")
-}
+// tasks.build {
+//     dependsOn("shadowJar")
+// }
 
 tasks.getByName("shadowJar", ShadowJar::class).apply {
-    archiveClassifier.set("shaded")
+    archiveClassifier = "shaded"
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         exclude(dependency("org.jetbrains:annotations"))

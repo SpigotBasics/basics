@@ -5,7 +5,6 @@ import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.module.BasicsModule
 
 class ModuleTagProvider(private val module: BasicsModule) : MessageTagProvider {
-
     override fun getMessageTags(): List<CustomTag> {
         return listOf(
             CustomTag.parsed("module", module.info.name),
