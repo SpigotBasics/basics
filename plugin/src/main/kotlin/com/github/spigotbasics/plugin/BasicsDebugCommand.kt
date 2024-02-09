@@ -4,6 +4,7 @@ import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.util.DurationParser
+import com.github.spigotbasics.pipe.CraftServerFacade
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -16,7 +17,7 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
         args: Array<out String>,
     ): MutableList<String> {
         if (args.size == 1) {
-            return listOf("start", "stop", "resendcommands").partialMatches(args.get(0))
+            return listOf("start", "stop", "synccommands").partialMatches(args.get(0))
         } else {
             return mutableListOf()
         }
@@ -67,10 +68,8 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
                     true
                 }
 
-                "resendcommands" -> {
-                    for (player in plugin.server.onlinePlayers) {
-                        player.updateCommands()
-                    }
+                "synccommands" -> {
+                    CraftServerFacade.syncCommands()
                     true
                 }
 
