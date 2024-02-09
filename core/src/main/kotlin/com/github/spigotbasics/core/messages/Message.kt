@@ -3,12 +3,12 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.pipe.SerializedMiniMessage
+import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -108,7 +108,12 @@ data class Message(
         tag: String,
         value: SerializedMiniMessage,
     ): Message {
-        return tags(tagResolverFactory.createMessageSpecificPlaceholderComponent(tag, miniMessage.deserialize(value.value)))
+        return tags(
+            tagResolverFactory.createMessageSpecificPlaceholderComponent(
+                tag,
+                miniMessage.deserialize(value.value),
+            ),
+        )
     }
 
     @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
@@ -119,7 +124,14 @@ data class Message(
 
     @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
     fun tags(tags: Map<String, String>): Message {
-        return tags(tags.map { (key, value) -> tagResolverFactory.createMessageSpecificPlaceholderUnparsed(key, value) })
+        return tags(
+            tags.map { (key, value) ->
+                tagResolverFactory.createMessageSpecificPlaceholderUnparsed(
+                    key,
+                    value,
+                )
+            },
+        )
     }
 
     @Deprecated("Use tagMessage or tagParsed", ReplaceWith("tagMessage(tag, value)"))
@@ -134,7 +146,10 @@ data class Message(
             return tagResolverFactory.createMessageSpecificPlaceholderMessage(key, value)
         }
         if (value is SerializedMiniMessage) {
-            return tagResolverFactory.createMessageSpecificPlaceholderComponent(key, miniMessage.deserialize(value.value))
+            return tagResolverFactory.createMessageSpecificPlaceholderComponent(
+                key,
+                miniMessage.deserialize(value.value),
+            )
         }
         error("Unsupported Placeholder value type: ${value::class}")
     }
