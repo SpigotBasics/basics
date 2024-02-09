@@ -27,30 +27,33 @@ import java.lang.reflect.Field
  * that are known to cause issues right during onEnable().
  */
 class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
-
-    private val isSuperEnabledField: Field? = try {
-        JavaPlugin::class.java.getDeclaredField("isEnabled").apply { isAccessible = true }
-    } catch (t: Throwable) {
-        null
-    }
+    private val isSuperEnabledField: Field? =
+        try {
+            JavaPlugin::class.java.getDeclaredField("isEnabled").apply { isAccessible = true }
+        } catch (t: Throwable) {
+            null
+        }
 
     /**
      * Fixes NoClassDefFoundError when AbstractBasicsModule loops over storages in onDisable() when a module has not
      * created any.
      */
     fun trickOnEnable() {
-
-        if (config.callIteratorOnEmptyList)
+        if (config.callIteratorOnEmptyList) {
             emptyList<Void?>().iterator().apply { }
+        }
 
-        if (config.abuseClassBasicsModule)
+        if (config.abuseClassBasicsModule) {
             forceLoadClassesForEnclosingClass(BasicsModule::class.java)
+        }
 
-        if (config.abuseClassAbstractBasicsModule)
+        if (config.abuseClassAbstractBasicsModule) {
             forceLoadClassesForEnclosingClass(AbstractBasicsModule::class.java)
+        }
 
-        if (config.abuseClassModuleManager)
+        if (config.abuseClassModuleManager) {
             forceLoadClassesForEnclosingClass(ModuleManager::class.java)
+        }
 
         for (className in config.abuseClassesList) {
             try {
@@ -61,7 +64,6 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
         }
     }
 
-
     /**
      * Sets JavaPlugin#isEnabled. Even though I checked Bukkit's classloading code, and as of
      * 1.20.4 I didn't find any reference of isEnabled being checked there, I remember having seen it there somewhere
@@ -69,7 +71,10 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
      *
      * The workaround is to set isEnabled to true in onDisable() and then set it back to false at the end of onDisable().
      */
-    fun setSuperEnabled(plugin: JavaPlugin, enabled: Boolean) { // This is called in onDisable()
+    fun setSuperEnabled(
+        plugin: JavaPlugin,
+        enabled: Boolean,
+    ) { // This is called in onDisable()
         if (config.setEnabledDuringOnDisable) {
             isSuperEnabledField?.set(plugin, enabled)
         }

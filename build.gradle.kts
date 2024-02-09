@@ -1,16 +1,33 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+version = "git-${getGitCommitHash()}"
+
 plugins {
     base
-    id("basics.kotlin-conventions")
+    // id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") apply false
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    tasks.withType<ShadowJar> {
+        archiveVersion = ""
+        archiveClassifier = "shaded"
+    }
+}
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }
 
 tasks.register("copyAllToTestServer") {
-    group  = "basics"
+    group = "basics"
     description = "Copies the plugin and all modules to the test server"
     dependsOn("plugin:copyPluginToTestServer")
-    dependsOn("modules:copyAllModulesToTestServer")
+    dependsOn("copyAllModulesToTestServer")
 }
 
 tasks.register<Zip>("zipDistribution") {
@@ -21,10 +38,27 @@ tasks.register<Zip>("zipDistribution") {
     destinationDirectory = file("build/dist")
 
     from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
-
-    for(module in project(":modules").subprojects) {
-        from(module.tasks.getByName("shadowJar", ShadowJar::class).archiveFile) {
-            into("Basics/modules")
+    for (module in project(":modules").subprojects) {
+        module.tasks.withType<ShadowJar>().forEach { shadowTask ->
+            from(shadowTask.archiveFile) {
+                into("Basics/modules")
+            }
         }
     }
+}
+
+tasks.register("copyAllModulesToTestServer") {
+    group = "basics-test"
+    description = "Copies all modules to the test server"
+    val copyAllModulesTask = this
+    subprojects.forEach { module ->
+        module.tasks.withType(CopyModule::class).forEach { copyModuleTask ->
+            copyAllModulesTask.dependsOn(copyModuleTask)
+        }
+    }
+}
+
+tasks.register("createModule", CreateModule::class) {
+    group = "basics"
+    description = "Creates a new module"
 }

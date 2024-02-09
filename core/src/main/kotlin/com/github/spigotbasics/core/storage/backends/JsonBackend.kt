@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.storage.backends
 
-import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.exceptions.BasicsStorageAccessException
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.storage.StorageBackend
 import com.github.spigotbasics.core.storage.StorageType
 import com.google.gson.GsonBuilder
@@ -13,18 +13,17 @@ import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 
 internal class JsonBackend(private val directory: File) : StorageBackend {
-
     override val type = StorageType.JSON
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
     private val prettyGson = GsonBuilder().setPrettyPrinting().create()
 
     init {
-        if(directory.exists() && !directory.isDirectory) {
+        if (directory.exists() && !directory.isDirectory) {
             throw IOException("Storage directory $directory exists but is not a directory")
         }
-        if(!directory.exists()) {
+        if (!directory.exists()) {
             val success = directory.mkdirs()
-            if(!success) {
+            if (!success) {
                 throw IOException("Could not create storage directory $directory")
             }
         }
@@ -33,7 +32,10 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
         testFile.delete()
     }
 
-    override fun getJsonElement(namespace: String, keyId: String): CompletableFuture<JsonElement?> {
+    override fun getJsonElement(
+        namespace: String,
+        keyId: String,
+    ): CompletableFuture<JsonElement?> {
         return CompletableFuture.supplyAsync {
             try {
                 val file = getFile(namespace, keyId)
@@ -55,8 +57,11 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
         }
     }
 
-
-    override fun setJsonElement(namespace: String, keyId: String, value: JsonElement?): CompletableFuture<Void?> {
+    override fun setJsonElement(
+        namespace: String,
+        keyId: String,
+        value: JsonElement?,
+    ): CompletableFuture<Void?> {
         return CompletableFuture.runAsync {
             try {
                 val file = getFile(namespace, keyId)
@@ -69,7 +74,11 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
                     file.writeText(prettyGson.toJson(value))
                 }
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Could not write file $namespace/$keyId.json", e) // TODO: Properly propagate exceptions in the async methods
+                logger.log(
+                    Level.SEVERE,
+                    "Could not write file $namespace/$keyId.json",
+                    e,
+                ) // TODO: Properly propagate exceptions in the async methods
                 throw BasicsStorageAccessException("Could not write file $namespace/$keyId.json", e)
             }
         }
@@ -85,8 +94,10 @@ internal class JsonBackend(private val directory: File) : StorageBackend {
         }
     }
 
-    private fun getFile(namespace: String, keyId: String) = File(File(directory, namespace), "$keyId.json")
+    private fun getFile(
+        namespace: String,
+        keyId: String,
+    ) = File(File(directory, namespace), "$keyId.json")
 
     override fun shutdown(): CompletableFuture<Void?> = CompletableFuture.completedFuture(null)
-
 }

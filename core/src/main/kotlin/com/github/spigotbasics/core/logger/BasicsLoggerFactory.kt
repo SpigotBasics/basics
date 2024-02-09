@@ -7,18 +7,19 @@ import org.bukkit.Bukkit
 import java.io.File
 import kotlin.reflect.KClass
 
-
 object BasicsLoggerFactory {
-
     fun getLogger(name: String): BasicsLogger {
-        return BasicsLogger(Bukkit.getLogger(),"Basics/$name")
+        return BasicsLogger(Bukkit.getLogger(), "Basics/$name")
     }
 
     fun getModuleLogger(module: ModuleInfo): BasicsLogger {
         return getLogger("Module/${module.name}")
     }
 
-    fun getModuleLogger(module: BasicsModule, clazz: KClass<*>): BasicsLogger {
+    fun getModuleLogger(
+        module: BasicsModule,
+        clazz: KClass<*>,
+    ): BasicsLogger {
         return getLogger("Module/${module.info.name}/${clazz.simpleName}")
     }
 
@@ -33,9 +34,10 @@ object BasicsLoggerFactory {
         return getLogger("Core/${clazz.simpleName}")
     }
 
-    fun getStorageLogger(type: StorageType, namespace: String): BasicsLogger {
+    fun getStorageLogger(
+        type: StorageType,
+        namespace: String,
+    ): BasicsLogger {
         return getLogger("Storage/${type.name}/$namespace")
-
     }
-
 }

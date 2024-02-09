@@ -13,21 +13,21 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
         val sender = context.sender
         var target: Player
 
-        if(args.isEmpty() || args.size > 2) {
+        if (args.isEmpty() || args.size > 2) {
             return CommandResult.USAGE
         }
 
         val gameModeName = args[0]
         val gameMode = module.toGameMode(gameModeName)
-        if(gameMode == null) {
+        if (gameMode == null) {
             return failInvalidArgument(gameModeName)
         }
 
         requirePermission(sender, module.getPermission(gameMode))
 
-        if(args.size == 1) {
+        if (args.size == 1) {
             target = requirePlayerOrMustSpecifyPlayerFromConsole(sender)
-        } else if(args.size == 2) {
+        } else if (args.size == 2) {
             requirePermission(sender, module.permOthers)
             target = requirePlayer(args[1])
         } else {
@@ -45,15 +45,16 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
-        if(context.args.size == 1) {
+        if (context.args.size == 1) {
             return StringUtil.copyPartialMatches(
                 context.args[0],
                 getAllowedGameModeNames(context.sender),
-                mutableListOf())
+                mutableListOf(),
+            )
         }
 
-        if(context.args.size == 2) {
-            if(context.sender.hasPermission(module.permOthers)) {
+        if (context.args.size == 2) {
+            if (context.sender.hasPermission(module.permOthers)) {
                 return null // null = normal list of players
             }
         }
@@ -64,20 +65,19 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
     private fun getAllowedGameModeNames(sender: CommandSender): MutableList<String> {
         val list = mutableListOf<String>()
 
-        if(sender.hasPermission(module.permSurvival)) {
+        if (sender.hasPermission(module.permSurvival)) {
             list += "survival"
         }
-        if(sender.hasPermission(module.permCreative)) {
+        if (sender.hasPermission(module.permCreative)) {
             list += "creative"
         }
-        if(sender.hasPermission(module.permAdventure)) {
+        if (sender.hasPermission(module.permAdventure)) {
             list += "adventure"
         }
-        if(sender.hasPermission(module.permSpectator)) {
+        if (sender.hasPermission(module.permSpectator)) {
             list += "spectator"
         }
 
         return list
     }
-
 }

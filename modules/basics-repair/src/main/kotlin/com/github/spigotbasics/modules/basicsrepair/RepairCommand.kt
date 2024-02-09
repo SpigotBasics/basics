@@ -12,34 +12,34 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.StringUtil
 
 class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecutor(module) {
-
     override fun execute(context: BasicsCommandContext): CommandResult {
         context.readFlags()
         val args = context.args
         val repairAll = context.popFlag("--all")
 
-        if(repairAll) {
+        if (repairAll) {
             requirePermission(context.sender, module.permissionAll)
         }
 
-        val target = if(args.size > 0) {
-            requirePlayer(args[0])
-        } else {
-            requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
-        }
+        val target =
+            if (args.size > 0) {
+                requirePlayer(args[0])
+            } else {
+                requirePlayerOrMustSpecifyPlayerFromConsole(context.sender)
+            }
 
-        if(target != context.sender) {
+        if (target != context.sender) {
             requirePermission(context.sender, module.permissionOthers)
         }
 
-        if(repairAll) {
-            if(target == context.sender) {
+        if (repairAll) {
+            if (target == context.sender) {
                 runAllSelf(target)
             } else {
                 runAllOther(context.sender, target)
             }
         } else {
-            if(target == context.sender) {
+            if (target == context.sender) {
                 runHandSelf(target)
             } else {
                 runHandOther(context.sender, target)
@@ -55,17 +55,17 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
         val mayAll = sender.hasPermission(module.permissionAll)
         val mayOthers = sender.hasPermission(module.permissionOthers)
 
-        if(!mayAll && !mayOthers) return mutableListOf()
-        if(args.size == 1) {
-            if(mayAll && !mayOthers) {
+        if (!mayAll && !mayOthers) return mutableListOf()
+        if (args.size == 1) {
+            if (mayAll && !mayOthers) {
                 return StringUtil.copyPartialMatches(args[0], listOf("--all"), mutableListOf())
-            } else if(mayAll && mayOthers) {
+            } else if (mayAll && mayOthers) {
                 return StringUtil.copyPartialMatches(args[0], listOf("--all") + TabCompleter.getPlayers(sender, args[0]), mutableListOf())
             } else if (!mayAll && mayOthers) {
                 return TabCompleter.getPlayers(sender, args[0])
             }
-        } else if(args.size == 2) {
-            if(mayAll && mayOthers && args[0].startsWithIgnoreCase("--")) {
+        } else if (args.size == 2) {
+            if (mayAll && mayOthers && args[0].startsWithIgnoreCase("--")) {
                 return TabCompleter.getPlayers(sender, args[1])
             }
         }
@@ -78,20 +78,24 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
         module.msgRepairHandSelf.concerns(player).sendToPlayer(player)
     }
 
-
-    fun runHandOther(sender: CommandSender, player: Player) {
+    fun runHandOther(
+        sender: CommandSender,
+        player: Player,
+    ) {
         requireItemInHandOther(player)
         repairHand(player)
         module.msgRepairHandOther.concerns(player.player).sendToSender(sender)
     }
-
 
     fun runAllSelf(player: Player) {
         repairAll(player)
         module.msgRepairAllSelf.concerns(player).sendToPlayer(player)
     }
 
-    fun runAllOther(sender: CommandSender, player: Player) {
+    fun runAllOther(
+        sender: CommandSender,
+        player: Player,
+    ) {
         repairAll(player)
         module.msgRepairAllOther.concerns(player.player).sendToSender(sender)
     }
@@ -109,14 +113,11 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
     private fun repairItem(item: ItemStack?) {
         if (item == null || item.type.isAir) return
         val meta = item.itemMeta
-        if(meta is Damageable) {
+        if (meta is Damageable) {
             if (meta.hasDamage()) {
                 meta.damage = 0
                 item.setItemMeta(meta)
             }
         }
     }
-
-
-
 }

@@ -10,7 +10,6 @@ import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.logger.BasicsLogger
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
-import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.loader.ModuleJarClassLoader
 import com.github.spigotbasics.core.permission.BasicsPermissionManager
@@ -19,7 +18,7 @@ import com.github.spigotbasics.core.storage.NamespacedStorage
 import org.bukkit.Server
 import org.bukkit.permissions.Permission
 import java.io.File
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -28,7 +27,6 @@ import java.util.concurrent.CompletableFuture
  * @constructor Create empty Basics plugin
  */
 interface BasicsModule {
-
     // ----- Global instances -----
 
     /**
@@ -108,8 +106,8 @@ interface BasicsModule {
      */
     val keyFactory: NamespacedNamespacedKeyFactory
 
-
     // ----- Module lifecycle -----
+
     /**
      * Called when the module is enabled
      *
@@ -145,13 +143,19 @@ interface BasicsModule {
 
     // ----- Utility methods -----
 
-    fun createCommand(name: String, permission: Permission): BasicsCommandBuilder
+    fun createCommand(
+        name: String,
+        permission: Permission,
+    ): BasicsCommandBuilder
 
     fun createStorage(name: String? = null): NamespacedStorage
 
     fun getConfig(configName: ConfigName): SavedConfig
 
-    fun <T : SavedConfig> getConfig(configName: ConfigName, configurationClass: Class<T>): T
+    fun <T : SavedConfig> getConfig(
+        configName: ConfigName,
+        configurationClass: Class<T>,
+    ): T
 
     /**
      * Get namespaced resource name in the format <module-name>-<path>. Also removes leading slashes.
@@ -168,6 +172,4 @@ interface BasicsModule {
 
         return "${info.name}-$newPath"
     }
-
-
 }

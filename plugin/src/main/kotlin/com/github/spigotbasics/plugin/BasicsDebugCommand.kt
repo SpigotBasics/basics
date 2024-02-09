@@ -9,12 +9,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 
 class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
-
     override fun onTabComplete(
         sender: CommandSender,
         command: Command,
         label: String,
-        args: Array<out String>
+        args: Array<out String>,
     ): MutableList<String> {
         if (args.size == 1) {
             return listOf("start", "stop", "resendcommands").partialMatches(args.get(0))
@@ -26,11 +25,15 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
     private val tasks: MutableMap<CommandSender, Int> = mutableMapOf()
     private val scheduler = BasicsScheduler(plugin)
 
-    fun startTask(sender: CommandSender, delay: Long) {
+    fun startTask(
+        sender: CommandSender,
+        delay: Long,
+    ) {
         stopTask(sender)
-        val taskId = scheduler.runTimer(0, delay) {
-            showForSender(sender)
-        }
+        val taskId =
+            scheduler.runTimer(0, delay) {
+                showForSender(sender)
+            }
         tasks[sender] = taskId
     }
 
@@ -41,7 +44,12 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
         }
     }
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+    override fun onCommand(
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>,
+    ): Boolean {
         when (args.size) {
             0 -> {
                 showForSender(sender)
@@ -60,7 +68,7 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
                 }
 
                 "resendcommands" -> {
-                    for(player in plugin.server.onlinePlayers) {
+                    for (player in plugin.server.onlinePlayers) {
                         player.updateCommands()
                     }
                     true
@@ -72,7 +80,9 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
             2 -> return if (args[0] == "start") {
                 startTask(sender, DurationParser.parseDurationToTicks(args[1]))
                 true
-            } else false
+            } else {
+                false
+            }
         }
         return false
     }
@@ -89,23 +99,27 @@ PlayerDataListener:
 
 """
 
-        val message = plugin.messageFactory.createMessage(output)
-            .tagMessage("cached-login-data", shouldBe(cachedLoginData.size, 0))
-            .tagMessage(
-                "scheduled-clear-cache-futures",
-                shouldBe(scheduledClearCacheFutures.size, cachedLoginData.size)
-            )
+        val message =
+            plugin.messageFactory.createMessage(output)
+                .tagMessage("cached-login-data", shouldBe(cachedLoginData.size, 0))
+                .tagMessage(
+                    "scheduled-clear-cache-futures",
+                    shouldBe(scheduledClearCacheFutures.size, cachedLoginData.size),
+                )
 
         message.sendToSender(sender)
     }
 
-    fun <T : Any> shouldBe(value: T, expected: T): Message {
+    fun <T : Any> shouldBe(
+        value: T,
+        expected: T,
+    ): Message {
         return plugin.messageFactory.createMessage(
             if (value == expected) {
                 "<green>OK $value</green>"
             } else {
                 "<red>!! $value (should be $expected)</red>"
-            }
+            },
         )
     }
 }

@@ -4,11 +4,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
-class CorePlayerDataListener(private val corePlayerData: CorePlayerData) : Listener{
-
+class CorePlayerDataListener(private val corePlayerData: CorePlayerData) : Listener {
     @EventHandler
     internal fun onJoin(event: PlayerJoinEvent) {
         corePlayerData.storeNameAndUuid(event.player.name, event.player.uniqueId)
     }
-
 }
