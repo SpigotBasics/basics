@@ -1,0 +1,56 @@
+name: Basics Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release Basics
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3.6.0
+        with:
+          java-version: 17
+          distribution: temurin
+#          cache: 'gradle'
+
+#      - name: Change version
+#        id: version
+#        env:
+#          REF: ${{ github.ref }}
+#        run: |
+#          sed -i "s/canary/${REF:11}/g" pom.xml
+#          echo "name=PteroBot-${REF:11}.jar" >> $GITHUB_OUTPUT
+
+      - name: Build zip archive with Gradle Wrapper
+        run: ./gradlew build zipDistribution --scan
+
+      - name: Run printVersion task and set env variable
+        run: |
+          VERSION=$(./gradlew printVersion --quiet)
+          echo "Project version is $VERSION"
+          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Generate checksum
+        run: |
+          CHECKSUM=`sha256sum build/dist/basics-${{ env.PROJECT_VERSION }}.zip`
+          echo $CHECKSUM > checksum.txt
+          echo -e "### SHA256 Checksum\n\`\`\`\n$CHECKSUM\n\`\`\`" > checksum_md.txt
+
+      - name: Create release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          files: |
+            build/dist/basics-${{ env.PROJECT_VERSION }}.zip
+            checksum.txt
+          draft: false
+          generate_release_notes: true
+          append_body: true
+          body_path: checksum_md.txt
