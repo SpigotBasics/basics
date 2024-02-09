@@ -36,7 +36,7 @@ jobs:
       continue-on-error: true
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build distribution --scan
+      run: ./gradlew --continue build distribution --scan
 
     - name: Run printVersion task and set env variable
       run: |
