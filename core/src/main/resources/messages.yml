@@ -2,25 +2,25 @@
 # Some messages have additional available tags, which are listed for each message.
 
 # Tags: <#permission>
-no-permission: "<hover:show_text:'<gray>Permission missing:</gray> <#permission>'><red>You don't have permission to do that!</red></hover>"
+no-permission: "<error><hover:show_text:'<gray>Permission missing:</gray> <#permission>'><red>You don't have permission to do that!</red></hover>"
 
 # Tags: <#option>
-unknown-option: "<red>Unknown option: </red><color:#FF8888><#option></color>"
+unknown-option: "<error><red>Unknown option: </red><color:#FF8888><#option></color>"
 
 # Tags: <#argument>
-invalid-argument: "<red>Invalid argument: </red><color:#FF8888><#argument></color>"
-player-not-found: "<red>Player not found: </red><color:#FF8888><#argument></color>"
-world-not-found: "<red>World not found: </red><color:#FF8888><#argument></color>"
-unsupported-server-software: "<red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
+invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></bright_red>"
+player-not-found: "<error><red>Player not found: </red><bright_red><#argument></bright_red>"
+world-not-found: "<error><red>World not found: </red><bright_red><#argument></bright_red>"
+unsupported-server-software: "<error><red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
 
-no-safe-location-found: "<red>Couldn't find a safe location to teleport to!</red>"
-not-having-item-in-hand: "<red>You're not holding any item in your hand!</red>"
-others-not-having-item-in-hand: "<red><gold><player-name></gold> is not holding any item in their hand!</red>"
+no-safe-location-found: "<error><red>Couldn't find a safe location to teleport to!</red>"
+not-having-item-in-hand: "<error><red>You're not holding any item in your hand!</red>"
+others-not-having-item-in-hand: "<error><red><gold><player-name></gold> is not holding any item in their hand!</red>"
 
-command-not-from-console: "<red>This command can't be run from console!</red>"
-must-specify-player-from-console: "<red>You must specify a player when running this command from console!</red>"
-command-module-disabled: "<red>The module that registered this command is disabled!</red>"
+command-not-from-console: "<error><red>This command can't be run from console!</red>"
+must-specify-player-from-console: "<error><red>You must specify a player when running this command from console!</red>"
+command-module-disabled: "<error><red>The module that registered this command is disabled!</red>"
 
 failed-to-load-data-on-join: "<red>[Basics] Failed to load player data in time - please try to join again!</red>"
-error-executing-command: "<red>An error occured while executing this command!</red>"
-error-executing-command-op: "<hover:show_text:'<#stacktrace>'><red>An error occured while executing this command!</red> <gray>(Hover for stacktrace - only visible to OPs)</gray></hover>"
+error-executing-command: "<error><red>An error occured while executing this command!</red>"
+error-executing-command-op: "<error><hover:show_text:'<#stacktrace>'><red>An error occured while executing this command!</red> <gray>(Hover for stacktrace - only visible to OPs)</gray></hover>"

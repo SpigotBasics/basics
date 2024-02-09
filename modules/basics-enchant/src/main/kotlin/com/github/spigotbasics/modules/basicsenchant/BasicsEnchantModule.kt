@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.extensions.partialMatches
+import com.github.spigotbasics.core.extensions.toHumanReadable
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.Bukkit
@@ -18,9 +19,23 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             "Allows the player to enchant items",
         )
 
+    val permissionUnsafeLevels =
+        permissionManager.createSimplePermission(
+            "basics.enchant.allowunsafe",
+            "Allows the player to enchant items with unsafe levels",
+        )
+
     val msg = getConfig(ConfigName.MESSAGES)
 
-    val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key }?.toList() ?: emptyList()
+    val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key.lowercase() }?.toList() ?: emptyList()
+
+    val enchantmentPermissions = Bukkit.getRegistry(Enchantment::class.java)?.associateWith { enchantment ->
+        val name = enchantment.key.key.lowercase()
+        permissionManager.createSimplePermission(
+            "basics.enchant.${name}",
+            "Allows the player to enchant items with the ${name.toHumanReadable()} enchantment",
+        )
+    } ?: emptyMap()
 
     fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = msg.getMessage("enchanted-self").tags(tag)
 
@@ -48,14 +63,23 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             if (args.size == 0) return CommandResult.USAGE
             val item = requireItemInHand(player)
             val enchantment = getEnchantment(args[0]) ?: throw failInvalidArgument(args[0]).asException()
-            var level = (item.itemMeta?.getEnchantLevel(enchantment) ?: 0) + 1
+            var desiredLevel = (item.itemMeta?.getEnchantLevel(enchantment) ?: 0) + 1
+            val maxLevel = enchantment.maxLevel
             if (args.size > 1) {
-                level = args[1].toIntOrNull() ?: throw failInvalidArgument(args[1]).asException()
+                desiredLevel = args[1].toIntOrNull() ?: throw failInvalidArgument(args[1]).asException()
             }
 
-            val tag = EnchantOperationMessageTag(item, enchantment, level)
+            // Unsafe levels require extra perm
+            if(desiredLevel > maxLevel) {
+                requirePermission(context.sender, permissionUnsafeLevels)
+            }
 
-            if (level == 0) {
+            // Enchantment-specific permissions
+            enchantmentPermissions[enchantment]?.let { requirePermission(context.sender, it) }
+
+            val tag = EnchantOperationMessageTag(item, enchantment, desiredLevel)
+
+            if (desiredLevel == 0) {
                 item.removeEnchantment(enchantment) // TODO: message "removed enchantment"
                 msgRemovedSelf(tag).sendToPlayer(player)
                 return CommandResult.SUCCESS
@@ -63,7 +87,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
 
             item.addUnsafeEnchantment(
                 enchantment,
-                level,
+                desiredLevel,
             ) // TODO: Separate permission for unsafe enchants, separate permission for max-level and for enchantment type
             msgEnchantedSelf(tag).sendToPlayer(player)
             return CommandResult.SUCCESS

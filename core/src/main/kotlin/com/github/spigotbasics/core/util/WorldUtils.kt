@@ -5,14 +5,14 @@ import org.bukkit.World
 
 object WorldUtils {
     val defaultWorldName by lazy {
-        Bukkit.getWorlds().first { it.environment == World.Environment.NORMAL }.name
+        Bukkit.getWorlds().firstOrNull { it.environment == World.Environment.NORMAL }?.name
     }
 
     val netherWorldName by lazy {
-        Bukkit.getWorlds().first { it.environment == World.Environment.NETHER }.name
+        Bukkit.getWorlds().firstOrNull { it.environment == World.Environment.NETHER }?.name
     }
 
     val endWorldName by lazy {
-        Bukkit.getWorlds().first { it.environment == World.Environment.THE_END }.name
+        Bukkit.getWorlds().firstOrNull { it.environment == World.Environment.THE_END }?.name
     }
 }

@@ -30,7 +30,8 @@ class BasicsCommand internal constructor(
             permission = permString
             description = info.description ?: ""
             usage = info.usage
-            permissionMessage = info.permissionMessage.tagUnparsed("permission", permString).toLegacyString()
+            // TODO: Permission message is not working - always shows "Unknown command"
+            permissionMessage = info.permissionMessage.tagParsed("permission", permString).toLegacyString()
         }
 
 //    private val customUsageMessage = messageFactory.createMessage(
