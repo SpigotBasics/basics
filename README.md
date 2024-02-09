@@ -57,7 +57,3 @@ It will ask you which language (`kotlin` or `java`) you want to use, asks you fo
   - Fixes the "cannot get locale" error message when using ACF on modern Spigot versions.
   - [Our Fork](https://github.com/SpigotBasics/acf) | [Original](https://github.com/aikar/commands)
   - EDIT: FIXED in 0.5.1-SNAPSHOT as of 25th Jan 2024-->
-
-## Did you know?
-> [!WARNING]\
-> Did you know that you can add fancy warnings like this, using `> [!WARNING]`?

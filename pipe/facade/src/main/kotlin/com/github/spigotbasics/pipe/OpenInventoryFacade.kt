@@ -3,9 +3,7 @@ package com.github.spigotbasics.pipe
 import com.github.spigotbasics.pipe.exceptions.UnsupportedServerSoftwareException
 import org.bukkit.entity.Player
 
-
 interface OpenInventoryFacade {
-
     @Throws(UnsupportedServerSoftwareException::class)
     fun openCartographyTable(player: Player) {
         throw UnsupportedServerSoftwareException("HumanEntity#openCartographyTable(Location, boolean)")
@@ -35,5 +33,4 @@ interface OpenInventoryFacade {
     fun openAnvil(player: Player) {
         throw UnsupportedServerSoftwareException("HumanEntity#openAnvil(Location, boolean)")
     }
-
 }

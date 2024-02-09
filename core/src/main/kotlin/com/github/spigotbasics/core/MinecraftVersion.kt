@@ -13,10 +13,9 @@ import java.util.logging.Level
 data class MinecraftVersion(
     val major: Int,
     val minor: Int,
-    val patch: Int = 0
+    val patch: Int = 0,
 ) : Comparable<MinecraftVersion> {
     companion object {
-
         val `1_20_4` = MinecraftVersion(1, 20, 4)
         val v1_20_4 = this.`1_20_4`
 
@@ -42,7 +41,7 @@ data class MinecraftVersion(
             }
         }
 
-        val UNKNOWN = MinecraftVersion(0 ,0 ,0)
+        val UNKNOWN = MinecraftVersion(0, 0, 0)
         val CURRENT = fromBukkitVersion(org.bukkit.Bukkit.getBukkitVersion())
 
         fun current(): MinecraftVersion {
@@ -75,5 +74,4 @@ data class MinecraftVersion(
     override fun toString(): String {
         return "$major.$minor.$patch"
     }
-
 }

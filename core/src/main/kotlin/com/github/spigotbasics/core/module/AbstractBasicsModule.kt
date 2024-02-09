@@ -21,7 +21,6 @@ import java.util.logging.Level
  * Represents the main class of a module. Extending classes require a public constructor that takes in a [ModuleInstantiationContext].
  */
 abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : BasicsModule {
-
     final override val server = context.server
     final override val moduleClassLoader = context.classLoader
     final override val file = context.file
@@ -33,7 +32,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val scheduler = BasicsScheduler(plugin as Plugin)
     final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(server.pluginManager))
     final override val messageFactory = plugin.messageFactory
-    final override val tagResolverFactory /*get()*/ = plugin.tagResolverFactory
+    final override val tagResolverFactory = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
     final override val keyFactory =
         NamespacedNamespacedKeyFactory
@@ -49,7 +48,6 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     override fun reloadConfig() {
         config.reload()
     }
-
 
     final override fun createStorage(name: String?): NamespacedStorage {
         if (!isEnabled) {
@@ -70,7 +68,6 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return storage
     }
 
-
     final override fun enable(reloadConfig: Boolean) {
         isEnabled = true
         if (reloadConfig) {
@@ -89,12 +86,15 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return storageShutdownFuture
     }
 
-    private fun shutdownAllStorages(): CompletableFuture<Void?> = CompletableFuture.allOf(*storages.values.map {
-        it.shutdown(10, TimeUnit.SECONDS).whenComplete { _, ex ->
-            if (ex != null) logger.log(Level.SEVERE, "Failed to shutdown storage ${it.namespace}", ex)
-            storages.remove(it.namespace)
-        }
-    }.toTypedArray())
+    private fun shutdownAllStorages(): CompletableFuture<Void?> =
+        CompletableFuture.allOf(
+            *storages.values.map {
+                it.shutdown(10, TimeUnit.SECONDS).whenComplete { _, ex ->
+                    if (ex != null) logger.log(Level.SEVERE, "Failed to shutdown storage ${it.namespace}", ex)
+                    storages.remove(it.namespace)
+                }
+            }.toTypedArray(),
+        )
 
     final override fun isEnabled(): Boolean {
         return isEnabled
@@ -121,22 +121,31 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         val futures = mutableListOf<CompletableFuture<Void?>>()
         server.onlinePlayers.forEach { player -> // TODO: Log exceptions
             // TODO: See comment below
-            futures += savePlayerData(player.uniqueId).whenComplete { _, _ -> // This was line 124 from below stacktrace
-                forgetPlayerData(player.uniqueId)
-            }
+            futures +=
+                savePlayerData(player.uniqueId).whenComplete { _, _ -> // This was line 124 from below stacktrace
+                    forgetPlayerData(player.uniqueId)
+                }
         }
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
     final override fun getConfig(configName: ConfigName): SavedConfig = getConfig(configName, SavedConfig::class.java)
 
-    final override fun <T : SavedConfig> getConfig(configName: ConfigName, configurationClass: Class<T>): T =
+    final override fun <T : SavedConfig> getConfig(
+        configName: ConfigName,
+        configurationClass: Class<T>,
+    ): T =
         plugin.coreConfigManager.getConfig(
-            configName.path, getNamespacedResourceName(configName.path), javaClass, configurationClass
+            configName.path,
+            getNamespacedResourceName(configName.path),
+            javaClass,
+            configurationClass,
         )
 
-    final override fun createCommand(name: String, permission: Permission): BasicsCommandBuilder {
+    final override fun createCommand(
+        name: String,
+        permission: Permission,
+    ): BasicsCommandBuilder {
         return BasicsCommandBuilder(this, name, permission)
     }
-
 }

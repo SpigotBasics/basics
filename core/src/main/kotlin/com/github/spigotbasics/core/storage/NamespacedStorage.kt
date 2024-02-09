@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.storage
 
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.google.gson.JsonElement
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
@@ -11,7 +11,6 @@ import java.util.logging.Level
 
 // TODO: add debug logs for get and set methods and whenComplete, print out parameters and time taken
 class NamespacedStorage(private val backend: StorageBackend, val namespace: String) {
-
     private val logger = BasicsLoggerFactory.getStorageLogger(backend.type, namespace)
     private val futures: MutableList<CompletableFuture<*>> = Collections.synchronizedList(mutableListOf())
 
@@ -35,12 +34,15 @@ class NamespacedStorage(private val backend: StorageBackend, val namespace: Stri
         }
         if (isShutdown) {
             logger.warning("Storage is shutting down, yet received a get request for key $keyId - this should be avoided.")
-            //throw IllegalStateException("Storage is shutting down, not accepting new get requests")
+            // throw IllegalStateException("Storage is shutting down, not accepting new get requests")
         }
         return track(backend.getJsonElement(namespace, keyId))
     }
 
-    fun setJsonElement(keyId: String, value: JsonElement?): CompletableFuture<Void?> {
+    fun setJsonElement(
+        keyId: String,
+        value: JsonElement?,
+    ): CompletableFuture<Void?> {
         if (hasShutdown) {
             throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
         }
@@ -55,17 +57,22 @@ class NamespacedStorage(private val backend: StorageBackend, val namespace: Stri
         return future
     }
 
-    fun shutdown(timeout: Long, unit: TimeUnit): CompletableFuture<Void?> {
+    fun shutdown(
+        timeout: Long,
+        unit: TimeUnit,
+    ): CompletableFuture<Void?> {
         isShutdown = true
         logger.info("Shutting down backend storage ...")
         return CompletableFuture.supplyAsync({
             synchronized(futures) {
                 val executorService = Executors.newCachedThreadPool()
                 futures.forEach { future ->
-                    executorService.submit(Callable<Void?> {
-                        future.get(timeout, unit)
-                        return@Callable null
-                    })
+                    executorService.submit(
+                        Callable<Void?> {
+                            future.get(timeout, unit)
+                            return@Callable null
+                        },
+                    )
                 }
                 executorService.shutdown()
                 try {

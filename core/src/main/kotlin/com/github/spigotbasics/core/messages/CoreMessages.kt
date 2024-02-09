@@ -18,19 +18,29 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     val commandModuleDisabled get() = getMessage("command-module-disabled")
     val failedToLoadDataOnJoin get() = getMessage("failed-to-load-data-on-join")
     val notHavingItemInHand get() = getMessage("not-having-item-in-hand")
+
     fun notHavingItemInHand(player: Player) = getMessage("others-not-having-item-in-hand").concerns(player)
+
     fun noPermission(permission: Permission) = getMessage("no-permission").tagParsed("permission", permission.name)
+
     fun unknownOption(option: String) = getMessage("unknown-option").tagUnparsed("option", option)
+
     fun invalidArgument(argument: String) = getMessage("invalid-argument").tagUnparsed("argument", argument)
+
     fun playerNotFound(name: String) = getMessage("player-not-found").tagUnparsed("argument", name)
+
     fun worldNotFound(name: String) = getMessage("world-not-found").tagUnparsed("argument", name)
+
     fun unsupportedServerSoftware(feature: String) = getMessage("unsupported-server-software").tagParsed("argument", feature)
-    fun errorExecutingCommand(receiver: Permissible, error: Throwable): Message {
-        return if(receiver.isOp) {
+
+    fun errorExecutingCommand(
+        receiver: Permissible,
+        error: Throwable,
+    ): Message {
+        return if (receiver.isOp) {
             getMessage("error-executing-command-op").tagParsed("stacktrace", error.toCompactStackTrace())
         } else {
             getMessage("error-executing-command")
         }
     }
-
 }

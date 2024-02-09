@@ -9,7 +9,6 @@ import org.bukkit.plugin.Plugin
 import java.util.EnumMap
 
 class BasicsEventBus(private val plugin: Plugin) {
-
     private val listeners: MutableList<Listener> = ArrayList()
     private val priorityBusses: MutableMap<EventPriority, PriorityEventBus> = EnumMap(EventPriority::class.java)
 
@@ -18,14 +17,17 @@ class BasicsEventBus(private val plugin: Plugin) {
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
 
-    fun <T : Event> subscribe(eventClass: Class<T>, action: (T) -> Unit) {
+    fun <T : Event> subscribe(
+        eventClass: Class<T>,
+        action: (T) -> Unit,
+    ) {
         subscribe(eventClass, action, EventPriority.NORMAL)
     }
 
     fun <T : Event> subscribe(
         eventClass: Class<T>,
         action: (T) -> Unit,
-        priority: EventPriority
+        priority: EventPriority,
     ): SubscribedListener<T> {
         val priorityBus = priorityBusses.computeIfAbsent(priority) { PriorityEventBus(plugin, it) }
         return priorityBus.subscribe(eventClass, action)

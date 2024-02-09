@@ -7,7 +7,6 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import java.io.File
 
 class StorageConfig(context: ConfigInstantiationContext) : SavedConfig(context) {
-
     private val logger = BasicsLoggerFactory.getConfigLogger(context.file)
     private val dataFolder: File = context.dataFolder
 
@@ -58,11 +57,11 @@ class StorageConfig(context: ConfigInstantiationContext) : SavedConfig(context) 
     val joinCacheDuration: Long
         get() = getDurationAsMillis("load-player-data-on-join.cache-duration", 60_000)
 
-
     val mysqlInfo: MySQLDatabaseInfo
         get() {
             val host = mysqlHost ?: error("MySQL host not set")
-            val port = mysqlPort; if(port == 0) error("MySQL port not set")
+            val port = mysqlPort
+            if (port == 0) error("MySQL port not set")
             val database = mysqlDatabase ?: error("MySQL database not set")
             val username = mysqlUsername ?: error("MySQL username not set")
             val password = mysqlPassword ?: error("MySQL password not set")
@@ -73,5 +72,4 @@ class StorageConfig(context: ConfigInstantiationContext) : SavedConfig(context) 
     private fun replaceDir(dir: String): String {
         return dir.replace("%plugindir%", dataFolder.absolutePath)
     }
-
 }

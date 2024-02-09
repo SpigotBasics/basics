@@ -7,9 +7,8 @@ import org.bukkit.scheduler.BukkitRunnable
 internal class BasicsRunnable(
     private val plugin: Plugin,
     private val taskIds: MutableSet<Int>,
-    private val task: () -> Unit
+    private val task: () -> Unit,
 ) : BukkitRunnable() {
-
     override fun run() {
         task.invoke()
     }
@@ -43,13 +42,19 @@ internal class BasicsRunnable(
         return taskId
     }
 
-    fun runTaskTimer(delay: Long, period: Long): Int {
+    fun runTaskTimer(
+        delay: Long,
+        period: Long,
+    ): Int {
         runTaskTimer(plugin, delay, period)
         taskIds.add(taskId)
         return taskId
     }
 
-    fun runTaskTimerAsync(delay: Long, period: Long): Int {
+    fun runTaskTimerAsync(
+        delay: Long,
+        period: Long,
+    ): Int {
         runTaskTimerAsynchronously(plugin, delay, period)
         taskIds.add(taskId)
         return taskId
