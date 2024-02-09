@@ -31,14 +31,14 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
 
+    - name: Build with Gradle Wrapper
+      run: ./gradlew ktlintCheck build distribution
+
     - name: Run printVersion task and set env variable
       run: |
         VERSION=$(./gradlew printVersion --quiet)
         echo "Project version is $VERSION"
         echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
-
-    - name: Build with Gradle Wrapper
-      run: ./gradlew ktlintCheck build distribution
 
     - uses: actions/upload-artifact@v4
       with:
