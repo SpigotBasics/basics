@@ -1,4 +1,4 @@
-name: Basics Release
+name: Release
 
 on:
   push:
@@ -19,14 +19,9 @@ jobs:
         with:
           java-version: 17
           distribution: temurin
-#          cache: 'gradle'
 
       - name: Get Tag name
         uses: olegtarasov/get-tag@v2.1.2
-#        id: tagName
-
-#      - name: Fetch all history for all tags and branches
-#        run: git fetch --prune --unshallow
 
       - name: Update version in build.gradle.kts
         run: |
@@ -36,12 +31,6 @@ jobs:
 
       - name: Build zip archive with Gradle Wrapper
         run: ./gradlew build zipDistribution --scan
-
-#      - name: Run printVersion task and set env variable
-#        run: |
-#          VERSION=$(./gradlew printVersion --quiet)
-#          echo "Project version is $VERSION"
-#          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Generate checksum
         run: |
@@ -59,5 +48,5 @@ jobs:
             checksum.txt
           draft: false
           generate_release_notes: true
-          append_body: false
-#          body_path: checksum_md.txt
+          append_body: true
+          body_path: checksum_md.txt
