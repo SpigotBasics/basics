@@ -37,14 +37,16 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Generate Tag Name
+        id: generate_tag_name
+        run: echo "::set-output name=tag::$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)"
       - name: Create Release
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ steps.generate_tag_name.outputs.tag }}
+          release_name: Release ${{ steps.generate_tag_name.outputs.tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
