@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "test-ci" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,6 +13,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Get short SHA
+        run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+      - name: Print short SHA
+        run: echo "The short SHA is $SHORT_SHA"
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -23,12 +27,13 @@ jobs:
         uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew clean ktlintCheck test build zipDistribution
+        run: ./gradlew clean ktlintCheck test build distribution
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Basics Plugin and Modules
-          path: build/dist
+          name: basics-${{ env.SHORT_SHA }}
+          path: build/dist/basics-git-${{ env.SHORT_SHA }}/*
+          if-no-files-found: warn
 
   dependency-submission:
 
