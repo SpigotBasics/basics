@@ -21,7 +21,8 @@ data class SimpleLocation(
     val y: Double,
     val z: Double,
     val yaw: Float,
-    val pitch: Float)
+    val pitch: Float,
+)
 
 /**
  * Turns a [Location] into a [SimpleLocation].

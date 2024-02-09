@@ -5,7 +5,6 @@ import org.bukkit.plugin.Plugin
 
 // TODO: Make this use FoliaLib
 class BasicsScheduler(private val plugin: Plugin) {
-
     private val taskIds: MutableSet<Int> = HashSet()
 
     fun runTask(task: () -> Unit): Int {
@@ -16,19 +15,33 @@ class BasicsScheduler(private val plugin: Plugin) {
         return runnable(task).runTaskAsync()
     }
 
-    fun runLater(delay: Long, task: () -> Unit): Int {
+    fun runLater(
+        delay: Long,
+        task: () -> Unit,
+    ): Int {
         return runnable(task).runTaskLater(delay)
     }
 
-    fun runLaterAsync(delay: Long, task: () -> Unit): Int {
+    fun runLaterAsync(
+        delay: Long,
+        task: () -> Unit,
+    ): Int {
         return runnable(task).runTaskLaterAsync(delay)
     }
 
-    fun runTimer(delay: Long, period: Long, task: () -> Unit): Int {
+    fun runTimer(
+        delay: Long,
+        period: Long,
+        task: () -> Unit,
+    ): Int {
         return runnable(task).runTaskTimer(delay, period)
     }
 
-    fun runTimerAsync(delay: Long, period: Long, task: () -> Unit): Int {
+    fun runTimerAsync(
+        delay: Long,
+        period: Long,
+        task: () -> Unit,
+    ): Int {
         return runnable(task).runTaskTimerAsync(delay, period)
     }
 
@@ -43,5 +56,4 @@ class BasicsScheduler(private val plugin: Plugin) {
     private fun runnable(task: () -> Unit): BasicsRunnable {
         return BasicsRunnable(plugin, taskIds, task)
     }
-
 }

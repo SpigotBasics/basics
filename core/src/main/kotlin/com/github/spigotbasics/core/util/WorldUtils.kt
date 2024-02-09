@@ -4,7 +4,6 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 
 object WorldUtils {
-
     val defaultWorldName by lazy {
         Bukkit.getWorlds().first { it.environment == World.Environment.NORMAL }.name
     }
@@ -16,5 +15,4 @@ object WorldUtils {
     val endWorldName by lazy {
         Bukkit.getWorlds().first { it.environment == World.Environment.THE_END }.name
     }
-
 }

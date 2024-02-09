@@ -9,9 +9,20 @@ data class CustomTag internal constructor(val name: String, val value: String, v
 
         val hexRegex = Regex("#[0-9a-fA-F]{6}")
 
-        fun parsed(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.PARSED)
-        fun unparsed(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.UNPARSED)
-        fun hex(name: String, value: String) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.COLOR)
+        fun parsed(
+            name: String,
+            value: String,
+        ) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.PARSED)
+
+        fun unparsed(
+            name: String,
+            value: String,
+        ) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.UNPARSED)
+
+        fun hex(
+            name: String,
+            value: String,
+        ) = CustomTag(MESSAGE_SPECIFIC_TAG_PREFIX + name, value, CustomTagType.COLOR)
 
         /**
          * Parses a tag from the given... whatever it is.
@@ -20,7 +31,10 @@ data class CustomTag internal constructor(val name: String, val value: String, v
          * @param value The tag value
          * @return The parsed tag
          */
-        fun fromConfig(key: String, value: Any): CustomTag {
+        fun fromConfig(
+            key: String,
+            value: Any,
+        ): CustomTag {
             @Suppress("UNCHECKED_CAST")
             return when (value) {
                 is String -> fromString(key, value)
@@ -36,7 +50,10 @@ data class CustomTag internal constructor(val name: String, val value: String, v
          * @param key The tag key
          * @param value The tag value
          */
-        fun fromString(key: String, value: String) = CustomTag(key, value, defaultTagType)
+        fun fromString(
+            key: String,
+            value: String,
+        ) = CustomTag(key, value, defaultTagType)
 
         /**
          * Parses a tag from the given configuration section
@@ -44,7 +61,10 @@ data class CustomTag internal constructor(val name: String, val value: String, v
          * @param key The tag key
          * @param value The tag value
          */
-        fun fromSection(key: String, value: ConfigurationSection) = fromMap(key, value.getValues(false))
+        fun fromSection(
+            key: String,
+            value: ConfigurationSection,
+        ) = fromMap(key, value.getValues(false))
 
         /**
          * Parses a tag from the given map
@@ -53,23 +73,22 @@ data class CustomTag internal constructor(val name: String, val value: String, v
          * @param map The tag value
          * @return The parsed tag
          */
-        fun fromMap(key: String, map: Map<String, Any?>): CustomTag {
+        fun fromMap(
+            key: String,
+            map: Map<String, Any?>,
+        ): CustomTag {
             val type = (map["type"] as? String)?.let { CustomTagType.fromString(it) } ?: defaultTagType
-            val value = when (map["value"]) {
-                is String -> map["value"] as String
-                is List<*> -> (map["value"] as List<*>).joinToString("\n")
-                else -> throw IllegalArgumentException("Invalid value for tag '$key': ${map["value"]}")
-            }
+            val value =
+                when (map["value"]) {
+                    is String -> map["value"] as String
+                    is List<*> -> (map["value"] as List<*>).joinToString("\n")
+                    else -> throw IllegalArgumentException("Invalid value for tag '$key': ${map["value"]}")
+                }
             return CustomTag(key, value, type)
         }
-
     }
 
     fun toTagResolver(): TagResolver {
         return CustomTagToTagResolverFactory.createTagResolverForCustomTag(this)
     }
-
-
-
-
 }

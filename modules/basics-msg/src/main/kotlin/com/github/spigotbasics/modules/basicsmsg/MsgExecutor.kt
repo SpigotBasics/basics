@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(module) {
     override fun execute(context: BasicsCommandContext): CommandResult {
         val sender = context.sender
-        if(context.args.size < 2) {
+        if (context.args.size < 2) {
             return CommandResult.USAGE
         }
         val player = requirePlayer(context.args[0])
@@ -27,14 +27,18 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
     }
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
-        if(context.args.size == 1) {
+        if (context.args.size == 1) {
             return null // null = normal list of players
         } else {
             return mutableListOf()
         }
     }
 
-    private fun console2player(sender: CommandSender, player: Player, message: String) {
+    private fun console2player(
+        sender: CommandSender,
+        player: Player,
+        message: String,
+    ) {
         val msg = module.formatConsole
         msg.tagUnparsed("message", message).sendToPlayer(player)
         module.formatSent.concerns(player).tagUnparsed("message", message).sendToSender(sender)
@@ -43,7 +47,7 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
     private fun player2player(
         sender: Player,
         receiver: Player,
-        message: String
+        message: String,
     ) {
         val receivedMsg = module.formatReceived
         val sentMsg = module.formatSent
@@ -54,10 +58,9 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
 
     private fun player2self(
         player: Player,
-        message: String
+        message: String,
     ) {
         val msg = module.formatSelf
         msg.concerns(player).tagUnparsed("message", message).sendToPlayer(player)
     }
-
 }

@@ -8,7 +8,6 @@ import org.bukkit.util.StringUtil
 
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {
     override fun execute(context: BasicsCommandContext): CommandResult {
-
         context.readFlags()
 
         val parseMini = context.popFlag("--parsed")
@@ -19,7 +18,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
         val text = args.joinToString(" ")
         var message = messageFactory.createPlainMessage(text)
 
-        if(parseMini) {
+        if (parseMini) {
             requirePermission(context.sender, module.parsedPerm)
             message = messageFactory.createMessage(text).concerns(context.sender as? Player)
         }
@@ -31,7 +30,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
 
     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
         val options = mutableListOf<String>()
-        if(context.sender.hasPermission(module.parsedPerm)) {
+        if (context.sender.hasPermission(module.parsedPerm)) {
             options += "--parsed"
         }
 
@@ -39,7 +38,8 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
             StringUtil.copyPartialMatches(
                 context.args[0],
                 options,
-                mutableListOf())
+                mutableListOf(),
+            )
         } else {
             mutableListOf()
         }

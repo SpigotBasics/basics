@@ -11,7 +11,6 @@ import java.net.URL
  *
  */
 object SafeResourceGetter {
-
     private fun addSlash(path: String): String = if (path.startsWith("/")) path else "/$path"
 
     /**
@@ -21,8 +20,11 @@ object SafeResourceGetter {
      * @param path Path to the resource. If it doesn't start with a slash, one will be added.
      * @return Resource as stream, or null if it doesn't exist
      */
-    fun getResourceAsStream(clazz: Class<*>, path: String): InputStream? {
-        //println("Getting resource $path for class ${clazz.name} - ClassLoader: ${clazz.classLoader?.javaClass?.name}")
+    fun getResourceAsStream(
+        clazz: Class<*>,
+        path: String,
+    ): InputStream? {
+        // println("Getting resource $path for class ${clazz.name} - ClassLoader: ${clazz.classLoader?.javaClass?.name}")
         return clazz.classLoader?.getResourceAsStream(addSlash(path))
             ?: clazz.getResourceAsStream(addSlash(path))
     }
@@ -34,7 +36,10 @@ object SafeResourceGetter {
      * @param path Path to the resource. If it doesn't start with a slash, one will be added.
      * @return Resource as URL, or null if it doesn't exist
      */
-    fun getResource(clazz: Class<*>, path: String): URL? {
+    fun getResource(
+        clazz: Class<*>,
+        path: String,
+    ): URL? {
         return clazz.classLoader?.getResource(addSlash(path))
             ?: clazz.getResource(addSlash(path))
     }

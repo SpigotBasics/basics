@@ -10,15 +10,19 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.*
-import java.util.concurrent.*
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 class ModulePlayerDataLoader(
     storageConfig: StorageConfig,
     private val moduleManager: ModuleManager,
-    private val messages: CoreMessages
+    private val messages: CoreMessages,
 ) : Listener {
-
     private val logger = BasicsLoggerFactory.getCoreLogger(ModulePlayerDataLoader::class)
 
     private val joinCacheDuration = storageConfig.joinCacheDuration
@@ -36,15 +40,17 @@ class ModulePlayerDataLoader(
         }
         val uuid = event.uniqueId
 
-        val future = cachedLoginData.computeIfAbsent(uuid) {
-            val newFuture = loadAll(uuid)
-            scheduledClearCacheFutures[uuid] = scheduler.schedule({
-                cachedLoginData.remove(uuid)?.cancel(true)
-                forgetAll(uuid)
-                scheduledClearCacheFutures.remove(uuid)
-            }, joinCacheDuration, TimeUnit.MILLISECONDS)
-            newFuture
-        }
+        val future =
+            cachedLoginData.computeIfAbsent(uuid) {
+                val newFuture = loadAll(uuid)
+                scheduledClearCacheFutures[uuid] =
+                    scheduler.schedule({
+                        cachedLoginData.remove(uuid)?.cancel(true)
+                        forgetAll(uuid)
+                        scheduledClearCacheFutures.remove(uuid)
+                    }, joinCacheDuration, TimeUnit.MILLISECONDS)
+                newFuture
+            }
 
         var secondsTaken = 0.0
         while (!future.isDone && secondsTaken < joinTimeOut * 1000) {
@@ -53,7 +59,10 @@ class ModulePlayerDataLoader(
         }
 
         if (!future.isDone) {
-            logger.warning("Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined in storage.yml), kicking them now.")
+            logger.warning(
+                "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined " +
+                    "in storage.yml), kicking them now.",
+            )
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
             return
         }
@@ -77,9 +86,10 @@ class ModulePlayerDataLoader(
     private fun saveAndForgetAll(uuid: UUID): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()
         moduleManager.enabledModules.forEach { module ->
-            futures += module.savePlayerData(uuid).whenComplete { _, _ ->
-                module.forgetPlayerData(uuid)
-            }
+            futures +=
+                module.savePlayerData(uuid).whenComplete { _, _ ->
+                    module.forgetPlayerData(uuid)
+                }
         }
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
@@ -94,12 +104,18 @@ class ModulePlayerDataLoader(
 
         if (future == null) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: No future found)")
-            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future found), kicking them now.")
+            logger.severe(
+                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future " +
+                    "found), kicking them now.",
+            )
             return
         }
         if (!future.isDone) {
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: Future not done)")
-            logger.severe("Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (Future not done), kicking them now.")
+            logger.severe(
+                "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded " +
+                    "(Future not done), kicking them now.",
+            )
             return
         }
     }
@@ -112,5 +128,4 @@ class ModulePlayerDataLoader(
     fun shutdownScheduler() {
         scheduler.shutdown()
     }
-
 }
