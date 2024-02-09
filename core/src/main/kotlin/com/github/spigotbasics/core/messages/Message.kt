@@ -162,7 +162,8 @@ data class Message(
         private val legacyComponentSerializer =
             LegacyComponentSerializer
                 .builder()
-                .useUnusualXRepeatedCharacterHexFormat() // They are not unusual
+                .hexColors()
+                .useUnusualXRepeatedCharacterHexFormat() // They are not unusual (+1)
                 .build()
 
         private val bungeeComponentSerializer = BungeeComponentSerializer.get()

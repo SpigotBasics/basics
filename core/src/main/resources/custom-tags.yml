@@ -37,20 +37,35 @@
 # This example lets you use <player-dm> to insert a clickable version of a player's name
 player-dm:
   type: parsed
-  value: "<gold><click:suggest_command:/msg <player-name> ><hover:show_text:Message <player-name>><player-display-name></hover></click></gold>"
+  value: "<click:suggest_command:/msg <player-name> ><hover:show_text:'Message <player-name>'><lite_text><player-display-name></lite_text></hover></click>"
 
-# Player name with gold color
-player-name-gold:
+player-name-colored:
   type: parsed
-  value: "<gold><player-name></gold>"
+  value: "<important_word><player-name></important_word>"
 
 error:
   type: parsed
-  value: "<color:#ff2222>Error: </color>"
+  value: "<error_red>Error: </error_red>"
 
 bright_green:
   type: color
   value: "#CCFFCC"
+
+lite_text:
+  type: color
+  value: "#DCE7EA"
+negative_text:
+  type: color
+  value: "#3A97B7"
+dark_text:
+  type: color
+  value: "#23739C"
+def_text:
+  type: color
+  value: "#68CDE1"
+error_red:
+  type: color
+  value: "#FF2222"
 bright_red:
   type: color
   value: "#FF8888"

@@ -1,26 +1,26 @@
 # TODO: Add some system to auto-apply all home-related placeholders, not just name
 # Tags: <#home> // later / TODO: <#limit> <#regex> <#name> <#homes> <#x> <#y> <#z> <#world>
-home-set: "<green>Set home <bright_green><#home></bright_green> to your current location.</green>"
-home-deleted: "<green>Deleted home <bright_red><#home></bright_red>.</green>"
-home-teleported: "<green>Teleported to home <bright_green><#home></bright_green>.</green>"
-home-not-found: "<error><red>Home <bright_red><#home></bright_red> not found.</red>"
+home-set: "<def_text>Set home <lite_text><#home></lite_text> to your current location.</def_text>"
+home-deleted: "<def_text>Deleted home <dark_text><#home></dark_text>.</def_text>"
+home-teleported: "<def_text>Teleported to home <lite_text><#home></lite_text>.</def_text>"
+home-not-found: "<error><error_red>Home <bright_red><#home></bright_red> not found.</error_red>"
 
-home-none-set: "<error><red>You don't have any homes set.</red>"
+home-none-set: "<error><error_red>You don't have any homes set.</error_red>"
 
 # Tags: <#limit>
-home-limit-reached: "<error><red>You cannot set more than <bright_red><#limit></bright_red> homes.</red>"
+home-limit-reached: "<error><error_red>You cannot set more than <bright_red><#limit></bright_red> homes.</error_red>"
 
 # Tags: <#world> // TODO: Move to core messages
-home-world-not-loaded: "<error><red>World <bright_red><#world></bright_red> is not loaded.</red>"
+home-world-not-loaded: "<error><error_red>World <bright_red><#world></bright_red> is not loaded.</error_red>"
 
 # Tags: <#regex>
-home-invalid-name: "<error><red>Invalid home name. Home names must match the following regex: <bright_red><#regex></bright_red></red>"
+home-invalid-name: "<error><error_red>Invalid home name. Home names must match the following regex: <bright_red><#regex></bright_red></error_red>"
 
 # Tags: <#homes> (= home-list-entry + home-list-separator)
 home-list:
-- "<green>Available homes <gray>(Click to teleport)</gray>:</green>"
-- "<#homes>"
+  - "<def_text>Available homes <lite_text>(Click to teleport)</lite_text>:</def_text>"
+  - "  <#homes>"
 
 # Tags: <#name> <#x> <#y> <#z> <#world>
-home-list-entry: "<hover:show_text:'<gold><#home></gold>\nX: <gold><#x></gold> <gray>|</gray> Y: <gold><#y></gold> <gray>|</gray> Z: <gold><#z></gold> <gray>|</gray> <gold><#world></gold>\n<color:#994499>Click to teleport</color>'><gold><click:run_command:'/home <#home>'><#home></click></gold></hover>"
-home-list-separator: "<gray>, </gray>"
+home-list-entry: "<hover:show_text:'<lite_text><#home></lite_text>\nX: <lite_text><#x></lite_text> <dark_text>|</dark_text> Y: <lite_text><#y></lite_text> <dark_text>|</dark_text> Z: <lite_text><#z></lite_text> <dark_text>|</dark_text> <lite_text><#world></lite_text>\n<dark_text>Click to teleport</dark_text>'><lite_text><click:run_command:'/home <#home>'><#home></click></lite_text></hover>"
+home-list-separator: "<dark_text>, </dark_text>"
