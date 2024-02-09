@@ -1,25 +1,25 @@
 # TODO: Add some system to auto-apply all home-related placeholders, not just name
 # Tags: <#home> // later / TODO: <#limit> <#regex> <#name> <#homes> <#x> <#y> <#z> <#world>
-home-set: "<green>Set home <gold><#home></gold> to your current location.</green>"
-home-deleted: "<green><red>Deleted</red> home <gold><#home></gold>.</green>"
-home-teleported: "<green>Teleported to home <gold><#home></gold>.</green>"
-home-not-found: "<red>Home <gold><#home></gold> not found.</red>"
+home-set: "<green>Set home <bright_green><#home></bright_green> to your current location.</green>"
+home-deleted: "<green>Deleted home <bright_red><#home></bright_red>.</green>"
+home-teleported: "<green>Teleported to home <bright_green><#home></bright_green>.</green>"
+home-not-found: "<error><red>Home <bright_red><#home></bright_red> not found.</red>"
 
-home-none-set: "<red>You don't have any homes set.</red>"
+home-none-set: "<error><red>You don't have any homes set.</red>"
 
 # Tags: <#limit>
-home-limit-reached: "<red>You cannot set more than <gold><#limit></gold> homes.</red>"
+home-limit-reached: "<error><red>You cannot set more than <bright_red><#limit></bright_red> homes.</red>"
 
 # Tags: <#world> // TODO: Move to core messages
-home-world-not-loaded: "<red>World <gold><#world></gold> is not loaded.</red>"
+home-world-not-loaded: "<error><red>World <bright_red><#world></bright_red> is not loaded.</red>"
 
 # Tags: <#regex>
-home-invalid-name: "<red>Invalid home name. Home names must match the following regex: <gold><#regex></gold></red>"
+home-invalid-name: "<error><red>Invalid home name. Home names must match the following regex: <bright_red><#regex></bright_red></red>"
 
 # Tags: <#homes> (= home-list-entry + home-list-separator)
 home-list:
 - "<green>Available homes <gray>(Click to teleport)</gray>:</green>"
-- "<gold><#homes></gold>"
+- "<#homes>"
 
 # Tags: <#name> <#x> <#y> <#z> <#world>
 home-list-entry: "<hover:show_text:'<gold><#home></gold>\nX: <gold><#x></gold> <gray>|</gray> Y: <gold><#y></gold> <gray>|</gray> Z: <gold><#z></gold> <gray>|</gray> <gold><#world></gold>\n<color:#994499>Click to teleport</color>'><gold><click:run_command:'/home <#home>'><#home></click></gold></hover>"
