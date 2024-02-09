@@ -27,7 +27,7 @@ jobs:
 #        if: github.ref == 'refs/heads/main' # This condition makes the step run only for the main branch
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: ${{ env.SHORT_SHA }}
+          #tag_name: ${{ env.SHORT_SHA }}
           files: |
             build/dist/basics-*.zip
           draft: false
