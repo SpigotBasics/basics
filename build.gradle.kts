@@ -80,3 +80,9 @@ tasks.register("createModule", CreateModule::class) {
     group = "basics"
     description = "Creates a new module"
 }
+
+tasks.register("printVersion") {
+    doLast {
+        println(version)
+    }
+}
