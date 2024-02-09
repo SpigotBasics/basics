@@ -1,3 +1,3 @@
-enchanted-self: "<green>Enchanted your <gold><#item></gold> with <bright_green><#enchantment> <#roman-level></bright_green>!"
-enchanted-others: "<green>Enchanted <gold><player-name></gold><player-name-genitive-suffix> <gold><#item></gold> with <bright_green><#enchantment> <#roman-level></bright_green>!"
-removed-self: "<green>Removed <bright_red><#enchantment></bright_red> from your <gold><#item></gold>!"
+enchanted-self: "<green>Enchanted your <bright_green><#item></bright_green> with <bright_green><#enchantment> <#roman-level></bright_green>!"
+enchanted-others: "<green>Enchanted <gold><player-name></gold><player-name-genitive-suffix> <bright_green><#item></bright_green> with <bright_green><#enchantment> <#roman-level></bright_green>!"
+removed-self: "<red>Removed <bright_red><#enchantment></bright_red> from your <bright_green><#item></bright_green>!"

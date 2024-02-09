@@ -44,9 +44,13 @@ player-name-gold:
   type: parsed
   value: "<gold><player-name></gold>"
 
+error:
+  type: parsed
+  value: "<color:#ff2222>Error: </color>"
+
 bright_green:
   type: color
   value: "#CCFFCC"
 bright_red:
   type: color
-  value: "#FF7777"
+  value: "#FF8888"
