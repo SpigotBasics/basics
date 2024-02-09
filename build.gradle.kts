@@ -1,6 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-version = "git-${getGitCommitHash()}"
+version = "0.0.1"
 
 plugins {
     base
@@ -21,6 +21,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    version = rootProject.version
 }
 
 tasks.register("copyAllToTestServer") {
@@ -34,13 +35,10 @@ tasks.register<Copy>("distribution") {
     group = "basics"
     description = "Bundle the plugin and all modules into a single directory."
 
-    // Define the destination directory for the copied files
     into("build/dist/basics-$version")
 
-    // Copy the plugin JAR
     from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
 
-    // Copy each module JAR into the "Basics/modules" directory within the destination
     project(":modules").subprojects.forEach { module ->
         module.tasks.withType<ShadowJar>().forEach { shadowTask ->
             from(shadowTask.archiveFile) {
