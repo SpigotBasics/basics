@@ -1,12 +1,11 @@
 on:
-  push:
-    branches: [ "main", "test-ci" ]
+  #push:
+    #branches: [ "main", "test-ci" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,18 +21,24 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
-
       - name: Build with Gradle Wrapper
-        run: ./gradlew clean ktlintCheck test build distribution
-
+        run: ./gradlew clean ktlintCheck test build zipDistribution distribution
       - uses: actions/upload-artifact@v4
         with:
           name: basics-${{ env.SHORT_SHA }}
           path: build/dist/basics-git-${{ env.SHORT_SHA }}/*
           if-no-files-found: warn
+      - name: Create release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          files: |
+            build/dist/basics-git-${{ env.SHORT_SHA }}.zip
+          draft: false
+          generate_release_notes: true
+          append_body: false
 
   dependency-submission:
 
