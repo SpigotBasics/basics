@@ -28,7 +28,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Basics Plugin and Modules
-          path: build/dist
+          path: build/dist/basics-${{ github.sha }}.zip
+          if-no-files-found: warn
 
   dependency-submission:
 
