@@ -21,13 +21,13 @@ jobs:
           distribution: temurin
 #          cache: 'gradle'
 
-#      - name: Change version
-#        id: version
-#        env:
-#          REF: ${{ github.ref }}
-#        run: |
-#          sed -i "s/canary/${REF:11}/g" pom.xml
-#          echo "name=PteroBot-${REF:11}.jar" >> $GITHUB_OUTPUT
+      - name: Fetch all history for all tags and branches
+        run: git fetch --prune --unshallow
+
+      - name: Update version in build.gradle.kts
+        run: |
+          GIT_REF=$(git rev-parse --short HEAD)
+          sed -i "s/version = \".*\"/version = \"$GIT_REF\"/" build.gradle.kts
 
       - name: Build zip archive with Gradle Wrapper
         run: ./gradlew build zipDistribution --scan
@@ -40,7 +40,9 @@ jobs:
 
       - name: Generate checksum
         run: |
-          CHECKSUM=`sha256sum build/dist/basics-${{ env.PROJECT_VERSION }}.zip`
+          cd build/dist
+          CHECKSUM=`sha256sum basics-${{ env.PROJECT_VERSION }}.zip`
+          cd ../..
           echo $CHECKSUM > checksum.txt
           echo -e "### SHA256 Checksum\n\`\`\`\n$CHECKSUM\n\`\`\`" > checksum_md.txt
 
@@ -52,5 +54,5 @@ jobs:
             checksum.txt
           draft: false
           generate_release_notes: true
-          append_body: true
-          body_path: checksum_md.txt
+          append_body: false
+#          body_path: checksum_md.txt
