@@ -35,7 +35,7 @@ jobs:
         with:
           files: |
             build/dist/basics-git-${{ env.SHORT_SHA }}.zip
-          draft: true
+          draft: false
           generate_release_notes: true
           append_body: false
 
