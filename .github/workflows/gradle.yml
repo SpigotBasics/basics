@@ -24,12 +24,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
       - name: Build with Gradle Wrapper
-        run: ./gradlew clean ktlintCheck test build distribution
+        run: ./gradlew clean ktlintCheck test build zipDistribution distribution
       - uses: actions/upload-artifact@v4
         with:
           name: basics-${{ env.SHORT_SHA }}
           path: build/dist/basics-git-${{ env.SHORT_SHA }}/*
           if-no-files-found: warn
+      - name: Create release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          files: |
+            build/dist/basics-git-${{ env.SHORT_SHA }}.zip
+          draft: true
+          generate_release_notes: true
+          append_body: false
 
   dependency-submission:
 
