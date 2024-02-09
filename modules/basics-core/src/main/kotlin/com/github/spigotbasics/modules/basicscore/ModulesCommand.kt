@@ -188,7 +188,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
                 .sendToSender(sender)
             return CommandResult.SUCCESS
         }
-        moduleManager.enableModule(module, true)
+        moduleManager.enableModule(module, true, true)
         messageFactory.createMessage("<gold>Module ${module.info.name} <green>enabled</green>.</gold>")
             .sendToSender(sender)
         return CommandResult.SUCCESS
