@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,18 +21,41 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
-
       - name: Build with Gradle Wrapper
         run: ./gradlew clean ktlintCheck test build distribution
-
       - uses: actions/upload-artifact@v4
         with:
           name: basics-${{ env.SHORT_SHA }}
           path: build/dist/basics-git-${{ env.SHORT_SHA }}/*
           if-no-files-found: warn
+
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          release_name: Release ${{ env.SHORT_SHA }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/dist/basics-git-${{ env.SHORT_SHA }}/
+          asset_name: basics-git-${{ env.SHORT_SHA }}.zip # Update this to match your file structure
+          asset_content_type: application/zip
 
   dependency-submission:
 
