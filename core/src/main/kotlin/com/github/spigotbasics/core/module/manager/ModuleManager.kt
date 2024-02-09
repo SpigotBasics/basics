@@ -7,6 +7,7 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleJarFileFilter
 import com.github.spigotbasics.core.module.loader.ModuleLoader
+import com.github.spigotbasics.pipe.CraftServerFacade
 import org.bukkit.Server
 import org.jetbrains.annotations.Blocking
 import java.io.File
@@ -55,7 +56,7 @@ class ModuleManager(
 
     fun enableAllLoadedModules() {
         for (module in myLoadedModules) {
-            enableModule(module, false)
+            enableModule(module, false, false)
         }
     }
 
@@ -121,6 +122,7 @@ class ModuleManager(
     fun enableModule(
         module: BasicsModule,
         reloadConfig: Boolean,
+        syncCommands: Boolean,
     ) {
         logger.info("Enabling module ${module.info.nameAndVersion}")
         // if(enabledModules.contains(module)) {
@@ -145,6 +147,9 @@ class ModuleManager(
                 logger.log(Level.SEVERE, "Failed to load all online player data for module ${module.info.name}", e)
             }
             logger.info("Enabled module ${module.info.nameAndVersion}")
+        }
+        if (syncCommands) {
+            CraftServerFacade.syncCommands()
         }
         // enabledModules.add(module)
     }

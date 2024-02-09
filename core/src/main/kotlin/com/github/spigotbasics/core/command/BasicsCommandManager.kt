@@ -19,38 +19,26 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
 
     fun registerAll(commands: List<BasicsCommand>) {
         commands.forEach { command ->
-            registerCommand(command, false)
+            registerCommand(command)
         }
         updateCommandsToPlayers()
     }
 
     fun unregisterAll() {
         registeredCommands.toList().forEach { command ->
-            unregisterCommand(command, false)
+            unregisterCommand(command)
         }
         updateCommandsToPlayers()
     }
 
-    fun registerCommand(
-        command: BasicsCommand,
-        update: Boolean = true,
-    ) {
+    fun registerCommand(command: BasicsCommand) {
         registeredCommands += command
         injectToServerCommandMap(command)
-        if (update) {
-            updateCommandsToPlayers()
-        }
     }
 
-    fun unregisterCommand(
-        command: BasicsCommand,
-        update: Boolean = true,
-    ) {
+    fun unregisterCommand(command: BasicsCommand) {
         registeredCommands -= command
         removeFromServerCommandMap(command)
-        if (update) {
-            updateCommandsToPlayers()
-        }
     }
 
     private fun updateCommandsToPlayers() {

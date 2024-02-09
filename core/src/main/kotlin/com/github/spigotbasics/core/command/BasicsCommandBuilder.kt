@@ -41,7 +41,7 @@ class BasicsCommandBuilder(
 
     fun register(): BasicsCommand {
         val command = build()
-        module.commandManager.registerCommand(command, true)
+        module.commandManager.registerCommand(command)
         return command
     }
 
