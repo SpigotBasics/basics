@@ -3,7 +3,7 @@
 **Basics** is a modular core plugin for modern Spigot versions!
 
 <p align="center">
-  <img src="https://static.jeff-media.com/img/basics/logo1_512.png" alt="Basics Logo">
+  <img src="https://static.jeff-media.com/img/basics/transparent-with-outline.png" alt="Basics Logo">
 </p>
 
 
