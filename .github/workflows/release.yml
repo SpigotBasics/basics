@@ -30,7 +30,7 @@ jobs:
 
       - name: Update version in build.gradle.kts
         run: |
-#          GIT_REF=${{ steps.tagName.outputs.tag }}
+          GIT_REF=${{ steps.tagName.outputs.tag }} # not needed
           echo "Project version adjusted to $GIT_TAG_NAME"
           sed -i "s/version = \".*\"/version = \"$GIT_TAG_NAME\"/" build.gradle.kts
 
