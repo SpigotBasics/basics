@@ -31,34 +31,6 @@ jobs:
           path: build/dist/basics-git-${{ env.SHORT_SHA }}/*
           if-no-files-found: warn
 
-  create_release:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Generate Tag Name
-        id: generate_tag_name
-        run: echo "::set-output name=tag::$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)"
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.generate_tag_name.outputs.tag }}
-          release_name: Release ${{ steps.generate_tag_name.outputs.tag }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/dist/basics-git-${{ env.SHORT_SHA }}/
-          asset_name: basics-git-${{ env.SHORT_SHA }}.zip # Update this to match your file structure
-          asset_content_type: application/zip
-
   dependency-submission:
 
     runs-on: ubuntu-latest
