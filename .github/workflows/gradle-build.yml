@@ -42,8 +42,8 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: basics-${{ env.VERSION }}
-        path: build/dist/basics-${{ env.VERSION }}/*
+        name: basics-${{ env.PROJECT_VERSION }}
+        path: build/dist/basics-${{ env.PROJECT_VERSION }}/*
 
   dependency-submission:
 
