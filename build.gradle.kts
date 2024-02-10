@@ -1,6 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-version = "0.0.2-SNAPSHOT"
+version = "0.0.3"
 
 plugins {
     base
