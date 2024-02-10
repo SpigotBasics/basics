@@ -19,6 +19,7 @@ import java.util.logging.Level
 class BasicsCommand internal constructor(
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
+    private var tabCompleter: BasicsTabCompleter?,
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory,
 ) :
@@ -33,11 +34,6 @@ class BasicsCommand internal constructor(
             // TODO: Permission message is not working - always shows "Unknown command"
             permissionMessage = info.permissionMessage.tagParsed("permission", permString).toLegacyString()
         }
-
-//    private val customUsageMessage = messageFactory.createMessage(
-//        "<red>Invalid command usage.</red>",
-//        "<red>Usage: </red><gold><usage></gold>"
-//    ).tagParsed("usage", usage).tagParsed("command", name)
 
         override fun execute(
             sender: CommandSender,
@@ -108,8 +104,8 @@ class BasicsCommand internal constructor(
                     args = args.toMutableList(),
                     location = location,
                 )
-            if (executor == null) return mutableListOf()
-            val result = executor!!.tabComplete(context)
+            if (tabCompleter == null) return mutableListOf()
+            val result = tabCompleter!!.tabComplete(context)
             return result ?: super.tabComplete(sender, alias, args, location)
         }
 
@@ -120,5 +116,6 @@ class BasicsCommand internal constructor(
          */
         fun disableExecutor() {
             executor = null
+            tabCompleter = null
         }
     }
