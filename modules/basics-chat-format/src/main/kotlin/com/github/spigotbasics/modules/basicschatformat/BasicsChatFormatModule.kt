@@ -3,7 +3,6 @@ package com.github.spigotbasics.modules.basicschatformat
 import com.github.spigotbasics.core.Serialization
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.config.ConfigName
-import com.github.spigotbasics.core.extensions.getAsNewLineSeparatedString
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -13,9 +12,7 @@ import com.github.spigotbasics.modules.basicschatformat.data.ChatData
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import java.util.UUID
-import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionException
 import java.util.logging.Level
 
 private fun String.escapeFormat(): String {
@@ -27,13 +24,13 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     private val chatData = mutableMapOf<UUID, ChatData>()
     override val messages = getConfig(ConfigName.MESSAGES, Messages::class.java)
 
-    val permissionSetColor =
-        permissionManager.createSimplePermission("basics.setcolor", "Allows access to the /setcolor command")
+    val permissionChatColor =
+        permissionManager.createSimplePermission("basics.chatcolor", "Allows access to the /chatcolor command")
 
     val format: Message
         get() = config.getMessage("chat-format")
 
-    val messageColor: String get() = config.getString("message-color") ?: "white"
+    val messageColor: String get() = config.getString("default-message-color") ?: "white"
 
     val regex: Regex
         get() =
@@ -46,8 +43,6 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
                     )!!,
                 )!!,
             )
-    val formatAsStr: String
-        get() = config.getAsNewLineSeparatedString("chat-format")
 
     override fun onEnable() {
         storage = createStorage()
@@ -58,9 +53,9 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
             eventBus.subscribe(AsyncPlayerChatEvent::class.java, this::changeChatFormatSpigot, EventPriority.HIGHEST)
         }
 
-        createCommand("setcolor", permissionSetColor)
+        createCommand("chatcolor", permissionChatColor)
             .description("Sets your chat color")
-            .usage("[color]")
+            .usage("[reset|<color>]")
             .executor(ColorChatCommand(this))
             .register()
     }
@@ -82,9 +77,8 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     fun getChatDataOrDefault(uuid: UUID) =
         chatData.getOrDefault(uuid, ChatData(messageColor))
 
-
-    fun getChatData(uuid: UUID): ChatData {
-        return chatData[uuid] ?: error("chat data is null")
+    fun setChatData(uuid: UUID, chatData: ChatData) {
+        this.chatData[uuid] = chatData
     }
 
     override fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> =
@@ -93,7 +87,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
         }
 
     override fun savePlayerData(uuid: UUID): CompletableFuture<Void?> {
-        val chatDatum = chatData[uuid] ?: CompletableFuture.completedFuture(null)
+        val chatDatum = chatData[uuid]
         val storage = storage ?: error("Storage is null")
         return storage.setJsonElement(uuid.toString(), Serialization.toJson(chatDatum))
     }
@@ -112,5 +106,9 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
         }
 
         return null
+    }
+
+    fun resetChatColor(uniqueId: UUID) {
+        forgetPlayerData(uniqueId)
     }
 }

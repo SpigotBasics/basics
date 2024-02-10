@@ -2,3 +2,5 @@
 color-set: "<def_text>Set your chat color to <#selected-color-parsed><#selected-color-name>!</def_text>"
 # Tags: <#selected-color-name>
 color-invalid: "<error><error_red>The given color name <bright_red><#selected-color-name></bright_red> is invalid</error_red>"
+
+color-reset: "<dark_text>Reset your chat color to default.</dark_text>"

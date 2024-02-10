@@ -12,4 +12,6 @@ class Messages(context: ConfigInstantiationContext) : SavedConfig(context) {
     fun colorInvalid(color: String) =
         getMessage("color-invalid")
             .tagUnparsed("selected-color-name", color)
+
+    val colorReset get() = getMessage("color-reset")
 }
