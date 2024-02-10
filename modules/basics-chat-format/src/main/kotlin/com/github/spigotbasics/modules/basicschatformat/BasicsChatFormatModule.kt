@@ -33,7 +33,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
     val format: Message
         get() = config.getMessage("chat-format")
 
-    val messageColor: String get() = config.getString("message-color", "white")!!
+    val messageColor: String get() = config.getString("message-color") ?: "white"
 
     val regex: Regex
         get() =
@@ -75,9 +75,13 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
             format
                 .concerns(event.player)
                 .tagUnparsed("message", event.message) // TODO: To allow MiniMessage in chat, this should be parsed.
-                .tagParsed("message-color", "<${getChatData(event.player.uniqueId).color}>")
+                .tagParsed("message-color", "<${getChatDataOrDefault(event.player.uniqueId).color}>")
                 .toLegacyString().escapeFormat()
     }
+
+    fun getChatDataOrDefault(uuid: UUID) =
+        chatData.getOrDefault(uuid, ChatData(messageColor))
+
 
     fun getChatData(uuid: UUID): ChatData {
         return chatData[uuid] ?: error("chat data is null")
@@ -85,37 +89,28 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
 
     override fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> =
         CompletableFuture.runAsync {
-            chatData[uuid] = loadPlayerDataBlocking(uuid)
+            loadPlayerDataBlocking(uuid)?.let { chatData[uuid] = it }
         }
 
-    override fun savePlayerData(uuid: UUID): CompletableFuture<Void?> =
-        CompletableFuture.runAsync {
-            val chatDatum = chatData[uuid] ?: error("Homes is null")
-            val storage = storage ?: error("Storage is null")
-            try {
-                storage.setJsonElement(uuid.toString(), Serialization.toJson(chatDatum)).join()
-            } catch (exception: CompletionException) {
-                logger.log(Level.SEVERE, "Failed to save chat data for $uuid", exception)
-            } catch (exception: CancellationException) {
-                logger.log(Level.SEVERE, "Failed to save chat data for $uuid", exception)
-            }
-        }
+    override fun savePlayerData(uuid: UUID): CompletableFuture<Void?> {
+        val chatDatum = chatData[uuid] ?: CompletableFuture.completedFuture(null)
+        val storage = storage ?: error("Storage is null")
+        return storage.setJsonElement(uuid.toString(), Serialization.toJson(chatDatum))
+    }
 
     override fun forgetPlayerData(uuid: UUID) {
         chatData.remove(uuid)
     }
 
-    private fun loadPlayerDataBlocking(uuid: UUID): ChatData {
+    private fun loadPlayerDataBlocking(uuid: UUID): ChatData? {
         val storage = storage ?: error("Storage is null")
         try {
-            val json = storage.getJsonElement(uuid.toString()).join() ?: return ChatData(messageColor)
+            val json = storage.getJsonElement(uuid.toString()).join() ?: return null
             return Serialization.fromJson(json, ChatData::class.java)
-        } catch (exception: CompletionException) {
-            logger.log(Level.SEVERE, "Failed to load chat data for $uuid", exception)
-        } catch (exception: CancellationException) {
-            logger.log(Level.SEVERE, "Failed to load chat data for $uuid", exception)
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "Failed to load chat data for $uuid", e)
         }
 
-        return ChatData(messageColor)
+        return null
     }
 }
