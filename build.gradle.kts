@@ -1,6 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-version = "0.0.4-SNAPSHOT"
+version = "git-${getGitCommitHash()}"
 
 plugins {
     base
