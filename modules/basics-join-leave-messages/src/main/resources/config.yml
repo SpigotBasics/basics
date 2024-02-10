@@ -13,5 +13,5 @@
 ## Quit message shown to console
 #quit-console: "<red- <yellow>%player_name% left the game"
 
-join: "<green>+ <gold><player-dm></gold> <gradient:dark_green:green>joined the game</gradient>"
-quit: "<red>- <gold><player-name></gold> <gradient:red:dark_red>left the game</gradient>"
+join: "<dark_text>+ <player-dm> <gradient:dark_green:green>joined the game</gradient>"
+quit: "<negative_text>-</negative_text> <dark_text><player-name></dark_text> <gradient:red:dark_red>left the game</gradient>"
