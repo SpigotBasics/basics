@@ -26,6 +26,7 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
         val serialized =
             module.format.concerns(player)
                 .tagMiniMessage("message", SerializedMiniMessage(mini.serialize(message)))
+                .tagParsed("message-color", "<${module.getChatData(player.uniqueId).color}>")
                 .serialize()
         val component = NativeComponentConverter.toNativeComponent(serialized)
         return component
