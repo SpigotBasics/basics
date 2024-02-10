@@ -36,6 +36,9 @@ tasks.shadowJar {
 
     minimize {
         exclude(project(":core"))
+        exclude(project(":pipe:facade"))
+        exclude(project(":pipe:spigot"))
+        exclude(project(":pipe:paper"))
     }
 }
 
