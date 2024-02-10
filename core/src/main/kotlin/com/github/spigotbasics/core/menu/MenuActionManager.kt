@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.Inventory
 
 class MenuActionManager(module: BasicsModule) : Listener {
-
     private val registry: MutableMap<Inventory, MenuActionHandler> = HashMap()
 
     init {

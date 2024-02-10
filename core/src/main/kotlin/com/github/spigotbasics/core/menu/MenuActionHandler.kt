@@ -7,13 +7,15 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.Inventory
 
 interface MenuActionHandler {
-
     val inventory: Inventory
 
     fun open(player: Player)
+
     fun close()
 
     fun handleClick(event: InventoryClickEvent)
+
     fun handleOpen(event: InventoryOpenEvent)
+
     fun handleClose(event: InventoryCloseEvent)
 }
