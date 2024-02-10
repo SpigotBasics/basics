@@ -14,6 +14,7 @@ class BasicsCommandBuilder(
     private var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
+    private var tabCompleter: BasicsTabCompleter? = null
 
     fun description(description: String) = apply { this.description = description }
 
@@ -29,12 +30,24 @@ class BasicsCommandBuilder(
 
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
+    fun tabCompleter(tabCompleter: BasicsTabCompleter) = apply { this.tabCompleter = tabCompleter }
+
     fun executor(executor: (BasicsCommandContext) -> CommandResult?) =
         apply {
             this.executor =
                 object : BasicsCommandExecutor(module) {
                     override fun execute(context: BasicsCommandContext): CommandResult? {
                         return executor(context)
+                    }
+                }
+        }
+
+    fun tabCompleter(tabCompleter: (BasicsCommandContext) -> MutableList<String>?) =
+        apply {
+            this.tabCompleter =
+                object : BasicsTabCompleter {
+                    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+                        return tabCompleter(context)
                     }
                 }
         }
@@ -56,10 +69,11 @@ class BasicsCommandBuilder(
                 aliases = aliases,
             )
         return BasicsCommand(
-            info,
-            executor ?: error("Executor must be set"),
-            module.plugin.messages,
-            module.plugin.messageFactory,
+            info = info,
+            executor = executor ?: error("Executor must be set"),
+            tabCompleter = tabCompleter ?: executor,
+            coreMessages = module.plugin.messages,
+            messageFactory = module.plugin.messageFactory,
         )
     }
 }
