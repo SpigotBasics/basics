@@ -4,7 +4,7 @@ show-in-console: true
 messages:
   - "<lite_text>Welcome</lite_text><def_text>, to the Basics plugin! We have worked hard we hope you enjoy the plugin!</def_text>"
   - "<lite_text>Did you know?</lite_text> <def_text>You can check out the basics repo on <click:open_url:https://github.com/SpigotBasics/basics><hover:show_text:'<dark_text>Click to visit GitHub'><dark_text>GitHub</dark_text></hover></def_text>"
-  - "<def_text>\"With <bold>Basics</bold>, server management has never been this <lite_text>simple</lite_text>. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)</def_text>"
+  - "<def_text>\"With <lite_text><bold>Basics</lite_text>, server management has never been this simple. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)</def_text>"
   - "<def_text>You can customize these messages in the basics-announcements module</def_text>"
-  - "<def_text>If you have PlaceholderAPI installed, you can use any placeholder! <papi:%server_tps%></def_text>"
-  - "<def_text>Basics utilizes <click:open_url:https://docs.advntr.dev/minimessage/index.html><hover:show_text:'<def_text>Click to see the MiniMessage Documentation</def_text>'>MiniMessage!</hover></click></def_text>"
+  - "<def_text>If you have PlaceholderAPI installed, you can use any placeholder! </lite_text><papi:%server_tps%></lite_text></def_text>"
+  - "<def_text>Basics utilizes <click:open_url:https://docs.advntr.dev/minimessage/index.html><hover:show_text:'<def_text>Click to see the MiniMessage Documentation</def_text>'><lite_text>MiniMessage</lite_text>!</hover></click></def_text>"
