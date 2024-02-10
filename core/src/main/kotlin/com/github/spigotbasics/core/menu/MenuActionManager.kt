@@ -29,17 +29,17 @@ class MenuActionManager(module: BasicsModule) : Listener {
     }
 
     private fun handleOpen(event: InventoryOpenEvent) {
-        val actionHandler: MenuActionHandler = registry[event.inventory] ?: return
+        val actionHandler: MenuActionHandler = registry[event.view.topInventory] ?: return
         actionHandler.handleOpen(event)
     }
 
     private fun handleClose(event: InventoryCloseEvent) {
-        val actionHandler: MenuActionHandler = registry[event.inventory] ?: return
+        val actionHandler: MenuActionHandler = registry[event.view.topInventory] ?: return
         actionHandler.handleClose(event)
     }
 
     private fun handleClick(event: InventoryClickEvent) {
-        val actionHandler: MenuActionHandler = registry[event.inventory] ?: return
+        val actionHandler: MenuActionHandler = registry[event.view.topInventory] ?: return
         actionHandler.handleClick(event)
     }
 }
