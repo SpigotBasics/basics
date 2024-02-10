@@ -1,6 +1,6 @@
 # Tags: <#new-gamemode>
-gamemode-changed-others: "<gray>Set <player-dm><player-name-genitive-suffix> game mode to <yellow><#new-gamemode></yellow>."
-gamemode-changed-self: "<gray>Set <gold>your</gold> game mode to <yellow><#new-gamemode></yellow>."
+gamemode-changed-others: "<def_text>Set <player-dm><player-name-genitive-suffix> game mode to <lite_text><#new-gamemode></lite_text>."
+gamemode-changed-self: "<def_text>Set <lite_text>your</lite_text> game mode to <lite_text><#new-gamemode></lite_text>."
 
 survival: "<gradient:#00AA00:#00FF00>survival</gradient>"
 creative: "<gradient:#5555FF:#87BEDB>creative</gradient>"

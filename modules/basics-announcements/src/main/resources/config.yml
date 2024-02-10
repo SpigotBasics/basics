@@ -2,9 +2,9 @@ interval: 2 minutes
 pick-random: true
 show-in-console: true
 messages:
-  - "<i><gradient:#00ff00:#00cc00>\"OMG YOU'RE USING BASICS???!!!\"</gradient></i> Basics makes players wet since 2024!"
-  - "<rainbow>Check out the Basics repo on <click:open_url:https://github.com/SpigotBasics/basics><hover:show_text:'Click to visit GitHub'><red>GitHub</red></hover>!</rainbow>"
-  - "\"With <bold>Basics</bold>, server management has never been this simple. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)"
-  - "<gradient:#ff0000:#cc0000>\"Basics is the best plugin ever!\"</gradient>\n- <gradient:#0000ff:#0000cc>mfnalex</gradient>"
-  - "<gray>(You can customize these messages in the basics-announcements module)</gray>"
-  - "<green2>If you got PlaceholderAPI installed, you can use any placeholder: <papi:%server_tps%></green2>"
+  - "<lite_text>Welcome</lite_text><def_text>, to the Basics plugin! We have worked hard we hope you enjoy the plugin!</def_text>"
+  - "<lite_text>Did you know?</lite_text> <def_text>You can check out the basics repo on <click:open_url:https://github.com/SpigotBasics/basics><hover:show_text:'<dark_text>Click to visit GitHub'><dark_text>GitHub</dark_text></hover></def_text>"
+  - "<def_text>\"With <bold>Basics</bold>, server management has never been this <lite_text>simple</lite_text>. Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)</def_text>"
+  - "<def_text>You can customize these messages in the basics-announcements module</def_text>"
+  - "<def_text>If you have PlaceholderAPI installed, you can use any placeholder! <papi:%server_tps%></def_text>"
+  - "<def_text>Basics utilizes <click:open_url:https://docs.advntr.dev/minimessage/index.html><hover:show_text:'<def_text>Click to see the MiniMessage Documentation</def_text>'>MiniMessage!</hover></click></def_text>"

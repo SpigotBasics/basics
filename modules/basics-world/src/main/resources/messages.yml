@@ -1,5 +1,5 @@
 # Tags: <#world>
-world-teleported: "<green>Teleported to world <bright_green><#world></bright_green>!</green>"
-already-in-world: "<gray>You are already in world <bright_green><#world></bright_green>!</gray>"
-starting-teleport: "<gray>Teleporting to world <bright_green><#world></bright_green> ...</gray>"
-teleport-unsuccessful: "<red>Teleportation to world <bright_red><#world></bright_red> was unsuccessful!</red>"
+world-teleported: "<def_text>Teleported to world <lite_text><#world></lite_text>!</def_text>"
+already-in-world: "<dark_text>You are already in world <lite_text><#world></lite_text>!</dark_text>"
+starting-teleport: "<dark_text>Teleporting to world <lite_text><#world></lite_text> ...</dark_text>"
+teleport-unsuccessful: "<error_red>Teleportation to world <bright_red><#world></bright_red> was unsuccessful!</error_red>"
