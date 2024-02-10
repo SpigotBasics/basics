@@ -74,10 +74,12 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
                 .toLegacyString().escapeFormat()
     }
 
-    fun getChatDataOrDefault(uuid: UUID) =
-        chatData.getOrDefault(uuid, ChatData(messageColor))
+    fun getChatDataOrDefault(uuid: UUID) = chatData.getOrDefault(uuid, ChatData(messageColor))
 
-    fun setChatData(uuid: UUID, chatData: ChatData) {
+    fun setChatData(
+        uuid: UUID,
+        chatData: ChatData,
+    ) {
         this.chatData[uuid] = chatData
     }
 
