@@ -3,12 +3,12 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.pipe.SerializedMiniMessage
-import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
