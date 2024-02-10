@@ -1,7 +1,7 @@
 # TODO: Add some system to auto-apply all home-related placeholders, not just name
 # Tags: <#home> // later / TODO: <#limit> <#regex> <#name> <#homes> <#x> <#y> <#z> <#world>
 home-set: "<def_text>Set home <lite_text><#home></lite_text> to your current location.</def_text>"
-home-deleted: "<def_text>Deleted home <dark_text><#home></dark_text>.</def_text>"
+home-deleted: "<dark_text>Deleted home <lite_text><#home></lite_text>.</dark_text>"
 home-teleported: "<def_text>Teleported to home <lite_text><#home></lite_text>.</def_text>"
 home-not-found: "<error><error_red>Home <bright_red><#home></bright_red> not found.</error_red>"
 
