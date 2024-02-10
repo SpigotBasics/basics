@@ -1,2 +1,8 @@
-# Tags: <#message>
-chat-format: "<player-dm> <dark_text>»<reset> <#message>"
+# Tags: <#message> <#message-color>
+chat-format: "<player-dm> <dark_text>»<reset> <#message-color><#message>"
+default-message-color: "white"
+
+# Color names that match this regex will be blacklisted
+regex-blacklist: "^(?!\\bbold\\b|\\bb\\b|\\bitalic\\b|\\bem\\b|\\bi\\b|\\bunderlined\\b|\\bu\\b|\\bstrikethrough\\b|\\bst\\b|\\bobfuscated\\b|\\bobf\\b).*$"
+# Color names that match this regex are whitelisted | when in use blacklist is ignored | Comment out to turn off
+regex-whitelist: "(\\b(black|dark_blue|dark_green|dark_red|dark_purple|gold|gray|dark_gray|blue|green|aqua|red|light_purple|yellow|white)\\b|#[0-9a-fA-F]{6}|gradient:#[0-9a-fA-F]{6}:#[0-9a-fA-F]{6})"
