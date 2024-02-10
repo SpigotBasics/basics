@@ -22,6 +22,14 @@ abstract class BasicsCommandContextHandler(
     }
 
     @Throws(BasicsCommandException::class)
+    fun requirePlayer(sender: CommandSender): Player {
+        if (sender !is Player) {
+            throw CommandResult.NOT_FROM_CONSOLE.asException()
+        }
+        return sender
+    }
+
+    @Throws(BasicsCommandException::class)
     fun notFromConsole(sender: CommandSender): Player {
         if (sender !is Player) {
             throw CommandResult.NOT_FROM_CONSOLE.asException()

@@ -1,15 +1,12 @@
 package com.github.spigotbasics.modules.basicsworld
 
-import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.Permission
 
 class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    // private val playerPositions = mutableMapOf<UUID, LocationList>()
     private val permission = permissionManager.createSimplePermission("basics.world", "Allows to switch worlds using /world")
-
-    private val messages = getConfig(ConfigName.MESSAGES)
+    val worldPermissions = mutableMapOf<String, Permission>()
 
     fun msgAlreadyInWorld(world: String) = messages.getMessage("already-in-world").tagUnparsed("world", world)
 
@@ -20,9 +17,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     fun msgStartingTeleport(world: String) =
         messages.getMessage(
             "starting-teleport",
-        ).tagUnparsed("world", world) // TODO: This shows __unparsed__ ??
-
-    val worldPermissions = mutableMapOf<String, Permission>()
+        ).tagUnparsed("world", world)
 
     override fun onEnable() {
         createCommand("world", permission)
@@ -37,7 +32,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     }
 
     override fun reloadConfig() {
-        super.reloadConfig()
+        config.reload()
         messages.reload()
     }
 
