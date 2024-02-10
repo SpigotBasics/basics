@@ -3,7 +3,6 @@ package com.github.spigotbasics.modules.basicsenchant
 import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.extensions.toHumanReadable
 import com.github.spigotbasics.core.module.AbstractBasicsModule
@@ -25,8 +24,6 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             "Allows the player to enchant items with unsafe levels",
         )
 
-    val msg = getConfig(ConfigName.MESSAGES)
-
     val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key.lowercase() }?.toList() ?: emptyList()
 
     val enchantmentPermissions =
@@ -38,16 +35,16 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             )
         } ?: emptyMap()
 
-    fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = msg.getMessage("enchanted-self").tags(tag)
+    fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("enchanted-self").tags(tag)
 
     fun msgEnchantedOthers(
         tag: EnchantOperationMessageTag,
         player: Player,
-    ) = msg.getMessage("enchanted-others")
+    ) = messages.getMessage("enchanted-others")
         .tags(tag)
         .concerns(player)
 
-    fun msgRemovedSelf(tag: EnchantOperationMessageTag) = msg.getMessage("removed-self").tags(tag)
+    fun msgRemovedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("removed-self").tags(tag)
 
     override fun onEnable() {
         createCommand("enchant", permission)
@@ -105,10 +102,5 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
         private fun getEnchantment(name: String): Enchantment? {
             return Bukkit.getRegistry(Enchantment::class.java)?.match(name.lowercase())
         }
-    }
-
-    override fun reloadConfig() {
-        super.reloadConfig()
-        msg.reload()
     }
 }

@@ -1,6 +1,5 @@
 package com.github.spigotbasics.modules.basicsgamemode
 
-import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -8,13 +7,12 @@ import org.bukkit.GameMode
 import org.bukkit.permissions.Permission
 
 class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val msgConfig = getConfig(ConfigName.fromName("messages.yml"))
-    val msgChangedOthers get() = msgConfig.getMessage("gamemode-changed-others")
-    val msgChangedSelf get() = msgConfig.getMessage("gamemode-changed-self")
-    val nameSurvival get() = msgConfig.getMessage("survival")
-    val nameCreative get() = msgConfig.getMessage("creative")
-    val nameAdventure get() = msgConfig.getMessage("adventure")
-    val nameSpectator get() = msgConfig.getMessage("spectator")
+    val msgChangedOthers get() = messages.getMessage("gamemode-changed-others")
+    val msgChangedSelf get() = messages.getMessage("gamemode-changed-self")
+    val nameSurvival get() = messages.getMessage("survival")
+    val nameCreative get() = messages.getMessage("creative")
+    val nameAdventure get() = messages.getMessage("adventure")
+    val nameSpectator get() = messages.getMessage("spectator")
 
     val perm = permissionManager.createSimplePermission("basics.gamemode", "Allows the player to change their game mode")
 
@@ -44,11 +42,6 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
             "basics.gamemode.others",
             "Allows the player to change other players' game modes",
         )
-
-    override fun reloadConfig() {
-        super.reloadConfig()
-        msgConfig.reload()
-    }
 
     override fun onEnable() {
         createCommand("gamemode", perm)
