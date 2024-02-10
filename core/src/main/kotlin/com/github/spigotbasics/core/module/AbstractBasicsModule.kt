@@ -29,6 +29,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val plugin = context.plugin
     final override val eventBus = BasicsEventBus(context.plugin as Plugin)
     final override val config = getConfig(ConfigName.CONFIG)
+    override val messages = getConfig(ConfigName.MESSAGES)
     final override val scheduler = BasicsScheduler(plugin as Plugin)
     final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(server.pluginManager))
     final override val messageFactory = plugin.messageFactory
@@ -47,6 +48,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
 
     override fun reloadConfig() {
         config.reload()
+        messages.reload()
     }
 
     final override fun createStorage(name: String?): NamespacedStorage {
