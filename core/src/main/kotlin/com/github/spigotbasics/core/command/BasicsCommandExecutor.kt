@@ -5,9 +5,9 @@ import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.module.BasicsModule
 
 abstract class BasicsCommandExecutor(
-    coreMessages: CoreMessages,
-    messageFactory: MessageFactory,
-) : BasicsCommandContextHandler(coreMessages, messageFactory), BasicsTabCompleter {
+    val coreMessages: CoreMessages,
+    val messageFactory: MessageFactory,
+) : BasicsCommandContextHandler(), BasicsTabCompleter {
     constructor(module: BasicsModule) : this(module.coreMessages, module.messageFactory)
 
     abstract fun execute(context: BasicsCommandContext): CommandResult?
