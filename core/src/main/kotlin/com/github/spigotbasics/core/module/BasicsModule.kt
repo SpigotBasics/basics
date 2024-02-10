@@ -77,6 +77,11 @@ interface BasicsModule {
     val config: SavedConfig
 
     /**
+     * This module's message config
+     */
+    val messages: SavedConfig
+
+    /**
      * This module's Logger
      */
     val logger: BasicsLogger

@@ -24,7 +24,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
 
     private var storage: NamespacedStorage? = null
     private val homes = mutableMapOf<UUID, HomeList>()
-    val messages = getConfig(ConfigName.MESSAGES, Messages::class.java)
+    override val messages = getConfig(ConfigName.MESSAGES, Messages::class.java)
 
     val permissionHome = permissionManager.createSimplePermission("basics.home", "Allows to access the /home command")
 
@@ -115,7 +115,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     }
 
     override fun reloadConfig() {
-        super.reloadConfig()
+        config.reload()
         messages.reload()
     }
 

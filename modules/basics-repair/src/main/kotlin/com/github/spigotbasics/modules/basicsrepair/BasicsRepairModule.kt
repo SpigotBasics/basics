@@ -1,24 +1,21 @@
 package com.github.spigotbasics.modules.basicsrepair
 
-import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
 class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val msgConfig = getConfig(ConfigName.MESSAGES)
-
     val msgRepairHandOther: Message
-        get() = msgConfig.getMessage("repair-hand-other")
+        get() = messages.getMessage("repair-hand-other")
 
     val msgRepairHandSelf: Message
-        get() = msgConfig.getMessage("repair-hand-self")
+        get() = messages.getMessage("repair-hand-self")
 
     val msgRepairAllOther: Message
-        get() = msgConfig.getMessage("repair-all-other")
+        get() = messages.getMessage("repair-all-other")
 
     val msgRepairAllSelf: Message
-        get() = msgConfig.getMessage("repair-all-self")
+        get() = messages.getMessage("repair-all-self")
 
     val permission = permissionManager.createSimplePermission("basics.repair", "Allows to repair your current items")
     val permissionAll = permissionManager.createSimplePermission("basics.repair.all", "Allows to repair all your items")
@@ -33,7 +30,7 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     }
 
     override fun reloadConfig() {
-        super.reloadConfig()
-        msgConfig.reload()
+        config.reload()
+        messages.reload()
     }
 }
