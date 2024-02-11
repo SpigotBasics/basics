@@ -13,7 +13,6 @@ class ArgumentPath<T : CommandContext>(
     // TODO: Check permission for specific paths!
     val permission: Permission? = null,
     private val contextBuilder: (CommandSender, List<Any?>) -> T,
-
 ) {
 //    fun matches(args: List<String>): Boolean {
 //        if (args.size > arguments.size) return false
@@ -29,27 +28,24 @@ class ArgumentPath<T : CommandContext>(
         sender: CommandSender,
         args: List<String>,
     ): Either<PathMatchResult, List<Message>> {
-
-
         // Exact match for the number of arguments
-        if (args.size > arguments.size) return Either.Left(PathMatchResult.NO) // Maybe use != ?
+        if (args.size != arguments.size) return Either.Left(PathMatchResult.NO) // Maybe use > ?
 
         // Each provided arg must be parseable by its corresponding CommandArgument
         val errors = mutableListOf<Message>()
-        //val matches =  // used to be all(...)
+        // val matches =  // used to be all(...)
         args.indices.forEach { index ->
             val parsed = arguments[index].parse(args[index])
 
-
-            if(parsed == null) {
+            if (parsed == null) {
                 val error = arguments[index].errorMessage(args[index])
                 errors.add(error)
             }
 
-            //true
+            // true
         }
 
-        if(errors.isNotEmpty()) return Either.Right(errors)
+        if (errors.isNotEmpty()) return Either.Right(errors)
 
         if (!senderArgument.requiredType.isInstance(sender)) return Either.Left(PathMatchResult.YES_BUT_NOT_FROM_CONSOLE)
         return Either.Left(PathMatchResult.YES)

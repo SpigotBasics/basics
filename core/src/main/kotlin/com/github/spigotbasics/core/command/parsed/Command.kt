@@ -56,7 +56,7 @@ class Command<T : CommandContext>(
                 // TODO: Maybe collect all error messages? Right now, which error message is shown depends on the order of the paths
                 //  That means more specific ones should be registered first
                 val newErrors = matchResult.value
-                if(errors == null || errors!!.size > newErrors.size) {
+                if (errors == null || errors!!.size > newErrors.size) {
                     errors = newErrors
                 }
             } else if (matchResult is Either.Left && matchResult.value == PathMatchResult.YES_BUT_NOT_FROM_CONSOLE) {
@@ -97,10 +97,9 @@ class Command<T : CommandContext>(
             errors!![0].sendToSender(sender)
             return Either.Left(CommandResult.SUCCESS)
         } else {
-            //println("No matching command format found.")
+            // println("No matching command format found.")
             return Either.Left(CommandResult.USAGE)
         }
-
     }
 
     fun tabComplete(input: List<String>): List<String> {
