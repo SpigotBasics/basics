@@ -29,7 +29,11 @@ class ArgumentPath<T : CommandContext>(
         args: List<String>,
     ): Either<PathMatchResult, List<Message>> {
         // Exact match for the number of arguments
-        if (args.size > arguments.size) return Either.Left(PathMatchResult.NO) // Maybe use != ? > allows to show "missing item", != wouldn't
+        if (args.size > arguments.size) {
+            return Either.Left(
+                PathMatchResult.NO,
+            ) // Maybe use != ? > allows to show "missing item", != wouldn't
+        }
         // TODO: Keep a list of non-matches where size is too little, and if no other errors occur, say "missing item", only otherwise
         //  fallback to CommandResult.USAGE
 
@@ -50,6 +54,7 @@ class ArgumentPath<T : CommandContext>(
         if (errors.isNotEmpty()) return Either.Right(errors)
 
         if (!senderArgument.requiredType.isInstance(sender)) return Either.Left(PathMatchResult.YES_BUT_NOT_FROM_CONSOLE)
+        if (permission != null && !sender.hasPermission(permission)) return Either.Left(PathMatchResult.YES_BUT_NO_PERMISSION)
         return Either.Left(PathMatchResult.YES)
     }
 
