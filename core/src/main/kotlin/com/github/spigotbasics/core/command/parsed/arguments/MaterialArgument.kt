@@ -5,7 +5,6 @@ import com.github.spigotbasics.core.command.parsed.CommandArgument
 import org.bukkit.Material
 
 class MaterialArgument : CommandArgument<Material>() {
-
     private val materials = Dictionary.from(Material.entries.filter { it.isItem }.map { it.name to it })
     private val materialNames = materials.keys.toList().sorted()
 

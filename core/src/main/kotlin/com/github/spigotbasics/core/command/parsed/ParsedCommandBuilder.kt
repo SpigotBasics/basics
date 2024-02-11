@@ -70,10 +70,11 @@ class ParsedCommandBuilder<T : CommandContext>(
     }
 
     private fun build(): BasicsCommand {
-        val command = Command(
-            parsedExecutor ?: error("parsedExecutor must be set"),
-            argumentPaths ?: error("Argument paths must be set")
-        )
+        val command =
+            Command(
+                parsedExecutor ?: error("parsedExecutor must be set"),
+                argumentPaths ?: error("Argument paths must be set"),
+            )
         executor(command)
         val info =
             CommandInfo(

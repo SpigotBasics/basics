@@ -13,7 +13,6 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     val permission =
         permissionManager.createSimplePermission("basics.give", "Allows the player to use the /give command")
 
-
     val giveCommandPathBasic =
         ArgumentPath(
             listOf(PlayerArgument(), MaterialArgument()),
@@ -27,7 +26,6 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         ) { parsedArgs ->
             GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material, parsedArgs[2] as Int)
         }
-
 
     override fun onEnable() {
         createParsedCommand<GiveContext>("give", permission)

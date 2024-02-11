@@ -9,9 +9,11 @@ import java.util.TreeMap
  * @constructor Create empty Dictionary
  */
 class Dictionary<T> : MutableMap<String, T>, TreeMap<String, T>(String.CASE_INSENSITIVE_ORDER) {
-
     companion object {
-        fun fromEnum(enumClass: Class<out Enum<*>>, lowercase: Boolean = false): Dictionary<Enum<*>> {
+        fun fromEnum(
+            enumClass: Class<out Enum<*>>,
+            lowercase: Boolean = false,
+        ): Dictionary<Enum<*>> {
             val dictionary = Dictionary<Enum<*>>()
             for (enumConstant in enumClass.enumConstants) {
                 val name = if (lowercase) enumConstant.name.lowercase() else enumConstant.name
@@ -28,5 +30,4 @@ class Dictionary<T> : MutableMap<String, T>, TreeMap<String, T>(String.CASE_INSE
             return dictionary
         }
     }
-
 }
