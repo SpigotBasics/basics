@@ -37,21 +37,23 @@ class BasicsFlyModule(context: ModuleInstantiationContext) : AbstractBasicsModul
 
     inner class FlyCommandExecutor(private val module: BasicsFlyModule) : BasicsCommandExecutor(module) {
         override fun execute(context: BasicsCommandContext): CommandResult {
-            val player = if (context.args.size == 1) {
-                requirePermission(context.sender, module.permissionOthers)
-                requirePlayer(context.args[0])
-            } else {
-                requirePlayer(context.sender)
-            }
+            val player =
+                if (context.args.size == 1) {
+                    requirePermission(context.sender, module.permissionOthers)
+                    requirePlayer(context.args[0])
+                } else {
+                    requirePlayer(context.sender)
+                }
 
             player.allowFlight = !player.allowFlight
 
-            val message = when {
-                player.allowFlight && context.sender == player -> module.msgEnabled
-                !player.allowFlight && context.sender == player -> module.msgDisabled
-                player.allowFlight -> module.msgEnabledOthers(player)
-                else -> module.msgDisabledOthers(player)
-            }
+            val message =
+                when {
+                    player.allowFlight && context.sender == player -> module.msgEnabled
+                    !player.allowFlight && context.sender == player -> module.msgDisabled
+                    player.allowFlight -> module.msgEnabledOthers(player)
+                    else -> module.msgDisabledOthers(player)
+                }
 
             message.sendToSender(context.sender)
             return CommandResult.SUCCESS
