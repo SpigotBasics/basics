@@ -7,7 +7,11 @@ no-permission: "<error><hover:show_text:'<gray>Permission missing:</gray> <#perm
 # Tags: <#option>
 unknown-option: "<error><red>Unknown option: </red><color:#FF8888><#option></color>"
 
+# Tags: <#argument> <#value>
+invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argument></bright_red>: <bright_red><#value></bright_red></red>"
+
 # Tags: <#argument>
+missing-value-for-argument: "<error><red>Missing value for <bright_red><#argument></bright_red>!</red>"
 invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></bright_red>"
 player-not-found: "<error><red>Player not found: </red><bright_red><#argument></bright_red>"
 world-not-found: "<error><red>World not found: </red><bright_red><#argument></bright_red>"

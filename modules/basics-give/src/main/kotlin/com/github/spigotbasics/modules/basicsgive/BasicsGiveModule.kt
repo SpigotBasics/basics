@@ -15,14 +15,21 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val giveCommandPathBasic =
         ArgumentPath(
-            listOf(PlayerArgument(), MaterialArgument()),
+            listOf(
+                PlayerArgument("Receiving Player"),
+                MaterialArgument("Item"),
+            ),
         ) { parsedArgs ->
             GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material)
         }
 
     val giveCommandPathWithAmount =
         ArgumentPath(
-            listOf(PlayerArgument(), MaterialArgument(), IntArgument()),
+            listOf(
+                PlayerArgument("Receiving Player"),
+                MaterialArgument("Item"),
+                IntArgument("Amount"),
+            ),
         ) { parsedArgs ->
             GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material, parsedArgs[2] as Int)
         }

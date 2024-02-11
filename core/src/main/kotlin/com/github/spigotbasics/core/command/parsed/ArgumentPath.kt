@@ -1,18 +1,21 @@
 package com.github.spigotbasics.core.command.parsed
 
+import com.github.spigotbasics.core.Basics
+import com.github.spigotbasics.core.extensions.lastOrEmpty
+import com.github.spigotbasics.core.messages.Message
+
 class ArgumentPath<T : CommandContext>(
     private val arguments: List<CommandArgument<*>>,
     private val contextBuilder: (List<Any?>) -> T,
 ) {
     fun matches(args: List<String>): Boolean {
-        if (args.size != arguments.size) return false
-        return arguments.zip(args).all { (arg, value) ->
-            try {
-                arg.parse(value) != null
-            } catch (e: Exception) {
-                false
-            }
+        if (args.size > arguments.size) return false
+
+        for ((index, arg) in args.withIndex()) {
+            if (arguments[index].parse(arg) == null) return false
         }
+
+        return true
     }
 
 //    fun parse(args: List<String>): T? {
@@ -26,11 +29,12 @@ class ArgumentPath<T : CommandContext>(
 
     fun parse(args: List<String>): ParseResult<T> {
         val parsedArgs = mutableListOf<Any?>()
-        val errors = mutableListOf<String>()
+        val errors = mutableListOf<Message>()
 
         for ((index, arg) in arguments.withIndex()) {
             if (index >= args.size) {
-                errors.add("Missing argument for ${arg::class.simpleName}")
+//                errors.add("Missing argument for ${arg.name}")
+                errors.add(Basics.messages.missingArgument(arg.name))
                 break
             }
 
@@ -51,20 +55,9 @@ class ArgumentPath<T : CommandContext>(
     }
 
     fun tabComplete(args: List<String>): List<String> {
-        // If the current args size is less than or equal to the arguments size,
-        // suggest completions for the current argument.
-        if (args.size <= arguments.size) {
-            val currentArgIndex = args.size - 1
-            // If exactly equal, user is typing the next argument (or just started typing the first one)
-            return if (args.size == arguments.size) {
-                arguments.getOrNull(currentArgIndex)?.tabComplete() ?: emptyList()
-            } else {
-                // User is in the middle of typing an argument; suggest completions for this arg
-                arguments.getOrNull(currentArgIndex)?.tabComplete()?.filter {
-                    it.startsWith(args.last(), ignoreCase = true)
-                } ?: emptyList()
-            }
-        }
-        return emptyList()
+        if (args.isEmpty() || args.size > arguments.size) return emptyList()
+
+        val currentArgIndex = args.size - 1
+        return arguments[currentArgIndex].tabComplete(args.lastOrEmpty())
     }
 }

@@ -1,0 +1,35 @@
+# Behold, the reimagining of these mundane messages into the splendid vernacular befitting someone of my unparalleled
+#  prowess in Java and all things coding. It's quite evident that whoever penned these original lines lacks my
+#  sophisticated touch and command over language. Let me enlighten you with versions that not only convey the intended
+#  message but do so with the flair that only I, CMarco, can infuse:
+
+# Tags: <#permission>
+no-permission: "<error><hover:show_text:'<gray>Thou lackest this sacred permission:</gray> <#permission>'><red>Dare not proceed, for thou art unworthy!</red></hover>"
+
+# Tags: <#option>
+unknown-option: "<error><red>This option is as foreign to me as good code is to thee: </red>color:#FF8888<#option></color>"
+
+# Tags: <#argument> <#value>
+invalid-value-for-argument: "<error><red>Thy input is as flawed as thy understanding: <bright_red><#argument></bright_red> beareth the cursed value of <bright_red><#value></bright_red></red>"
+
+# Tags: <#argument>
+missing-value-for-argument: "<error><red>Thou hast forgotten a value for: <bright_red><#argument></bright_red>! How typical.</red>"
+invalid-argument: "<error><red>Foolishness thy name is, for <bright_red><#argument></bright_red> is not of this realm.</red>"
+player-not-found: "<error><red>The player thou seeketh exists not within this domain: </red><bright_red><#argument></bright_red>"
+world-not-found: "<error><red>This world is beyond thy reach, lost to the void: </red><bright_red><#argument></bright_red>"
+unsupported-server-software: "<error><red>Thy server, antiquated and feeble, supports not <bright_red><hover:show_text:'<gray>This sacred knowledge is missing:</gray> <#argument>'>this divine gift</hover></bright_red>!</red>"
+
+no-safe-location-found: "<error><red>Thy quest for a safe haven is but a fool's errand!</red>"
+not-having-item-in-hand: "<error><red>Thou art as empty-handed as thou art of wit!</red>"
+others-not-having-item-in-hand: "<error><red><gold><player-name></gold>, much like thyself, holds naught but air.</red>"
+
+command-not-from-console: "<error><red>This command, noble as it is, rejects the cold embrace of the console!</red>"
+must-specify-player-from-console: "<error><red>From the void of the console, name thy champion!</red>"
+command-module-disabled: "<error><red>This module, unlike my brilliance, lies dormant.</red>"
+
+failed-to-load-data-on-join: "<red>[Basics] Alas! Thy entry was as fruitless as thy efforts - attempt thy arrival anew!</red>"
+error-executing-command: "<error><red>A blunder has occurred, for even the command fails before my magnificence!</red>"
+error-executing-command-op: "<error><hover:show_text:'<#stacktrace>'><red>Behold! An error most vile, visible only to the chosen (Hover for the cursed details).</red> <gray>(Only the OPs may gaze upon this tragedy)</gray></hover>"
+
+# Only a master of the craft could twist such mundane directives into literary gold. Take heed, for these improvements
+#  are not mere suggestions but edicts from the apex of coding and linguistic mastery.

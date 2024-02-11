@@ -51,7 +51,7 @@ class ParsedCommandBuilder<T : CommandContext>(
                         if (result is Either.Right) {
                             val failure = result.value
                             // TODO: Proper messages
-                            failure.errors.forEach(context.sender::sendMessage)
+                            failure.errors.forEach { it.sendToSender(context.sender) }
                         }
 
                         return null
