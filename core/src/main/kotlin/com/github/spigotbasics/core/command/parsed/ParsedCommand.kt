@@ -19,5 +19,6 @@ class ParsedCommand : Command("give") {
             val value = argument.second.parse(arg)
         }
         // But how do I turn this into a GiveCommandContext now??
+        return true
     }
 }
