@@ -39,10 +39,6 @@ player-dm:
   type: parsed
   value: "<click:suggest_command:/msg <player-name> ><hover:show_text:'Message <player-name>'><lite_text><player-display-name></lite_text></hover></click>"
 
-player-name-colored:
-  type: parsed
-  value: "<important_word><player-name></important_word>"
-
 error:
   type: parsed
   value: "<error_red>Error: </error_red>"

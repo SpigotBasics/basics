@@ -1,0 +1,72 @@
+package com.github.spigotbasics.modules.basicsfly
+
+import com.github.spigotbasics.core.command.BasicsCommandContext
+import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.module.AbstractBasicsModule
+import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import org.bukkit.entity.Player
+
+class BasicsFlyModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
+    private val permission =
+        permissionManager.createSimplePermission(
+            "basics.fly",
+            "Allows to toggle fly using /fly",
+        )
+    private val permissionOthers =
+        permissionManager.createSimplePermission(
+            "basics.fly.others",
+            "Allows to toggle fly for other players using /fly",
+        )
+    private val msgEnabled
+        get() = messages.getMessage("fly-enabled")
+    private val msgDisabled
+        get() = messages.getMessage("fly-disabled")
+
+    private fun msgEnabledOthers(player: Player) = messages.getMessage("fly-enabled-others").concerns(player)
+
+    private fun msgDisabledOthers(player: Player) = messages.getMessage("fly-disabled-others").concerns(player)
+
+    override fun onEnable() {
+        createCommand("fly", permission)
+            .description("Toggles fly mode")
+            .usage("[player]")
+            .executor(FlyCommandExecutor(this))
+            .register()
+    }
+
+    inner class FlyCommandExecutor(private val module: BasicsFlyModule) : BasicsCommandExecutor(module) {
+        override fun execute(context: BasicsCommandContext): CommandResult {
+            val args = context.args
+            val sender = context.sender
+            val player =
+                if (args.size == 1) {
+                    requirePermission(sender, module.permissionOthers)
+                    requirePlayer(args[0])
+                } else {
+                    requirePlayer(sender)
+                }
+
+            val enabled = !player.allowFlight
+            player.allowFlight = enabled
+
+            val message =
+                if (enabled) {
+                    if (sender == player) {
+                        module.msgEnabled
+                    } else {
+                        module.msgEnabledOthers(player)
+                    }
+                } else {
+                    if (sender == player) {
+                        module.msgDisabled
+                    } else {
+                        module.msgDisabledOthers(player)
+                    }
+                }
+
+            message.sendToSender(sender)
+            return CommandResult.SUCCESS
+        }
+    }
+}
