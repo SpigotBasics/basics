@@ -1,6 +1,6 @@
 package com.github.spigotbasics.common
 
-import java.util.*
+import java.util.TreeMap
 
 /**
  * A case-insensitive map.
