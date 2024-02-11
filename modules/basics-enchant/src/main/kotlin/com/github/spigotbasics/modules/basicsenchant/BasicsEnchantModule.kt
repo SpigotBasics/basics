@@ -37,6 +37,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
 
     fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("enchanted-self").tags(tag)
 
+    // TODO: Cannot enchant others stuff yet
     fun msgEnchantedOthers(
         tag: EnchantOperationMessageTag,
         player: Player,

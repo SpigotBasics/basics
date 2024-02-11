@@ -1,0 +1,4 @@
+fly-enabled: "<def_text>Fly mode enabled!</def_text>"
+fly-disabled: "<negative_text>Fly mode disabled!</negative_text>"
+fly-enabled-others: "<def_text>Fly mode enabled for <player-dm></def_text>"
+fly-disabled-others: "<negative_text>Fly mode disabled for <player-dm></negative_text>"
