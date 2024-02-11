@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsgive
 
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.GeneralSenderType
-import com.github.spigotbasics.core.command.parsed.PlayerSenderType
+import com.github.spigotbasics.core.command.parsed.AnySender
+import com.github.spigotbasics.core.command.parsed.PlayerSender
 import com.github.spigotbasics.core.command.parsed.arguments.IntArgument
 import com.github.spigotbasics.core.command.parsed.arguments.MaterialArgument
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArgument
@@ -25,7 +25,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val pathPlayerItem =
         ArgumentPath(
-            GeneralSenderType,
+            AnySender,
             listOf(
                 PlayerArgument("Receiving Player"),
                 MaterialArgument("Item"),
@@ -36,7 +36,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val pathItem =
         ArgumentPath(
-            PlayerSenderType,
+            PlayerSender,
             listOf(
                 MaterialArgument("Item"),
             ),
@@ -46,7 +46,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val pathItemAmount =
         ArgumentPath(
-            PlayerSenderType,
+            PlayerSender,
             listOf(
                 MaterialArgument("Item"),
                 IntArgument("Amount"),
@@ -57,7 +57,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val pathPlayerItemAmount =
         ArgumentPath(
-            GeneralSenderType,
+            AnySender,
             listOf(
                 PlayerArgument("Receiving Player"),
                 MaterialArgument("Item"),

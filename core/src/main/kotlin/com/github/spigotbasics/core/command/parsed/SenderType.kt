@@ -6,6 +6,6 @@ import kotlin.reflect.KClass
 
 abstract class SenderType<T : CommandSender>(val requiredType: KClass<T>)
 
-object PlayerSenderType : SenderType<Player>(Player::class)
+object PlayerSender : SenderType<Player>(Player::class)
 
-object GeneralSenderType : SenderType<CommandSender>(CommandSender::class)
+object AnySender : SenderType<CommandSender>(CommandSender::class)
