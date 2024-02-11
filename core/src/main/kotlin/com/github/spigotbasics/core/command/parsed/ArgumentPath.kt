@@ -3,10 +3,12 @@ package com.github.spigotbasics.core.command.parsed
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.messages.Message
+import org.bukkit.command.CommandSender
 
 class ArgumentPath<T : CommandContext>(
+    val senderArgument: SenderType<*>,
     val arguments: List<CommandArgument<*>>,
-    private val contextBuilder: (List<Any?>) -> T,
+    private val contextBuilder: (CommandSender, List<Any?>) -> T,
 ) {
 //    fun matches(args: List<String>): Boolean {
 //        if (args.size > arguments.size) return false
@@ -18,7 +20,13 @@ class ArgumentPath<T : CommandContext>(
 //        return true
 //    }
 
-    fun matches(args: List<String>): Boolean {
+    fun matches(
+        sender: CommandSender,
+        args: List<String>,
+    ): Boolean {
+        // TODO: Print out messages when only player paths matched, but a console sender was provided
+        if (!senderArgument.requiredType.isInstance(sender)) return false
+
         // Exact match for the number of arguments
         if (args.size > arguments.size) return false // Maybe use != ?
 
@@ -37,7 +45,14 @@ class ArgumentPath<T : CommandContext>(
 //        return contextBuilder(parsedArgs)
 //    }
 
-    fun parse(args: List<String>): ParseResult<T> {
+    fun parse(
+        sender: CommandSender,
+        args: List<String>,
+    ): ParseResult<T> {
+        if (!senderArgument.requiredType.isInstance(sender)) {
+            return ParseResult.Failure(listOf(Basics.messages.commandNotFromConsole))
+        }
+
         val parsedArgs = mutableListOf<Any?>()
         val errors = mutableListOf<Message>()
 
@@ -58,7 +73,7 @@ class ArgumentPath<T : CommandContext>(
         }
 
         if (errors.isEmpty() && parsedArgs.size == arguments.size) {
-            return ParseResult.Success(contextBuilder(parsedArgs))
+            return ParseResult.Success(contextBuilder(sender, parsedArgs))
         } else {
             return ParseResult.Failure(errors)
         }

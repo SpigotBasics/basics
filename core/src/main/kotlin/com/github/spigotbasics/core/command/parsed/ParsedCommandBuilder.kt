@@ -42,7 +42,7 @@ class ParsedCommandBuilder<T : CommandContext>(
             this.executor =
                 object : BasicsCommandExecutor(module) {
                     override fun execute(context: BasicsCommandContext): CommandResult? {
-                        val result = command.execute(context.args)
+                        val result = command.execute(context.sender, context.args)
 
                         if (result is Either.Left) {
                             return result.value

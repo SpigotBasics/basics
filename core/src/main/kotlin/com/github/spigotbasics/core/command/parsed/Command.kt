@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.CommandResult
+import org.bukkit.command.CommandSender
 
 class Command<T : CommandContext>(
     private val executor: CommandExecutor<T>,
@@ -37,23 +38,30 @@ class Command<T : CommandContext>(
 //        return Either.Left(CommandResult.USAGE)
 //    }
 
-    fun execute(input: List<String>): Either<CommandResult, ParseResult.Failure> {
+    fun execute(
+        sender: CommandSender,
+        input: List<String>,
+    ): Either<CommandResult, ParseResult.Failure> {
         // Sort paths by the number of arguments they expect, ascending.
         val sortedPaths = paths.sortedBy { it.arguments.size }
 
         var shortestPathFailure: ParseResult.Failure? = null
 
         sortedPaths.forEach { path ->
-            if (path.matches(input)) {
-                when (val result = path.parse(input)) {
+            if (path.matches(sender, input)) {
+                when (val result = path.parse(sender, input)) {
                     is ParseResult.Success -> {
-                        executor.execute(result.context)
+                        executor.execute(sender, result.context)
+                        println("Command executed successfully.")
                         return Either.Left(CommandResult.SUCCESS)
                     }
                     is ParseResult.Failure -> {
-                        // Optionally handle or display errors if necessary for debugging
-                        result.errors.forEach { println(it) }
-                        if(shortestPathFailure == null /*|| result.errors.size < shortestPathFailure!!.errors.size*/) {
+                        println("Path failed to parse: $result")
+                        result.errors.forEach { println(it) } // Optionally handle or display errors if necessary for debugging
+
+                        // Might comment out the part after || below v v v
+                        if (shortestPathFailure == null || result.errors.size < shortestPathFailure!!.errors.size) {
+                            println("Shortest path failure: $result")
                             shortestPathFailure = result
                         }
                     }
@@ -61,10 +69,12 @@ class Command<T : CommandContext>(
             }
         }
         // If no paths matched, inform the user or handle the failure
-        println("No matching command format found.")
-        if(shortestPathFailure != null) {
+
+        if (shortestPathFailure != null) {
             return Either.Right(shortestPathFailure!!)
         }
+
+        println("No matching command format found.")
         return Either.Left(CommandResult.USAGE)
     }
 
