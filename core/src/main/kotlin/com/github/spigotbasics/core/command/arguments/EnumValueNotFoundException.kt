@@ -1,5 +1,5 @@
 package com.github.spigotbasics.core.command.arguments
 
-class EnumValueNotFoundException<T>(value: String, enumClass: Class<T>) : Throwable() {
+class EnumValueNotFoundException(value: String, enumClass: Class<*>) : NoSuchElementException("Enum value not found: $value in enum class: $enumClass") {
 
 }
