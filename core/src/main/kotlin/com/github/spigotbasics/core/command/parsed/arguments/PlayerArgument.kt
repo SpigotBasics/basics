@@ -1,5 +1,6 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.arguments
 
+import com.github.spigotbasics.core.command.parsed.CommandArgument
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 

@@ -1,6 +1,7 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.arguments
 
 import com.github.spigotbasics.common.Dictionary
+import com.github.spigotbasics.core.command.parsed.CommandArgument
 import org.bukkit.Material
 
 class MaterialArgument : CommandArgument<Material>() {
