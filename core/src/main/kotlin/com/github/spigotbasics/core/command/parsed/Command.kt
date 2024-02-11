@@ -18,22 +18,53 @@ class Command<T : CommandContext>(
 //        // Handle no matching path found, e.g., show usage or error message
 //    }
 
+//    fun execute(input: List<String>): Either<CommandResult, ParseResult.Failure> {
+//        for (path in paths) {
+//            when (val result = path.parse(input)) {
+//                is ParseResult.Success -> {
+//                    executor.execute(result.context)
+//                    return Either.Left(CommandResult.SUCCESS)
+//                }
+//                is ParseResult.Failure -> {
+//                    // Handle or display errors
+//                    result.errors.forEach { println(it) }
+//                    return Either.Right(result)
+//                }
+//            }
+//        }
+//        // If no paths matched, optionally print a generic error or usage message
+//        println("Invalid command syntax.")
+//        return Either.Left(CommandResult.USAGE)
+//    }
+
     fun execute(input: List<String>): Either<CommandResult, ParseResult.Failure> {
-        for (path in paths) {
-            when (val result = path.parse(input)) {
-                is ParseResult.Success -> {
-                    executor.execute(result.context)
-                    return Either.Left(CommandResult.SUCCESS)
-                }
-                is ParseResult.Failure -> {
-                    // Handle or display errors
-                    result.errors.forEach { println(it) }
-                    return Either.Right(result)
+        // Sort paths by the number of arguments they expect, ascending.
+        val sortedPaths = paths.sortedBy { it.arguments.size }
+
+        var shortestPathFailure: ParseResult.Failure? = null
+
+        sortedPaths.forEach { path ->
+            if (path.matches(input)) {
+                when (val result = path.parse(input)) {
+                    is ParseResult.Success -> {
+                        executor.execute(result.context)
+                        return Either.Left(CommandResult.SUCCESS)
+                    }
+                    is ParseResult.Failure -> {
+                        // Optionally handle or display errors if necessary for debugging
+                        result.errors.forEach { println(it) }
+                        if(shortestPathFailure == null /*|| result.errors.size < shortestPathFailure!!.errors.size*/) {
+                            shortestPathFailure = result
+                        }
+                    }
                 }
             }
         }
-        // If no paths matched, optionally print a generic error or usage message
-        println("Invalid command syntax.")
+        // If no paths matched, inform the user or handle the failure
+        println("No matching command format found.")
+        if(shortestPathFailure != null) {
+            return Either.Right(shortestPathFailure!!)
+        }
         return Either.Left(CommandResult.USAGE)
     }
 

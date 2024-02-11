@@ -5,17 +5,27 @@ import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.messages.Message
 
 class ArgumentPath<T : CommandContext>(
-    private val arguments: List<CommandArgument<*>>,
+    val arguments: List<CommandArgument<*>>,
     private val contextBuilder: (List<Any?>) -> T,
 ) {
+//    fun matches(args: List<String>): Boolean {
+//        if (args.size > arguments.size) return false
+//
+//        for ((index, arg) in args.withIndex()) {
+//            if (arguments[index].parse(arg) == null) return false
+//        }
+//
+//        return true
+//    }
+
     fun matches(args: List<String>): Boolean {
-        if (args.size > arguments.size) return false
+        // Exact match for the number of arguments
+        if (args.size > arguments.size) return false // Maybe use != ?
 
-        for ((index, arg) in args.withIndex()) {
-            if (arguments[index].parse(arg) == null) return false
+        // Each provided arg must be parseable by its corresponding CommandArgument
+        return args.indices.all { index ->
+            arguments[index].parse(args[index]) != null
         }
-
-        return true
     }
 
 //    fun parse(args: List<String>): T? {
