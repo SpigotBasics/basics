@@ -33,6 +33,8 @@ class ParsedCommandBuilder<T : CommandContext>(
 
     fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths = argumentPaths }
 
+    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths = argumentPaths.toList() }
+
     fun executor(executor: CommandExecutor<T>) = apply { this.parsedExecutor = executor }
 
     private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
