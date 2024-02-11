@@ -10,8 +10,16 @@ class GiveExecutor(private val module: BasicsGiveModule) : CommandExecutor<GiveC
         context: GiveContext,
     ) {
         val item = ItemStack(context.material, context.amount)
-        context.receiver.inventory.addItem(item.clone()) // Cloning to avoid modifying the original item, which messes up the message
-        // println("Giving ${context.amount} of ${context.material} to ${context.receiver}")
-        module.msgGiveOthers(context.receiver, item).sendToSender(sender)
+
+        context.receiver.inventory.addItem(item.clone())
+
+        val msg =
+            if (sender === context.receiver) {
+                module.msgGiveSelf(context.receiver, item)
+            } else {
+                module.msgGiveOthers(context.receiver, item)
+            }
+
+        msg.sendToSender(sender)
     }
 }

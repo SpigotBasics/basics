@@ -11,7 +11,7 @@ class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<CommandArgument<*>>,
     // TODO: Check permission for specific paths!
-    val permission: Permission? = null,
+    val permission: List<Permission> = emptyList(),
     private val contextBuilder: (CommandSender, List<Any?>) -> T,
 ) {
 //    fun matches(args: List<String>): Boolean {
@@ -54,7 +54,7 @@ class ArgumentPath<T : CommandContext>(
         if (errors.isNotEmpty()) return Either.Right(errors)
 
         if (!senderArgument.requiredType.isInstance(sender)) return Either.Left(PathMatchResult.YES_BUT_NOT_FROM_CONSOLE)
-        if (permission != null && !sender.hasPermission(permission)) return Either.Left(PathMatchResult.YES_BUT_NO_PERMISSION)
+        if (!hasPermission(sender)) return Either.Left(PathMatchResult.YES_BUT_NO_PERMISSION)
         return Either.Left(PathMatchResult.YES)
     }
 
@@ -106,5 +106,13 @@ class ArgumentPath<T : CommandContext>(
 
         val currentArgIndex = args.size - 1
         return arguments[currentArgIndex].tabComplete(args.lastOrEmpty())
+    }
+
+    fun isCorrectSender(sender: CommandSender): Boolean {
+        return senderArgument.requiredType.isInstance(sender)
+    }
+
+    fun hasPermission(sender: CommandSender): Boolean {
+        return permission.all { sender.hasPermission(it) }
     }
 }

@@ -7,7 +7,7 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class PlayerArgument(name: String) : CommandArgument<Player>(name) {
+class PlayerArg(name: String) : CommandArgument<Player>(name) {
     override fun parse(value: String): Player? {
         return Bukkit.getPlayer(value)
     }

@@ -2,9 +2,9 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.Command
 import com.github.spigotbasics.core.command.parsed.CommandContext
 import com.github.spigotbasics.core.command.parsed.CommandExecutor
+import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.permissions.Permission
@@ -39,7 +39,7 @@ class ParsedCommandBuilder<T : CommandContext>(
 
     private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
-    private fun executor(command: Command<T>) =
+    private fun executor(command: ParsedCommandExecutor<T>) =
         apply {
             this.executor =
                 object : BasicsCommandExecutor(module) {
@@ -60,7 +60,7 @@ class ParsedCommandBuilder<T : CommandContext>(
                     }
 
                     override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
-                        return command.tabComplete(context.args).toMutableList()
+                        return command.tabComplete(context.sender, context.args).toMutableList()
                     }
                 }
         }
@@ -73,7 +73,7 @@ class ParsedCommandBuilder<T : CommandContext>(
 
     private fun build(): BasicsCommand {
         val command =
-            Command(
+            ParsedCommandExecutor(
                 parsedExecutor ?: error("parsedExecutor must be set"),
                 argumentPaths ?: error("Argument paths must be set"),
             )

@@ -6,6 +6,7 @@ import com.github.spigotbasics.core.ChunkTicketManager
 import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
+import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
@@ -110,6 +111,8 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             return
         }
 
+        initializeHeavyClasses()
+
         // ::storageManager.get()
         server.pluginManager.registerEvents(CorePlayerDataListener(corePlayerData), this)
 
@@ -119,6 +122,12 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         server.pluginManager.registerEvents(modulePlayerDataLoader, this)
 
         getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
+    }
+
+    private fun initializeHeavyClasses() {
+        logger.info("Initializing heavy classes...")
+        ItemMaterialArg.Companion
+        logger.info("Heavy classes initialized.")
     }
 
     private fun reloadCustomTags() {
