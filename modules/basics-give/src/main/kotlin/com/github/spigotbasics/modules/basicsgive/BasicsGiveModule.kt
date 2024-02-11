@@ -69,7 +69,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     override fun onEnable() {
         createParsedCommand<GiveContext>("give", permission)
-            .paths(listOf(pathItem, pathItemAmount, pathPlayerItem, pathPlayerItemAmount))
+            .paths(listOf(pathItem, pathPlayerItem, pathItemAmount, pathPlayerItemAmount))
             .executor(GiveExecutor(this))
             .register()
     }
