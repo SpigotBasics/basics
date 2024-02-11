@@ -1,12 +1,17 @@
 package com.github.spigotbasics.core.command.parsed2
 
-class Command(val paths: List<ArgumentPath>) {
-    fun execute(input: String): CommandContext<*>? {
-        val args = input.split(" ")
+class Command<T : CommandContext>(
+    private val executor: CommandExecutor<T>,
+    private val paths: List<ArgumentPath<T>>,
+) {
+    fun execute(input: List<String>) {
         for (path in paths) {
-            val context = path.parse<Any>(args)
-            if (context != null) return context
+            val context = path.parse(input)
+            if (context != null) {
+                executor.execute(context)
+                return
+            }
         }
-        return null // No matching path found
+        // Handle no matching path found, e.g., show usage or error message
     }
 }

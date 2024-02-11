@@ -3,7 +3,6 @@ package com.github.spigotbasics.core.command.arguments
 import com.github.spigotbasics.common.Dictionary
 
 class EnumArgument<T : Enum<T>>(val enumClass: Class<T>) : ArgumentType<T> {
-
     private val enumConstants: Dictionary<T>
 
     init {
@@ -12,6 +11,7 @@ class EnumArgument<T : Enum<T>>(val enumClass: Class<T>) : ArgumentType<T> {
             enumConstants[constant.name] = constant
         }
     }
+
     override fun parse(value: String): T {
         return enumConstants[value] ?: throw EnumValueNotFoundException(value, enumClass)
     }

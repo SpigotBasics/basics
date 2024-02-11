@@ -8,7 +8,4 @@ class GiveCommandContext(
     sender: CommandSender,
     val receiver: Player,
     val item: Material,
-) : ParsedCommandContext(sender) {
-
-
-}
+) : ParsedCommandContext(sender)
