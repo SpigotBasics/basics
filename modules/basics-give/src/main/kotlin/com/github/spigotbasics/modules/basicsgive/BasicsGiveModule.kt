@@ -20,7 +20,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     fun msgGiveOthers(
         receiver: Player,
         item: ItemStack,
-    ) = messages.getMessage("give.others").concerns(receiver).tagParsed("item", item.type.name.toHumanReadable())
+    ) = messages.getMessage("give-others").concerns(receiver).tagParsed("item", item.type.name.toHumanReadable())
         .tagParsed("amount", item.amount.toString())
 
     val pathPlayerItem =
