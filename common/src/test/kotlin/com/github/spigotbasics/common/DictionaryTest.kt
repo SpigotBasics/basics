@@ -25,4 +25,18 @@ class DictionaryTest {
         assertNull(map["test2"])
         assertNull(map["TEST2"])
     }
+
+    @Test
+    fun replacesProperly() {
+        val map = Dictionary<Any>()
+        map["aaa"] = object { }
+        map["AAA"] = object { }
+        map["aAa"] = object { }
+        assertEquals(1, map.size)
+
+        map["aab"] = object { }
+        map["AAB"] = object { }
+        map["aAb"] = object { }
+        assertEquals(2, map.size)
+    }
 }
