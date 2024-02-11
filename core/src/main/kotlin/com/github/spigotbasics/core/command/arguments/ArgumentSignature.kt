@@ -1,3 +1,5 @@
 package com.github.spigotbasics.core.command.arguments
 
-data class ArgumentSignature(val arguments: List<ArgumentType<*>>)
+import org.bukkit.command.CommandSender
+
+class ArgumentSignature<T: CommandSender>(val requiredSender: Class<out T>, val arguments: List<ArgumentType<*>>)
