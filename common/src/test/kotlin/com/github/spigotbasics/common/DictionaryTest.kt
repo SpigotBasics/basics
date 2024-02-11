@@ -25,5 +25,4 @@ class DictionaryTest {
         assertNull(map["test2"])
         assertNull(map["TEST2"])
     }
-
 }
