@@ -1,14 +1,19 @@
 package com.github.spigotbasics.core.command.parsed
 
+import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
+import org.bukkit.permissions.Permission
 
 class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<CommandArgument<*>>,
+    // TODO: Check permission for specific paths!
+    val permission: Permission? = null,
     private val contextBuilder: (CommandSender, List<Any?>) -> T,
+
 ) {
 //    fun matches(args: List<String>): Boolean {
 //        if (args.size > arguments.size) return false
@@ -23,17 +28,31 @@ class ArgumentPath<T : CommandContext>(
     fun matches(
         sender: CommandSender,
         args: List<String>,
-    ): Boolean {
-        // TODO: Print out messages when only player paths matched, but a console sender was provided
-        if (!senderArgument.requiredType.isInstance(sender)) return false
+    ): Either<PathMatchResult, List<Message>> {
+
 
         // Exact match for the number of arguments
-        if (args.size > arguments.size) return false // Maybe use != ?
+        if (args.size > arguments.size) return Either.Left(PathMatchResult.NO) // Maybe use != ?
 
         // Each provided arg must be parseable by its corresponding CommandArgument
-        return args.indices.all { index ->
-            arguments[index].parse(args[index]) != null
+        val errors = mutableListOf<Message>()
+        //val matches =  // used to be all(...)
+        args.indices.forEach { index ->
+            val parsed = arguments[index].parse(args[index])
+
+
+            if(parsed == null) {
+                val error = arguments[index].errorMessage(args[index])
+                errors.add(error)
+            }
+
+            //true
         }
+
+        if(errors.isNotEmpty()) return Either.Right(errors)
+
+        if (!senderArgument.requiredType.isInstance(sender)) return Either.Left(PathMatchResult.YES_BUT_NOT_FROM_CONSOLE)
+        return Either.Left(PathMatchResult.YES)
     }
 
 //    fun parse(args: List<String>): T? {

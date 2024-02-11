@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 
 class Command<T : CommandContext>(
@@ -46,15 +47,28 @@ class Command<T : CommandContext>(
         val sortedPaths = paths.sortedBy { it.arguments.size }
 
         var shortestPathFailure: ParseResult.Failure? = null
+        var bestMatchResult: PathMatchResult? = null
+        var errors: List<Message>? = null
 
         sortedPaths.forEach { path ->
-            if (path.matches(sender, input)) {
+            val matchResult = path.matches(sender, input)
+            if (matchResult is Either.Right) {
+                // TODO: Maybe collect all error messages? Right now, which error message is shown depends on the order of the paths
+                //  That means more specific ones should be registered first
+                val newErrors = matchResult.value
+                if(errors == null || errors!!.size > newErrors.size) {
+                    errors = newErrors
+                }
+            } else if (matchResult is Either.Left && matchResult.value == PathMatchResult.YES_BUT_NOT_FROM_CONSOLE) {
+                bestMatchResult = matchResult.value
+            } else if (matchResult is Either.Left && matchResult.value == PathMatchResult.YES) {
                 when (val result = path.parse(sender, input)) {
                     is ParseResult.Success -> {
                         executor.execute(sender, result.context)
                         println("Command executed successfully.")
                         return Either.Left(CommandResult.SUCCESS)
                     }
+
                     is ParseResult.Failure -> {
                         println("Path failed to parse: $result")
                         result.errors.forEach { println(it) } // Optionally handle or display errors if necessary for debugging
@@ -74,8 +88,19 @@ class Command<T : CommandContext>(
             return Either.Right(shortestPathFailure!!)
         }
 
-        println("No matching command format found.")
-        return Either.Left(CommandResult.USAGE)
+        // TODO: Maybe this must be moved up
+        if (bestMatchResult == PathMatchResult.YES_BUT_NOT_FROM_CONSOLE) {
+            return Either.Left(CommandResult.NOT_FROM_CONSOLE)
+        }
+
+        if (errors != null) {
+            errors!![0].sendToSender(sender)
+            return Either.Left(CommandResult.SUCCESS)
+        } else {
+            //println("No matching command format found.")
+            return Either.Left(CommandResult.USAGE)
+        }
+
     }
 
     fun tabComplete(input: List<String>): List<String> {
