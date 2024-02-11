@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed2.CommandExecutor
-import com.github.spigotbasics.core.command.parsed2.GiveCommandContext
+import com.github.spigotbasics.core.command.parsed.CommandExecutor
+import com.github.spigotbasics.core.command.parsed.GiveCommandContext
 import org.bukkit.inventory.ItemStack
 
 class GiveExecutor : CommandExecutor<GiveContext> {

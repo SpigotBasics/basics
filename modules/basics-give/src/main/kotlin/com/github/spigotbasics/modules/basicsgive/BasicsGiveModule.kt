@@ -1,10 +1,10 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed2.ArgumentPath
-import com.github.spigotbasics.core.command.parsed2.GiveCommandContext
-import com.github.spigotbasics.core.command.parsed2.IntArgument
-import com.github.spigotbasics.core.command.parsed2.MaterialArgument
-import com.github.spigotbasics.core.command.parsed2.PlayerArgument
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.GiveCommandContext
+import com.github.spigotbasics.core.command.parsed.IntArgument
+import com.github.spigotbasics.core.command.parsed.MaterialArgument
+import com.github.spigotbasics.core.command.parsed.PlayerArgument
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.Material

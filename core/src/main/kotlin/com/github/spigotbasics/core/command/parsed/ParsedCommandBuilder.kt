@@ -1,9 +1,10 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.command.parsed2.ArgumentPath
-import com.github.spigotbasics.core.command.parsed2.Command
-import com.github.spigotbasics.core.command.parsed2.CommandContext
-import com.github.spigotbasics.core.command.parsed2.CommandExecutor
+import com.github.spigotbasics.common.Either
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.Command
+import com.github.spigotbasics.core.command.parsed.CommandContext
+import com.github.spigotbasics.core.command.parsed.CommandExecutor
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.permissions.Permission
@@ -41,8 +42,23 @@ class ParsedCommandBuilder<T : CommandContext>(
             this.executor =
                 object : BasicsCommandExecutor(module) {
                     override fun execute(context: BasicsCommandContext): CommandResult? {
-                        command.execute(context.args)
-                        return CommandResult.SUCCESS
+                        val result = command.execute(context.args)
+
+                        if (result is Either.Left) {
+                            return result.value
+                        }
+
+                        if (result is Either.Right) {
+                            val failure = result.value
+                            // TODO: Proper messages
+                            failure.errors.forEach(context.sender::sendMessage)
+                        }
+
+                        return null
+                    }
+
+                    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+                        return command.tabComplete(context.args).toMutableList()
                     }
                 }
         }
@@ -54,7 +70,10 @@ class ParsedCommandBuilder<T : CommandContext>(
     }
 
     private fun build(): BasicsCommand {
-        val command = Command(parsedExecutor ?: error("parsedExecutor must be set"), argumentPaths ?: error("Argument paths must be set"))
+        val command = Command(
+            parsedExecutor ?: error("parsedExecutor must be set"),
+            argumentPaths ?: error("Argument paths must be set")
+        )
         executor(command)
         val info =
             CommandInfo(

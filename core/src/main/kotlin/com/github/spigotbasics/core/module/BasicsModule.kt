@@ -5,7 +5,7 @@ import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed2.CommandContext
+import com.github.spigotbasics.core.command.parsed.CommandContext
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus

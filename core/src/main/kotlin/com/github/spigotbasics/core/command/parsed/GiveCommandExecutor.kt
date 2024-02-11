@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.command.parsed2
+package com.github.spigotbasics.core.command.parsed
 
 import org.bukkit.inventory.ItemStack
 
