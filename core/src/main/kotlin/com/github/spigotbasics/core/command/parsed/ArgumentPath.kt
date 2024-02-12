@@ -10,20 +10,9 @@ import org.bukkit.permissions.Permission
 class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<CommandArgument<*>>,
-    // TODO: Check permission for specific paths!
     val permission: List<Permission> = emptyList(),
     private val contextBuilder: (CommandSender, List<Any?>) -> T,
 ) {
-//    fun matches(args: List<String>): Boolean {
-//        if (args.size > arguments.size) return false
-//
-//        for ((index, arg) in args.withIndex()) {
-//            if (arguments[index].parse(arg) == null) return false
-//        }
-//
-//        return true
-//    }
-
     fun matches(
         sender: CommandSender,
         args: List<String>,
@@ -58,15 +47,6 @@ class ArgumentPath<T : CommandContext>(
         return Either.Left(PathMatchResult.YES)
     }
 
-//    fun parse(args: List<String>): T? {
-//        if (!matches(args)) return null
-//        val parsedArgs =
-//            arguments.zip(args).mapNotNull { (arg, value) ->
-//                arg.parse(value)
-//            }
-//        return contextBuilder(parsedArgs)
-//    }
-
     fun parse(
         sender: CommandSender,
         args: List<String>,
@@ -80,7 +60,6 @@ class ArgumentPath<T : CommandContext>(
 
         for ((index, arg) in arguments.withIndex()) {
             if (index >= args.size) {
-//                errors.add("Missing argument for ${arg.name}")
                 errors.add(Basics.messages.missingArgument(arg.name))
                 break
             }
