@@ -1,13 +1,13 @@
 package com.github.spigotbasics.modules.basicsweather
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import org.bukkit.WeatherType
 
 class WeatherCommand(val module: BasicsWeatherModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult? {
+    override fun execute(context: RawCommandContext): CommandResult? {
         val player = requirePlayer(context.sender)
         val args = context.args
         if (args.isEmpty()) {
@@ -40,7 +40,7 @@ class WeatherCommand(val module: BasicsWeatherModule) : BasicsCommandExecutor(mo
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         return listOf("clear", "storm").partialMatches(context.args[0])
     }
 }

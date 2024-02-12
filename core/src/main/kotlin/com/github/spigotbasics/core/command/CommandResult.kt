@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 
 abstract class CommandResult private constructor() {
-    abstract fun process(context: BasicsCommandContext)
+    abstract fun process(context: RawCommandContext)
 
     @Throws(BasicsCommandException::class)
     fun asException(): BasicsCommandException {
@@ -14,9 +14,9 @@ abstract class CommandResult private constructor() {
     }
 
     companion object {
-        private fun fromContext(action: ((BasicsCommandContext) -> Unit)): CommandResult {
+        private fun fromContext(action: ((RawCommandContext) -> Unit)): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     action(context)
                 }
             }
@@ -24,7 +24,7 @@ abstract class CommandResult private constructor() {
 
         fun fromMessage(action: ((CoreMessages) -> Message)): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     action(context.command.coreMessages).sendToSender(context.sender)
                 }
             }
@@ -51,7 +51,7 @@ abstract class CommandResult private constructor() {
 
         fun usage(usage: String? = null): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     context.command.messageFactory
                         // TODO: Configurable
                         .createMessage(
@@ -66,7 +66,7 @@ abstract class CommandResult private constructor() {
 
         fun playerNotFound(name: String): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     context.command.coreMessages.playerNotFound(name).sendToSender(context.sender)
                 }
             }
@@ -74,7 +74,7 @@ abstract class CommandResult private constructor() {
 
         fun unknownFlag(flag: String): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     context.command.coreMessages.unknownOption(flag).sendToSender(context.sender)
                 }
             }
@@ -82,7 +82,7 @@ abstract class CommandResult private constructor() {
 
         fun invalidArgument(argument: String): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     context.command.coreMessages.invalidArgument(argument).sendToSender(context.sender)
                 }
             }
@@ -90,7 +90,7 @@ abstract class CommandResult private constructor() {
 
         fun noPermission(permission: Permission): CommandResult {
             return object : CommandResult() {
-                override fun process(context: BasicsCommandContext) {
+                override fun process(context: RawCommandContext) {
                     context.command.coreMessages.noPermission(permission).sendToSender(context.sender)
                 }
             }

@@ -2,20 +2,11 @@ package com.github.spigotbasics.common
 
 import java.util.TreeMap
 
-/**
- * A case-insensitive map.
- *
- * @param T The type of the values in the map.
- * @constructor Create empty Dictionary
- */
-class Dictionary<T> : MutableMap<String, T>, TreeMap<String, T>(String.CASE_INSENSITIVE_ORDER) {
+class Dictionary<T> : Map<String, T>, TreeMap<String, T>(String.CASE_INSENSITIVE_ORDER) {
     companion object {
-        fun fromEnum(
-            enumClass: Class<out Enum<*>>,
-            lowercase: Boolean = false,
-        ): Dictionary<Enum<*>> {
-            val dictionary = Dictionary<Enum<*>>()
-            for (enumConstant in enumClass.enumConstants) {
+        inline fun <reified E : Enum<E>> fromEnumClass(lowercase: Boolean = false): Dictionary<E> {
+            val dictionary = Dictionary<E>()
+            for (enumConstant in enumValues<E>()) {
                 val name = if (lowercase) enumConstant.name.lowercase() else enumConstant.name
                 dictionary[name] = enumConstant
             }

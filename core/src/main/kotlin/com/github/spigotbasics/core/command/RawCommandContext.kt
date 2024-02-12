@@ -3,7 +3,7 @@ package com.github.spigotbasics.core.command
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 
-data class BasicsCommandContext(
+data class RawCommandContext(
     val sender: CommandSender,
     val command: BasicsCommand,
     val label: String,

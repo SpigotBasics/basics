@@ -2,14 +2,14 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.CommandContext
-import com.github.spigotbasics.core.command.parsed.CommandExecutor
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.permissions.Permission
 
-class ParsedCommandBuilder<T : CommandContext>(
+class ParsedCommandBuilder<T : ParsedCommandContext>(
     private val module: BasicsModule,
     private val name: String,
     private val permission: Permission,
@@ -20,8 +20,8 @@ class ParsedCommandBuilder<T : CommandContext>(
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
     private var tabCompleter: BasicsTabCompleter? = null
-    private var parsedExecutor: CommandExecutor<T>? = null
-    private var argumentPaths: List<ArgumentPath<T>>? = null
+    private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
+    private var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 
     fun description(description: String) = apply { this.description = description }
 
@@ -31,11 +31,13 @@ class ParsedCommandBuilder<T : CommandContext>(
             this.usage = usage
         }
 
-    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths = argumentPaths }
+    fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths = argumentPaths.toList() }
+    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
 
-    fun executor(executor: CommandExecutor<T>) = apply { this.parsedExecutor = executor }
+    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
     private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
@@ -43,7 +45,7 @@ class ParsedCommandBuilder<T : CommandContext>(
         apply {
             this.executor =
                 object : BasicsCommandExecutor(module) {
-                    override fun execute(context: BasicsCommandContext): CommandResult? {
+                    override fun execute(context: RawCommandContext): CommandResult? {
                         val result = command.execute(context.sender, context.args)
 
                         if (result is Either.Left) {
@@ -59,7 +61,7 @@ class ParsedCommandBuilder<T : CommandContext>(
                         return null
                     }
 
-                    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+                    override fun tabComplete(context: RawCommandContext): MutableList<String> {
                         return command.tabComplete(context.sender, context.args).toMutableList()
                     }
                 }
@@ -75,7 +77,7 @@ class ParsedCommandBuilder<T : CommandContext>(
         val command =
             ParsedCommandExecutor(
                 parsedExecutor ?: error("parsedExecutor must be set"),
-                argumentPaths ?: error("Argument paths must be set"),
+                argumentPaths,
             )
         executor(command)
         val info =

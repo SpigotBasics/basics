@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicshealth
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.entity.Player
@@ -51,7 +51,7 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     }
 
     inner class HealCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             val player =
                 if (context.args.size == 1) {
                     requirePermission(context.sender, module.permHealOthers)
@@ -73,7 +73,7 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             return CommandResult.SUCCESS
         }
 
-        override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+        override fun tabComplete(context: RawCommandContext): MutableList<String>? {
             return if (context.args.size == 1 && context.sender.hasPermission(module.permHealOthers)) {
                 null
             } else {
@@ -83,7 +83,7 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     }
 
     inner class FeedCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             val player =
                 if (context.args.size == 1) {
                     requirePermission(context.sender, module.permFeedOthers)
@@ -105,7 +105,7 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             return CommandResult.SUCCESS
         }
 
-        override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+        override fun tabComplete(context: RawCommandContext): MutableList<String>? {
             return if (context.args.size == 1 && context.sender.hasPermission(module.permFeedOthers)) {
                 null
             } else {

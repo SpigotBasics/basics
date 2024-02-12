@@ -1,11 +1,11 @@
 package com.github.spigotbasics.modules.basicsenderchest
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 
 class EnderchestCommand(private val module: BasicsEnderchestModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult? {
+    override fun execute(context: RawCommandContext): CommandResult? {
         val sender = requirePlayer(context.sender)
         var targetPlayer = sender
         val args = context.args
@@ -19,7 +19,7 @@ class EnderchestCommand(private val module: BasicsEnderchestModule) : BasicsComm
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
         if (context.sender.hasPermission(module.permissionOthers)) {
             return null
         }

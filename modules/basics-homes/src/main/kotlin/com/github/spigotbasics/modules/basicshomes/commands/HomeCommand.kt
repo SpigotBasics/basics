@@ -2,9 +2,9 @@ package com.github.spigotbasics.modules.basicshomes.commands
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Spiper
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.model.toLocation
@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerTeleportEvent
 class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
     private val messages = module.messages
 
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         val result = module.parseHomeCmd(context)
         if (result is Either.Right) {
             return if (result.value) CommandResult.SUCCESS else CommandResult.USAGE
@@ -33,7 +33,7 @@ class HomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         if (context.sender !is Player) {
             return mutableListOf()
         }

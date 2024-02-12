@@ -7,7 +7,7 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ArgumentPath<T : CommandContext>(
+class ArgumentPath<T : ParsedCommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<CommandArgument<*>>,
     val permission: List<Permission> = emptyList(),

@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicshomes.commands
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.getPermissionNumberValue
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecutor(module) {
     private val messages = module.messages
 
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         if (context.sender !is Player) {
             return CommandResult.NOT_FROM_CONSOLE
         }
@@ -82,7 +82,7 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         if (context.sender !is Player) {
             return mutableListOf()
         }

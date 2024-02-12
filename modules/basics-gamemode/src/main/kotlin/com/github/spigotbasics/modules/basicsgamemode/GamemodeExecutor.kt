@@ -1,14 +1,14 @@
 package com.github.spigotbasics.modules.basicsgamemode
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         val args = context.args
         val sender = context.sender
         var target: Player
@@ -44,7 +44,7 @@ class GamemodeExecutor(val module: BasicsGamemodeModule) : BasicsCommandExecutor
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
         if (context.args.size == 1) {
             return StringUtil.copyPartialMatches(
                 context.args[0],

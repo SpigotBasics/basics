@@ -1,13 +1,13 @@
 package com.github.spigotbasics.modules.basicsbroadcast
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         context.readFlags()
 
         val parseMini = context.popFlag("--parsed")
@@ -28,7 +28,7 @@ class BroadcastExecutor(private val module: BasicsBroadcastModule) : BasicsComma
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         val options = mutableListOf<String>()
         if (context.sender.hasPermission(module.parsedPerm)) {
             options += "--parsed"

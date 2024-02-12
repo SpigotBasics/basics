@@ -10,9 +10,9 @@ abstract class BasicsCommandExecutor(
 ) : BasicsCommandContextHandler(), BasicsTabCompleter {
     constructor(module: BasicsModule) : this(module.coreMessages, module.messageFactory)
 
-    abstract fun execute(context: BasicsCommandContext): CommandResult?
+    abstract fun execute(context: RawCommandContext): CommandResult?
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
         return null
     }
 }

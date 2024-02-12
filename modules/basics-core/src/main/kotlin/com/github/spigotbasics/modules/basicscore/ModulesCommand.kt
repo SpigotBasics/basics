@@ -1,9 +1,9 @@
 package com.github.spigotbasics.modules.basicscore
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandException
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
@@ -31,7 +31,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private val moduleManager = module.plugin.moduleManager
 
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         val args = context.args
         val sender = context.sender
         if (args.isEmpty()) {
@@ -87,7 +87,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private fun loadModule(
         sender: CommandSender,
-        context: BasicsCommandContext,
+        context: RawCommandContext,
     ): CommandResult {
         context.readFlags()
         val enable = context.popFlag("--enable") or context.popFlag("-e")
@@ -226,7 +226,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
     }
 
     // Tab Completes
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
         val args = context.args
         if (args.size == 1) {
             return listOf("list", "info", "enable", "disable", "reload", "unload", "load", "reloadjar").partialMatches(args[0])

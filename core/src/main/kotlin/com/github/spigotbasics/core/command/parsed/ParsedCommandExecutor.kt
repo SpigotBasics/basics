@@ -6,8 +6,8 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ParsedCommandExecutor<T : CommandContext>(
-    private val executor: CommandExecutor<T>,
+class ParsedCommandExecutor<T : ParsedCommandContext>(
+    private val executor: ParsedCommandContextExecutor<T>,
     private val paths: List<ArgumentPath<T>>,
 ) {
 //    fun execute(input: List<String>) {
