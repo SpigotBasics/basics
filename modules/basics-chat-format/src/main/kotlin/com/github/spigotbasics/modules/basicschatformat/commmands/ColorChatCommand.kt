@@ -7,10 +7,8 @@ import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicschatformat.BasicsChatFormatModule
 import com.github.spigotbasics.modules.basicschatformat.data.ChatData
-import net.md_5.bungee.api.ChatColor
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import java.util.Arrays
-import kotlin.streams.toList
 
 class ColorChatCommand(private val module: BasicsChatFormatModule) : BasicsCommandExecutor(module) {
     override fun execute(context: RawCommandContext): CommandResult {
@@ -47,8 +45,7 @@ class ColorChatCommand(private val module: BasicsChatFormatModule) : BasicsComma
 
     override fun tabComplete(context: RawCommandContext): MutableList<String> {
         return if (context.args.size == 1) {
-            Arrays.stream(ChatColor.values()).map { it.name.lowercase() }.toList().addAnd("reset")
-                .partialMatches(context.args[0])
+            return ChatColor.entries.map { it.name.lowercase() }.addAnd("reset").partialMatches(context.args[0])
         } else {
             mutableListOf()
         }
