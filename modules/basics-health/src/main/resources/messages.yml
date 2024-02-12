@@ -1,0 +1,4 @@
+healed: "<def_text>You healed <lite_text>yourself</lite_text>!</def_text>"
+healed-others: "<def_text>You healed <player-dm>!</def_text>"
+fed: "<def_text>You fed <lite_text>yourself</lite_text>!</def_text>"
+fed-others: "<def_text>You fed <player-dm>!</def_text>"
