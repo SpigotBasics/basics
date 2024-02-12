@@ -20,8 +20,8 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
     private var tabCompleter: BasicsTabCompleter? = null
-    private var parsedExecutor: CommandExecutor<T>? = null
-    private var argumentPaths: List<ArgumentPath<T>>? = null
+    private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
+    private var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 
     fun description(description: String) = apply { this.description = description }
 
@@ -31,11 +31,13 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
             this.usage = usage
         }
 
-    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths = argumentPaths }
+    fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths = argumentPaths.toList() }
+    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
 
-    fun executor(executor: CommandExecutor<T>) = apply { this.parsedExecutor = executor }
+    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
     private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
@@ -75,7 +77,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
         val command =
             ParsedCommandExecutor(
                 parsedExecutor ?: error("parsedExecutor must be set"),
-                argumentPaths ?: error("Argument paths must be set"),
+                argumentPaths,
             )
         executor(command)
         val info =
