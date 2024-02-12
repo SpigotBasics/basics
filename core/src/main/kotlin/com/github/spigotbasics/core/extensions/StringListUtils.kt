@@ -12,3 +12,5 @@ fun List<String>.addAnd(value: String): MutableList<String> {
     list.add(value)
     return list
 }
+
+fun List<String>.lastOrEmpty(): String = if (isEmpty()) "" else last()

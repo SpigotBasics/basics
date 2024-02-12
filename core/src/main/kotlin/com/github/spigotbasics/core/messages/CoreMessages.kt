@@ -43,4 +43,15 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
             getMessage("error-executing-command")
         }
     }
+
+    fun invalidValueForArgument(
+        argumentName: String,
+        givenValue: String,
+    ): Message {
+        return getMessage("invalid-value-for-argument")
+            .tagUnparsed("argument", argumentName)
+            .tagUnparsed("value", givenValue)
+    }
+
+    fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)
 }

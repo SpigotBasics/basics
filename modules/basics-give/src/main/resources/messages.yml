@@ -1,0 +1,2 @@
+give:        "<def_text>Gave <lite_text><#item-amount></lite_text>x <lite_text><#item-type></lite_text> to <lite_text>yourself</lite_text>."
+give-others: "<def_text>Gave <lite_text><#item-amount></lite_text>x <lite_text><#item-type></lite_text> to <player-dm>."
