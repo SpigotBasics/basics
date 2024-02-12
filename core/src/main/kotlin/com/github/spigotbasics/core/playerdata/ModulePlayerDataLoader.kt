@@ -43,6 +43,8 @@ class ModulePlayerDataLoader(
             return
         }
         val uuid = event.uniqueId
+        val name = event.name
+        val player = "$name ($uuid)"
 
         val future =
             cachedLoginData.computeIfAbsent(uuid) {
@@ -56,27 +58,36 @@ class ModulePlayerDataLoader(
                 newFuture
             }
 
+        fun printException(e: Exception) {
+            logger.warning(
+                "Could not load data for joining player $player in time (threshold: $joinTimeOut ms as defined in storage.yml): " +
+                    "${e.javaClass.simpleName} - kicking them now.",
+            )
+        }
+
         fun kick() {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
         }
 
         try {
             future.get(joinTimeOut, TimeUnit.MILLISECONDS)
-        } catch (e: TimeoutException) {
-            logger.warning(
-                "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined " +
-                        "in storage.yml), kicking them now.",
-            )
-            kick()
-            return
-        } catch (_: InterruptedException) {
-            // ???
-            kick()
-        } catch (e: ExecutionException) {
-            logger.log(Level.SEVERE, "Error while loading data for joining player $uuid", e)
-            kick()
-        } catch (_: CancellationException) {
-            kick()
+        } catch (e: Exception) {
+            when (e) {
+                is TimeoutException,
+                is InterruptedException,
+                is CancellationException,
+                -> {
+                    printException(e)
+                    kick()
+                }
+
+                is ExecutionException -> {
+                    logger.log(Level.SEVERE, "Error while loading data for joining player $player - kicking them now", e)
+                    kick()
+                }
+
+                else -> throw e
+            }
         }
     }
 
@@ -118,7 +129,7 @@ class ModulePlayerDataLoader(
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: No future found)")
             logger.severe(
                 "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future " +
-                        "found), kicking them now.",
+                    "found), kicking them now.",
             )
             return
         }
@@ -126,7 +137,7 @@ class ModulePlayerDataLoader(
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: Future not done)")
             logger.severe(
                 "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded " +
-                        "(Future not done), kicking them now.",
+                    "(Future not done), kicking them now.",
             )
             return
         }
