@@ -47,10 +47,11 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     private fun broadcastAnnouncement() {
         if (broadcasts.isEmpty()) return
 
-        val broadcast = when (pickRandom) {
-            true -> broadcasts.getRandom()
-            false -> broadcasts[msgIndex.also { msgIndex = (msgIndex + 1) % broadcasts.size }]
-        }
+        val broadcast =
+            when (pickRandom) {
+                true -> broadcasts.getRandom()
+                false -> broadcasts[msgIndex.also { msgIndex = (msgIndex + 1) % broadcasts.size }]
+            }
 
         broadcast?.let {
             val message = messageFactory.createMessage(it)
