@@ -1,5 +1,6 @@
 package com.github.spigotbasics.modules.basicsannouncements
 
+import com.github.spigotbasics.common.RandomList
 import com.github.spigotbasics.core.extensions.getDurationAsTicks
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -12,8 +13,12 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
     private val pickRandom
         get() = config.getBoolean("pick-random")
 
-    private val broadcasts
-        get() = config.getStringList("messages")
+    private var broadcasts = createList()
+
+    private fun createList(): RandomList<String> {
+        val list = config.getStringList("messages")
+        return RandomList(list, 0.5)
+    }
 
     private val showInConsole
         get() = config.getBoolean("show-in-console")
@@ -31,6 +36,7 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
         super.reloadConfig()
         scheduler.kill(announcerTaskId)
         scheduleAnnouncementTask()
+        broadcasts = createList()
     }
 
     private fun scheduleAnnouncementTask() {
@@ -40,11 +46,17 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
 
     private fun broadcastAnnouncement() {
         if (broadcasts.isEmpty()) return
-        if (pickRandom) msgIndex = localRandom.nextInt(broadcasts.size)
-        val message = messageFactory.createMessage(broadcasts[msgIndex])
-        msgIndex = (msgIndex + 1).mod(broadcasts.size)
 
-        if (showInConsole) message.sendToConsole()
-        message.sendToAllPlayers()
+        val broadcast =
+            when (pickRandom) {
+                true -> broadcasts.getRandom()
+                false -> broadcasts[msgIndex.also { msgIndex = (msgIndex + 1) % broadcasts.size }]
+            }
+
+        broadcast?.let {
+            val message = messageFactory.createMessage(it)
+            if (showInConsole) message.sendToConsole()
+            message.sendToAllPlayers()
+        }
     }
 }
