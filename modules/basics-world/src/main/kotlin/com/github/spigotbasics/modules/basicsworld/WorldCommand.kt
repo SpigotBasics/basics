@@ -1,9 +1,9 @@
 package com.github.spigotbasics.modules.basicsworld
 
 import com.github.spigotbasics.core.Spiper
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
 import com.github.spigotbasics.core.util.WorldUtils
@@ -13,7 +13,7 @@ import org.bukkit.permissions.Permissible
 import java.util.logging.Level
 
 class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         val player = notFromConsole(context.sender)
         val args = context.args
         if (args.isEmpty()) {
@@ -95,7 +95,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         }
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         val args = context.args
         if (args.size == 1) {
             return allWorldsAnd012(context.sender).apply {

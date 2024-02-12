@@ -1,10 +1,10 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed.CommandExecutor
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.ItemStack
 
-class GiveExecutor(private val module: BasicsGiveModule) : CommandExecutor<GiveContext> {
+class GiveExecutor(private val module: BasicsGiveModule) : ParsedCommandContextExecutor<GiveContext> {
     override fun execute(
         sender: CommandSender,
         context: GiveContext,

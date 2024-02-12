@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.CommandContext
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
@@ -153,7 +153,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         return BasicsCommandBuilder(this, name, permission)
     }
 
-    final override fun <T : CommandContext> createParsedCommand(
+    final override fun <T : ParsedCommandContext> createParsedCommand(
         name: String,
         permission: Permission,
     ): ParsedCommandBuilder<T> {

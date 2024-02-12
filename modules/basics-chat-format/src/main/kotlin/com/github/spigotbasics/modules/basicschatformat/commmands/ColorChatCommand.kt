@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicschatformat.commmands
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicschatformat.BasicsChatFormatModule
@@ -13,7 +13,7 @@ import java.util.Arrays
 import kotlin.streams.toList
 
 class ColorChatCommand(private val module: BasicsChatFormatModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         if (context.sender !is Player) {
             module.plugin.messages.commandNotFromConsole.sendToSender(context.sender)
             return CommandResult.SUCCESS
@@ -45,7 +45,7 @@ class ColorChatCommand(private val module: BasicsChatFormatModule) : BasicsComma
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): MutableList<String> {
         return if (context.args.size == 1) {
             Arrays.stream(ChatColor.values()).map { it.name.lowercase() }.toList().addAnd("reset")
                 .partialMatches(context.args[0])

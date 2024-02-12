@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsworkbench
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
@@ -90,49 +90,49 @@ class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasic
     }
 
     inner class WorkbenchExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             notFromConsole(context.sender).openWorkbench(null, true)
             return CommandResult.SUCCESS
         }
     }
 
     inner class CartographyExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openCartographyTable(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }
     }
 
     inner class LoomExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openLoom(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }
     }
 
     inner class GrindstoneExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openGrindstone(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }
     }
 
     inner class SmithingTableExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openSmithingTable(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }
     }
 
     inner class StonecutterExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openStonecutter(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }
     }
 
     inner class AnvilExecutor : BasicsCommandExecutor(this@BasicsWorkbenchModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             facade.openAnvil(notFromConsole(context.sender))
             return CommandResult.SUCCESS
         }

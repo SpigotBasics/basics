@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicshomes
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Serialization
-import com.github.spigotbasics.core.command.BasicsCommandContext
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -119,7 +119,7 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         messages.reload()
     }
 
-    fun parseHomeCmd(context: BasicsCommandContext): Either<Home, Boolean> {
+    fun parseHomeCmd(context: RawCommandContext): Either<Home, Boolean> {
         if (context.sender !is Player) {
             plugin.messages.commandNotFromConsole.sendToSender(context.sender)
             return Either.Right(true)

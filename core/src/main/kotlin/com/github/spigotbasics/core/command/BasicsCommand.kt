@@ -43,7 +43,7 @@ class BasicsCommand internal constructor(
             val args = origArgs.toMutableList()
 
             val context =
-                BasicsCommandContext(
+                RawCommandContext(
                     sender = sender,
                     command = this,
                     label = commandLabel,
@@ -97,7 +97,7 @@ class BasicsCommand internal constructor(
             location: Location?,
         ): MutableList<String> {
             val context =
-                BasicsCommandContext(
+                RawCommandContext(
                     sender = sender,
                     command = this,
                     label = alias,

@@ -1,13 +1,13 @@
 package com.github.spigotbasics.modules.basicsmsg
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(module) {
-    override fun execute(context: BasicsCommandContext): CommandResult {
+    override fun execute(context: RawCommandContext): CommandResult {
         val sender = context.sender
         if (context.args.size < 2) {
             return CommandResult.USAGE
@@ -26,7 +26,7 @@ class MsgExecutor(private val module: BasicsMsgModule) : BasicsCommandExecutor(m
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
         if (context.args.size == 1) {
             return null // null = normal list of players
         } else {

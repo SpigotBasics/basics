@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsenchant
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.extensions.toHumanReadable
 import com.github.spigotbasics.core.module.AbstractBasicsModule
@@ -56,7 +56,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
     }
 
     inner class EnchantExecutor : BasicsCommandExecutor(this@BasicsEnchantModule) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             val player = requirePlayerOrMustSpecifyPlayerFromConsole(context.sender) // TODO: Create a requirePlayer(Sender) method
             val args = context.args
             if (args.size == 0) return CommandResult.USAGE
@@ -92,7 +92,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             return CommandResult.SUCCESS
         }
 
-        override fun tabComplete(context: BasicsCommandContext): MutableList<kotlin.String>? {
+        override fun tabComplete(context: RawCommandContext): MutableList<kotlin.String>? {
             val args = context.args
             if (args.size == 1) {
                 return enchantments.partialMatches(args[0])

@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsfly
 
-import com.github.spigotbasics.core.command.BasicsCommandContext
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.entity.Player
@@ -36,7 +36,7 @@ class BasicsFlyModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     }
 
     inner class FlyCommandExecutor(private val module: BasicsFlyModule) : BasicsCommandExecutor(module) {
-        override fun execute(context: BasicsCommandContext): CommandResult {
+        override fun execute(context: RawCommandContext): CommandResult {
             val player =
                 if (context.args.size == 1) {
                     requirePermission(context.sender, module.permissionOthers)

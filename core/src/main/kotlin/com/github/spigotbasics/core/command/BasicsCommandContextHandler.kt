@@ -47,7 +47,7 @@ abstract class BasicsCommandContextHandler(
         }
 
         @Throws(BasicsCommandException::class)
-        fun failIfFlagsLeft(context: BasicsCommandContext) {
+        fun failIfFlagsLeft(context: RawCommandContext) {
             if (context.flags.isEmpty()) return
             throw CommandResult.unknownFlag(context.flags[0]).asException()
         }

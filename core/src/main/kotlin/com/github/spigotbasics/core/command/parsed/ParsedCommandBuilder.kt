@@ -2,14 +2,14 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.CommandContext
-import com.github.spigotbasics.core.command.parsed.CommandExecutor
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.permissions.Permission
 
-class ParsedCommandBuilder<T : CommandContext>(
+class ParsedCommandBuilder<T : ParsedCommandContext>(
     private val module: BasicsModule,
     private val name: String,
     private val permission: Permission,
@@ -43,7 +43,7 @@ class ParsedCommandBuilder<T : CommandContext>(
         apply {
             this.executor =
                 object : BasicsCommandExecutor(module) {
-                    override fun execute(context: BasicsCommandContext): CommandResult? {
+                    override fun execute(context: RawCommandContext): CommandResult? {
                         val result = command.execute(context.sender, context.args)
 
                         if (result is Either.Left) {
@@ -59,7 +59,7 @@ class ParsedCommandBuilder<T : CommandContext>(
                         return null
                     }
 
-                    override fun tabComplete(context: BasicsCommandContext): MutableList<String> {
+                    override fun tabComplete(context: RawCommandContext): MutableList<String> {
                         return command.tabComplete(context.sender, context.args).toMutableList()
                     }
                 }

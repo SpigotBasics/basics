@@ -32,21 +32,21 @@ class BasicsCommandBuilder(
 
     fun tabCompleter(tabCompleter: BasicsTabCompleter) = apply { this.tabCompleter = tabCompleter }
 
-    fun executor(executor: (BasicsCommandContext) -> CommandResult?) =
+    fun executor(executor: (RawCommandContext) -> CommandResult?) =
         apply {
             this.executor =
                 object : BasicsCommandExecutor(module) {
-                    override fun execute(context: BasicsCommandContext): CommandResult? {
+                    override fun execute(context: RawCommandContext): CommandResult? {
                         return executor(context)
                     }
                 }
         }
 
-    fun tabCompleter(tabCompleter: (BasicsCommandContext) -> MutableList<String>?) =
+    fun tabCompleter(tabCompleter: (RawCommandContext) -> MutableList<String>?) =
         apply {
             this.tabCompleter =
                 object : BasicsTabCompleter {
-                    override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+                    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
                         return tabCompleter(context)
                     }
                 }
