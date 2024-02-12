@@ -42,12 +42,13 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             .description("Heals Players")
             .usage("[player]")
             .executor(HealCommandExecutor(this))
-            .register();
+            .register()
+
         createCommand("feed", permFeed)
             .description("Feeds Players")
             .usage("[player]")
             .executor(FeedCommandExecutor(this))
-            .register();
+            .register()
     }
 
     inner class HealCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
