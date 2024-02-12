@@ -44,8 +44,6 @@ It is not often updated, so better create your own using `gradlew dokkaHtml` or 
 ## Note to Contributors
 Contributions are always welcome from anyone!
 
-> [!WARNING]\
-> Contributions from CMarco, however, are not welcome and will be rejected.
 
 ## Create a new module
 Modules can be written in Java or Kotlin. To create a new module, use the `createModule` task.
