@@ -44,6 +44,14 @@ class ParsedCommandExecutor<T : CommandContext>(
         sender: CommandSender,
         input: List<String>,
     ): Either<CommandResult, ParseResult.Failure> {
+
+        // Empty args = show usage, unless an empty path is registered
+        if(input.isEmpty()) {
+            if(!paths.any { it.arguments.isEmpty() }) {
+                return Either.Left(CommandResult.USAGE)
+            }
+        }
+
         // Sort paths by the number of arguments they expect, ascending.
         val sortedPaths = paths.sortedBy { it.arguments.size }
 

@@ -34,7 +34,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     fun msgGiveSelf(
         receiver: Player,
         item: ItemStack,
-    ) = messages.getMessage("give-self")
+    ) = messages.getMessage("give")
         .concerns(receiver)
         .tags(ItemStackTag(item))
 
