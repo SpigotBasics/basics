@@ -17,14 +17,18 @@
 <a href="https://discord.gg/GDaTvneshw">![image](https://github.com/SpigotBasics/basics/assets/1122571/e815f75d-7e86-4142-a00a-22b5b093d81e)</a>
 
 ## Compile
-To compile, use `gradlew build` on the root project.
+To compile, use `gradlew build`.
 
-You can also use the `testserver` tasks:
+You can also use `gradlew distribution`,
+which will create the plugin .jar and all modules in a drag-and-droppable layout into `build/dist`.
+You can also use `gradlew zipDistribution` to get the whole project .zip file.
+
+For running Basics locally, you can also use the `testserver` tasks:
 
 - `copyPluginToTestServer`: Copies the main plugin .jar to your test server
 - `copyModule<Name>ToTestServer`: Copies the specific module .jar to your test server
 - `copyAllModulesToTestServer`: Copies all modules to the test server - same as running all `copyModule<Name>ToTestServer` tasks
-- `copyAllToTestServer`: Copies all modules and the main plugin .jar to your test server - same as running `copyPluginToTestServer` and `copyAllModulesToTestServer`
+- `copyAllToTestServer`: **Copies all modules and the main plugin .jar to your test server** - same as running `copyPluginToTestServer` and `copyAllModulesToTestServer`
 
 The path to your test server can be specified using a gradle property called "testserver.path" using one of the following methods:
 - as command line argument (`gradlew copyAllToTestServer -Ptestserver.path=/my/test/server`)
