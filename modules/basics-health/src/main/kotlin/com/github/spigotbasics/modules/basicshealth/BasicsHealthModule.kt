@@ -10,23 +10,23 @@ import org.bukkit.entity.Player
 class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
     val permHeal =
         permissionManager.createSimplePermission(
-            "basics.health.heal",
-            "Allows the player to heal them selves",
+            "basics.heal",
+            "Allows the player to heal themself",
         )
     val permHealOthers =
         permissionManager.createSimplePermission(
-            "basics.health.heal.others",
-            "Allows the player to heal other players",
+            "basics.heal.others",
+            "Allows to heal other players",
         )
     val permFeed =
         permissionManager.createSimplePermission(
-            "basics.health.feed",
-            "Allows the player to feed them selves",
+            "basics.feed",
+            "Allows the player to feed themself",
         )
     val permFeedOthers =
         permissionManager.createSimplePermission(
-            "basics.health.feed.others",
-            "Allows the player to feed other players",
+            "basics.feed.others",
+            "Allows to feed other players",
         )
     private val msgHealed
         get() = messages.getMessage("healed")
