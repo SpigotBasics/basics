@@ -1,8 +1,5 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed.AnySender
-import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.PlayerSender
 import com.github.spigotbasics.core.command.parsed.arguments.IntArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
@@ -27,77 +24,66 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     fun msgGiveOthers(
         receiver: Player,
         item: ItemStack,
-    ) = messages.getMessage("give-others")
-        .concerns(receiver)
-        .tags(ItemStackTag(item))
+    ) = messages.getMessage("give-others").concerns(receiver).tags(ItemStackTag(item))
 
     fun msgGiveSelf(
         receiver: Player,
         item: ItemStack,
-    ) = messages.getMessage("give")
-        .concerns(receiver)
-        .tags(ItemStackTag(item))
+    ) = messages.getMessage("give").concerns(receiver).tags(ItemStackTag(item))
 
     val pathPlayerItem =
-        ArgumentPath(
-            AnySender,
-            listOf(
-                PlayerArg("Receiving Player"),
-                ItemMaterialArg("Item"),
-            ),
-            listOf(permissionOthers),
-        ) { _, parsedArgs ->
-            GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material)
-        }
+        createArgumentPath<GiveContext>(
+            PlayerArg("Receiving Player"),
+            ItemMaterialArg("Item"),
+        )
+            .permissions(permissionOthers)
+            .contextBuilder { _, args ->
+                GiveContext(args[0] as Player, args[1] as Material)
+            }.build()
 
     val pathItem =
-        ArgumentPath(
-            PlayerSender,
-            listOf(
-                ItemMaterialArg("Item"),
-            ),
-        ) { sender, parsedArgs ->
-            GiveContext(sender as Player, parsedArgs[0] as Material)
-        }
+        createArgumentPath<GiveContext>(
+            ItemMaterialArg("Item"),
+        )
+            .playerOnly()
+            .contextBuilder { sender, args ->
+                GiveContext(sender as Player, args[0] as Material)
+            }.build()
 
     val pathItemAmount =
-        ArgumentPath(
-            PlayerSender,
-            listOf(
-                ItemMaterialArg("Item"),
-                IntArg("Amount"),
-            ),
-        ) { sender, parsedArgs ->
-            GiveContext(sender as Player, parsedArgs[0] as Material, parsedArgs[1] as Int)
-        }
+        createArgumentPath<GiveContext>(
+            ItemMaterialArg("Item"),
+            IntArg("Amount"),
+        )
+            .playerOnly()
+            .contextBuilder { sender, parsedArgs ->
+                GiveContext(sender as Player, parsedArgs[0] as Material, parsedArgs[1] as Int)
+            }.build()
 
     val pathPlayerItemAmount =
-        ArgumentPath(
-            AnySender,
-            listOf(
-                PlayerArg("Receiving Player"),
-                ItemMaterialArg("Item"),
-                IntArg("Amount"),
-            ),
-            listOf(permissionOthers),
-        ) { _, parsedArgs ->
-            GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material, parsedArgs[2] as Int)
-        }
+        createArgumentPath<GiveContext>(
+            PlayerArg("Receiving Player"),
+            ItemMaterialArg("Item"),
+            IntArg("Amount"),
+        )
+            .permissions(permissionOthers)
+            .contextBuilder { _, parsedArgs ->
+                GiveContext(parsedArgs[0] as Player, parsedArgs[1] as Material, parsedArgs[2] as Int)
+            }.build()
 
     override fun onEnable() {
-        createParsedCommand<GiveContext>("give", permission)
-            .paths(listOf(pathItem, pathPlayerItem, pathItemAmount, pathPlayerItemAmount))
-            .executor(GiveExecutor(this))
-            .usage("[Receiving Player] <Item> [Amount]")
-            .register()
+        createParsedCommand<GiveContext>("give", permission).paths(
+            pathItem,
+            pathPlayerItem,
+            pathItemAmount,
+            pathPlayerItemAmount,
+        ).executor(GiveExecutor(this)).usage("[Receiving Player] <Item> [Amount]").register()
 
-        createCommand("givesnbt", permission)
-            .executor { context ->
-                val snbt = context.args[0]
-                val item = Bukkit.getItemFactory().createItemStack(snbt)
-                (context.sender as Player).inventory.addItem(item)
-                null
-            }
-            .register()
+        createCommand("givesnbt", permission).executor { context ->
+            val snbt = context.args[0]
+            val item = Bukkit.getItemFactory().createItemStack(snbt)
+            (context.sender as Player).inventory.addItem(item)
+            null
+        }.register()
     }
 }

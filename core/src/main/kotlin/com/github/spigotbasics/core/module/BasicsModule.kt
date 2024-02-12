@@ -5,6 +5,8 @@ import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.ParsedCommandBuilder
+import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.CommandArgument
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
@@ -184,4 +186,6 @@ interface BasicsModule {
 
         return "${info.name}-$newPath"
     }
+
+    fun <T : ParsedCommandContext> createArgumentPath(vararg arguments: CommandArgument<*>): ArgumentPathBuilder<T>
 }
