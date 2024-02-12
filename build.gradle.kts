@@ -35,6 +35,8 @@ tasks.register<Copy>("distribution") {
     group = "basics"
     description = "Bundle the plugin and all modules into a single directory."
 
+    dependsOn(tasks.build)
+
     into("build/dist/basics-$version")
 
     from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
@@ -51,6 +53,8 @@ tasks.register<Copy>("distribution") {
 tasks.register<Zip>("zipDistribution") {
     group = "basics"
     description = "Bundle the plugin and all modules into a single zip file."
+
+    dependsOn(tasks.build)
 
     archiveFileName = "basics-$version.zip"
     destinationDirectory = file("build/dist")
