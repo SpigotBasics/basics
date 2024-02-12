@@ -95,9 +95,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
-//        logger.info("Showing all classes in pacakge com.github.spigotbasics.core:")
-//        findAllClassesUsingClassLoader("com.github.spigotbasics.core").forEach(System.out::println)
-
         classLoaderFixer.trickOnEnable()
 
         if (isRustySpigot()) {

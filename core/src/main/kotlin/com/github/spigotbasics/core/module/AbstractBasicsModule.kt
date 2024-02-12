@@ -1,12 +1,9 @@
 package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
-import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
-import com.github.spigotbasics.core.command.parsed.CommandArgument
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.RawCommandBuilder
+import com.github.spigotbasics.core.command.factory.CommandFactory
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
@@ -31,38 +28,40 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val info = context.info
     final override val logger = BasicsLoggerFactory.getModuleLogger(context.info)
     final override val plugin = context.plugin
+    final override val coreMessages = plugin.messages
     final override val eventBus = BasicsEventBus(context.plugin as Plugin)
     final override val config = getConfig(ConfigName.CONFIG)
-    override val messages = getConfig(ConfigName.MESSAGES)
+    override val messages = getConfig(ConfigName.MESSAGES) // TODO: Make this final
     final override val scheduler = BasicsScheduler(plugin as Plugin)
     final override val commandManager = BasicsCommandManager(plugin.facade.getCommandMap(server.pluginManager))
     final override val messageFactory = plugin.messageFactory
     final override val tagResolverFactory = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
+    final override val commandFactory = CommandFactory(messageFactory, coreMessages, commandManager)
     final override val keyFactory =
         NamespacedNamespacedKeyFactory
             .NamespacedNamespacedKeyFactoryFactory
             .forModule(context.plugin as Plugin, context.info)
-
-    final override val coreMessages get() = plugin.messages
-
     private val storages: MutableMap<String, NamespacedStorage> = mutableMapOf()
-
     private var isEnabled = false
 
-    override fun reloadConfig() {
+    override fun reloadConfig() { // TODO: Make this final. Modules will get an onReload() method instead
         config.reload()
         messages.reload()
+    }
+
+    companion object {
+        private val STORAGE_NAMESPACE_NOT_ALLOWED_REGEX = "[^a-zA-Z0-9]".toRegex()
     }
 
     final override fun createStorage(name: String?): NamespacedStorage {
         if (!isEnabled) {
             throw IllegalStateException("Cannot create storage while module is disabled")
         }
-        val toReplaceRegex = "[^a-zA-Z0-9]".toRegex()
-        var namespacedName = "m_${info.name.replace(toReplaceRegex, "_")}"
+
+        var namespacedName = "m_${info.name.replace(STORAGE_NAMESPACE_NOT_ALLOWED_REGEX, "_")}"
         if (name != null) {
-            namespacedName += "__${name.replace(toReplaceRegex, "_")}"
+            namespacedName += "__${name.replace(STORAGE_NAMESPACE_NOT_ALLOWED_REGEX, "_")}"
         }
 
         if (storages.containsKey(namespacedName)) {
@@ -148,22 +147,17 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
             configurationClass,
         )
 
-    final override fun createCommand(
+    @Deprecated("Use BasicsModule#commandFactory instead", ReplaceWith("commandFactory.rawCommandBuilder(name, permission)"))
+    fun createCommand(
         name: String,
         permission: Permission,
-    ): BasicsCommandBuilder {
-        return BasicsCommandBuilder(this, name, permission)
-    }
-
-    final override fun <T : ParsedCommandContext> createParsedCommand(
-        name: String,
-        permission: Permission,
-    ): ParsedCommandBuilder<T> {
-        return ParsedCommandBuilder(this, name, permission)
-    }
-
-    final override fun <T : ParsedCommandContext> createArgumentPath(vararg arguments: CommandArgument<*>) =
-        ArgumentPathBuilder<T>().arguments(
-            *arguments,
+    ): RawCommandBuilder {
+        return RawCommandBuilder(
+            messageFactory = messageFactory,
+            coreMessages = coreMessages,
+            commandManager = commandManager,
+            name = name,
+            permission = permission,
         )
+    }
 }

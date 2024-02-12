@@ -20,7 +20,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         ).tagUnparsed("world", world)
 
     override fun onEnable() {
-        createCommand("world", permission)
+        commandFactory.rawCommandBuilder("world", permission)
             .usage("<world>")
             .description("Teleport to another world")
             .executor(WorldCommand(this))

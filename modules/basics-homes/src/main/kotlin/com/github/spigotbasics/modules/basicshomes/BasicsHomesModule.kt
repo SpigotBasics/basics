@@ -47,25 +47,25 @@ class BasicsHomesModule(context: ModuleInstantiationContext) : AbstractBasicsMod
     override fun onEnable() {
         storage = createStorage()
 
-        createCommand("home", permissionHome)
+        commandFactory.rawCommandBuilder("home", permissionHome)
             .description("Teleports you to one of your homes")
             .usage("[name]")
             .executor(HomeCommand(this))
             .register()
 
-        createCommand("homes", permissionHome)
+        commandFactory.rawCommandBuilder("homes", permissionHome)
             .description("Lists your homes")
             // .usage("/homes")
             .executor(HomeListCommand(this))
             .register()
 
-        createCommand("sethome", permissionSetHome)
+        commandFactory.rawCommandBuilder("sethome", permissionSetHome)
             .description("Sets a home")
             .usage("[name]")
             .executor(SetHomeCommand(this))
             .register()
 
-        createCommand("delhome", permissionDelHome)
+        commandFactory.rawCommandBuilder("delhome", permissionDelHome)
             .description("Deletes a home")
             .usage("[name]")
             .executor(DelHomeCommand(this))

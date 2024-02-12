@@ -53,7 +53,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
             eventBus.subscribe(AsyncPlayerChatEvent::class.java, this::changeChatFormatSpigot, EventPriority.HIGHEST)
         }
 
-        createCommand("chatcolor", permissionChatColor)
+        commandFactory.rawCommandBuilder("chatcolor", permissionChatColor)
             .description("Sets your chat color")
             .usage("[reset|<color>]")
             .executor(ColorChatCommand(this))

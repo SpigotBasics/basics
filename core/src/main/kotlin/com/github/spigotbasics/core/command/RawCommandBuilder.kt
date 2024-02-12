@@ -1,15 +1,18 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
-import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
-class BasicsCommandBuilder(
-    private val module: BasicsModule,
+class RawCommandBuilder(
+    private val messageFactory: MessageFactory,
+    private val coreMessages: CoreMessages,
+    private val commandManager: BasicsCommandManager,
     private val name: String,
     private val permission: Permission,
 ) {
-    private var permissionMessage: Message = module.plugin.messages.noPermission
+    private var permissionMessage: Message = coreMessages.noPermission
     private var description: String? = null
     private var usage: String = ""
     private var aliases: List<String> = emptyList()
@@ -24,8 +27,10 @@ class BasicsCommandBuilder(
             this.usage = usage
         }
 
-    fun permissionMessage(permissionMessage: Message) = apply { this.permissionMessage = permissionMessage }
+    @Deprecated("Ignored by Bukkit")
+    private fun permissionMessage(permissionMessage: Message) = apply { this.permissionMessage = permissionMessage }
 
+    @Deprecated("Will be registered automatically in the future")
     fun aliases(aliases: List<String>) = apply { this.aliases = aliases }
 
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
@@ -35,7 +40,7 @@ class BasicsCommandBuilder(
     fun executor(executor: (RawCommandContext) -> CommandResult?) =
         apply {
             this.executor =
-                object : BasicsCommandExecutor(module) {
+                object : BasicsCommandExecutor(coreMessages, messageFactory) {
                     override fun execute(context: RawCommandContext): CommandResult? {
                         return executor(context)
                     }
@@ -54,7 +59,7 @@ class BasicsCommandBuilder(
 
     fun register(): BasicsCommand {
         val command = build()
-        module.commandManager.registerCommand(command)
+        commandManager.registerCommand(command)
         return command
     }
 
@@ -72,8 +77,8 @@ class BasicsCommandBuilder(
             info = info,
             executor = executor ?: error("Executor must be set"),
             tabCompleter = tabCompleter ?: executor,
-            coreMessages = module.plugin.messages,
-            messageFactory = module.plugin.messageFactory,
+            coreMessages = coreMessages,
+            messageFactory = messageFactory,
         )
     }
 }

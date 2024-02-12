@@ -28,7 +28,7 @@ class BasicsFlyModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     private fun msgDisabledOthers(player: Player) = messages.getMessage("fly-disabled-others").concerns(player)
 
     override fun onEnable() {
-        createCommand("fly", permission)
+        commandFactory.rawCommandBuilder("fly", permission)
             .description("Toggles fly mode")
             .usage("[player]")
             .executor(FlyCommandExecutor(this))

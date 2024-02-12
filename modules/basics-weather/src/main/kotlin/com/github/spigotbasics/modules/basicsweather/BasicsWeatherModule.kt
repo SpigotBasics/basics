@@ -12,7 +12,7 @@ class BasicsWeatherModule(context: ModuleInstantiationContext) : AbstractBasicsM
     val msgWeatherChanged get() = messages.getMessage("weather-changed")
 
     override fun onEnable() {
-        createCommand("weather", perm)
+        commandFactory.rawCommandBuilder("weather", perm)
             .usage("<clear|storm> [duration]")
             .executor(WeatherCommand(this))
             .register()

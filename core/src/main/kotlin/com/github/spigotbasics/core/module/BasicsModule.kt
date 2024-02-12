@@ -2,12 +2,8 @@ package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.BasicsPlugin
 import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
-import com.github.spigotbasics.core.command.BasicsCommandBuilder
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
-import com.github.spigotbasics.core.command.parsed.CommandArgument
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.factory.CommandFactory
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
@@ -20,7 +16,6 @@ import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.scheduler.BasicsScheduler
 import com.github.spigotbasics.core.storage.NamespacedStorage
 import org.bukkit.Server
-import org.bukkit.permissions.Permission
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
@@ -115,6 +110,11 @@ interface BasicsModule {
      */
     val keyFactory: NamespacedNamespacedKeyFactory
 
+    /**
+     * This module's CommandFactory
+     */
+    val commandFactory: CommandFactory
+
     // ----- Module lifecycle -----
 
     /**
@@ -152,15 +152,20 @@ interface BasicsModule {
 
     // ----- Utility methods -----
 
-    fun createCommand(
-        name: String,
-        permission: Permission,
-    ): BasicsCommandBuilder
-
-    fun <T : ParsedCommandContext> createParsedCommand(
-        name: String,
-        permission: Permission,
-    ): ParsedCommandBuilder<T>
+//    fun createCommand(
+//        name: String,
+//        permission: Permission,
+//    ): RawCommandBuilder
+//
+//    fun <T : ParsedCommandContext> createParsedCommand(
+//        name: String,
+//        permission: Permission,
+//    ): ParsedCommandBuilder<T>
+//
+//    fun createParsedCommand(
+//        name: String,
+//        permission: Permission
+//    ): ParsedCommandBuilder<MapCommandContext> = createParsedCommand<MapCommandContext>(name, permission)
 
     fun createStorage(name: String? = null): NamespacedStorage
 
@@ -187,5 +192,5 @@ interface BasicsModule {
         return "${info.name}-$newPath"
     }
 
-    fun <T : ParsedCommandContext> createArgumentPath(vararg arguments: CommandArgument<*>): ArgumentPathBuilder<T>
+//    fun <T : ParsedCommandContext> createArgumentPath(vararg arguments: CommandArgument<*>): ArgumentPathBuilder<T>
 }

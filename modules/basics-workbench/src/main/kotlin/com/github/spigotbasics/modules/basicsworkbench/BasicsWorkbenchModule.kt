@@ -52,38 +52,38 @@ class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasic
         )
 
     override fun onEnable() {
-        createCommand("craftingtable", permissionCraftingTable)
+        commandFactory.rawCommandBuilder("craftingtable", permissionCraftingTable)
             .description("Opens a crafting table")
             .aliases(listOf("workbench"))
             .executor(WorkbenchExecutor())
             .register()
 
-        createCommand("cartographytable", permissionCartographyTable)
+        commandFactory.rawCommandBuilder("cartographytable", permissionCartographyTable)
             .description("Opens a cartography table")
             .executor(CartographyExecutor())
             .register()
 
-        createCommand("loom", permissionLoom)
+        commandFactory.rawCommandBuilder("loom", permissionLoom)
             .description("Opens a loom")
             .executor(LoomExecutor())
             .register()
 
-        createCommand("grindstone", permissionGrindstone)
+        commandFactory.rawCommandBuilder("grindstone", permissionGrindstone)
             .description("Opens a grindstone")
             .executor(GrindstoneExecutor())
             .register()
 
-        createCommand("smithingtable", permissionSmithingTable)
+        commandFactory.rawCommandBuilder("smithingtable", permissionSmithingTable)
             .description("Opens a smithing table")
             .executor(SmithingTableExecutor())
             .register()
 
-        createCommand("stonecutter", permissionStonecutter)
+        commandFactory.rawCommandBuilder("stonecutter", permissionStonecutter)
             .description("Opens a stonecutter")
             .executor(StonecutterExecutor())
             .register()
 
-        createCommand("anvil", permissionAnvil)
+        commandFactory.rawCommandBuilder("anvil", permissionAnvil)
             .description("Opens an anvil")
             .executor(AnvilExecutor())
             .register()

@@ -16,7 +16,7 @@ class BasicsEnderchestModule(context: ModuleInstantiationContext) : AbstractBasi
     val inventoryTitle get() = messages.getMessage("inventory-title")
 
     override fun onEnable() {
-        createCommand("enderchest", permission)
+        commandFactory.rawCommandBuilder("enderchest", permission)
             .description("Opens your enderchest")
             .usage("[player]")
             .executor(EnderchestCommand(this))

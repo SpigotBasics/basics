@@ -38,12 +38,12 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     private fun msgFedOthers(player: Player) = messages.getMessage("fed-others").concerns(player)
 
     override fun onEnable() {
-        createCommand("heal", permHeal)
+        commandFactory.rawCommandBuilder("heal", permHeal)
             .description("Heals Players")
             .usage("[player]")
             .executor(HealCommandExecutor(this))
             .register()
-        createCommand("feed", permFeed)
+        commandFactory.rawCommandBuilder("feed", permFeed)
             .description("Feeds Players")
             .usage("[player]")
             .executor(FeedCommandExecutor(this))

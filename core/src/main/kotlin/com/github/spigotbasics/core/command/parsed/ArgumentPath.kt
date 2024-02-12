@@ -9,9 +9,9 @@ import org.bukkit.permissions.Permission
 
 class ArgumentPath<T : ParsedCommandContext>(
     val senderArgument: SenderType<*>,
-    val arguments: List<CommandArgument<*>>,
+    val arguments: List<Pair<String, CommandArgument<*>>>,
     val permission: List<Permission> = emptyList(),
-    private val contextBuilder: (CommandSender, List<Any?>) -> T,
+    private val contextBuilder: (Map<String, Any?>) -> T,
 ) {
     fun matches(
         sender: CommandSender,
@@ -21,23 +21,20 @@ class ArgumentPath<T : ParsedCommandContext>(
         if (args.size > arguments.size) {
             return Either.Left(
                 PathMatchResult.NO,
-            ) // Maybe use != ? > allows to show "missing item", != wouldn't
+            )
         }
-        // TODO: Keep a list of non-matches where size is too little, and if no other errors occur, say "missing item", only otherwise
-        //  fallback to CommandResult.USAGE
 
         // Each provided arg must be parseable by its corresponding CommandArgument
         val errors = mutableListOf<Message>()
-        // val matches =  // used to be all(...)
         args.indices.forEach { index ->
-            val parsed = arguments[index].parse(args[index])
+            // val parsed = arguments[index].parse(args[index])
+            val (_, argument) = arguments[index]
+            val parsed = argument.parse(args[index])
 
             if (parsed == null) {
-                val error = arguments[index].errorMessage(args[index])
+                val error = argument.errorMessage(args[index])
                 errors.add(error)
             }
-
-            // true
         }
 
         if (errors.isNotEmpty()) return Either.Right(errors)
@@ -55,10 +52,12 @@ class ArgumentPath<T : ParsedCommandContext>(
             return ParseResult.Failure(listOf(Basics.messages.commandNotFromConsole))
         }
 
-        val parsedArgs = mutableListOf<Any?>()
+        val parsedArgs = mutableMapOf<String, Any?>()
+        parsedArgs["sender"] = sender
         val errors = mutableListOf<Message>()
 
-        for ((index, arg) in arguments.withIndex()) {
+        for ((index, argumentPair) in arguments.withIndex()) {
+            val (argName, arg) = argumentPair
             if (index >= args.size) {
                 errors.add(Basics.messages.missingArgument(arg.name))
                 break
@@ -69,14 +68,14 @@ class ArgumentPath<T : ParsedCommandContext>(
                 errors.add(arg.errorMessage(args[index]))
                 break
             } else {
-                parsedArgs.add(parsed)
+                parsedArgs[argName] = parsed
             }
         }
 
-        if (errors.isEmpty() && parsedArgs.size == arguments.size) {
-            return ParseResult.Success(contextBuilder(sender, parsedArgs))
+        return if (errors.isEmpty() && parsedArgs.size == arguments.size) {
+            ParseResult.Success(contextBuilder(parsedArgs))
         } else {
-            return ParseResult.Failure(errors)
+            ParseResult.Failure(errors)
         }
     }
 
@@ -84,7 +83,7 @@ class ArgumentPath<T : ParsedCommandContext>(
         if (args.isEmpty() || args.size > arguments.size) return emptyList()
 
         val currentArgIndex = args.size - 1
-        return arguments[currentArgIndex].tabComplete(args.lastOrEmpty())
+        return arguments[currentArgIndex].second.tabComplete(args.lastOrEmpty())
     }
 
     fun isCorrectSender(sender: CommandSender): Boolean {

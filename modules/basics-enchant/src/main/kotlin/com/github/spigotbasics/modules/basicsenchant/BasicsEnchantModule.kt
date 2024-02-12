@@ -48,7 +48,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
     fun msgRemovedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("removed-self").tags(tag)
 
     override fun onEnable() {
-        createCommand("enchant", permission)
+        commandFactory.rawCommandBuilder("enchant", permission)
             .description("Enchants the item in the player's hand")
             .usage("<enchantment> [level]")
             .executor(EnchantExecutor())

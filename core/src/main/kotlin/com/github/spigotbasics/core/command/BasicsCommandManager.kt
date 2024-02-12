@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.command
 
+import org.bukkit.command.Command
 import org.bukkit.command.SimpleCommandMap
 
 // TODO: Fix updateCommandsToPlayers logic
@@ -68,7 +69,13 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
     }
 
     private fun removeFromServerCommandMap(command: BasicsCommand) {
-        // serverCommandMap.commands.remove(command)
+        try {
+            // TODO: Cache this
+            val knownCommandsField = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
+            knownCommandsField.isAccessible = true
+            val knownCommands = knownCommandsField.get(serverCommandMap) as MutableMap<String, Command>
+            knownCommands.entries.removeIf { it.value == command }
+        } catch (_: Exception) { }
         command.disableExecutor()
     }
 }

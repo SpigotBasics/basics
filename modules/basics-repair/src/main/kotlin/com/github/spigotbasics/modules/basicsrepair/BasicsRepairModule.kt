@@ -22,7 +22,7 @@ class BasicsRepairModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     val permissionOthers = permissionManager.createSimplePermission("basics.repair.others", "Allows to repair other players' items")
 
     override fun onEnable() {
-        createCommand("repair", permission)
+        commandFactory.rawCommandBuilder("repair", permission)
             .usage("[--all] [player]")
             .description("Repairs an item")
             .executor(RepairCommand(this))

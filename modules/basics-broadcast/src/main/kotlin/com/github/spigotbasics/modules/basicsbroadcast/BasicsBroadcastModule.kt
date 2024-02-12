@@ -8,7 +8,7 @@ class BasicsBroadcastModule(context: ModuleInstantiationContext) : AbstractBasic
     val parsedPerm = permissionManager.createSimplePermission("basics.broadcast.parsed", "Allows the user to broadcast parsed messages")
 
     override fun onEnable() {
-        createCommand("broadcast", commandPerm)
+        commandFactory.rawCommandBuilder("broadcast", commandPerm)
             .description("Broadcasts a message to all players")
             .usage("[--parsed] <message>")
             .executor(BroadcastExecutor(this))
