@@ -86,7 +86,11 @@ class ModulePlayerDataLoader(
                     kick()
                 }
 
-                else -> throw e
+                else -> {
+                    // TODO: Bypass permission to join anyway - for admins who messed up their storage?
+                    logger.log(Level.SEVERE, "Unknown error while loading data for joining player $player - kicking them now", e)
+                    kick()
+                }
             }
         }
     }
