@@ -11,12 +11,16 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.UUID
+import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+import java.util.logging.Level
 
 class ModulePlayerDataLoader(
     storageConfig: StorageConfig,
@@ -26,7 +30,7 @@ class ModulePlayerDataLoader(
     private val logger = BasicsLoggerFactory.getCoreLogger(ModulePlayerDataLoader::class)
 
     private val joinCacheDuration = storageConfig.joinCacheDuration
-    private val joinTimeOut = storageConfig.joinTimeOut
+    private val joinTimeOut = storageConfig.joinTimeOutMillis
 
     val cachedLoginData = ConcurrentHashMap<UUID, CompletableFuture<Void?>>()
     val scheduledClearCacheFutures = ConcurrentHashMap<UUID, ScheduledFuture<*>>()
@@ -52,19 +56,27 @@ class ModulePlayerDataLoader(
                 newFuture
             }
 
-        var secondsTaken = 0.0
-        while (!future.isDone && secondsTaken < joinTimeOut * 1000) {
-            Thread.sleep(20)
-            secondsTaken += 0.02
+        fun kick() {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
         }
 
-        if (!future.isDone) {
+        try {
+            future.get(joinTimeOut, TimeUnit.MILLISECONDS)
+        } catch (e: TimeoutException) {
             logger.warning(
                 "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined " +
-                    "in storage.yml), kicking them now.",
+                        "in storage.yml), kicking them now.",
             )
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
+            kick()
             return
+        } catch (_: InterruptedException) {
+            // ???
+            kick()
+        } catch (e: ExecutionException) {
+            logger.log(Level.SEVERE, "Error while loading data for joining player $uuid", e)
+            kick()
+        } catch (_: CancellationException) {
+            kick()
         }
     }
 
@@ -106,7 +118,7 @@ class ModulePlayerDataLoader(
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: No future found)")
             logger.severe(
                 "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded (No future " +
-                    "found), kicking them now.",
+                        "found), kicking them now.",
             )
             return
         }
@@ -114,7 +126,7 @@ class ModulePlayerDataLoader(
             event.player.kickPlayer(messages.failedToLoadDataOnJoin.toLegacyString() + " (Error: Future not done)")
             logger.severe(
                 "Player ${event.player.name} made it to PlayerJoinEvent despite not having any data loaded " +
-                    "(Future not done), kicking them now.",
+                        "(Future not done), kicking them now.",
             )
             return
         }
