@@ -17,7 +17,8 @@
 <a href="https://discord.gg/GDaTvneshw">![image](https://github.com/SpigotBasics/basics/assets/1122571/e815f75d-7e86-4142-a00a-22b5b093d81e)</a>
 
 ## Compile
-To compile, use `gradlew build` on the root project.
+To compile, use `gradlew distribution`. It will create the plugin .jar and all modules into `build/dist`. You can also 
+use `gradlew zipDistribution` to get a .zip file.
 
 You can also use the `testserver` tasks:
 
