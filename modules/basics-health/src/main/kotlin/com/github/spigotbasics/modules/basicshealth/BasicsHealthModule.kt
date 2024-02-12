@@ -42,12 +42,12 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             .description("Heals Players")
             .usage("[player]")
             .executor(HealCommandExecutor(this))
-            .register();
+            .register()
         createCommand("feed", permFeed)
             .description("Feeds Players")
             .usage("[player]")
             .executor(FeedCommandExecutor(this))
-            .register();
+            .register()
     }
 
     inner class HealCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
@@ -63,13 +63,22 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             player.health = player.healthScale
 
             val message =
-                if (context.sender == player){
+                if (context.sender == player) {
                     module.msgHealed
                 } else {
                     module.msgHealedOthers(player)
                 }
+
             message.sendToSender(context.sender)
             return CommandResult.SUCCESS
+        }
+
+        override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+            return if (context.args.size == 1 && context.sender.hasPermission(module.permHealOthers)) {
+                null
+            } else {
+                mutableListOf()
+            }
         }
     }
 
@@ -86,13 +95,22 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
             player.foodLevel = 20
 
             val message =
-                if (context.sender == player){
+                if (context.sender == player) {
                     module.msgFed
                 } else {
                     module.msgFedOthers(player)
                 }
+
             message.sendToSender(context.sender)
             return CommandResult.SUCCESS
+        }
+
+        override fun tabComplete(context: BasicsCommandContext): MutableList<String>? {
+            return if (context.args.size == 1 && context.sender.hasPermission(module.permFeedOthers)) {
+                null
+            } else {
+                mutableListOf()
+            }
         }
     }
 }
