@@ -51,7 +51,7 @@ class StorageConfig(context: ConfigInstantiationContext) : SavedConfig(context) 
     val sqlSleep: Double
         get() = getDurationAsMillis("debug.sql-sleep-delay", 0L) / 1_000.0
 
-    val joinTimeOut: Long
+    val joinTimeOutMillis: Long
         get() = getDurationAsMillis("load-player-data-on-join.timeout", 2_000)
 
     val joinCacheDuration: Long

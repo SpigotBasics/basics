@@ -11,12 +11,16 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.UUID
+import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+import java.util.logging.Level
 
 class ModulePlayerDataLoader(
     storageConfig: StorageConfig,
@@ -26,7 +30,7 @@ class ModulePlayerDataLoader(
     private val logger = BasicsLoggerFactory.getCoreLogger(ModulePlayerDataLoader::class)
 
     private val joinCacheDuration = storageConfig.joinCacheDuration
-    private val joinTimeOut = storageConfig.joinTimeOut
+    private val joinTimeOut = storageConfig.joinTimeOutMillis
 
     val cachedLoginData = ConcurrentHashMap<UUID, CompletableFuture<Void?>>()
     val scheduledClearCacheFutures = ConcurrentHashMap<UUID, ScheduledFuture<*>>()
@@ -39,6 +43,8 @@ class ModulePlayerDataLoader(
             return
         }
         val uuid = event.uniqueId
+        val name = event.name
+        val player = "$name ($uuid)"
 
         val future =
             cachedLoginData.computeIfAbsent(uuid) {
@@ -52,19 +58,40 @@ class ModulePlayerDataLoader(
                 newFuture
             }
 
-        var secondsTaken = 0.0
-        while (!future.isDone && secondsTaken < joinTimeOut * 1000) {
-            Thread.sleep(20)
-            secondsTaken += 0.02
+        fun printException(e: Exception) {
+            logger.warning(
+                "Could not load data for joining player $player in time (threshold: $joinTimeOut ms as defined in storage.yml): " +
+                    "${e.javaClass.simpleName} - kicking them now.",
+            )
         }
 
-        if (!future.isDone) {
-            logger.warning(
-                "Could not load data for joining player ${event.name} in time (threshold: $joinTimeOut ms as defined " +
-                    "in storage.yml), kicking them now.",
-            )
+        fun kick() {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, messages.failedToLoadDataOnJoin.toLegacyString())
-            return
+        }
+
+        try {
+            future.get(joinTimeOut, TimeUnit.MILLISECONDS)
+        } catch (e: Exception) {
+            when (e) {
+                is TimeoutException,
+                is InterruptedException,
+                is CancellationException,
+                -> {
+                    printException(e)
+                    kick()
+                }
+
+                is ExecutionException -> {
+                    logger.log(Level.SEVERE, "Error while loading data for joining player $player - kicking them now", e)
+                    kick()
+                }
+
+                else -> {
+                    // TODO: Bypass permission to join anyway - for admins who messed up their storage?
+                    logger.log(Level.SEVERE, "Unknown error while loading data for joining player $player - kicking them now", e)
+                    kick()
+                }
+            }
         }
     }
 

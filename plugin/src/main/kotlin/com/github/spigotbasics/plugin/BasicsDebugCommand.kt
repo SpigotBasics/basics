@@ -93,8 +93,8 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
         val output = """
 
 PlayerDataListener:
-  -             cached login data: <cached-login-data>
-  - scheduled clear cache futures: <scheduled-clear-cache-futures>
+  -             cached login data: <#cached-login-data>
+  - scheduled clear cache futures: <#scheduled-clear-cache-futures>
 
 """
 
