@@ -46,16 +46,16 @@ class BasicsAnnouncementsModule(context: ModuleInstantiationContext) : AbstractB
 
     private fun broadcastAnnouncement() {
         if (broadcasts.isEmpty()) return
-        val broadcast = if (pickRandom) {
-            broadcasts.getRandom()!!
-        } else {
-            val value = broadcasts[msgIndex]
-            msgIndex = (msgIndex + 1).mod(broadcasts.size)
-            value
-        }
-        val message = messageFactory.createMessage(broadcast)
 
-        if (showInConsole) message.sendToConsole()
-        message.sendToAllPlayers()
+        val broadcast = when (pickRandom) {
+            true -> broadcasts.getRandom()
+            false -> broadcasts[msgIndex.also { msgIndex = (msgIndex + 1) % broadcasts.size }]
+        }
+
+        broadcast?.let {
+            val message = messageFactory.createMessage(it)
+            if (showInConsole) message.sendToConsole()
+            message.sendToAllPlayers()
+        }
     }
 }
