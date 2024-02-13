@@ -1,5 +1,12 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.factory
 
+import com.github.spigotbasics.core.command.BasicsCommand
+import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.raw.RawTabCompleter
+import com.github.spigotbasics.core.command.CommandInfo
+import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -17,7 +24,7 @@ class RawCommandBuilder(
     private var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
-    private var tabCompleter: BasicsTabCompleter? = null
+    private var tabCompleter: RawTabCompleter? = null
 
     fun description(description: String) = apply { this.description = description }
 
@@ -35,7 +42,7 @@ class RawCommandBuilder(
 
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
-    fun tabCompleter(tabCompleter: BasicsTabCompleter) = apply { this.tabCompleter = tabCompleter }
+    fun tabCompleter(tabCompleter: RawTabCompleter) = apply { this.tabCompleter = tabCompleter }
 
     fun executor(executor: (RawCommandContext) -> CommandResult?) =
         apply {
@@ -50,7 +57,7 @@ class RawCommandBuilder(
     fun tabCompleter(tabCompleter: (RawCommandContext) -> MutableList<String>?) =
         apply {
             this.tabCompleter =
-                object : BasicsTabCompleter {
+                object : RawTabCompleter {
                     override fun tabComplete(context: RawCommandContext): MutableList<String>? {
                         return tabCompleter(context)
                     }

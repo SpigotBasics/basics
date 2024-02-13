@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsmsg
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

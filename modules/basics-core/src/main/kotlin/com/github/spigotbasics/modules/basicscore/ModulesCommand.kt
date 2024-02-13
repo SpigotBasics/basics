@@ -3,7 +3,7 @@ package com.github.spigotbasics.modules.basicscore
 import com.github.spigotbasics.core.command.BasicsCommandException
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message

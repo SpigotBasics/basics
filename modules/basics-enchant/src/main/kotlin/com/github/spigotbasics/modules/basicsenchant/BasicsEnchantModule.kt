@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsenchant
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.extensions.toHumanReadable
 import com.github.spigotbasics.core.module.AbstractBasicsModule

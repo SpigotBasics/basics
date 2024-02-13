@@ -5,6 +5,8 @@ import com.github.spigotbasics.core.command.parsed.ArgumentPath
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
+import com.github.spigotbasics.core.command.raw.RawTabCompleter
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -22,7 +24,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
     private var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
-    private var tabCompleter: BasicsTabCompleter? = null
+    private var tabCompleter: RawTabCompleter? = null
     private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
     private var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 

@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicshomes.commands
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.tags.MESSAGE_SPECIFIC_TAG_PREFIX
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule

@@ -3,7 +3,7 @@ package com.github.spigotbasics.modules.basicsworld
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
 import com.github.spigotbasics.core.util.WorldUtils

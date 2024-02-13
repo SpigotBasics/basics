@@ -1,5 +1,6 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.raw
 
+import com.github.spigotbasics.core.command.BasicsCommand
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 

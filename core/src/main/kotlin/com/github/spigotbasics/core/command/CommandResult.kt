@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.entity.Player
