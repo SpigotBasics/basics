@@ -51,11 +51,14 @@ fun Throwable.toCompactStackTrace(
     shortenedPackages: Map<String, String> = emptyMap(),
     maxLines: Int = 10,
 ): String {
+    val allShortenedPackages = builtinShortenedPackages + shortenedPackages
     val compactStackTrace = StringBuilder()
+
+    compactStackTrace.append("<red>${compactClassName(this::class.qualifiedName!!, allShortenedPackages)}</red>: ${this.message}\n")
 
     run loop@{
         this.stackTrace.forEachIndexed { index, element ->
-            val fullClassName = compactClassName(element.className, builtinShortenedPackages + shortenedPackages)
+            val fullClassName = compactClassName(element.className, allShortenedPackages)
             val packageName = fullClassName.substringBeforeLast(".")
             val className = fullClassName.substringAfterLast(".")
             compactStackTrace.append(

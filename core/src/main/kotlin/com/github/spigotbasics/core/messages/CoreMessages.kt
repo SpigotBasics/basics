@@ -54,5 +54,18 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
             .tagUnparsed("value", givenValue)
     }
 
+    fun invalidValueForArgumentNumberNotInRange(
+        argumentName: String,
+        givenValue: Int,
+        min: Int,
+        max: Int,
+    ): Message {
+        return getMessage("invalid-value-for-argument-number-not-in-range")
+            .tagUnparsed("argument", argumentName)
+            .tagParsed("value", givenValue.toString())
+            .tagParsed("min", min.toString())
+            .tagParsed("max", max.toString())
+    }
+
     fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)
 }
