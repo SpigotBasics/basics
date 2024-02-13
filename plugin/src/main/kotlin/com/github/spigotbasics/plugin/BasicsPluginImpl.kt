@@ -67,6 +67,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val classLoaderFixer =
         ClassLoaderFixer(
+            file.absolutePath,
             coreConfigManager.getConfig(
                 "fix-class-loading.yml",
                 "fix-class-loading.yml",

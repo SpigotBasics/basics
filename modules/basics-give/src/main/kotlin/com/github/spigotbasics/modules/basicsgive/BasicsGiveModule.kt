@@ -1,5 +1,9 @@
 package com.github.spigotbasics.modules.basicsgive
 
+import com.github.spigotbasics.core.command.parsed.MapArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.arguments.IntArg
+import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
+import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -25,6 +29,21 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         receiver: Player,
         item: ItemStack,
     ) = messages.getMessage("give").concerns(receiver).tags(ItemStackTag(item))
+
+    override fun onEnable() {
+        commandFactory.parsedCommandBuilder("give", permission)
+            .mapContext()
+            .usage("[Receiving Player] <Item> [Amount]")
+            .path(
+                MapArgumentPathBuilder().arguments(
+                    "receiver" to PlayerArg("Receiving Player"),
+                    "item" to ItemMaterialArg("Item"),
+                    "amount" to IntArg("Amount"),
+                ).permissions(permissionOthers),
+            )
+            .executor(GiveExecutor(this))
+            .register()
+    }
 
 //    val pathPlayerItem =
 //        createArgumentPath<GiveContext>(

@@ -1,5 +1,6 @@
 set-enabled-during-ondisable: true
 call-iterator-on-empty-list: true
+load-all-classes: true
 abuse-classes:
   BasicsModule: true
   AbstractBasicsModule: true

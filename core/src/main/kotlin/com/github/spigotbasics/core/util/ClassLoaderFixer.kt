@@ -28,7 +28,10 @@ import java.util.jar.JarFile
  * the classloader is not removed from the list and closed before onDisable() completes, and it loads classes
  * that are known to cause issues right during onEnable().
  */
-class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
+class ClassLoaderFixer(
+    private val pluginJarPath: String,
+    private val config: FixClassLoadingConfig,
+) {
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
     private val isSuperEnabledField: Field? =
@@ -65,6 +68,10 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
                 forceLoadClassesForEnclosingClass(clazz)
             } catch (_: Throwable) {
             }
+        }
+
+        if (config.loadAllClasses) {
+            loadAllClassesInJar(pluginJarPath)
         }
     }
 
@@ -120,13 +127,13 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
         }
     }
 
-    fun touchAllClassesInJar(jarFilePath: String) {
+    fun loadAllClassesInJar(jarFilePath: String) {
         listClassNamesInJar(jarFilePath).forEach {
             try {
-                logger.info("Touching class: $it")
+                // logger.info("Touching class: $it")
                 Class.forName(it, false, this::class.java.classLoader)
             } catch (e: Throwable) {
-                e.printStackTrace()
+                // e.printStackTrace()
             }
         }
     }

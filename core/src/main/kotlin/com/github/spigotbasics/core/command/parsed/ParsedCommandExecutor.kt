@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
@@ -10,6 +11,14 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
     private val executor: ParsedCommandContextExecutor<T>,
     private val paths: List<ArgumentPath<T>>,
 ) {
+    companion object {
+        private val logger = BasicsLoggerFactory.getCoreLogger(ParsedCommandExecutor::class)
+    }
+
+    init {
+        logger.debug(10, "ParsedCommandExecutor created with paths: ${paths.size}")
+    }
+
 //    fun execute(input: List<String>) {
 //        for (path in paths) {
 //            val context = path.parse(input)
@@ -30,13 +39,13 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
 //                }
 //                is ParseResult.Failure -> {
 //                    // Handle or display errors
-//                    result.errors.forEach { println(it) }
+//                    result.errors.forEach { logger.debug(10,it) }
 //                    return Either.Right(result)
 //                }
 //            }
 //        }
 //        // If no paths matched, optionally print a generic error or usage message
-//        println("Invalid command syntax.")
+//        logger.debug(10,"Invalid command syntax.")
 //        return Either.Left(CommandResult.USAGE)
 //    }
 
@@ -44,9 +53,12 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
         sender: CommandSender,
         input: List<String>,
     ): Either<CommandResult, ParseResult.Failure> {
+        logger.debug(10, "ParsedCommandExecutor executing with input: $input")
+
         // Empty args = show usage, unless an empty path is registered
         if (input.isEmpty()) {
             if (!paths.any { it.arguments.isEmpty() }) {
+                logger.debug(10, "Input is empty and no empty path was found")
                 return Either.Left(CommandResult.USAGE)
             }
         }
@@ -60,7 +72,11 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
         var missingPermission: Permission? = null
 
         sortedPaths.forEach { path ->
+
+            logger.debug(10, " Testing path match $path ??")
+
             val matchResult = path.matches(sender, input)
+            logger.debug(10, "Match result: $matchResult")
             if (matchResult is Either.Right) {
                 // TODO: Maybe collect all error messages? Right now, which error message is shown depends on the order of the paths
                 //  That means more specific ones should be registered first
@@ -79,20 +95,27 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
                     missingPermission = path.permission.firstOrNull { !sender.hasPermission(it) }
                 }
             } else if (matchResult is Either.Left && matchResult.value == PathMatchResult.YES) {
+                logger.debug(10, "Path matched: $path")
+                logger.debug(10, "Now executing it...")
+
                 when (val result = path.parse(sender, input)) {
                     is ParseResult.Success -> {
+                        logger.debug(10, "Path.parse == ParseResult.Success: $result")
                         executor.execute(sender, result.context)
-                        // println("Command executed successfully.")
+                        // logger.debug(10,"Command executed successfully.")
+                        logger.debug(10, "Command executed successfully.")
                         return Either.Left(CommandResult.SUCCESS)
                     }
 
                     is ParseResult.Failure -> {
-                        // println("Path failed to parse: $result")
-                        // result.errors.forEach { println(it) } // Optionally handle or display errors if necessary for debugging
+                        logger.debug(10, "Path.parse == ParseResult.Failure: $result")
+
+                        // logger.debug(10,"Path failed to parse: $result")
+                        // result.errors.forEach { logger.debug(10,it) } // Optionally handle or display errors if necessary for debugging
 
                         // Might comment out the part after || below v v v
                         if (shortestPathFailure == null || result.errors.size < shortestPathFailure!!.errors.size) {
-                            // println("Shortest path failure: $result")
+                            // logger.debug(10,"Shortest path failure: $result")
                             shortestPathFailure = result
                         }
                     }
@@ -117,7 +140,7 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
             errors!![0].sendToSender(sender)
             return Either.Left(CommandResult.SUCCESS)
         } else {
-            // println("No matching command format found.")
+            // logger.debug(10,"No matching command format found.")
             return Either.Left(CommandResult.USAGE)
         }
     }

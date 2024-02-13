@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
@@ -38,9 +39,15 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
 
     fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
+    fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
 
-    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+    // fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    // fun paths(argumentPathBuilders: List<ArgumentPathBuilder<T>>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
+
+    // fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    // fun paths(vararg argumentPathBuilders: ArgumentPathBuilder<T>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
 
     fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
