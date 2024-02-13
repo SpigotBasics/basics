@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
 class ArgumentPath<T : ParsedCommandContext>(
-    // val coreMessages: CoreMessages,
     val senderArgument: SenderType<*>,
     val arguments: List<Pair<String, CommandArgument<*>>>,
     val permission: List<Permission> = emptyList(),

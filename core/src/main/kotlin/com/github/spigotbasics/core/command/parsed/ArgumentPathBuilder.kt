@@ -2,14 +2,18 @@ package com.github.spigotbasics.core.command.parsed
 
 import org.bukkit.permissions.Permission
 
-interface ArgumentPathBuilder<T : ParsedCommandContext> {
-    fun senderType(senderType: SenderType<*>): ArgumentPathBuilder<T>
+abstract class ArgumentPathBuilder<T : ParsedCommandContext> {
+    protected var senderType: SenderType<*> = AnySender
+    protected var arguments = emptyList<Pair<String, CommandArgument<*>>>()
+    protected var permissions = emptyList<Permission>()
 
-    fun playerOnly(): ArgumentPathBuilder<T> = apply { senderType(PlayerSender) }
+    private fun senderType(senderType: SenderType<*>) = apply { this.senderType = senderType }
 
-    fun permissions(vararg permissions: Permission): ArgumentPathBuilder<T>
+    fun playerOnly() = apply { senderType(PlayerSender) }
 
-    fun arguments(vararg arguments: Pair<String, CommandArgument<*>>): ArgumentPathBuilder<T>
+    fun permissions(vararg permissions: Permission) = apply { this.permissions = permissions.toList() }
 
-    fun build(): ArgumentPath<T>
+    fun arguments(vararg arguments: Pair<String, CommandArgument<*>>) = apply { this.arguments = arguments.toList() }
+
+    abstract fun build(): ArgumentPath<T>
 }
