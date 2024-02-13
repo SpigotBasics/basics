@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.command
 
-import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.command.raw.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory

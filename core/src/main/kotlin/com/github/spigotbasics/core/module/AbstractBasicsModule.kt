@@ -2,8 +2,8 @@ package com.github.spigotbasics.core.module
 
 import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.factory.RawCommandBuilder
 import com.github.spigotbasics.core.command.factory.CommandFactory
+import com.github.spigotbasics.core.command.factory.RawCommandBuilder
 import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus

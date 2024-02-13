@@ -75,7 +75,8 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
             knownCommandsField.isAccessible = true
             val knownCommands = knownCommandsField.get(serverCommandMap) as MutableMap<String, Command>
             knownCommands.entries.removeIf { it.value == command }
-        } catch (_: Exception) { }
+        } catch (_: Exception) {
+        }
         command.disableExecutor()
     }
 }
