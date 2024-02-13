@@ -16,7 +16,7 @@ class BasicsLogger(
         private fun getDefaultDebugLogLevel(): Int {
             val debugLevel = System.getenv("BASICS_DEBUG_LEVEL") ?: return -1
             val number = debugLevel.toIntOrNull()
-            if(number == null) {
+            if (number == null) {
                 logger.severe("Invalid debug level: $debugLevel (must be a positive integer) - disabling debug logging")
                 return -1
             }

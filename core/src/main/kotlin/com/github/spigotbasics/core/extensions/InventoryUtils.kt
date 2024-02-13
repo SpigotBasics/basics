@@ -29,13 +29,14 @@ fun ItemStack.addOrDrop(
     location: Location = inventory.findLocation(),
     naturally: Boolean = true,
     consumer: (Item) -> Unit = {},
-): DropResult = inventory.addOrDrop(
-    itemStack = this,
-    dropOverflow = dropOverflow,
-    location = location,
-    naturally = naturally,
-    consumer = consumer,
-)
+): DropResult =
+    inventory.addOrDrop(
+        itemStack = this,
+        dropOverflow = dropOverflow,
+        location = location,
+        naturally = naturally,
+        consumer = consumer,
+    )
 
 /**
  * Attempts to add all items to the inventory and drops the remaining items to the world.
@@ -54,8 +55,11 @@ fun Inventory.addOrDrop(
     naturally: Boolean = true,
     consumer: (Item) -> Unit = {},
 ): DropResult {
-
-    logger.debug(50, "Inventory.addOrDrop: itemStack = $itemStack, dropOverflow = $dropOverflow, location = $location, naturally = $naturally, consumer = $consumer")
+    logger.debug(
+        50,
+        "Inventory.addOrDrop: itemStack = $itemStack, dropOverflow = $dropOverflow, location = $location, " +
+            "naturally = $naturally, consumer = $consumer",
+    )
 
     val totalAmount = itemStack.amount
 
@@ -75,7 +79,6 @@ fun Inventory.addOrDrop(
     logger.debug(50, "  Not all items added to inventory: $amountAdded added, $amountNotAdded not added")
 
     if (!dropOverflow) {
-
         logger.debug(50, "  Not dropping overflow")
 
         return DropResult(

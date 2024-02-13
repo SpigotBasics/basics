@@ -29,11 +29,11 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     fun getStackSize(material: Material): Int {
         val defaultAmount = config.get("default-amount") ?: "stack"
-        if(defaultAmount is Int) {
+        if (defaultAmount is Int) {
             return defaultAmount
         }
-        if(defaultAmount is String) {
-            if(defaultAmount.equals("stack", true)) {
+        if (defaultAmount is String) {
+            if (defaultAmount.equals("stack", true)) {
                 return material.maxStackSize
             }
             return defaultAmount.toIntOrNull() ?: 1

@@ -11,7 +11,7 @@ class BasicsDisposalModule(context: ModuleInstantiationContext) : AbstractBasics
     val title get() = messages.getMessage("inventory-title")
 
     override fun onEnable() {
-        createCommand("disposal", permission)
+        commandFactory.rawCommandBuilder("disposal", permission)
             .executor { content ->
                 val player = requirePlayer(content.sender)
                 val inv = Bukkit.createInventory(null, 6 * 9, title.toLegacyString())
