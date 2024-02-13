@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsfly
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.entity.Player
@@ -28,7 +28,7 @@ class BasicsFlyModule(context: ModuleInstantiationContext) : AbstractBasicsModul
     private fun msgDisabledOthers(player: Player) = messages.getMessage("fly-disabled-others").concerns(player)
 
     override fun onEnable() {
-        createCommand("fly", permission)
+        commandFactory.rawCommandBuilder("fly", permission)
             .description("Toggles fly mode")
             .usage("[player]")
             .executor(FlyCommandExecutor(this))

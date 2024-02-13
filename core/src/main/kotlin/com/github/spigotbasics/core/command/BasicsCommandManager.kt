@@ -1,6 +1,9 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
+import org.bukkit.command.Command
 import org.bukkit.command.SimpleCommandMap
+import java.util.logging.Level
 
 // TODO: Fix updateCommandsToPlayers logic
 //   1. Must not be called async
@@ -67,8 +70,28 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
         }
     }
 
+    companion object {
+        private val logger = BasicsLoggerFactory.getCoreLogger(BasicsCommandManager::class)
+
+        private val simpleCommandMap_knownCommands =
+            try {
+                val field = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
+                field.isAccessible = true
+                field
+            } catch (e: Exception) {
+                logger.log(Level.SEVERE, "Failed to get SimpleCommandMap.knownCommands field", e)
+                null
+            }
+    }
+
     private fun removeFromServerCommandMap(command: BasicsCommand) {
-        // serverCommandMap.commands.remove(command)
+        try {
+            @Suppress("UNCHECKED_CAST")
+            (simpleCommandMap_knownCommands?.get(serverCommandMap) as? MutableMap<String, Command>)?.let { knownCommands ->
+                knownCommands.entries.removeIf { it.value == command }
+            }
+        } catch (e: Exception) {
+        }
         command.disableExecutor()
     }
 }

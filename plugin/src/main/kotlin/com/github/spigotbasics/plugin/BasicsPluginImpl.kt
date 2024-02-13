@@ -67,6 +67,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val classLoaderFixer =
         ClassLoaderFixer(
+            file.absolutePath,
             coreConfigManager.getConfig(
                 "fix-class-loading.yml",
                 "fix-class-loading.yml",
@@ -95,9 +96,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     }
 
     override fun onEnable() {
-//        logger.info("Showing all classes in pacakge com.github.spigotbasics.core:")
-//        findAllClassesUsingClassLoader("com.github.spigotbasics.core").forEach(System.out::println)
-
         classLoaderFixer.trickOnEnable()
 
         if (isRustySpigot()) {

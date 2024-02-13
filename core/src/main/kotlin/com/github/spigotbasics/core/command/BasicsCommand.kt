@@ -1,5 +1,7 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.command.raw.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -19,7 +21,7 @@ import java.util.logging.Level
 class BasicsCommand internal constructor(
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
-    private var tabCompleter: BasicsTabCompleter?,
+    private var tabCompleter: RawTabCompleter?,
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory,
 ) :

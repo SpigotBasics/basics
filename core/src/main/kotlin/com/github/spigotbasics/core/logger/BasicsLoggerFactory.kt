@@ -34,6 +34,10 @@ object BasicsLoggerFactory {
         return getLogger("Core/${clazz.simpleName}")
     }
 
+    fun getExtensionFileLogger(name: String): BasicsLogger {
+        return getLogger("Core/Extensions/$name")
+    }
+
     fun getStorageLogger(
         type: StorageType,
         namespace: String,

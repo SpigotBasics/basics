@@ -1,0 +1,7 @@
+max-amount: 64
+
+# Whether to drop items to the ground if the target inventory is full
+drop-overflow: false
+
+# Can be a number, or "stack" to use the item's max stack size
+default-amount: stack

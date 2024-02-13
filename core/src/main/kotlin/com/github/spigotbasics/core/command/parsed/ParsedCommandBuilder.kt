@@ -2,24 +2,30 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
+import com.github.spigotbasics.core.command.raw.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawTabCompleter
+import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
-import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
 class ParsedCommandBuilder<T : ParsedCommandContext>(
-    private val module: BasicsModule,
+    private val messageFactory: MessageFactory,
+    private val coreMessages: CoreMessages,
+    private val commandManager: BasicsCommandManager,
     private val name: String,
     private val permission: Permission,
 ) {
-    private var permissionMessage: Message = module.plugin.messages.noPermission
+    private var permissionMessage: Message = coreMessages.noPermission
     private var description: String? = null
     private var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
-    private var tabCompleter: BasicsTabCompleter? = null
+    private var tabCompleter: RawTabCompleter? = null
     private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
     private var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 
@@ -33,9 +39,15 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
 
     fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
+    fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
 
-    fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+    // fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    // fun paths(argumentPathBuilders: List<ArgumentPathBuilder<T>>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
+
+    // fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
+
+    // fun paths(vararg argumentPathBuilders: ArgumentPathBuilder<T>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
 
     fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
@@ -44,7 +56,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
     private fun executor(command: ParsedCommandExecutor<T>) =
         apply {
             this.executor =
-                object : BasicsCommandExecutor(module) {
+                object : BasicsCommandExecutor(coreMessages, messageFactory) {
                     override fun execute(context: RawCommandContext): CommandResult? {
                         val result = command.execute(context.sender, context.args)
 
@@ -69,7 +81,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
 
     fun register(): BasicsCommand {
         val command = build()
-        module.commandManager.registerCommand(command)
+        commandManager.registerCommand(command)
         return command
     }
 
@@ -93,8 +105,8 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
             info = info,
             executor = executor ?: error("Executor must be set"),
             tabCompleter = tabCompleter ?: executor,
-            coreMessages = module.plugin.messages,
-            messageFactory = module.plugin.messageFactory,
+            coreMessages = coreMessages,
+            messageFactory = messageFactory,
         )
     }
 }

@@ -8,6 +8,9 @@ class FixClassLoadingConfig(context: ConfigInstantiationContext) : SavedConfig(c
     val setEnabledDuringOnDisable
         get() = getBooleanAndLog("set-enabled-during-ondisable")
 
+    val loadAllClasses
+        get() = getBooleanAndLog("load-all-classes")
+
     val abuseClassesList: List<String>
         get() = getStringList("abuse-classes.others")
 

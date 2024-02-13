@@ -2,8 +2,8 @@ package com.github.spigotbasics.modules.basicsrepair
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
-import com.github.spigotbasics.core.command.TabCompleter
+import com.github.spigotbasics.core.command.TabCompleters
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.startsWithIgnoreCase
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -60,13 +60,13 @@ class RepairCommand(private val module: BasicsRepairModule) : BasicsCommandExecu
             if (mayAll && !mayOthers) {
                 return StringUtil.copyPartialMatches(args[0], listOf("--all"), mutableListOf())
             } else if (mayAll && mayOthers) {
-                return StringUtil.copyPartialMatches(args[0], listOf("--all") + TabCompleter.getPlayers(sender, args[0]), mutableListOf())
+                return StringUtil.copyPartialMatches(args[0], listOf("--all") + TabCompleters.getPlayers(sender, args[0]), mutableListOf())
             } else if (!mayAll && mayOthers) {
-                return TabCompleter.getPlayers(sender, args[0])
+                return TabCompleters.getPlayers(sender, args[0])
             }
         } else if (args.size == 2) {
             if (mayAll && mayOthers && args[0].startsWithIgnoreCase("--")) {
-                return TabCompleter.getPlayers(sender, args[1])
+                return TabCompleters.getPlayers(sender, args[1])
             }
         }
         return mutableListOf()

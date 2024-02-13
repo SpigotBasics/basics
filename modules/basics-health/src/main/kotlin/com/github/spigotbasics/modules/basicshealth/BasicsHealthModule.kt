@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicshealth
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.entity.Player
@@ -38,12 +38,12 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     private fun msgFedOthers(player: Player) = messages.getMessage("fed-others").concerns(player)
 
     override fun onEnable() {
-        createCommand("heal", permHeal)
+        commandFactory.rawCommandBuilder("heal", permHeal)
             .description("Heals Players")
             .usage("[player]")
             .executor(HealCommandExecutor(this))
             .register()
-        createCommand("feed", permFeed)
+        commandFactory.rawCommandBuilder("feed", permFeed)
             .description("Feeds Players")
             .usage("[player]")
             .executor(FeedCommandExecutor(this))

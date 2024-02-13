@@ -11,6 +11,7 @@ import org.bukkit.permissions.Permission
  * Provides messages used by the core classes, or are commonly used in other modules
  */
 class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
+    // val commandArgumentSizeMismatch get() = getMessage("command-argument-size-mismatch")
     val noSafeLocationFound get() = getMessage("no-safe-location-found")
     val noPermission get() = getMessage("no-permission")
     val commandNotFromConsole get() = getMessage("command-not-from-console")
@@ -51,6 +52,19 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
         return getMessage("invalid-value-for-argument")
             .tagUnparsed("argument", argumentName)
             .tagUnparsed("value", givenValue)
+    }
+
+    fun invalidValueForArgumentNumberNotInRange(
+        argumentName: String,
+        givenValue: Int,
+        min: Int,
+        max: Int,
+    ): Message {
+        return getMessage("invalid-value-for-argument-number-not-in-range")
+            .tagUnparsed("argument", argumentName)
+            .tagParsed("value", givenValue.toString())
+            .tagParsed("min", min.toString())
+            .tagParsed("max", max.toString())
     }
 
     fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)

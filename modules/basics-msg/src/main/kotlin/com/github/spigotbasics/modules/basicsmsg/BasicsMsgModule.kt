@@ -26,7 +26,7 @@ class BasicsMsgModule(context: ModuleInstantiationContext) : AbstractBasicsModul
         )
 
     override fun onEnable() {
-        createCommand("msg", permission)
+        commandFactory.rawCommandBuilder("msg", permission)
             .description("Sends a private message to another player")
             .usage("<player> <message>")
             .executor(MsgExecutor(this))

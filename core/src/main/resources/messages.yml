@@ -10,6 +10,9 @@ unknown-option: "<error><red>Unknown option: </red><color:#FF8888><#option></col
 # Tags: <#argument> <#value>
 invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argument></bright_red>: <bright_red><#value></bright_red></red>"
 
+# Tags: <#argument> <#value> <#min> <#max>
+invalid-value-for-argument-number-not-in-range: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be between <bright_red><#min></bright_red> and <bright_red><#max></bright_red>, was <dark_red><#value></dark_red>!</red>"
+
 # Tags: <#argument>
 missing-value-for-argument: "<error><red>Missing value for <bright_red><#argument></bright_red>!</red>"
 invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></bright_red>"

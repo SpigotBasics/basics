@@ -44,7 +44,7 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
         )
 
     override fun onEnable() {
-        createCommand("gamemode", perm)
+        commandFactory.rawCommandBuilder("gamemode", perm)
             .description("Changes the player's game mode")
             .usage("<mode> [player]")
             .executor(GamemodeExecutor(this))

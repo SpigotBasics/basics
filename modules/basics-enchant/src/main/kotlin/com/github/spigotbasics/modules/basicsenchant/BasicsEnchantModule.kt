@@ -2,7 +2,7 @@ package com.github.spigotbasics.modules.basicsenchant
 
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.extensions.toHumanReadable
 import com.github.spigotbasics.core.module.AbstractBasicsModule
@@ -48,7 +48,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
     fun msgRemovedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("removed-self").tags(tag)
 
     override fun onEnable() {
-        createCommand("enchant", permission)
+        commandFactory.rawCommandBuilder("enchant", permission)
             .description("Enchants the item in the player's hand")
             .usage("<enchantment> [level]")
             .executor(EnchantExecutor())

@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 import java.util.Collections
 
-object TabCompleter {
+object TabCompleters {
     fun getPlayers(
         sender: CommandSender,
         string: String,

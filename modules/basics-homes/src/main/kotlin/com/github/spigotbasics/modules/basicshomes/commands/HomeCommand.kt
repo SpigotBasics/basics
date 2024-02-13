@@ -4,7 +4,7 @@ import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.CommandResult
-import com.github.spigotbasics.core.command.RawCommandContext
+import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.model.toLocation

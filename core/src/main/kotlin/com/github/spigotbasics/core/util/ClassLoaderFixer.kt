@@ -1,11 +1,13 @@
 package com.github.spigotbasics.core.util
 
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.BasicsModule
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
+import java.util.jar.JarFile
 
 /**
  * Methods to trick out the ClassLoader.
@@ -26,7 +28,12 @@ import java.lang.reflect.Field
  * the classloader is not removed from the list and closed before onDisable() completes, and it loads classes
  * that are known to cause issues right during onEnable().
  */
-class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
+class ClassLoaderFixer(
+    private val pluginJarPath: String,
+    private val config: FixClassLoadingConfig,
+) {
+    private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+
     private val isSuperEnabledField: Field? =
         try {
             JavaPlugin::class.java.getDeclaredField("isEnabled").apply { isAccessible = true }
@@ -61,6 +68,10 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
                 forceLoadClassesForEnclosingClass(clazz)
             } catch (_: Throwable) {
             }
+        }
+
+        if (config.loadAllClasses) {
+            loadAllClassesInJar(pluginJarPath)
         }
     }
 
@@ -114,5 +125,31 @@ class ClassLoaderFixer(private val config: FixClassLoadingConfig) {
             } catch (_: Throwable) {
             }
         }
+    }
+
+    fun loadAllClassesInJar(jarFilePath: String) {
+        listClassNamesInJar(jarFilePath).forEach {
+            try {
+                logger.debug(998, "Loading class: $it")
+                Class.forName(it, false, this::class.java.classLoader)
+            } catch (e: Throwable) {
+                logger.debug(999, "Failed to load class: $it - ${e.message}")
+            }
+        }
+    }
+
+    private fun listClassNamesInJar(jarFilePath: String): List<String> {
+        val jarFile = JarFile(jarFilePath)
+        logger.debug(10, "My jar file is $jarFile - $jarFilePath")
+
+        return jarFile.entries().asSequence()
+            .filter { it.name.endsWith(".class") }
+            .map { entry ->
+                entry.name.replace('/', '.').removeSuffix(".class")
+            }.toList().apply {
+                if (size == 0) {
+                    logger.warning("No classes found in jar file: $jarFilePath")
+                }
+            }
     }
 }
