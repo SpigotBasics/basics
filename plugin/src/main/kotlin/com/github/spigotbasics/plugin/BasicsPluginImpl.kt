@@ -7,8 +7,11 @@ import com.github.spigotbasics.core.Constants
 import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
+import com.github.spigotbasics.core.config.ConfigName
+import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.config.FixClassLoadingConfig
+import com.github.spigotbasics.core.listeners.PlayerCommandListSendListener
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -48,8 +51,20 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
     override val messageFactory: MessageFactory = MessageFactory(audienceProvider, tagResolverFactory)
     override val coreConfigManager: CoreConfigManager = CoreConfigManager(messageFactory, dataFolder)
+    override val config: CoreConfig =
+        coreConfigManager.getConfig(
+            ConfigName.CONFIG.path,
+            ConfigName.CONFIG.path,
+            CoreConfig::class.java,
+            CoreConfig::class.java,
+        )
     override val messages: CoreMessages =
-        coreConfigManager.getConfig("messages.yml", "messages.yml", CoreMessages::class.java, CoreMessages::class.java)
+        coreConfigManager.getConfig(
+            ConfigName.MESSAGES.path,
+            ConfigName.MESSAGES.path,
+            CoreMessages::class.java,
+            CoreMessages::class.java,
+        )
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
 
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
@@ -118,6 +133,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         reloadCustomTags()
         server.pluginManager.registerEvents(tagResolverFactory.Listener(), this)
         server.pluginManager.registerEvents(modulePlayerDataLoader, this)
+        server.pluginManager.registerEvents(PlayerCommandListSendListener(facade.getCommandMap(server.pluginManager)), this)
 
         getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }

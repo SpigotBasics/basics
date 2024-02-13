@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core
 
+import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.config.CoreConfigManager
 import com.github.spigotbasics.core.messages.AudienceProvider
 import com.github.spigotbasics.core.messages.CoreMessages
@@ -54,6 +55,11 @@ interface BasicsPlugin {
      * Messages used by the plugin itself or by more than one module.
      */
     val messages: CoreMessages
+
+    /**
+     * Core configuration settings of the plugin.
+     */
+    val config: CoreConfig
 
     /**
      * Storage manager

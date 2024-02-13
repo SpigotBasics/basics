@@ -7,12 +7,14 @@ import com.github.spigotbasics.core.command.CommandInfo
 import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
+import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
 class RawCommandBuilder(
+    private val coreConfig: CoreConfig,
     private val messageFactory: MessageFactory,
     private val coreMessages: CoreMessages,
     private val commandManager: BasicsCommandManager,
@@ -84,6 +86,7 @@ class RawCommandBuilder(
             info = info,
             executor = executor ?: error("Executor must be set"),
             tabCompleter = tabCompleter ?: executor,
+            coreConfig = coreConfig,
             coreMessages = coreMessages,
             messageFactory = messageFactory,
         )

@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command
 
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
+import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -10,6 +11,7 @@ import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import java.util.logging.Level
 
 /**
@@ -22,6 +24,7 @@ class BasicsCommand internal constructor(
     var info: CommandInfo,
     private var executor: BasicsCommandExecutor?,
     private var tabCompleter: RawTabCompleter?,
+    coreConfig: CoreConfig,
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory,
 ) :
@@ -30,7 +33,7 @@ class BasicsCommand internal constructor(
 
         init {
             val permString = info.permission.name
-            permission = permString
+            permission = if (coreConfig.hideCommandsWhenNoPermission) permString else null
             description = info.description ?: ""
             usage = info.usage
             // TODO: Permission message is not working - always shows "Unknown command"
@@ -42,6 +45,14 @@ class BasicsCommand internal constructor(
             commandLabel: String,
             origArgs: Array<out String>,
         ): Boolean {
+            if (!sender.hasPermission(info.permission)) {
+                coreMessages.noPermission
+                    .apply { if (sender is Player) concerns(sender) }
+                    .tagParsed("permission", info.permission.name)
+                    .sendToSender(sender)
+                return true
+            }
+
             val args = origArgs.toMutableList()
 
             val context =
@@ -98,6 +109,8 @@ class BasicsCommand internal constructor(
             args: Array<out String>,
             location: Location?,
         ): MutableList<String> {
+            if (!sender.hasPermission(info.permission)) return mutableListOf()
+
             val context =
                 RawCommandContext(
                     sender = sender,
