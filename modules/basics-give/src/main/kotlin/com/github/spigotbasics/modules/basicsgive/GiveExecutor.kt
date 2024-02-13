@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class GiveExecutor(private val module: BasicsGiveModule) : ParsedCommandContextExecutor<MapCommandContext> {
-
     private val logger = BasicsLoggerFactory.getModuleLogger(module, GiveExecutor::class)
 
     override fun execute(

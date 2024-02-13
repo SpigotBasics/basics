@@ -1,7 +1,6 @@
 package com.github.spigotbasics.modules.basicsgive
 
 import com.github.spigotbasics.core.command.parsed.MapArgumentPathBuilder
-import com.github.spigotbasics.core.command.parsed.arguments.IntArg
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
@@ -35,7 +34,6 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     ) = messages.getMessage("give").concerns(receiver).tags(ItemStackTag(item))
 
     override fun onEnable() {
-
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
 
         commandFactory.parsedCommandBuilder("give", permission)

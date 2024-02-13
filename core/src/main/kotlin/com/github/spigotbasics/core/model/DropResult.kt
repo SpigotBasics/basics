@@ -15,5 +15,5 @@ data class DropResult(
     val addedToInv: Int = 0,
     val droppedToWorld: Int = 0,
     val dropLocation: Location? = null,
-    val droppedItems: Set<Item> = emptySet()
+    val droppedItems: Set<Item> = emptySet(),
 )

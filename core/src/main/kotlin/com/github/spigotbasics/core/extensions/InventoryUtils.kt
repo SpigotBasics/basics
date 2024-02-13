@@ -10,11 +10,10 @@ import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-
 fun ItemStack.addOrDrop(
     inventory: Inventory,
     location: Location = inventory.findLocation(),
-    naturally: Boolean = true
+    naturally: Boolean = true,
 ): DropResult = inventory.addOrDrop(this, location, naturally)
 
 /**
@@ -31,9 +30,8 @@ fun Inventory.addOrDrop(
     itemStack: ItemStack,
     location: Location = this.findLocation(),
     naturally: Boolean = true,
-    consumer: (Item) -> Unit = {}
+    consumer: (Item) -> Unit = {},
 ): DropResult {
-
     val totalAmount = itemStack.amount
 
     val remaining = this.addItem(itemStack)
@@ -46,16 +44,17 @@ fun Inventory.addOrDrop(
     val amountAdded = totalAmount - amountNotAdded
     val world = location.world ?: throw WorldNotLoadedException(location)
 
-
     val droppedItems = mutableSetOf<Item>()
 
     for (item in remaining.values) {
         item?.let {
-            droppedItems += world.dropItem(
-                location = location,
-                itemStack = it,
-                naturally = naturally,
-                consumer = consumer)
+            droppedItems +=
+                world.dropItem(
+                    location = location,
+                    itemStack = it,
+                    naturally = naturally,
+                    consumer = consumer,
+                )
         }
     }
 
@@ -63,19 +62,22 @@ fun Inventory.addOrDrop(
         addedToInv = amountAdded,
         droppedToWorld = amountNotAdded,
         dropLocation = location,
-        droppedItems = droppedItems
+        droppedItems = droppedItems,
     )
-
 }
 
-fun World.dropItem(location: Location, itemStack: ItemStack, naturally: Boolean, consumer: ((Item) -> Unit)?): Item {
+fun World.dropItem(
+    location: Location,
+    itemStack: ItemStack,
+    naturally: Boolean,
+    consumer: ((Item) -> Unit)?,
+): Item {
     return if (naturally) {
         this.dropItemNaturally(location, itemStack, consumer)
     } else {
         this.dropItem(location, itemStack, consumer)
     }
 }
-
 
 fun Inventory.findLocation(): Location {
     val bukkitLocation = this.location
