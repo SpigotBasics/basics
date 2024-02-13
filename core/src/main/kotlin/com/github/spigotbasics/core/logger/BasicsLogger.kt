@@ -10,7 +10,12 @@ class BasicsLogger(
     private val prefix = "[$prefix] "
 
     companion object {
-        val debugLogLevel = 100 // TODO: Configurable, default 0
+        val debugLogLevel = getDefaultDebugLogLevel()
+
+        private fun getDefaultDebugLogLevel(): Int {
+            val debugLevel = System.getenv("BASICS_DEBUG_LEVEL") ?: return 0
+            return debugLevel.toIntOrNull() ?: 0
+        }
     }
 
     fun info(message: String) {

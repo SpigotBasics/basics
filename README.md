@@ -48,7 +48,6 @@ It is not often updated, so better create your own using `gradlew dokkaHtml` or 
 ## Note to Contributors
 Contributions are always welcome from anyone!
 
-
 ## Create a new module
 Modules can be written in Java or Kotlin. To create a new module, use the `createModule` task.
 It will ask you which language (`kotlin` or `java`) you want to use, asks you for the module name, which should be `[a-z0-9_-]+`.
@@ -59,3 +58,10 @@ It will ask you which language (`kotlin` or `java`) you want to use, asks you fo
   - Fixes the "cannot get locale" error message when using ACF on modern Spigot versions.
   - [Our Fork](https://github.com/SpigotBasics/acf) | [Original](https://github.com/aikar/commands)
   - EDIT: FIXED in 0.5.1-SNAPSHOT as of 25th Jan 2024-->
+
+## Debug information
+Debug output can be enabled by setting the `BASICS_DEBUG_LEVEL` environment variable to 1 or higher, for example:
+
+```shell
+BASICS_DEBUG_LEVEL=99 java -jar spigot.jar 
+```
