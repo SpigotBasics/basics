@@ -1,0 +1,10 @@
+# Whether to mask "no permission" messages with "command not found" messages.
+#
+# When true:
+#  Players will see the "Command not found" message when they try to execute a command they don't have permission for.
+#
+# When false:
+#  Players will see the `no-permission` message from messages.yml.
+#
+# Regardless of this option, players will only see tab-completions for commands they have permission for.
+mask-no-permission-with-command-not-found: false

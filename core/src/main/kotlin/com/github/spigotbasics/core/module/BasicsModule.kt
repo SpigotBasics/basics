@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.NamespacedNamespacedKeyFactory
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.factory.CommandFactory
 import com.github.spigotbasics.core.config.ConfigName
+import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.event.BasicsEventBus
 import com.github.spigotbasics.core.logger.BasicsLogger
@@ -32,6 +33,11 @@ interface BasicsModule {
      * Basics instance
      */
     val plugin: BasicsPlugin
+
+    /**
+     * The CoreConfig instance
+     */
+    val coreConfig: CoreConfig
 
     /**
      * The global Message Factory
