@@ -130,17 +130,17 @@ class ClassLoaderFixer(
     fun loadAllClassesInJar(jarFilePath: String) {
         listClassNamesInJar(jarFilePath).forEach {
             try {
-                // logger.info("Touching class: $it")
+                logger.debug(998, "Loading class: $it")
                 Class.forName(it, false, this::class.java.classLoader)
             } catch (e: Throwable) {
-                // e.printStackTrace()
+                logger.debug(999, "Failed to load class: $it - ${e.message}")
             }
         }
     }
 
     private fun listClassNamesInJar(jarFilePath: String): List<String> {
         val jarFile = JarFile(jarFilePath)
-        println("My jar file is $jarFile - $jarFilePath")
+        logger.debug(10, "My jar file is $jarFile - $jarFilePath")
 
         return jarFile.entries().asSequence()
             .filter { it.name.endsWith(".class") }

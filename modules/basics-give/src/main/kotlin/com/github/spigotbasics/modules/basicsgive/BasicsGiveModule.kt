@@ -7,6 +7,7 @@ import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -22,6 +23,23 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val maxAmount
         get() = config.getInt("max-amount", 64)
+
+    val dropOverflow
+        get() = config.getBoolean("drop-overflow")
+
+    fun getStackSize(material: Material): Int {
+        val defaultAmount = config.get("default-amount") ?: "stack"
+        if(defaultAmount is Int) {
+            return defaultAmount
+        }
+        if(defaultAmount is String) {
+            if(defaultAmount.equals("stack", true)) {
+                return material.maxStackSize
+            }
+            return defaultAmount.toIntOrNull() ?: 1
+        }
+        return 1
+    }
 
     fun msgGiveOthers(
         receiver: Player,

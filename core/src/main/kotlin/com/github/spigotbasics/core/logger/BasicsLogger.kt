@@ -10,11 +10,17 @@ class BasicsLogger(
     private val prefix = "[$prefix] "
 
     companion object {
-        val debugLogLevel = getDefaultDebugLogLevel()
+        private val logger = BasicsLoggerFactory.getCoreLogger(BasicsLogger::class)
+        var debugLogLevel = getDefaultDebugLogLevel()
 
         private fun getDefaultDebugLogLevel(): Int {
-            val debugLevel = System.getenv("BASICS_DEBUG_LEVEL") ?: return 0
-            return debugLevel.toIntOrNull() ?: 0
+            val debugLevel = System.getenv("BASICS_DEBUG_LEVEL") ?: return -1
+            val number = debugLevel.toIntOrNull()
+            if(number == null) {
+                logger.severe("Invalid debug level: $debugLevel (must be a positive integer) - disabling debug logging")
+                return -1
+            }
+            return number
         }
     }
 
@@ -43,7 +49,9 @@ class BasicsLogger(
         message: String,
     ) {
         if (debugLogLevel >= level) {
-            logger.info("[DEBUG $level] " + prefix + message)
+            logger.warning("[DEBUG ${formattedDebugLogLevel(level)}] $prefix$message")
         }
     }
+
+    private fun formattedDebugLogLevel(level: Int): String = if (level > 999) "***" else String.format("%3d", level)
 }

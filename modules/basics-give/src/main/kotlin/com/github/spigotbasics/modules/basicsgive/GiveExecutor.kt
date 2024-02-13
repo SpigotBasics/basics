@@ -2,6 +2,7 @@ package com.github.spigotbasics.modules.basicsgive
 
 import com.github.spigotbasics.core.command.parsed.MapCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
+import com.github.spigotbasics.core.extensions.addOrDrop
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
@@ -21,11 +22,12 @@ class GiveExecutor(private val module: BasicsGiveModule) : ParsedCommandContextE
 
         val material = context["item"] as Material
         val receiver = context.getOrDefault("receiver", sender) as Player
-        val amount = context.getOrDefault("amount", 1) as Int
+        val amount = context.getOrDefault("amount", module.getStackSize(material)) as Int
 
         val item = ItemStack(material, amount)
 
-        receiver.inventory.addItem(item.clone())
+        val result = receiver.inventory.addOrDrop(item.clone(), module.dropOverflow)
+        logger.debug(10, "Added to inventory: ${result.addedToInv}, Dropped to world: ${result.droppedToWorld}")
 
         val msg =
             if (sender === receiver) {
