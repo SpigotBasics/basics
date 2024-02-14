@@ -3,6 +3,8 @@ package com.github.spigotbasics.core.command
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
 import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.GenericArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.MapCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
@@ -24,7 +26,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
 ) {
     private var permissionMessage: Message = coreMessages.noPermission
     private var description: String? = null
-    private var usage: String = ""
+    var usage: String = ""
     private var aliases: List<String> = emptyList()
     private var executor: BasicsCommandExecutor? = null
     private var tabCompleter: RawTabCompleter? = null
@@ -42,6 +44,12 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
     fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
     fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
+
+    fun path(block: ArgumentPathBuilder<T>.() -> Unit): ArgumentPath<T> {
+        val builder = GenericArgumentPathBuilder<T>()
+        builder.block()
+        return builder.build()
+    }
 
     // fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
 
@@ -87,7 +95,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
         return command
     }
 
-    private fun build(): BasicsCommand {
+    fun build(): BasicsCommand {
         val command =
             ParsedCommandExecutor(
                 parsedExecutor ?: error("parsedExecutor must be set"),

@@ -15,5 +15,11 @@ abstract class ArgumentPathBuilder<T : ParsedCommandContext> {
 
     fun arguments(vararg arguments: Pair<String, CommandArgument<*>>) = apply { this.arguments = arguments.toList() }
 
+    fun arguments(block: ArgumentBuilder.() -> Unit) = apply {
+        val argumentBuilder = ArgumentBuilder()
+        argumentBuilder.block()
+        this.arguments = argumentBuilder.build()
+    }
+
     abstract fun build(): ArgumentPath<T>
 }

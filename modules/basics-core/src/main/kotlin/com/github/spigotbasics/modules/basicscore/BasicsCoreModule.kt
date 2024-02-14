@@ -13,6 +13,26 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         )
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("module", permission).usage("<command>").executor(ModulesCommand(this)).register()
+
+
+        commandFactory.parsedCommandBuilder("module", permission).mapContext {
+            usage = "<command> [module]"
+
+            path {
+                arguments {
+                    add("sub", literal("list"))
+                }
+            }
+
+            path {
+                arguments {
+                    add("sub", literal("info"))
+                    add("module", ModuleArg)
+                }
+            }
+
+
+
+        }
     }
 }

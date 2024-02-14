@@ -1,7 +1,9 @@
 package com.github.spigotbasics.core.command.factory
 
+import com.github.spigotbasics.core.command.BasicsCommand
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.ParsedCommandBuilder
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
 import com.github.spigotbasics.core.command.parsed.MapCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.config.CoreConfig
@@ -37,5 +39,18 @@ class ParsedCommandBuilderFactory(
             name = name,
             permission = permission,
         )
+    }
+
+    fun mapContext(block: ParsedCommandBuilder<MapCommandContext>.() -> Unit): BasicsCommand {
+        val builder = ParsedCommandBuilder<MapCommandContext>(
+            coreConfig = coreConfig,
+            messageFactory = messageFactory,
+            coreMessages = coreMessages,
+            commandManager = commandManager,
+            name = name,
+            permission = permission,
+        )
+        builder.block() // Apply the DSL configurations
+        return builder.build()
     }
 }
