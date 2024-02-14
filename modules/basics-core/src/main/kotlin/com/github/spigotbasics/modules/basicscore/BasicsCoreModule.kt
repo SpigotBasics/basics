@@ -1,5 +1,8 @@
 package com.github.spigotbasics.modules.basicscore
 
+import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.MapArgumentPathBuilder
+import com.github.spigotbasics.core.command.parsed.arguments.LiteralArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
@@ -13,6 +16,14 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         )
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("module", permission).usage("<command>").executor(ModulesCommand(this)).register()
+        //commandFactory.rawCommandBuilder("module", permission).usage("<command>").executor(ModulesCommand(this)).register()
+
+        commandFactory.parsedCommandBuilder("module", permission)
+            .mapContext()
+            .usage("<subcommand> [module]")
+            .path(MapArgumentPathBuilder().arguments(
+                "_" to LiteralArg("enable"),
+                "module" to ModuleArg("module")
+            ))
     }
 }

@@ -19,36 +19,6 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
         logger.debug(10, "ParsedCommandExecutor created with paths: ${paths.size}")
     }
 
-//    fun execute(input: List<String>) {
-//        for (path in paths) {
-//            val context = path.parse(input)
-//            if (context != null) {
-//                executor.execute(context)
-//                return
-//            }
-//        }
-//        // Handle no matching path found, e.g., show usage or error message
-//    }
-
-//    fun execute(input: List<String>): Either<CommandResult, ParseResult.Failure> {
-//        for (path in paths) {
-//            when (val result = path.parse(input)) {
-//                is ParseResult.Success -> {
-//                    executor.execute(result.context)
-//                    return Either.Left(CommandResult.SUCCESS)
-//                }
-//                is ParseResult.Failure -> {
-//                    // Handle or display errors
-//                    result.errors.forEach { logger.debug(10,it) }
-//                    return Either.Right(result)
-//                }
-//            }
-//        }
-//        // If no paths matched, optionally print a generic error or usage message
-//        logger.debug(10,"Invalid command syntax.")
-//        return Either.Left(CommandResult.USAGE)
-//    }
-
     fun execute(
         sender: CommandSender,
         input: List<String>,
