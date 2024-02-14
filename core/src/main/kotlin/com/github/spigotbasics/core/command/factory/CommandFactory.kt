@@ -39,5 +39,4 @@ class CommandFactory(
             permission = permission,
         )
     }
-
 }

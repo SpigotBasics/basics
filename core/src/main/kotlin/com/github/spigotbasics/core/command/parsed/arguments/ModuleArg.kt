@@ -5,16 +5,16 @@ import com.github.spigotbasics.core.command.parsed.CommandArgument
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.BasicsModule
 
-open class ModuleArg(name: String, private val predicate: (BasicsModule) -> Boolean) : CommandArgument<BasicsModule>(name) {
-
+open class ModuleArg(name: String? = null, private val predicate: (BasicsModule) -> Boolean) : CommandArgument<BasicsModule>(name) {
     private val moduleManager by lazy { Basics.moduleManager } // TODO: DI
 
     override fun parse(value: String): BasicsModule? {
         moduleManager.loadedModules.firstOrNull { it.info.name.equals(value, ignoreCase = true) }?.let {
-            return if(predicate(it))
+            return if (predicate(it)) {
                 it
-            else
+            } else {
                 null
+            }
         }
         return null
     }
@@ -23,8 +23,9 @@ open class ModuleArg(name: String, private val predicate: (BasicsModule) -> Bool
         return moduleManager.loadedModules.filter(predicate).map { it.info.name }.partialMatches(typing)
     }
 
-    inner class ModuleEnabledArg(name: String) : ModuleArg(name, BasicsModule::isEnabled)
-    inner class ModuleDisabledArg(name: String) : ModuleArg(name, { !it.isEnabled() })
+    class EnabledModules(name: String? = null) : ModuleArg(name, BasicsModule::isEnabled)
 
-    inner class ModuleAllArg(name: String) : ModuleArg(name, { true })
+    class DisabledModules(name: String? = null) : ModuleArg(name, { !it.isEnabled() })
+
+    class LoadedModules(name: String? = null) : ModuleArg(name, { true })
 }

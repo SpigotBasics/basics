@@ -1,15 +1,13 @@
 package com.github.spigotbasics.modules.basicscore
 
 import com.github.spigotbasics.core.command.parsed.MapCommandContext
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
 import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
-import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.command.CommandSender
 
-class NewModulesCommand(private val moduleManager: ModuleManager, private val messageFactory: MessageFactory) : ParsedCommandContextExecutor<MapCommandContext> {
-
+class NewModulesCommand(private val moduleManager: ModuleManager, private val messageFactory: MessageFactory) :
+    ParsedCommandContextExecutor<MapCommandContext> {
     val msgHelp =
         messageFactory.createMessage(
             """
@@ -28,7 +26,10 @@ class NewModulesCommand(private val moduleManager: ModuleManager, private val me
 
     val msgNotImplemented = messageFactory.createMessage("<red>Not implemented yet :')</red>")
 
-    override fun execute(sender: CommandSender, context: MapCommandContext) {
+    override fun execute(
+        sender: CommandSender,
+        context: MapCommandContext,
+    ) {
         val sub = context.getOrDefault("sub", "help") as String
         when (sub) {
             "list" -> {

@@ -1,13 +1,11 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.command.parsed.ArgumentPath
-import com.github.spigotbasics.core.command.parsed.ArgumentPathBuilder
-import com.github.spigotbasics.core.command.parsed.GenericArgumentPathBuilder
-import com.github.spigotbasics.core.command.parsed.MapCommandContext
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
-import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
+import com.github.spigotbasics.core.command.BasicsCommand
+import com.github.spigotbasics.core.command.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.CommandInfo
+import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.config.CoreConfig
@@ -16,7 +14,7 @@ import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
-class ParsedCommandBuilder<T : ParsedCommandContext>(
+open class ParsedCommandBuilder<T : ParsedCommandContext>(
     private val coreConfig: CoreConfig,
     private val messageFactory: MessageFactory,
     private val coreMessages: CoreMessages,
@@ -31,7 +29,7 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
     private var executor: BasicsCommandExecutor? = null
     private var tabCompleter: RawTabCompleter? = null
     private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
-    private var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
+    var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 
     fun description(description: String) = apply { this.description = description }
 
@@ -41,23 +39,9 @@ class ParsedCommandBuilder<T : ParsedCommandContext>(
             this.usage = usage
         }
 
-    fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
+    // fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
-
-    fun path(block: ArgumentPathBuilder<T>.() -> Unit): ArgumentPath<T> {
-        val builder = GenericArgumentPathBuilder<T>()
-        builder.block()
-        return builder.build()
-    }
-
-    // fun paths(argumentPaths: List<ArgumentPath<T>>) = apply { this.argumentPaths.addAll(argumentPaths) }
-
-    // fun paths(argumentPathBuilders: List<ArgumentPathBuilder<T>>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
-
-    // fun paths(vararg argumentPaths: ArgumentPath<T>) = apply { this.argumentPaths.addAll(argumentPaths) }
-
-    // fun paths(vararg argumentPathBuilders: ArgumentPathBuilder<T>) = apply { this.argumentPaths.addAll(argumentPathBuilders.map { it.build() }) }
+    // fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
 
     fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 

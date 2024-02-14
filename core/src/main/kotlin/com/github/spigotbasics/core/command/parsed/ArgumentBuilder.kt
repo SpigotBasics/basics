@@ -3,7 +3,6 @@ package com.github.spigotbasics.core.command.parsed
 import com.github.spigotbasics.core.command.parsed.arguments.LiteralArg
 
 class ArgumentBuilder {
-
     companion object {
         private const val UNUSED_ARG_PREFIX = "_unused_"
     }
@@ -13,7 +12,10 @@ class ArgumentBuilder {
 
     private fun generateUnusedArgName(): String = "${UNUSED_ARG_PREFIX}${unusedArgIndex++}"
 
-    fun add(name: String, commandArgument: CommandArgument<*>) {
+    fun add(
+        name: String,
+        commandArgument: CommandArgument<*>,
+    ) {
         arguments.add((name) to commandArgument)
     }
 
@@ -22,7 +24,6 @@ class ArgumentBuilder {
     }
 
     fun literal(value: String) = LiteralArg(value)
-
 
     fun build(): List<Pair<String, CommandArgument<*>>> = arguments
 }

@@ -1,7 +1,7 @@
 package com.github.spigotbasics.core.command.parsed
 
 class GenericArgumentPathBuilder<T : ParsedCommandContext> : ArgumentPathBuilder<T>() {
-    private var contextBuilder: ((Map<String, Any?>) -> T)? = null
+    protected var contextBuilder: ((Map<String, Any?>) -> T)? = null
 
     fun contextBuilder(contextBuilder: (Map<String, Any?>) -> T) = apply { this.contextBuilder = contextBuilder }
 
