@@ -1,14 +1,15 @@
 package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.CommandResult
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ParsedCommandExecutor<T : ParsedCommandContext>(
-    private val executor: ParsedCommandContextExecutor<T>,
+class ParsedCommandExecutor<T : CommandContext>(
+    private val executor: CommandContextExecutor<T>,
     private val paths: List<ArgumentPath<T>>,
 ) {
     companion object {

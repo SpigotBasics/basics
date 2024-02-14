@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicshomes.commands
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
@@ -25,7 +25,7 @@ class DelHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): List<String> {
         val sender = context.sender
         if (sender is Player) {
             if (context.args.size == 1) {

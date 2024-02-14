@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsrepair
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
 import com.github.spigotbasics.core.command.TabCompleters
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.startsWithIgnoreCase
 import org.bukkit.command.CommandSender

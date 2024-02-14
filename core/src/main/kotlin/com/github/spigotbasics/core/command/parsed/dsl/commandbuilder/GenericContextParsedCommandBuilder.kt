@@ -1,12 +1,15 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl.commandbuilder
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+import com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder.GenericArgumentPathBuilder
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
-class GenericContextParsedCommandBuilder<T : ParsedCommandContext>(
+class GenericContextParsedCommandBuilder<T : CommandContext>(
     coreConfig: CoreConfig,
     messageFactory: MessageFactory,
     coreMessages: CoreMessages,

@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.common
 
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
@@ -36,7 +36,6 @@ class BasicsCommand internal constructor(
             permission = if (coreConfig.hideCommandsWhenNoPermission) permString else null
             description = info.description ?: ""
             usage = info.usage
-            // TODO: Permission message is not working - always shows "Unknown command"
             permissionMessage = info.permissionMessage.tagParsed("permission", permString).toLegacyString()
         }
 
@@ -69,7 +68,7 @@ class BasicsCommand internal constructor(
                 return true
             }
 
-            var returned: CommandResult?
+            val returned: CommandResult?
             try {
                 returned = executor!!.execute(context)
 
@@ -108,7 +107,7 @@ class BasicsCommand internal constructor(
             alias: String,
             args: Array<out String>,
             location: Location?,
-        ): MutableList<String> {
+        ): List<String> {
             if (!sender.hasPermission(info.permission)) return mutableListOf()
 
             val context =

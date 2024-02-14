@@ -1,8 +1,15 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder
 
+import com.github.spigotbasics.core.command.parsed.AnySender
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.PlayerSender
+import com.github.spigotbasics.core.command.parsed.SenderType
+import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+import com.github.spigotbasics.core.command.parsed.dsl.ArgumentBuilder
 import org.bukkit.permissions.Permission
 
-abstract class ArgumentPathBuilder<T : ParsedCommandContext> {
+abstract class ArgumentPathBuilder<T : CommandContext> {
     protected var senderType: SenderType<*> = AnySender
     protected var arguments = emptyList<Pair<String, CommandArgument<*>>>()
     protected var permissions = emptyList<Permission>()

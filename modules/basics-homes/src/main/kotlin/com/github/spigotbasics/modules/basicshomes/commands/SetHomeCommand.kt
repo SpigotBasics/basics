@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicshomes.commands
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.getPermissionNumberValue
 import com.github.spigotbasics.core.extensions.partialMatches
@@ -82,7 +82,7 @@ class SetHomeCommand(private val module: BasicsHomesModule) : BasicsCommandExecu
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): List<String> {
         if (context.sender !is Player) {
             return mutableListOf()
         }

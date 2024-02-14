@@ -1,7 +1,5 @@
 package com.github.spigotbasics.core.command.parsed.arguments
 
-import com.github.spigotbasics.core.command.parsed.CommandArgument
-
 class LiteralArg(override val name: String) : CommandArgument<String>(name) {
     override fun parse(value: String): String? {
         return if (value.equals(name, ignoreCase = true)) {

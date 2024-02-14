@@ -2,13 +2,15 @@ package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Basics
+import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
 import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ArgumentPath<T : ParsedCommandContext>(
+class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<Pair<String, CommandArgument<*>>>,
     val permission: List<Permission> = emptyList(),

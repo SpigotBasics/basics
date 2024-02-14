@@ -1,5 +1,6 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl
 
+import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.command.parsed.arguments.LiteralArg
 
 class ArgumentBuilder {
@@ -10,7 +11,7 @@ class ArgumentBuilder {
     private var unusedArgIndex = 0
     private val arguments = mutableListOf<Pair<String, CommandArgument<*>>>()
 
-    private fun generateUnusedArgName(): String = "${UNUSED_ARG_PREFIX}${unusedArgIndex++}"
+    private fun generateUnusedArgName(): String = "$UNUSED_ARG_PREFIX${unusedArgIndex++}"
 
     fun add(
         name: String,

@@ -1,6 +1,9 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl.commandbuilder
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.context.MapContext
+import com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder.MapArgumentPathBuilder
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -13,7 +16,7 @@ class MapContextParsedCommandBuilder(
     commandManager: BasicsCommandManager,
     name: String,
     permission: Permission,
-) : ParsedCommandBuilder<MapCommandContext>(
+) : ParsedCommandBuilder<MapContext>(
         coreConfig = coreConfig,
         messageFactory = messageFactory,
         coreMessages = coreMessages,
@@ -21,7 +24,7 @@ class MapContextParsedCommandBuilder(
         name = name,
         permission = permission,
     ) {
-    fun MapContextParsedCommandBuilder.path(block: MapArgumentPathBuilder.() -> Unit): ArgumentPath<MapCommandContext> {
+    fun MapContextParsedCommandBuilder.path(block: MapArgumentPathBuilder.() -> Unit): ArgumentPath<MapContext> {
         val builder = MapArgumentPathBuilder()
         builder.block()
         val built = builder.build()

@@ -1,7 +1,6 @@
 package com.github.spigotbasics.core.command.parsed.arguments
 
 import com.github.spigotbasics.core.Basics
-import com.github.spigotbasics.core.command.parsed.CommandArgument
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.BasicsModule
 

@@ -1,6 +1,9 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder
 
-class GenericArgumentPathBuilder<T : ParsedCommandContext> : ArgumentPathBuilder<T>() {
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+
+class GenericArgumentPathBuilder<T : CommandContext> : ArgumentPathBuilder<T>() {
     protected var contextBuilder: ((Map<String, Any?>) -> T)? = null
 
     fun contextBuilder(contextBuilder: (Map<String, Any?>) -> T) = apply { this.contextBuilder = contextBuilder }

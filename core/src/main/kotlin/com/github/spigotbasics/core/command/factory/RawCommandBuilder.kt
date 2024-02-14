@@ -1,10 +1,10 @@
 package com.github.spigotbasics.core.command.factory
 
-import com.github.spigotbasics.core.command.BasicsCommand
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.CommandInfo
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommand
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandInfo
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.config.CoreConfig

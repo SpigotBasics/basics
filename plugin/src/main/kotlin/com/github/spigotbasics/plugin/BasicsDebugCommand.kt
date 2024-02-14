@@ -15,7 +15,7 @@ class BasicsDebugCommand(private val plugin: BasicsPluginImpl) : TabExecutor {
         command: Command,
         label: String,
         args: Array<out String>,
-    ): MutableList<String> {
+    ): List<String> {
         if (args.size == 1) {
             return listOf("start", "stop", "synccommands").partialMatches(args.get(0))
         } else {

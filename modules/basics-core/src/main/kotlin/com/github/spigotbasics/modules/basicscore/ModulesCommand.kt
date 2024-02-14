@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicscore
 
-import com.github.spigotbasics.core.command.BasicsCommandException
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandException
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
@@ -226,7 +226,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
     }
 
     // Tab Completes
-    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): List<String>? {
         val args = context.args
         if (args.size == 1) {
             return listOf("list", "info", "enable", "disable", "reload", "unload", "load", "reloadjar").partialMatches(args[0])
