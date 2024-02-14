@@ -17,7 +17,7 @@ class NewModulesCommand(private val module: BasicsCoreModule) : CommandContextEx
         messageFactory.createMessage(
             """
             <gold>Basics Modules Help</gold>
-            <gray>---------------------------------------------------------------------</gray>
+            <gray>--------------------------------------------</gray>
             <gold><click:run_command:/module list>/module list</click></gold> - <gray>Show all loaded modules</gray>
             <gold><click:suggest_command:/module info >/module info <module></click></gold> - <gray>Show info about a module</gray>
             <gold><click:suggest_command:/module enable >/module enable <module></click></gold> - <gray>Enable a module</gray>

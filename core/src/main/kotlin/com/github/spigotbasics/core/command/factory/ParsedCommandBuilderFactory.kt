@@ -44,8 +44,8 @@ class ParsedCommandBuilderFactory(
         return builder // return .build() ?
     }
 
-    fun mapContext(): ParsedCommandBuilder<MapContext> {
-        return ParsedCommandBuilder(
+    fun mapContext(): MapContextParsedCommandBuilder {
+        return MapContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
@@ -55,7 +55,7 @@ class ParsedCommandBuilderFactory(
         )
     }
 
-    fun mapContext(block: MapContextParsedCommandBuilder.() -> Unit): ParsedCommandBuilder<MapContext> {
+    fun mapContext(block: MapContextParsedCommandBuilder.() -> Unit): MapContextParsedCommandBuilder {
         val builder =
             MapContextParsedCommandBuilder(
                 coreConfig = coreConfig,
