@@ -48,7 +48,7 @@ class ArgumentBuilder {
      * @param level
      */
     fun sub(name: String, level: Int = 0) {
-        val nameWithLevel = if (level == 0) name else "$name$level"
+        val nameWithLevel = if (level == 0) "sub" else "sub$level"
         arguments.add((nameWithLevel) to LiteralArg(name))
     }
 
