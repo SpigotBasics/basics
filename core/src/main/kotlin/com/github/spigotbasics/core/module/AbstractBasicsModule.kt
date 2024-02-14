@@ -28,6 +28,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val info = context.info
     final override val logger = BasicsLoggerFactory.getModuleLogger(context.info)
     final override val plugin = context.plugin
+    final override val coreConfig = plugin.config
     final override val coreMessages = plugin.messages
     final override val eventBus = BasicsEventBus(context.plugin as Plugin)
     final override val config = getConfig(ConfigName.CONFIG)
@@ -37,7 +38,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     final override val messageFactory = plugin.messageFactory
     final override val tagResolverFactory = plugin.tagResolverFactory
     final override val permissionManager = BasicsPermissionManager(logger)
-    final override val commandFactory = CommandFactory(messageFactory, coreMessages, commandManager)
+    final override val commandFactory = CommandFactory(coreConfig, messageFactory, coreMessages, commandManager)
     final override val keyFactory =
         NamespacedNamespacedKeyFactory
             .NamespacedNamespacedKeyFactoryFactory
@@ -153,6 +154,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
         permission: Permission,
     ): RawCommandBuilder {
         return RawCommandBuilder(
+            coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
             commandManager = commandManager,

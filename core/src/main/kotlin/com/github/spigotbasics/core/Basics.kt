@@ -64,6 +64,11 @@ object Basics {
     val messages get() = basics.messages
 
     /**
+     * Core configuration settings of the plugin.
+     */
+    val config get() = basics.config
+
+    /**
      * Storage manager
      */
     val storageManager get() = basics.storageManager
