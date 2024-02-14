@@ -62,7 +62,8 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                         add("module", ModuleArg.EnabledModules("module"))
                     }
                 }
-            }.executor(NewModulesCommand(plugin.moduleManager, messageFactory))
+            }
+            .executor(NewModulesCommand(plugin.moduleManager, messageFactory))
             .register()
     }
 }
