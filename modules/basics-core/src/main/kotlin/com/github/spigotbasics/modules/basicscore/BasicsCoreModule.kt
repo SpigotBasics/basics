@@ -14,19 +14,19 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         )
 
     override fun onEnable() {
-//        commandFactory.parsedCommandBuilder("moduletest", permission)
-//            .context<TestContext> {
-//                usage = "<donkey>"
-//
-//                path {
-//                    arguments {
-//                        add("value", literal("donkey"))
-//                    }
-//                    contextBuilder { TestContext(it["value"] as String) }
-//                }
-//            }
-//            .executor(TestContextExecutor())
-//            .register()
+        commandFactory.parsedCommandBuilder("moduletest", permission)
+            .context<TestContext> {
+                usage = "<donkey>"
+
+                path {
+                    arguments {
+                        add("value", literal("donkey"))
+                    }
+                    contextBuilder { TestContext(it["value"] as String) }
+                }
+            }
+            .executor(TestContextExecutor())
+            .register()
 
         commandFactory.parsedCommandBuilder("module", permission)
             .mapContext {

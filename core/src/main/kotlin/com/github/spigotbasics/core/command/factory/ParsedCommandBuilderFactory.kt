@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.command.factory
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
+import com.github.spigotbasics.core.command.parsed.GenericContextParsedCommandBuilder
 import com.github.spigotbasics.core.command.parsed.MapCommandContext
 import com.github.spigotbasics.core.command.parsed.MapContextParsedCommandBuilder
 import com.github.spigotbasics.core.command.parsed.ParsedCommandBuilder
@@ -18,8 +19,8 @@ class ParsedCommandBuilderFactory(
     private val name: String,
     private val permission: Permission,
 ) {
-    fun <T : ParsedCommandContext> context(): ParsedCommandBuilder<T> {
-        return ParsedCommandBuilder(
+    fun <T : ParsedCommandContext> context(): GenericContextParsedCommandBuilder<T> {
+        return GenericContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
@@ -29,9 +30,9 @@ class ParsedCommandBuilderFactory(
         )
     }
 
-    fun <T : ParsedCommandContext> context(block: ParsedCommandBuilder<T>.() -> Unit): ParsedCommandBuilder<T> {
+    fun <T : ParsedCommandContext> context(block: GenericContextParsedCommandBuilder<T>.() -> Unit): GenericContextParsedCommandBuilder<T> {
         val builder =
-            ParsedCommandBuilder<T>(
+            GenericContextParsedCommandBuilder<T>(
                 coreConfig = coreConfig,
                 messageFactory = messageFactory,
                 coreMessages = coreMessages,

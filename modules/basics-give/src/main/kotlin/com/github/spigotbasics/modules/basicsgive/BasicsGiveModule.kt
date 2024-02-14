@@ -1,6 +1,9 @@
 package com.github.spigotbasics.modules.basicsgive
 
+import com.github.spigotbasics.core.command.parsed.MapArgumentPathBuilder
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
+import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
+import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -51,38 +54,38 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     override fun onEnable() {
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
 
-//        commandFactory.parsedCommandBuilder("give", permission)
-//            .mapContext()
-//            .usage("[Receiving Player] <Item> [Amount]")
-//            // give diamond
-//            .path(
-//                MapArgumentPathBuilder().arguments(
-//                    "item" to ItemMaterialArg("Item"),
-//                ).playerOnly(),
-//            )
-//            // give mfnalex diamond
-//            .path(
-//                MapArgumentPathBuilder().arguments(
-//                    "receiver" to PlayerArg("Receiving Player"),
-//                    "item" to ItemMaterialArg("Item"),
-//                ).permissions(permissionOthers),
-//            )
-//            // give diamond 64
-//            .path(
-//                MapArgumentPathBuilder().arguments(
-//                    "item" to ItemMaterialArg("Item"),
-//                    "amount" to amountRangeArg,
-//                ).playerOnly(),
-//            )
-//            // give mfnalex diamond 64
-//            .path(
-//                MapArgumentPathBuilder().arguments(
-//                    "receiver" to PlayerArg("Receiving Player"),
-//                    "item" to ItemMaterialArg("Item"),
-//                    "amount" to amountRangeArg,
-//                ).permissions(permissionOthers),
-//            )
-//            .executor(GiveExecutor(this))
-//            .register()
+        commandFactory.parsedCommandBuilder("give", permission)
+            .mapContext()
+            .usage("[Receiving Player] <Item> [Amount]")
+            // give diamond
+            .path(
+                MapArgumentPathBuilder().arguments(
+                    "item" to ItemMaterialArg("Item"),
+                ).playerOnly(),
+            )
+            // give mfnalex diamond
+            .path(
+                MapArgumentPathBuilder().arguments(
+                    "receiver" to PlayerArg("Receiving Player"),
+                    "item" to ItemMaterialArg("Item"),
+                ).permissions(permissionOthers),
+            )
+            // give diamond 64
+            .path(
+                MapArgumentPathBuilder().arguments(
+                    "item" to ItemMaterialArg("Item"),
+                    "amount" to amountRangeArg,
+                ).playerOnly(),
+            )
+            // give mfnalex diamond 64
+            .path(
+                MapArgumentPathBuilder().arguments(
+                    "receiver" to PlayerArg("Receiving Player"),
+                    "item" to ItemMaterialArg("Item"),
+                    "amount" to amountRangeArg,
+                ).permissions(permissionOthers),
+            )
+            .executor(GiveExecutor(this))
+            .register()
     }
 }

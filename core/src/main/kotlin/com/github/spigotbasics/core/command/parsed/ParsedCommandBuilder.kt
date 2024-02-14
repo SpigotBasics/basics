@@ -39,9 +39,9 @@ open class ParsedCommandBuilder<T : ParsedCommandContext>(
             this.usage = usage
         }
 
-    // fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
+    fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
-    // fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
+    fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
 
     fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
