@@ -5,6 +5,7 @@ import com.github.spigotbasics.common.leftOrNull
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
+import com.github.spigotbasics.core.permission.CorePermissions
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -16,7 +17,7 @@ class PlayersArg(name: String) : CommandArgument<List<Player>>(name) {
         SELECTOR_INCUDES_ENTITIES,
     }
 
-    private val selectorPermission = Basics.permissions.useSelectors
+    private val selectorPermission = CorePermissions.useSelectors
 
     override fun parse(
         sender: CommandSender,
