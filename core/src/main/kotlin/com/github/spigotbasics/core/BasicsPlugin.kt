@@ -10,6 +10,7 @@ import com.github.spigotbasics.core.module.manager.ModuleManager
 import com.github.spigotbasics.core.permission.CorePermissions
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.storage.StorageManager
+import com.github.spigotbasics.nms.NMSFacade
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import java.io.File
 
@@ -81,6 +82,11 @@ interface BasicsPlugin {
      * Chunk ticket manager
      */
     val chunkTicketManager: ChunkTicketManager
+
+    /**
+     * NMS Facade
+     */
+    val nms: NMSFacade
 
     /**
      * Reloads the core configuration settings of the plugin.

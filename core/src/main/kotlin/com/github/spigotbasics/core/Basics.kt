@@ -84,6 +84,11 @@ object Basics {
     val corePlayerData get() = basics.corePlayerData
 
     /**
+     * NMS Facade
+     */
+    val nms get() = basics.nms
+
+    /**
      * Reloads the core configuration settings of the plugin.
      */
     fun reloadCoreConfig() {

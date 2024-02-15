@@ -15,6 +15,15 @@ plugins {
 
 rootProject.name = "basics"
 
+gradleEnterprise {
+    if (System.getenv("CI") != null) {
+        buildScan {
+            termsOfServiceUrl = "https://gradle.com/terms-of-service"
+            termsOfServiceAgree = "yes"
+        }
+    }
+}
+
 // Data classes used in multiple modules
 include("common")
 
@@ -29,11 +38,27 @@ include("pipe:paper")
 // Actual JavaPlugin
 include("plugin")
 
-// Parent for all modules
-include("modules")
-
 // Bootstrap plugin, so people don't have to extract a zip file (70% of people would just put it into the plugins folder)
 include("bootstrap")
+
+// NMS Modules
+include("nms:facade")
+include("nms:aggregator")
+
+// Import all NMS versions
+val nmsVersionsFolder: Array<File> =
+    file("nms/versions").listFiles(FileFilter { it.isDirectory })
+        ?: throw RuntimeException("Couldn't find nms/versions folder")
+
+// Add all modules ...
+for (nmsVersionFolder in nmsVersionsFolder) {
+    val moduleName = "nms:versions:" + nmsVersionFolder.name
+    include(moduleName)
+    project(":$moduleName").projectDir = nmsVersionFolder
+}
+
+// Parent for all modules
+include("modules")
 
 // Import subprojects from modules folder
 val moduleFolders: Array<File> =
@@ -43,19 +68,10 @@ val moduleFolders: Array<File> =
 // Add all modules ...
 for (moduleFolder in moduleFolders) {
 
-    // ... except for _skeleton
+    // ... except for _skeletons
     if (moduleFolder.name.startsWith("_")) continue
 
     val moduleName = "modules:" + moduleFolder.name
     include(moduleName)
     project(":$moduleName").projectDir = moduleFolder
-}
-
-gradleEnterprise {
-    if (System.getenv("CI") != null) {
-        buildScan {
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
-    }
 }
