@@ -21,7 +21,7 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 // module help
                 path {
                     arguments {
-                        sub( "help")
+                        sub("help")
                     }
                 }
 

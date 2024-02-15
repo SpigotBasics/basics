@@ -2,10 +2,8 @@ package com.github.spigotbasics.core.command.factory
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
 import com.github.spigotbasics.core.command.parsed.context.CommandContext
-import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.GenericContextParsedCommandBuilder
 import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.MapContextParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.ParsedCommandBuilder
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
