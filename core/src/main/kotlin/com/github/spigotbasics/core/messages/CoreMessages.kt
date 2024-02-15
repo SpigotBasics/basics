@@ -11,6 +11,8 @@ import org.bukkit.permissions.Permission
  * Provides messages used by the core classes, or are commonly used in other modules
  */
 class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
+    val tooManyArguments get() = getMessage("too-many-arguments")
+
     // val commandArgumentSizeMismatch get() = getMessage("command-argument-size-mismatch")
     val noSafeLocationFound get() = getMessage("no-safe-location-found")
     val noPermission get() = getMessage("no-permission")

@@ -34,13 +34,14 @@ class ParsedCommandExecutor<T : CommandContext>(
             }
         }
 
-        // Sort paths by the number of arguments they expect, ascending.
-        val sortedPaths = paths.sortedBy { it.arguments.size }
+        // Sort paths by the number of arguments they expect
+        val sortedPaths = paths.sortedBy { -it.arguments.size }
 
         var shortestPathFailure: ParseResult.Failure? = null
         var bestMatchResult: PathMatchResult? = null
         var errors: List<Message>? = null
         var missingPermission: Permission? = null
+        var lastErrorIndex = -1
 
         sortedPaths.forEach { path ->
 
@@ -48,12 +49,17 @@ class ParsedCommandExecutor<T : CommandContext>(
 
             val matchResult = path.matches(sender, input)
             logger.debug(10, "Match result: $matchResult")
+
             if (matchResult is Either.Right) {
                 // TODO: Maybe collect all error messages? Right now, which error message is shown depends on the order of the paths
                 //  That means more specific ones should be registered first
-                val newErrors = matchResult.value
-                if (errors == null || errors!!.size > newErrors.size) {
+                val (firstErrorIndex, newErrors) = matchResult.value
+                if (lastErrorIndex == -1 ||
+                    // errors!!.size > newErrors.size // Old version - use the one with the least errors
+                    lastErrorIndex < firstErrorIndex
+                ) {
                     errors = newErrors
+                    lastErrorIndex = firstErrorIndex
                 }
             } else if (matchResult is Either.Left &&
                 (

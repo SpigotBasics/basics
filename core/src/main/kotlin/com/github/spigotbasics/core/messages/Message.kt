@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -194,5 +195,9 @@ data class Message(
 
     fun toBungeeComponents(): Array<net.md_5.bungee.api.chat.BaseComponent> {
         return bungeeComponentSerializer.serialize(toAdventureComponent())
+    }
+
+    override fun toString(): String {
+        return ChatColor.stripColor(toLegacyString())
     }
 }

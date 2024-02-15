@@ -5,6 +5,10 @@ import com.github.spigotbasics.core.messages.Message
 
 class SubcommandArg(name: String) : LiteralArg(name) {
     override fun errorMessage(value: String?): Message {
-        return Basics.messages.invalidSubcommand(value ?: "null")
+        return if (value != name) {
+            Basics.messages.invalidSubcommand(value ?: "null")
+        } else {
+            super.errorMessage(value)
+        }
     }
 }

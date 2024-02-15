@@ -20,11 +20,12 @@ class GiveExecutor(private val module: BasicsGiveModule) : CommandContextExecuto
 
         logger.debug(10, "Max Give Amount: ${module.maxAmount}")
 
-        val material = context["item"] as Material
+        val snbtItem = context["snbt"] as ItemStack?
+        val material = (context["item"] as Material?) ?: snbtItem!!.type
         val receiver = context.getOrDefault("receiver", sender) as Player
         val amount = context.getOrDefault("amount", module.getStackSize(material)) as Int
 
-        val item = ItemStack(material, amount)
+        val item = snbtItem?.apply { setAmount(amount) } ?: ItemStack(material, amount)
 
         val result =
             receiver.inventory.addOrDrop(

@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicsgive
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
+import com.github.spigotbasics.core.command.parsed.arguments.SnbtArg
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -18,6 +19,12 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         permissionManager.createSimplePermission(
             "basics.give.others",
             "Allows to give items to others using the /give command",
+        )
+
+    val permissionSnbt =
+        permissionManager.createSimplePermission(
+            "basics.give.snbt",
+            "Allows to give items using SNBT Strings using the /give command",
         )
 
     val maxAmount
@@ -56,6 +63,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
     override fun onEnable() {
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
         val itemArg = ItemMaterialArg("Item")
+        val snbtItemArg = SnbtArg("Item SNBT")
         val playerArg = PlayerArg("Receiving Player")
 
         commandFactory.parsedCommandBuilder("give", permission)
@@ -71,11 +79,29 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 }
 
                 path {
+                    playerOnly()
+                    permissions(permissionSnbt)
+
+                    arguments {
+                        named("snbt", snbtItemArg)
+                    }
+                }
+
+                path {
                     permissions(permissionOthers)
 
                     arguments {
                         named("receiver", playerArg)
                         named("item", itemArg)
+                    }
+                }
+
+                path {
+                    permissions(permissionOthers, permissionSnbt)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("snbt", snbtItemArg)
                     }
                 }
 
@@ -89,11 +115,31 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 }
 
                 path {
+                    playerOnly()
+                    permissions(permissionSnbt)
+
+                    arguments {
+                        named("snbt", snbtItemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+
+                path {
                     permissions(permissionOthers)
 
                     arguments {
                         named("receiver", playerArg)
                         named("item", itemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+
+                path {
+                    permissions(permissionOthers, permissionSnbt)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("snbt", snbtItemArg)
                         named("amount", amountRangeArg)
                     }
                 }
