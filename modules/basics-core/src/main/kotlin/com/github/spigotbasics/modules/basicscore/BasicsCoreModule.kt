@@ -1,7 +1,10 @@
 package com.github.spigotbasics.modules.basicscore
 
+import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import com.github.spigotbasics.modules.basicscore.commands.PrintPermissionsCommand
+import com.github.spigotbasics.modules.basicscore.commands.SetDebugLogLevelCommand
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -110,8 +113,15 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                     }
                     executor(PrintPermissionsCommand())
                 }
+
+                path {
+                    arguments {
+                        sub("setdebugloglevel")
+                        named("level", IntRangeArg("Log Level", { 0 }, { 999_999_999 }))
+                    }
+                    executor(SetDebugLogLevelCommand())
+                }
             }
-            //.executor(DebugFallbackExecutor())
             .register()
     }
 }

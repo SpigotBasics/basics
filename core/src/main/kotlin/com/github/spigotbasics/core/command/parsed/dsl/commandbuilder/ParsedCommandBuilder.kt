@@ -87,7 +87,7 @@ open class ParsedCommandBuilder<T : CommandContext>(
     fun build(): BasicsCommand {
         val command =
             ParsedCommandExecutor(
-                parsedExecutor, // ?: error("parsedExecutor must be set"),
+                parsedExecutor,
                 argumentPaths,
             )
         val actualExecutor = createActualExecutor(command)

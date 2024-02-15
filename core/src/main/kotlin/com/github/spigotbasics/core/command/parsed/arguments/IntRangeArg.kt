@@ -21,6 +21,7 @@ class IntRangeArg(name: String, private val min: () -> Int, private val max: () 
         sender: CommandSender,
         value: String,
     ): Message {
-        return Basics.messages.invalidValueForArgumentNumberNotInRange(name, value.toIntOrNull() ?: 0, min(), max())
+        val given = value.toIntOrNull() ?: return Basics.messages.invalidValueForArgumentMustBeInteger(name, value)
+        return Basics.messages.invalidValueForArgumentNumberNotInRange(name, given, min(), max())
     }
 }
