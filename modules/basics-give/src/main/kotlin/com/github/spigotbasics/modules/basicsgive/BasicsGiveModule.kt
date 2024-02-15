@@ -53,50 +53,48 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     override fun onEnable() {
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
+        val itemArg = ItemMaterialArg("item")
+        val playerArg = PlayerArg("Receiving Player")
 
         commandFactory.parsedCommandBuilder("give", permission)
             .mapContext {
                 usage = "[Receiving Player] <Item> [Amount]"
 
                 path {
+                    playerOnly()
+
                     arguments {
-                        named
+                        named("item", itemArg)
                     }
                 }
-            }
 
-        commandFactory.parsedCommandBuilder("give", permission)
-            .mapContext()
-            .usage("[Receiving Player] <Item> [Amount]")
-            // give diamond
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "item" to ItemMaterialArg("Item"),
-                ).playerOnly(),
-            )
-            // give mfnalex diamond
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "receiver" to PlayerArg("Receiving Player"),
-                    "item" to ItemMaterialArg("Item"),
-                ).permissions(permissionOthers),
-            )
-            // give diamond 64
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "item" to ItemMaterialArg("Item"),
-                    "amount" to amountRangeArg,
-                ).playerOnly(),
-            )
-            // give mfnalex diamond 64
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "receiver" to PlayerArg("Receiving Player"),
-                    "item" to ItemMaterialArg("Item"),
-                    "amount" to amountRangeArg,
-                ).permissions(permissionOthers),
-            )
-            .executor(GiveExecutor(this))
-            .register()
+                path {
+                    permissions(permissionOthers)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("item", itemArg)
+                    }
+                }
+
+                path {
+                    playerOnly()
+
+                    arguments {
+                        named("item", itemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+
+                path {
+                    permissions(permissionOthers)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("item", itemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+            }.executor(GiveExecutor(this)).register()
     }
 }
