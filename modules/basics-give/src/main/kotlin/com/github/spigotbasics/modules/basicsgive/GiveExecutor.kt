@@ -22,27 +22,31 @@ class GiveExecutor(private val module: BasicsGiveModule) : CommandContextExecuto
 
         val snbtItem = context["snbt"] as ItemStack?
         val material = (context["item"] as Material?) ?: snbtItem!!.type
-        val receiver = context.getOrDefault("receiver", sender) as Player
+
+        @Suppress("UNCHECKED_CAST")
+        val receivers = context.getOrDefault("receiver", listOf(sender as Player)) as List<Player>
         val amount = context.getOrDefault("amount", module.getStackSize(material)) as Int
 
         val item = snbtItem?.apply { setAmount(amount) } ?: ItemStack(material, amount)
 
-        val result =
-            receiver.inventory.addOrDrop(
-                itemStack = item.clone(),
-                dropOverflow = module.dropOverflow,
-                naturally = module.dropnaturally,
-            )
+        for (receiver in receivers) {
+            val result =
+                receiver.inventory.addOrDrop(
+                    itemStack = item.clone(),
+                    dropOverflow = module.dropOverflow,
+                    naturally = module.dropnaturally,
+                )
 
-        logger.debug(10, "Added to inventory: ${result.addedToInv}, Dropped to world: ${result.droppedToWorld}")
+            logger.debug(10, "Added to inventory: ${result.addedToInv}, Dropped to world: ${result.droppedToWorld}")
 
-        val msg =
-            if (sender === receiver) {
-                module.msgGiveSelf(receiver, item)
-            } else {
-                module.msgGiveOthers(receiver, item)
-            }
+            val msg =
+                if (sender === receiver) {
+                    module.msgGiveSelf(receiver, item)
+                } else {
+                    module.msgGiveOthers(receiver, item)
+                }
 
-        msg.sendToSender(sender)
+            msg.sendToSender(sender)
+        }
     }
 }
