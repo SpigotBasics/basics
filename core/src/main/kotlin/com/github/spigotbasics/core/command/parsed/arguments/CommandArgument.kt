@@ -18,7 +18,10 @@ abstract class CommandArgument<T>(
     ): List<String> = emptyList()
 
     // TODO: This is using the static Singleton :/
-    open fun errorMessage(sender: CommandSender, value: String): Message = Basics.messages.invalidValueForArgument(name, value)
+    open fun errorMessage(
+        sender: CommandSender,
+        value: String,
+    ): Message = Basics.messages.invalidValueForArgument(name, value)
 
     /**
      * Whether this argument is greedy. If yes, it will consume all given strings until args.size - remainingArgs.

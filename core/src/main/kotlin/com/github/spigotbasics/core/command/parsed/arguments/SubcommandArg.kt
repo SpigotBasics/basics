@@ -5,7 +5,10 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 
 class SubcommandArg(name: String) : LiteralArg(name) {
-    override fun errorMessage(sender: CommandSender, value: String): Message {
+    override fun errorMessage(
+        sender: CommandSender,
+        value: String,
+    ): Message {
         return if (value != name) {
             Basics.messages.invalidSubcommand(value)
         } else {

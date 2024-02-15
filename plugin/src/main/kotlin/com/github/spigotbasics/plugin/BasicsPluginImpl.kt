@@ -75,8 +75,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
     override val chunkTicketManager: ChunkTicketManager = ChunkTicketManager()
 
-
-
     internal val modulePlayerDataLoader by lazy {
         ModulePlayerDataLoader(
             storageManager.config,

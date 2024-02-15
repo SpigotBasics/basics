@@ -88,6 +88,7 @@ class ArgumentPath<T : CommandContext>(
         logger.debug(400, "Accumulated arguments @ $argIndex  ----- $result")
         return result
     }
+
     fun accumulateArguments0(
         argIndex: Int,
         givenArgs: List<String>,
@@ -103,7 +104,11 @@ class ArgumentPath<T : CommandContext>(
         val greedyArgumentExtraSize = givenArgs.size - commandArguments.size
         val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize + 1)
 
-        logger.debug(600, "Accumulating arguments: argIndex: $argIndex, givenArgs: $givenArgs, commandArguments: $commandArguments, greedyPosition: $greedyPosition")
+        logger.debug(
+            600,
+            "Accumulating arguments: argIndex: $argIndex, givenArgs: $givenArgs, commandArguments: $commandArguments, " +
+                "greedyPosition: $greedyPosition",
+        )
         logger.debug(500, "GreedyArgumentExtraSize: $greedyArgumentExtraSize, extraArgs: $extraArgs")
 
         if (argIndex == greedyPosition) {
@@ -172,28 +177,6 @@ class ArgumentPath<T : CommandContext>(
         }
     }
 
-    fun tabComplete(
-        sender: CommandSender,
-        args: List<String>,
-    ): List<String> {
-        if (args.isEmpty() || args.size > arguments.size) return emptyList()
-
-        val currentArgIndex = args.size - 1
-        return arguments[currentArgIndex].second.tabComplete(sender, args.lastOrEmpty())
-    }
-
-    fun isCorrectSender(sender: CommandSender): Boolean {
-        return senderArgument.requiredType.isInstance(sender)
-    }
-
-    fun hasPermission(sender: CommandSender): Boolean {
-        return permission.all { sender.hasPermission(it) }
-    }
-
-    override fun toString(): String {
-        return "ArgumentPath(senderArgument=$senderArgument, arguments=$arguments, permission=$permission)"
-    }
-
     /**
      * Checks if this path matches the input until the end of the input. This is only used for tabcompletes.
      *
@@ -226,4 +209,28 @@ class ArgumentPath<T : CommandContext>(
         logger.debug(200, "  All arguments parsed, this path matches the input")
         return true
     }
+
+    fun tabComplete(
+        sender: CommandSender,
+        args: List<String>,
+    ): List<String> {
+        if (args.isEmpty() || args.size > arguments.size) return emptyList()
+
+        val currentArgIndex = args.size - 1
+        return arguments[currentArgIndex].second.tabComplete(sender, args.lastOrEmpty())
+    }
+
+    fun isCorrectSender(sender: CommandSender): Boolean {
+        return senderArgument.requiredType.isInstance(sender)
+    }
+
+    fun hasPermission(sender: CommandSender): Boolean {
+        return permission.all { sender.hasPermission(it) }
+    }
+
+    override fun toString(): String {
+        return "ArgumentPath(senderArgument=$senderArgument, arguments=$arguments, permission=$permission)"
+    }
+
+
 }

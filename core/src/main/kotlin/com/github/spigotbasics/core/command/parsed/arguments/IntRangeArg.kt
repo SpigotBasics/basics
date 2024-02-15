@@ -17,7 +17,10 @@ class IntRangeArg(name: String, private val min: () -> Int, private val max: () 
         return value in min()..max()
     }
 
-    override fun errorMessage(sender: CommandSender, value: String): Message {
+    override fun errorMessage(
+        sender: CommandSender,
+        value: String,
+    ): Message {
         return Basics.messages.invalidValueForArgumentNumberNotInRange(name, value.toIntOrNull() ?: 0, min(), max())
     }
 }

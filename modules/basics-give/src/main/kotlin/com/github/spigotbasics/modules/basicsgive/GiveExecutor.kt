@@ -22,14 +22,14 @@ class GiveExecutor(private val module: BasicsGiveModule) : CommandContextExecuto
 
         val snbtItem = context["snbt"] as ItemStack?
         val material = (context["item"] as Material?) ?: snbtItem!!.type
+
         @Suppress("UNCHECKED_CAST")
         val receivers = context.getOrDefault("receiver", listOf(sender as Player)) as List<Player>
         val amount = context.getOrDefault("amount", module.getStackSize(material)) as Int
 
         val item = snbtItem?.apply { setAmount(amount) } ?: ItemStack(material, amount)
 
-        for(receiver in receivers) {
-
+        for (receiver in receivers) {
             val result =
                 receiver.inventory.addOrDrop(
                     itemStack = item.clone(),
