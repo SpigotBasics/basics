@@ -20,5 +20,9 @@ abstract class CommandArgument<T>(
     // TODO: This is using the static Singleton :/
     open fun errorMessage(value: String? = null): Message = Basics.messages.invalidValueForArgument(name, value ?: "null")
 
-    // fun getArgumentName(): String = name // ?: this::class.simpleName ?: "unknown"
+    /**
+     * Whether this argument is greedy. If yes, it will consume all given strings until args.size - remainingArgs.
+     * Only one argument can be greedy in a path.
+     */
+    open val greedy = false
 }

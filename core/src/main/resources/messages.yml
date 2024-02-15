@@ -25,6 +25,7 @@ no-safe-location-found: "<error><red>Couldn't find a safe location to teleport t
 not-having-item-in-hand: "<error><red>You're not holding any item in your hand!</red>"
 others-not-having-item-in-hand: "<error><red><gold><player-name></gold> is not holding any item in their hand!</red>"
 
+too-many-arguments: "<error><red>Too many arguments!</red>"
 command-not-from-console: "<error><red>This command can't be run from console!</red>"
 must-specify-player-from-console: "<error><red>You must specify a player when running this command from console!</red>"
 command-module-disabled: "<error><red>The module that registered this command is disabled!</red>"

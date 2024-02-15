@@ -26,4 +26,8 @@ open class LiteralArg(name: String) : CommandArgument<String>(name) {
             emptyList()
         }
     }
+
+    override fun toString(): String {
+        return "LiteralArg(name='$name')"
+    }
 }

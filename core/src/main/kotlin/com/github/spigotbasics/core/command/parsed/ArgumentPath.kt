@@ -9,6 +9,8 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
+import kotlin.math.max
+import kotlin.math.min
 
 class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
@@ -29,32 +31,70 @@ class ArgumentPath<T : CommandContext>(
     fun matches(
         sender: CommandSender,
         args: List<String>,
-    ): Either<PathMatchResult, List<Message>> {
-        // Exact match for the number of arguments
-        if (args.size > arguments.size) {
-            return Either.Left(
-                PathMatchResult.NO,
-            )
-        }
+    ): Either<PathMatchResult, Pair<Int,List<Message>>> {
+
+        val greedyArg = arguments.indexOfFirst { it.second.greedy }
+        var firstErrorIndex = -1
+
+        // Exact match for the number of arguments, unless one argument is greedy
+//        if (greedyArg == -1 && args.size > arguments.size) {
+//            return Either.Left(
+//                PathMatchResult.NO,
+//            )
+//        }
 
         // Each provided arg must be parseable by its corresponding CommandArgument
         val errors = mutableListOf<Message>()
-        args.indices.forEach { index ->
+        arguments.indices.forEach { index ->
+
+            if(index >= args.size) {
+                return@forEach // Needed because we now iterate over arguments and not args anymore
+            }
+
             // val parsed = arguments[index].parse(args[index])
             val (_, argument) = arguments[index]
-            val parsed = argument.parse(sender, args[index])
+
+            val currentArg = accumulateArguments(index, args, arguments.map { it.second }, greedyArg)
+
+            val parsed = argument.parse(sender, currentArg)
 
             if (parsed == null) {
-                val error = argument.errorMessage(args[index])
+                val error = argument.errorMessage(currentArg)
+                firstErrorIndex = if(firstErrorIndex == -1) index else min(firstErrorIndex, index)
                 errors.add(error)
             }
         }
 
-        if (errors.isNotEmpty()) return Either.Right(errors)
+        if (errors.isNotEmpty()) return Either.Right(firstErrorIndex to errors)
+
+        if (greedyArg == -1) {
+            if(args.size > arguments.size) {
+                return Either.Right(
+                    arguments.size to listOf(Basics.messages.tooManyArguments) // TODO
+                )
+            }
+        }
 
         if (!senderArgument.requiredType.isInstance(sender)) return Either.Left(PathMatchResult.YES_BUT_NOT_FROM_CONSOLE)
         if (!hasPermission(sender)) return Either.Left(PathMatchResult.YES_BUT_NO_PERMISSION)
         return Either.Left(PathMatchResult.YES)
+    }
+
+    fun accumulateArguments(argIndex: Int, givenArgs: List<String>, commandArguments: List<CommandArgument<*>>, greedyPosition: Int): String {
+        if(greedyPosition == -1) {
+            return givenArgs[argIndex]
+        }
+        if(argIndex < greedyPosition) {
+            return givenArgs[argIndex]
+        }
+        val greedyArgumentExtraSize = givenArgs.size - commandArguments.size
+        val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize)
+
+        if(argIndex == greedyPosition) {
+            return extraArgs.joinToString(" ")
+        }
+        val offsetFromEnd = commandArguments.size - argIndex
+        return givenArgs[argIndex - offsetFromEnd]
     }
 
     fun parse(
@@ -66,6 +106,8 @@ class ArgumentPath<T : CommandContext>(
             "ArgumentPath#parse: sender: $sender, args: $args, senderArgument: $senderArgument, arguments: $arguments, " +
                 "permission: $permission, contextBuilder: $contextBuilder",
         )
+
+        val greedyArg = arguments.indexOfFirst { it.second.greedy } // TODO: Can be field
 
         if (!senderArgument.requiredType.isInstance(sender)) {
             logger.debug(10, "Failure: senderArgument.requiredType.isInstance(sender) is false")
@@ -84,10 +126,12 @@ class ArgumentPath<T : CommandContext>(
                 break
             }
 
-            val parsed = arg.parse(sender, args[index])
+            val currentArg = accumulateArguments(index, args, arguments.map { it.second }, greedyArg)
+
+            val parsed = arg.parse(sender, currentArg)
             if (parsed == null) {
                 logger.debug(10, "Failure: parsed == null for arg: $arg, args[$index]: ${args[index]} (index: $index)")
-                errors.add(arg.errorMessage(args[index]))
+                errors.add(arg.errorMessage(currentArg))
                 break
             } else {
                 logger.debug(10, "  parsed: $parsed for arg: $arg, args[$index]: ${args[index]} (index: $index)")
