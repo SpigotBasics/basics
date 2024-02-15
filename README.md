@@ -65,3 +65,5 @@ Debug output can be enabled by setting the `BASICS_DEBUG_LEVEL` environment vari
 ```shell
 BASICS_DEBUG_LEVEL=99 java -jar spigot.jar 
 ```
+
+You can also change the debug level on the fly using `/basicsdebug setdebugloglevel <number>`.
