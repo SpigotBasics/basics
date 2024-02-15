@@ -54,7 +54,7 @@ class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasic
     override fun onEnable() {
         commandFactory.rawCommandBuilder("craftingtable", permissionCraftingTable)
             .description("Opens a crafting table")
-            .aliases(listOf("workbench"))
+//            .aliases(listOf("workbench"))
             .executor(WorkbenchExecutor())
             .register()
 
