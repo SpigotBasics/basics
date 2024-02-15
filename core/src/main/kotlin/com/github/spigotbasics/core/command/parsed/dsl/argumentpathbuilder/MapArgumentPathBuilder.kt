@@ -9,5 +9,7 @@ class MapArgumentPathBuilder : ArgumentPathBuilder<MapContext>() {
             senderType,
             arguments,
             permissions,
-        ) { args -> MapContext(args) }
+            { args -> MapContext(args) },
+            pathExecutor,
+        )
 }

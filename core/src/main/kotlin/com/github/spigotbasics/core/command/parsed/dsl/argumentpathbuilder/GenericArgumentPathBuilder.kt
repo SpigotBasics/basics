@@ -1,6 +1,7 @@
 package com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder
 
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.context.CommandContext
 
 class GenericArgumentPathBuilder<T : CommandContext> : ArgumentPathBuilder<T>() {
@@ -14,5 +15,6 @@ class GenericArgumentPathBuilder<T : CommandContext> : ArgumentPathBuilder<T>() 
             arguments,
             permissions,
             contextBuilder ?: error("Context builder not set"),
+            pathExecutor
         )
 }

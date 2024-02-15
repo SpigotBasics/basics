@@ -5,15 +5,22 @@ import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val permission =
+    val modulePermission =
         permissionManager.createSimplePermission(
             "basics.admin.module",
             "Allows managing Basics modules",
             PermissionDefault.OP,
         )
 
+    val debugPermission =
+        permissionManager.createSimplePermission(
+            "basics.admin.debug",
+            "Allows debugging Basics",
+            PermissionDefault.OP,
+        )
+
     override fun onEnable() {
-        commandFactory.parsedCommandBuilder("module", permission)
+        commandFactory.parsedCommandBuilder("module", modulePermission)
             .mapContext {
                 usage = "<command> [module]"
 
@@ -91,6 +98,20 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 path {}
             }
             .executor(ModuleCommand(this))
+            .register()
+
+        commandFactory.parsedCommandBuilder("basicsdebug", debugPermission)
+            .mapContext {
+                usage = "<command>"
+
+                path {
+                    arguments {
+                        sub("printpermissions")
+                    }
+                    executor(PrintPermissionsCommand())
+                }
+            }
+            //.executor(DebugFallbackExecutor())
             .register()
     }
 }

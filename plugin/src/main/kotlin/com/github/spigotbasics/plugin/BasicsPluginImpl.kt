@@ -137,7 +137,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         server.pluginManager.registerEvents(modulePlayerDataLoader, this)
         server.pluginManager.registerEvents(PlayerCommandListSendListener(facade.getCommandMap(server.pluginManager)), this)
 
-        getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
+        //getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }
 
     private fun initializeHeavyClasses() {

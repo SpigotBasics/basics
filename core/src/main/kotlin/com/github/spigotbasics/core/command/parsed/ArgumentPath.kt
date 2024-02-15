@@ -16,6 +16,7 @@ class ArgumentPath<T : CommandContext>(
     val arguments: List<Pair<String, CommandArgument<*>>>,
     val permission: List<Permission> = emptyList(),
     private val contextBuilder: (Map<String, Any?>) -> T,
+    val ownExecutor: CommandContextExecutor<T>? = null,
 ) {
     companion object {
         val logger = BasicsLoggerFactory.getCoreLogger(ArgumentPath::class)
