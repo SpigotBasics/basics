@@ -5,6 +5,7 @@ import com.github.spigotbasics.common.leftOrNull
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.messages.Message
+import com.github.spigotbasics.core.permission.CorePermissions
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -13,10 +14,10 @@ class PlayersArg(name: String) : CommandArgument<List<Player>>(name) {
     private enum class ErrorType {
         NOT_FOUND,
         NO_PERMISSION_SELECTORS,
-        SELECTOR_INCUDES_ENTITIES,
+        SELECTOR_INCLUDES_ENTITIES,
     }
 
-    private val selectorPermission = Basics.permissions.useSelectors
+    private val selectorPermission = CorePermissions.useSelectors
 
     override fun parse(
         sender: CommandSender,
@@ -58,7 +59,7 @@ class PlayersArg(name: String) : CommandArgument<List<Player>>(name) {
         val selected = Bukkit.selectEntities(sender, value)
         val players = selected.filterIsInstance<Player>()
         if (selected.size != players.size) {
-            return Either.Left(ErrorType.SELECTOR_INCUDES_ENTITIES)
+            return Either.Left(ErrorType.SELECTOR_INCLUDES_ENTITIES)
         }
         if (players.isEmpty()) {
             return Either.Left(ErrorType.NOT_FOUND)
@@ -73,7 +74,7 @@ class PlayersArg(name: String) : CommandArgument<List<Player>>(name) {
         return when (get(sender, value).leftOrNull()) {
             ErrorType.NOT_FOUND -> Basics.messages.playerNotFound(value)
             ErrorType.NO_PERMISSION_SELECTORS -> Basics.messages.noPermission(selectorPermission)
-            ErrorType.SELECTOR_INCUDES_ENTITIES -> Basics.messages.selectorIncludesEntities(value)
+            ErrorType.SELECTOR_INCLUDES_ENTITIES -> Basics.messages.selectorIncludesEntities(value)
             else -> super.errorMessage(sender, value)
         }
     }

@@ -14,5 +14,6 @@ class GenericArgumentPathBuilder<T : CommandContext> : ArgumentPathBuilder<T>() 
             arguments,
             permissions,
             contextBuilder ?: error("Context builder not set"),
+            pathExecutor,
         )
 }

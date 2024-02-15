@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder
 
 import com.github.spigotbasics.core.command.parsed.AnySender
 import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.PlayerSender
 import com.github.spigotbasics.core.command.parsed.SenderType
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
@@ -13,6 +14,7 @@ abstract class ArgumentPathBuilder<T : CommandContext> {
     protected var senderType: SenderType<*> = AnySender
     protected var arguments = emptyList<Pair<String, CommandArgument<*>>>()
     protected var permissions = emptyList<Permission>()
+    protected var pathExecutor: CommandContextExecutor<T>? = null
 
     private fun senderType(senderType: SenderType<*>) = apply { this.senderType = senderType }
 
@@ -28,6 +30,8 @@ abstract class ArgumentPathBuilder<T : CommandContext> {
             argumentBuilder.block()
             this.arguments = argumentBuilder.build()
         }
+
+    fun executor(pathExecutor: CommandContextExecutor<T>) = apply { this.pathExecutor = pathExecutor }
 
     abstract fun build(): ArgumentPath<T>
 }

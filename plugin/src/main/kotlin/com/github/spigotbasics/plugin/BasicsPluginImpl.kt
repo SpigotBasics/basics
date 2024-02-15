@@ -18,7 +18,6 @@ import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
-import com.github.spigotbasics.core.permission.BasicsPermissionManager
 import com.github.spigotbasics.core.permission.CorePermissions
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
@@ -50,7 +49,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
 
-    override val permissions = CorePermissions(BasicsPermissionManager(logger))
+    override val permissions = CorePermissions
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, server, moduleFolder)
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
@@ -138,7 +137,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         server.pluginManager.registerEvents(modulePlayerDataLoader, this)
         server.pluginManager.registerEvents(PlayerCommandListSendListener(facade.getCommandMap(server.pluginManager)), this)
 
-        getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
+        // getCommand("basicsdebug")?.setExecutor(BasicsDebugCommand(this))
     }
 
     private fun initializeHeavyClasses() {

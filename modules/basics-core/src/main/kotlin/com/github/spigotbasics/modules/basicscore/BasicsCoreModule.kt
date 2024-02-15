@@ -1,19 +1,29 @@
 package com.github.spigotbasics.modules.basicscore
 
+import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import com.github.spigotbasics.modules.basicscore.commands.PrintPermissionsCommand
+import com.github.spigotbasics.modules.basicscore.commands.SetDebugLogLevelCommand
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val permission =
+    val modulePermission =
         permissionManager.createSimplePermission(
             "basics.admin.module",
             "Allows managing Basics modules",
             PermissionDefault.OP,
         )
 
+    val debugPermission =
+        permissionManager.createSimplePermission(
+            "basics.admin.debug",
+            "Allows debugging Basics",
+            PermissionDefault.OP,
+        )
+
     override fun onEnable() {
-        commandFactory.parsedCommandBuilder("module", permission)
+        commandFactory.parsedCommandBuilder("module", modulePermission)
             .mapContext {
                 usage = "<command> [module]"
 
@@ -91,6 +101,27 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 path {}
             }
             .executor(ModuleCommand(this))
+            .register()
+
+        commandFactory.parsedCommandBuilder("basicsdebug", debugPermission)
+            .mapContext {
+                usage = "<command>"
+
+                path {
+                    arguments {
+                        sub("printpermissions")
+                    }
+                    executor(PrintPermissionsCommand())
+                }
+
+                path {
+                    arguments {
+                        sub("setdebugloglevel")
+                        named("level", IntRangeArg("Log Level", { 0 }, { 999_999_999 }))
+                    }
+                    executor(SetDebugLogLevelCommand())
+                }
+            }
             .register()
     }
 }

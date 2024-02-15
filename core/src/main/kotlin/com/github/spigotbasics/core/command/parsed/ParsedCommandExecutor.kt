@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
 class ParsedCommandExecutor<T : CommandContext>(
-    private val executor: CommandContextExecutor<T>,
+    private val executor: CommandContextExecutor<T>?,
     private val paths: List<ArgumentPath<T>>,
 ) {
     companion object {
@@ -17,6 +17,16 @@ class ParsedCommandExecutor<T : CommandContext>(
     }
 
     init {
+
+        for (path in paths) {
+            if (path.ownExecutor == null && executor == null) {
+                throw IllegalArgumentException(
+                    "Attempting to create a ParsedCommandExecutor with a path that has no executor and no default " +
+                        "executor was provided. Path: $path",
+                )
+            }
+        }
+
         logger.debug(10, "ParsedCommandExecutor created with paths: ${paths.size}")
     }
 
@@ -78,7 +88,10 @@ class ParsedCommandExecutor<T : CommandContext>(
                 when (val result = path.parse(sender, input)) {
                     is ParseResult.Success -> {
                         logger.debug(10, "Path.parse == ParseResult.Success: $result")
-                        executor.execute(sender, result.context)
+
+                        val actualExecutor = path.ownExecutor ?: executor ?: error("No executor found for path: $path")
+
+                        actualExecutor.execute(sender, result.context)
                         // logger.debug(10,"Command executed successfully.")
                         logger.debug(10, "Command executed successfully.")
                         return Either.Left(CommandResult.SUCCESS)
