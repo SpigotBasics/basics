@@ -5,6 +5,7 @@ import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import com.github.spigotbasics.modules.basicscore.commands.PrintPermissionsCommand
 import com.github.spigotbasics.modules.basicscore.commands.SetDebugLogLevelCommand
+import com.github.spigotbasics.modules.basicscore.commands.ShowTpsCommand
 import org.bukkit.permissions.PermissionDefault
 
 class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -120,6 +121,13 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                         named("level", IntRangeArg("Log Level", { 0 }, { 999_999_999 }))
                     }
                     executor(SetDebugLogLevelCommand())
+                }
+
+                path {
+                    arguments {
+                        sub("tps")
+                    }
+                    executor(ShowTpsCommand())
                 }
             }
             .register()

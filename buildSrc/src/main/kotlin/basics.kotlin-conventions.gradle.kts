@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+
 /**
  * Base plugin for Kotlin
  */
@@ -7,6 +9,10 @@ group = getGroupId()
 plugins {
     kotlin("jvm")
     `maven-publish`
+}
+
+if(!project.path.startsWith(":nms:versions")) {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }
 
 dependencies {
@@ -71,6 +77,23 @@ repositories {
 
 kotlin {
     jvmToolchain(8)
+    target {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        disableAutoTargetJvm()
+    }
+
 }
 
 tasks.compileKotlin {

@@ -22,6 +22,7 @@ dependencies {
     compileOnly(libs.placeholderapi)
     api(project(":common"))
     api(project(":pipe:facade"))
+    api(project(":nms:facade"))
     testImplementation(libs.gson)
     compileOnlyApi(libs.gson)
 }
