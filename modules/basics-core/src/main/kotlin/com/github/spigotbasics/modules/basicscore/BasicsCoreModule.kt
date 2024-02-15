@@ -14,56 +14,84 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         )
 
     override fun onEnable() {
-        commandFactory.parsedCommandBuilder("moduletest", permission)
-            .context<TestContext> {
-                usage = "<donkey>"
-
-                path {
-                    arguments {
-                        add("value", literal("donkey"))
-                    }
-                    contextBuilder { TestContext(it["value"] as String) }
-                }
-            }
-            .executor(TestContextExecutor())
-            .register()
-
         commandFactory.parsedCommandBuilder("module", permission)
             .mapContext {
                 usage = "<command> [module]"
 
+                // module help
+                path {
+                    arguments {
+                        sub("help")
+                    }
+                }
+
                 // module list
                 path {
                     arguments {
-                        add("sub", literal("list"))
+                        sub("list")
                     }
                 }
 
                 // module info <module>
                 path {
                     arguments {
-                        add("sub", literal("info"))
-                        add("module", ModuleArg.LoadedModules("module"))
+                        sub("info")
+                        named("module", ModuleArg.LoadedModules("Module"))
                     }
                 }
 
                 // module enable <module>
                 path {
                     arguments {
-                        add("sub", literal("enable"))
-                        add("module", ModuleArg.DisabledModules("module"))
+                        sub("enable")
+                        named("module", ModuleArg.DisabledModules("Module"))
                     }
                 }
 
                 // module disable <module>
                 path {
                     arguments {
-                        add("sub", literal("disable"))
-                        add("module", ModuleArg.EnabledModules("module"))
+                        sub("disable")
+                        named("module", ModuleArg.EnabledModules("Module"))
                     }
                 }
+
+                // module reloadjar <module>
+                path {
+                    arguments {
+                        sub("reloadjar")
+                        named("module", ModuleArg.LoadedModules("Module"))
+                    }
+                }
+
+                // module reload <module>
+                path {
+                    arguments {
+                        sub("reload")
+                        named("module", ModuleArg.EnabledModules("Module"))
+                    }
+                }
+
+                // module unload <module>
+                path {
+                    arguments {
+                        sub("unload")
+                        named("module", ModuleArg.LoadedModules("Module"))
+                    }
+                }
+
+                // module load <module>
+                path {
+                    arguments {
+                        sub("loadfile")
+                        named("moduleFileName", UnloadedModuleFileArg("Module File", plugin.moduleManager))
+                    }
+                }
+
+                // no arguments -> help
+                path {}
             }
-            .executor(NewModulesCommand(plugin.moduleManager, messageFactory))
+            .executor(NewModulesCommand(this))
             .register()
     }
 }

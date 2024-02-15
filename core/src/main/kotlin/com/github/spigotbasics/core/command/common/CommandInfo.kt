@@ -1,11 +1,9 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.common
 
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.permissions.Permission
 
 // TODO: createCommandInfo in BasicsModule
-// TODO: Permission message not shown when permission is missing, but "no command found" - make this configurable?
-//       That'd require not setting any permission on the actual Command, but only checking it in the executor (BasicsCommand#execute)
 data class CommandInfo(
     val name: String,
     val permission: Permission,

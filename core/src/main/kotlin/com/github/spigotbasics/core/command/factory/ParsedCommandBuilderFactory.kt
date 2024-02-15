@@ -1,11 +1,9 @@
 package com.github.spigotbasics.core.command.factory
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.parsed.GenericContextParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.MapCommandContext
-import com.github.spigotbasics.core.command.parsed.MapContextParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.GenericContextParsedCommandBuilder
+import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.MapContextParsedCommandBuilder
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -19,7 +17,7 @@ class ParsedCommandBuilderFactory(
     private val name: String,
     private val permission: Permission,
 ) {
-    fun <T : ParsedCommandContext> context(): GenericContextParsedCommandBuilder<T> {
+    fun <T : CommandContext> context(): GenericContextParsedCommandBuilder<T> {
         return GenericContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
@@ -30,7 +28,7 @@ class ParsedCommandBuilderFactory(
         )
     }
 
-    fun <T : ParsedCommandContext> context(block: GenericContextParsedCommandBuilder<T>.() -> Unit): GenericContextParsedCommandBuilder<T> {
+    fun <T : CommandContext> context(block: GenericContextParsedCommandBuilder<T>.() -> Unit): GenericContextParsedCommandBuilder<T> {
         val builder =
             GenericContextParsedCommandBuilder<T>(
                 coreConfig = coreConfig,
@@ -44,8 +42,8 @@ class ParsedCommandBuilderFactory(
         return builder // return .build() ?
     }
 
-    fun mapContext(): ParsedCommandBuilder<MapCommandContext> {
-        return ParsedCommandBuilder(
+    fun mapContext(): MapContextParsedCommandBuilder {
+        return MapContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
@@ -55,7 +53,7 @@ class ParsedCommandBuilderFactory(
         )
     }
 
-    fun mapContext(block: MapContextParsedCommandBuilder.() -> Unit): ParsedCommandBuilder<MapCommandContext> {
+    fun mapContext(block: MapContextParsedCommandBuilder.() -> Unit): MapContextParsedCommandBuilder {
         val builder =
             MapContextParsedCommandBuilder(
                 coreConfig = coreConfig,

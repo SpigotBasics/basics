@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed.MapCommandContext
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.extensions.addOrDrop
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.Material
@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class GiveExecutor(private val module: BasicsGiveModule) : ParsedCommandContextExecutor<MapCommandContext> {
+class GiveExecutor(private val module: BasicsGiveModule) : CommandContextExecutor<MapContext> {
     private val logger = BasicsLoggerFactory.getModuleLogger(module, GiveExecutor::class)
 
     override fun execute(
         sender: CommandSender,
-        context: MapCommandContext,
+        context: MapContext,
     ) {
         // Bukkit.broadcastMessage("GiveExecutor called")
 

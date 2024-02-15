@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.command
 
+import com.github.spigotbasics.core.command.common.BasicsCommand
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.command.Command
 import org.bukkit.command.SimpleCommandMap

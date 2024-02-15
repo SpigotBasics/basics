@@ -1,6 +1,6 @@
 package com.github.spigotbasics.core.listeners
 
-import com.github.spigotbasics.core.command.BasicsCommand
+import com.github.spigotbasics.core.command.common.BasicsCommand
 import org.bukkit.command.CommandMap
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

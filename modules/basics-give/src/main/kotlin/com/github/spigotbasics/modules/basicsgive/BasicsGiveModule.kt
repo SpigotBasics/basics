@@ -1,9 +1,9 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed.MapArgumentPathBuilder
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
+import com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder.MapArgumentPathBuilder
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext

@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsgive
 
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class GiveContext(val receiver: Player, val material: Material, val amount: Int = 1) : ParsedCommandContext
+class GiveContext(val receiver: Player, val material: Material, val amount: Int = 1) : CommandContext

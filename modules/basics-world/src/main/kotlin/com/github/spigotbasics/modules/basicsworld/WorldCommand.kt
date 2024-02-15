@@ -1,8 +1,8 @@
 package com.github.spigotbasics.modules.basicsworld
 
 import com.github.spigotbasics.core.Spiper
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.util.TeleportUtils
@@ -95,7 +95,7 @@ class WorldCommand(val module: BasicsWorldModule) : BasicsCommandExecutor(module
         }
     }
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): List<String> {
         val args = context.args
         if (args.size == 1) {
             return allWorldsAnd012(context.sender).apply {

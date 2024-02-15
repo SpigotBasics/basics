@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsweather
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import org.bukkit.WeatherType
@@ -40,7 +40,7 @@ class WeatherCommand(val module: BasicsWeatherModule) : BasicsCommandExecutor(mo
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): List<String> {
         return listOf("clear", "storm").partialMatches(context.args[0])
     }
 }

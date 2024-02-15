@@ -1,20 +1,24 @@
-package com.github.spigotbasics.core.command.parsed
+package com.github.spigotbasics.core.command.parsed.dsl.commandbuilder
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.command.BasicsCommand
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.CommandInfo
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommand
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandInfo
+import com.github.spigotbasics.core.command.common.CommandResult
+import com.github.spigotbasics.core.command.parsed.ArgumentPath
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.ParsedCommandExecutor
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+import com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder.ArgumentPathBuilder
 import com.github.spigotbasics.core.command.raw.RawCommandContext
-import com.github.spigotbasics.core.command.raw.RawTabCompleter
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.MessageFactory
 import org.bukkit.permissions.Permission
 
-open class ParsedCommandBuilder<T : ParsedCommandContext>(
+open class ParsedCommandBuilder<T : CommandContext>(
     private val coreConfig: CoreConfig,
     private val messageFactory: MessageFactory,
     private val coreMessages: CoreMessages,
@@ -26,9 +30,10 @@ open class ParsedCommandBuilder<T : ParsedCommandContext>(
     private var description: String? = null
     var usage: String = ""
     private var aliases: List<String> = emptyList()
-    private var executor: BasicsCommandExecutor? = null
-    private var tabCompleter: RawTabCompleter? = null
-    private var parsedExecutor: ParsedCommandContextExecutor<T>? = null
+
+    // private var executor: BasicsCommandExecutor? = null
+    // private var tabCompleter: RawTabCompleter? = null
+    private var parsedExecutor: CommandContextExecutor<T>? = null
     var argumentPaths: MutableList<ArgumentPath<T>> = mutableListOf()
 
     fun description(description: String) = apply { this.description = description }
@@ -43,35 +48,35 @@ open class ParsedCommandBuilder<T : ParsedCommandContext>(
 
     fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
 
-    fun executor(executor: ParsedCommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
+    fun executor(executor: CommandContextExecutor<T>) = apply { this.parsedExecutor = executor }
 
-    private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
+    // private fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
 
-    private fun executor(command: ParsedCommandExecutor<T>) =
-        apply {
-            this.executor =
-                object : BasicsCommandExecutor(coreMessages, messageFactory) {
-                    override fun execute(context: RawCommandContext): CommandResult? {
-                        val result = command.execute(context.sender, context.args)
+    private fun createActualExecutor(command: ParsedCommandExecutor<T>): BasicsCommandExecutor {
+        val executor =
+            object : BasicsCommandExecutor(coreMessages, messageFactory) {
+                override fun execute(context: RawCommandContext): CommandResult? {
+                    val result = command.execute(context.sender, context.args)
 
-                        if (result is Either.Left) {
-                            return result.value
-                        }
-
-                        if (result is Either.Right) {
-                            val failure = result.value
-                            // TODO: Proper messages
-                            failure.errors.forEach { it.sendToSender(context.sender) }
-                        }
-
-                        return null
+                    if (result is Either.Left) {
+                        return result.value
                     }
 
-                    override fun tabComplete(context: RawCommandContext): MutableList<String> {
-                        return command.tabComplete(context.sender, context.args).toMutableList()
+                    if (result is Either.Right) {
+                        val failure = result.value
+                        // TODO: Proper messages
+                        failure.errors.forEach { it.sendToSender(context.sender) }
                     }
+
+                    return null
                 }
-        }
+
+                override fun tabComplete(context: RawCommandContext): MutableList<String> {
+                    return command.tabComplete(context.sender, context.args).toMutableList()
+                }
+            }
+        return executor
+    }
 
     fun register(): BasicsCommand {
         val command = build()
@@ -85,7 +90,7 @@ open class ParsedCommandBuilder<T : ParsedCommandContext>(
                 parsedExecutor ?: error("parsedExecutor must be set"),
                 argumentPaths,
             )
-        executor(command)
+        val actualExecutor = createActualExecutor(command)
         val info =
             CommandInfo(
                 name = name,
@@ -97,8 +102,8 @@ open class ParsedCommandBuilder<T : ParsedCommandContext>(
             )
         return BasicsCommand(
             info = info,
-            executor = executor ?: error("Executor must be set"),
-            tabCompleter = tabCompleter ?: executor,
+            executor = actualExecutor ?: error("Executor must be set"),
+            tabCompleter = actualExecutor,
             coreConfig = coreConfig,
             coreMessages = coreMessages,
             messageFactory = messageFactory,

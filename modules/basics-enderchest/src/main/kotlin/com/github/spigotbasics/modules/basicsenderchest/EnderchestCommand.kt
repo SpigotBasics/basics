@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsenderchest
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 
 class EnderchestCommand(private val module: BasicsEnderchestModule) : BasicsCommandExecutor(module) {
