@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.common
 
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.command.raw.RawTabCompleter
@@ -9,12 +9,12 @@ import com.github.spigotbasics.core.module.BasicsModule
 abstract class BasicsCommandExecutor(
     val coreMessages: CoreMessages,
     val messageFactory: MessageFactory,
-) : BasicsCommandContextHandler(), RawTabCompleter {
+) : BasicsCommandContextHandler, RawTabCompleter {
     constructor(module: BasicsModule) : this(module.coreMessages, module.messageFactory)
 
     abstract fun execute(context: RawCommandContext): CommandResult?
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String>? {
+    override fun tabComplete(context: RawCommandContext): List<String>? {
         return null
     }
 }

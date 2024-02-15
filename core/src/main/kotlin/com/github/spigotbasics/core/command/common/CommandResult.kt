@@ -1,4 +1,4 @@
-package com.github.spigotbasics.core.command
+package com.github.spigotbasics.core.command.common
 
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.messages.CoreMessages

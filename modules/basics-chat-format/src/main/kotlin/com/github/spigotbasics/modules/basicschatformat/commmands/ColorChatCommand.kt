@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicschatformat.commmands
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.addAnd
 import com.github.spigotbasics.core.extensions.partialMatches
@@ -43,7 +43,7 @@ class ColorChatCommand(private val module: BasicsChatFormatModule) : BasicsComma
         return CommandResult.SUCCESS
     }
 
-    override fun tabComplete(context: RawCommandContext): MutableList<String> {
+    override fun tabComplete(context: RawCommandContext): List<String> {
         return if (context.args.size == 1) {
             return ChatColor.entries.map { it.name.lowercase() }.addAnd("reset").partialMatches(context.args[0])
         } else {

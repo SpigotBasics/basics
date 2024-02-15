@@ -1,9 +1,9 @@
 package com.github.spigotbasics.core.command.factory
 
 import com.github.spigotbasics.core.command.BasicsCommandManager
-import com.github.spigotbasics.core.command.ParsedCommandBuilder
-import com.github.spigotbasics.core.command.parsed.MapCommandContext
-import com.github.spigotbasics.core.command.parsed.ParsedCommandContext
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
+import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.GenericContextParsedCommandBuilder
+import com.github.spigotbasics.core.command.parsed.dsl.commandbuilder.MapContextParsedCommandBuilder
 import com.github.spigotbasics.core.config.CoreConfig
 import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
@@ -17,8 +17,8 @@ class ParsedCommandBuilderFactory(
     private val name: String,
     private val permission: Permission,
 ) {
-    fun <T : ParsedCommandContext> context(): ParsedCommandBuilder<T> {
-        return ParsedCommandBuilder(
+    fun <T : CommandContext> context(): GenericContextParsedCommandBuilder<T> {
+        return GenericContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
@@ -28,8 +28,22 @@ class ParsedCommandBuilderFactory(
         )
     }
 
-    fun mapContext(): ParsedCommandBuilder<MapCommandContext> {
-        return ParsedCommandBuilder(
+    fun <T : CommandContext> context(block: GenericContextParsedCommandBuilder<T>.() -> Unit): GenericContextParsedCommandBuilder<T> {
+        val builder =
+            GenericContextParsedCommandBuilder<T>(
+                coreConfig = coreConfig,
+                messageFactory = messageFactory,
+                coreMessages = coreMessages,
+                commandManager = commandManager,
+                name = name,
+                permission = permission,
+            )
+        builder.block() // Apply the DSL configurations
+        return builder // return .build() ?
+    }
+
+    fun mapContext(): MapContextParsedCommandBuilder {
+        return MapContextParsedCommandBuilder(
             coreConfig = coreConfig,
             messageFactory = messageFactory,
             coreMessages = coreMessages,
@@ -37,5 +51,19 @@ class ParsedCommandBuilderFactory(
             name = name,
             permission = permission,
         )
+    }
+
+    fun mapContext(block: MapContextParsedCommandBuilder.() -> Unit): MapContextParsedCommandBuilder {
+        val builder =
+            MapContextParsedCommandBuilder(
+                coreConfig = coreConfig,
+                messageFactory = messageFactory,
+                coreMessages = coreMessages,
+                commandManager = commandManager,
+                name = name,
+                permission = permission,
+            )
+        builder.block() // Apply the DSL configurations
+        return builder // return .build() ?
     }
 }

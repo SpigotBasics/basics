@@ -75,6 +75,9 @@ class ModuleManager(
             } catch (e: InvalidModuleException) {
                 logger.log(Level.SEVERE, "Failed to load module ${moduleFile.absolutePath}", e)
                 return Result.failure(e)
+            } catch (e: Exception) {
+                logger.log(Level.SEVERE, "Failed to load module ${moduleFile.absolutePath}", e)
+                return Result.failure(InvalidModuleException(e))
             }
         val info = loader.info
 
@@ -88,6 +91,9 @@ class ModuleManager(
             } catch (e: InvalidModuleException) {
                 logger.log(Level.SEVERE, "Failed to instantiate module ${info.nameAndVersion}", e)
                 return Result.failure(e)
+            } catch (e: Exception) {
+                logger.log(Level.SEVERE, "Failed to instantiate module ${info.nameAndVersion}", e)
+                return Result.failure(InvalidModuleException(e))
             }
 
         // TODO: Initialize all classes here, then close the loader

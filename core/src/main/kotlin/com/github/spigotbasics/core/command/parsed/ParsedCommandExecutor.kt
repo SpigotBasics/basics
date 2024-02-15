@@ -1,14 +1,15 @@
 package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.CommandResult
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ParsedCommandExecutor<T : ParsedCommandContext>(
-    private val executor: ParsedCommandContextExecutor<T>,
+class ParsedCommandExecutor<T : CommandContext>(
+    private val executor: CommandContextExecutor<T>,
     private val paths: List<ArgumentPath<T>>,
 ) {
     companion object {
@@ -18,36 +19,6 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
     init {
         logger.debug(10, "ParsedCommandExecutor created with paths: ${paths.size}")
     }
-
-//    fun execute(input: List<String>) {
-//        for (path in paths) {
-//            val context = path.parse(input)
-//            if (context != null) {
-//                executor.execute(context)
-//                return
-//            }
-//        }
-//        // Handle no matching path found, e.g., show usage or error message
-//    }
-
-//    fun execute(input: List<String>): Either<CommandResult, ParseResult.Failure> {
-//        for (path in paths) {
-//            when (val result = path.parse(input)) {
-//                is ParseResult.Success -> {
-//                    executor.execute(result.context)
-//                    return Either.Left(CommandResult.SUCCESS)
-//                }
-//                is ParseResult.Failure -> {
-//                    // Handle or display errors
-//                    result.errors.forEach { logger.debug(10,it) }
-//                    return Either.Right(result)
-//                }
-//            }
-//        }
-//        // If no paths matched, optionally print a generic error or usage message
-//        logger.debug(10,"Invalid command syntax.")
-//        return Either.Left(CommandResult.USAGE)
-//    }
 
     fun execute(
         sender: CommandSender,
@@ -155,6 +126,7 @@ class ParsedCommandExecutor<T : ParsedCommandContext>(
         for (path in paths) {
             if (!path.isCorrectSender(sender)) continue
             if (!path.hasPermission(sender)) continue
+            if (!path.matchesStart(sender, input)) continue
             completions.addAll(path.tabComplete(input))
         }
         // Remove duplicates and return

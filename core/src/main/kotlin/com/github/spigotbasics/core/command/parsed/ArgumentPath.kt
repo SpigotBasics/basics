@@ -2,13 +2,15 @@ package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Basics
+import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
+import com.github.spigotbasics.core.command.parsed.context.CommandContext
 import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
 
-class ArgumentPath<T : ParsedCommandContext>(
+class ArgumentPath<T : CommandContext>(
     val senderArgument: SenderType<*>,
     val arguments: List<Pair<String, CommandArgument<*>>>,
     val permission: List<Permission> = emptyList(),
@@ -78,7 +80,7 @@ class ArgumentPath<T : ParsedCommandContext>(
             val (argName, arg) = argumentPair
             if (index >= args.size) {
                 logger.debug(10, "Failure: index >= args.size")
-                errors.add(Basics.messages.missingArgument(arg.name))
+                errors.add(Basics.messages.missingArgument(arg.getArgumentName()))
                 break
             }
 
@@ -127,5 +129,38 @@ class ArgumentPath<T : ParsedCommandContext>(
 
     override fun toString(): String {
         return "ArgumentPath(senderArgument=$senderArgument, arguments=$arguments, permission=$permission)"
+    }
+
+    /**
+     * Checks if this path matches the input until the end of the input. This is only used for tabcompletes.
+     *
+     * @param sender
+     * @param input
+     * @return
+     */
+    fun matchesStart(
+        sender: CommandSender,
+        input: List<String>,
+    ): Boolean {
+        logger.debug(200, "TabComplete matchesStart: input: $input @ $this")
+        if (input.size > arguments.size) {
+            logger.debug(200, "  input.size > arguments.size")
+            return false
+        }
+        input.forEachIndexed { index, s ->
+            logger.debug(200, "  Checking index $index, s: $s")
+            if (index == input.size - 1) {
+                logger.debug(200, "    Last argument, skipping")
+                return@forEachIndexed
+            } // Last argument is still typing
+            val arg = arguments[index].second
+            val parsed = arg.parse(s)
+            if (parsed == null) {
+                logger.debug(200, "     parsed == null")
+                return false
+            }
+        }
+        logger.debug(200, "  All arguments parsed, this path matches the input")
+        return true
     }
 }

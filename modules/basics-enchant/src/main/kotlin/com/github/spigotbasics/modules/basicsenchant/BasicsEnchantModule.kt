@@ -1,7 +1,7 @@
 package com.github.spigotbasics.modules.basicsenchant
 
-import com.github.spigotbasics.core.command.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.CommandResult
+import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
+import com.github.spigotbasics.core.command.common.CommandResult
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.extensions.toHumanReadable
@@ -92,7 +92,7 @@ class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsM
             return CommandResult.SUCCESS
         }
 
-        override fun tabComplete(context: RawCommandContext): MutableList<kotlin.String>? {
+        override fun tabComplete(context: RawCommandContext): List<String>? {
             val args = context.args
             if (args.size == 1) {
                 return enchantments.partialMatches(args[0])
