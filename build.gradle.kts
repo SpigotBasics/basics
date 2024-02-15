@@ -15,14 +15,15 @@ allprojects {
     repositories {
         mavenCentral()
     }
-    tasks.withType<ShadowJar>().configureEach {
-        archiveVersion = ""
-        archiveClassifier = "shaded"
+    afterEvaluate {
+        tasks.withType<ShadowJar>().configureEach {
+            archiveVersion = ""
+            archiveClassifier = "shaded"
+        }
     }
 }
 
 subprojects {
-    //apply(plugin = "org.jlleitschuh.gradle.ktlint")
     version = rootProject.version
 }
 
