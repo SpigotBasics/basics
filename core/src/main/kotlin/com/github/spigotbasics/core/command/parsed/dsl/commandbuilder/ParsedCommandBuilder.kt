@@ -102,7 +102,7 @@ open class ParsedCommandBuilder<T : CommandContext>(
             )
         return BasicsCommand(
             info = info,
-            executor = actualExecutor ?: error("Executor must be set"),
+            executor = actualExecutor,
             tabCompleter = actualExecutor,
             coreConfig = coreConfig,
             coreMessages = coreMessages,

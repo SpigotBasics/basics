@@ -3,7 +3,6 @@ package com.github.spigotbasics.modules.basicsgive
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
-import com.github.spigotbasics.core.command.parsed.dsl.argumentpathbuilder.MapArgumentPathBuilder
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -26,6 +25,9 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     val dropOverflow
         get() = config.getBoolean("drop-overflow")
+
+    val dropnaturally
+        get() = config.getBoolean("drop-naturally")
 
     fun getStackSize(material: Material): Int {
         val defaultAmount = config.get("default-amount") ?: "stack"
@@ -53,38 +55,49 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
 
     override fun onEnable() {
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
+        val itemArg = ItemMaterialArg("Item")
+        val playerArg = PlayerArg("Receiving Player")
 
         commandFactory.parsedCommandBuilder("give", permission)
-            .mapContext()
-            .usage("[Receiving Player] <Item> [Amount]")
-            // give diamond
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "item" to ItemMaterialArg("Item"),
-                ).playerOnly(),
-            )
-            // give mfnalex diamond
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "receiver" to PlayerArg("Receiving Player"),
-                    "item" to ItemMaterialArg("Item"),
-                ).permissions(permissionOthers),
-            )
-            // give diamond 64
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "item" to ItemMaterialArg("Item"),
-                    "amount" to amountRangeArg,
-                ).playerOnly(),
-            )
-            // give mfnalex diamond 64
-            .path(
-                MapArgumentPathBuilder().arguments(
-                    "receiver" to PlayerArg("Receiving Player"),
-                    "item" to ItemMaterialArg("Item"),
-                    "amount" to amountRangeArg,
-                ).permissions(permissionOthers),
-            )
+            .mapContext {
+                usage = "[Receiving Player] <Item> [Amount]"
+
+                path {
+                    playerOnly()
+
+                    arguments {
+                        named("item", itemArg)
+                    }
+                }
+
+                path {
+                    permissions(permissionOthers)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("item", itemArg)
+                    }
+                }
+
+                path {
+                    playerOnly()
+
+                    arguments {
+                        named("item", itemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+
+                path {
+                    permissions(permissionOthers)
+
+                    arguments {
+                        named("receiver", playerArg)
+                        named("item", itemArg)
+                        named("amount", amountRangeArg)
+                    }
+                }
+            }
             .executor(GiveExecutor(this))
             .register()
     }
