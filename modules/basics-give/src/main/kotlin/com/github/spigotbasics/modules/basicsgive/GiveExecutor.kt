@@ -26,7 +26,12 @@ class GiveExecutor(private val module: BasicsGiveModule) : CommandContextExecuto
 
         val item = ItemStack(material, amount)
 
-        val result = receiver.inventory.addOrDrop(item.clone(), module.dropOverflow)
+        val result = receiver.inventory.addOrDrop(
+            itemStack = item.clone(),
+            dropOverflow = module.dropOverflow,
+            naturally = module.dropnaturally
+        )
+
         logger.debug(10, "Added to inventory: ${result.addedToInv}, Dropped to world: ${result.droppedToWorld}")
 
         val msg =
