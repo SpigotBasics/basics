@@ -2,6 +2,7 @@ package com.github.spigotbasics.core.command.parsed.dsl
 
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.command.parsed.arguments.LiteralArg
+import com.github.spigotbasics.core.command.parsed.arguments.SubcommandArg
 
 class ArgumentBuilder {
     companion object {
@@ -52,7 +53,7 @@ class ArgumentBuilder {
         level: Int = 0,
     ) {
         val nameWithLevel = if (level == 0) "sub" else "sub$level"
-        arguments.add((nameWithLevel) to LiteralArg(name))
+        arguments.add((nameWithLevel) to SubcommandArg(name))
     }
 
     fun build(): List<Pair<String, CommandArgument<*>>> = arguments

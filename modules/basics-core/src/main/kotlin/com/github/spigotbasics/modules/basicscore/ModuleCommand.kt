@@ -1,72 +1,57 @@
 package com.github.spigotbasics.modules.basicscore
 
-import com.github.spigotbasics.core.command.common.BasicsCommandException
-import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.common.CommandResult
-import com.github.spigotbasics.core.command.raw.RawCommandContext
-import com.github.spigotbasics.core.extensions.addAnd
-import com.github.spigotbasics.core.extensions.partialMatches
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.messages.Message
+import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.module.BasicsModule
+import com.github.spigotbasics.core.module.manager.ModuleManager
 import org.bukkit.command.CommandSender
 
-class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(module) {
+class ModuleCommand(private val module: BasicsCoreModule) : CommandContextExecutor<MapContext> {
+    private val moduleManager: ModuleManager = module.plugin.moduleManager
+    private val messageFactory: MessageFactory = module.messageFactory
+
     val msgHelp =
         messageFactory.createMessage(
             """
             <gold>Basics Modules Help</gold>
-            <gray>---------------------------------------------------------------------</gray>
+            <gray>--------------------------------------------</gray>
             <gold><click:run_command:/module list>/module list</click></gold> - <gray>Show all loaded modules</gray>
             <gold><click:suggest_command:/module info >/module info <module></click></gold> - <gray>Show info about a module</gray>
             <gold><click:suggest_command:/module enable >/module enable <module></click></gold> - <gray>Enable a module</gray>
             <gold><click:suggest_command:/module disable >/module disable <module></click></gold> - <gray>Disable a module</gray>
             <gold><click:suggest_command:/module reload >/module reload <module></click></gold> - <gray>Reload a module's config</gray>
             <gold><click:suggest_command:/module unload >/module unload <module></click></gold> - <gray>Unload a module</gray>
-            <gold><click:suggest_command:/module load >/module load <file></click></gold> - <gray>Load a module</gray>
+            <gold><click:suggest_command:/module loadfile >/module load <file></click></gold> - <gray>Load a module</gray>
             <gold><click:suggest_command:/module reloadjar >/module reloadjar <module></click></gold> - <gray>Reload a module's jar</gray>
             """.trimIndent(),
         )
 
     val msgNotImplemented = messageFactory.createMessage("<red>Not implemented yet :')</red>")
 
-    private val moduleManager = module.plugin.moduleManager
+    override fun execute(
+        sender: CommandSender,
+        context: MapContext,
+    ) {
+        val sub = (context["sub"] as String?) ?: "help"
 
-    override fun execute(context: RawCommandContext): CommandResult {
-        val args = context.args
-        val sender = context.sender
-        if (args.isEmpty()) {
-            showMainHelp(sender)
-            return CommandResult.SUCCESS
+        val module = context["module"] as BasicsModule?
+        val moduleFileName = context["moduleFileName"] as String?
+
+        when (sub) {
+            "help" -> showMainHelp(sender)
+            "list" -> listModules(sender)
+            "info" -> showInfo(sender, module!!)
+            "enable" -> enableModule(sender, module!!)
+            "disable" -> disableModule(sender, module!!)
+            "reloadjar" -> reloadJar(sender, module!!)
+            "reload" -> reloadModule(sender, module!!)
+            "unload" -> unloadModule(sender, module!!)
+            "loadfile" -> loadModule(sender, moduleFileName!!)
+            else -> error("Unknown subcommand: $sub")
         }
-
-        val subCommand = args[0]
-
-        when (subCommand) {
-            "list" -> return listModules(sender)
-        }
-
-        args.removeAt(0)
-        if (args.isEmpty()) {
-            // messageFactory.createMessage("<red>Usage: /module $subCommand <module></red>").sendToSender(sender)
-            // return CommandResult.SUCCESS
-            return CommandResult.usage("$subCommand <module>")
-        }
-
-        when (subCommand) {
-            "info" -> return showInfo(sender, requireModule(sender, args[0]))
-            "enable" -> return enableModule(sender, requireModule(sender, args[0]))
-            "disable" -> return disableModule(sender, requireModule(sender, args[0]))
-            "reloadjar" -> return reloadJar(sender, requireModule(sender, args[0]))
-            "reload" -> return reloadModule(sender, requireModule(sender, args[0]))
-            "unload" -> return unloadModule(sender, requireModule(sender, args[0]))
-            "load" -> return loadModule(sender, context)
-            else -> {
-                failInvalidArgument(subCommand)
-            }
-        }
-
-        msgNotImplemented.sendToSender(sender)
-        return CommandResult.SUCCESS
     }
 
     private fun showInfo(
@@ -87,14 +72,15 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private fun loadModule(
         sender: CommandSender,
-        context: RawCommandContext,
+        moduleFileName: String,
     ): CommandResult {
-        context.readFlags()
-        val enable = context.popFlag("--enable") or context.popFlag("-e")
-        val arg = context.args[0]
-        val file = moduleManager.modulesDirectory.resolve(arg)
+//        context.readFlags()
+//        val enable = context.popFlag("--enable") or context.popFlag("-e")
+//        val arg = context.args[0]
+        val enable = true // TODO: Implement flags
+        val file = moduleManager.modulesDirectory.resolve(moduleFileName)
         if (!file.exists()) {
-            messageFactory.createMessage("<red>File $arg not found.</red>").sendToSender(sender)
+            messageFactory.createMessage("<red>File $moduleFileName not found.</red>").sendToSender(sender)
             return CommandResult.SUCCESS
         }
         val result = moduleManager.loadModuleFromFile(file)
@@ -102,7 +88,7 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
             if (result.isSuccess) {
                 "<gold>Module ${result.getOrThrow().info.name} <green><bold>LOADED</bold></green>.</gold>"
             } else {
-                "<red>Failed to load module $arg.</red>"
+                "<red>Failed to load module $moduleFileName.</red>"
             }
 
         messageFactory.createMessage(message).sendToSender(sender)
@@ -118,6 +104,10 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         sender: CommandSender,
         module: BasicsModule,
     ): CommandResult {
+        if (module == this.module) {
+            messageFactory.createMessage("<red>Cannot unload the core module.</red>").sendToSender(sender)
+            return CommandResult.SUCCESS
+        }
         if (module.isEnabled()) {
             moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
             messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
@@ -126,18 +116,6 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
         moduleManager.unloadModule(module, true)
         messageFactory.createMessage("<gold>Module ${module.info.name} <red><bold>UNLOADED</bold></red>.</gold>").sendToSender(sender)
         return CommandResult.SUCCESS
-    }
-
-    private fun requireModule(
-        sender: CommandSender,
-        arg: String,
-    ): BasicsModule {
-        val module = moduleManager.getModule(arg)
-        if (module == null) {
-            messageFactory.createMessage("<red>Module $arg not found").sendToSender(sender)
-            throw BasicsCommandException(CommandResult.SUCCESS)
-        }
-        return module
     }
 
     private fun reloadModule(
@@ -203,6 +181,10 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
                 .sendToSender(sender)
             return CommandResult.SUCCESS
         }
+        if (module == this.module) {
+            messageFactory.createMessage("<red>Cannot disable the core module.</red>").sendToSender(sender)
+            return CommandResult.SUCCESS
+        }
         moduleManager.disableModule(module).get() // TODO: This is blocking, but it shouldn't be
         messageFactory.createMessage("<gold>Module ${module.info.name} <red>disabled</red>.</gold>")
             .sendToSender(sender)
@@ -223,53 +205,5 @@ class ModulesCommand(val module: BasicsCoreModule) : BasicsCommandExecutor(modul
 
     private fun showMainHelp(sender: CommandSender) {
         msgHelp.sendToSender(sender)
-    }
-
-    // Tab Completes
-    override fun tabComplete(context: RawCommandContext): List<String>? {
-        val args = context.args
-        if (args.size == 1) {
-            return listOf("list", "info", "enable", "disable", "reload", "unload", "load", "reloadjar").partialMatches(args[0])
-        }
-        if (args.size == 2) {
-            when (args[0]) {
-                "disable", "reload" -> return enabledModules().partialMatches(args[1])
-                "info", "unload", "reloadjar" -> return allModules().partialMatches(args[1])
-                "load" -> return filesNamesUnloadedModules().addAnd("-e").addAnd("--enable").partialMatches(args[1])
-                "enable" -> return disabledModules().partialMatches(args[1])
-            }
-        }
-        if (args.size == 3) {
-            if (args[0] == "load") {
-                if (args[1] == "-e" || args[1] == "--enable") {
-                    return filesNamesUnloadedModules().partialMatches(args[2])
-                }
-            }
-        }
-
-        return mutableListOf()
-    }
-
-    private fun filesNamesUnloadedModules(): List<String> {
-        return moduleManager.modulesDirectory.listFiles()?.filter {
-            for (module in moduleManager.loadedModules) {
-                if (module.file == it) {
-                    return@filter false
-                }
-            }
-            return@filter true
-        }?.map { it.name } ?: listOf()
-    }
-
-    private fun enabledModules(): List<String> {
-        return moduleManager.enabledModules.map { it.info.name }
-    }
-
-    private fun disabledModules(): List<String> {
-        return moduleManager.disabledModules.map { it.info.name }
-    }
-
-    private fun allModules(): List<String> {
-        return moduleManager.loadedModules.map { it.info.name }
     }
 }

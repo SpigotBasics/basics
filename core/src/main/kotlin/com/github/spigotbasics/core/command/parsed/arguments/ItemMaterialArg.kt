@@ -4,6 +4,7 @@ import com.github.spigotbasics.common.Dictionary
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.Material
+import org.bukkit.command.CommandSender
 
 class ItemMaterialArg(name: String) : CommandArgument<Material>(name) {
     companion object {
@@ -17,11 +18,17 @@ class ItemMaterialArg(name: String) : CommandArgument<Material>(name) {
         }
     }
 
-    override fun parse(value: String): Material? {
+    override fun parse(
+        sender: CommandSender,
+        value: String,
+    ): Material? {
         return materials[value]
     }
 
-    override fun tabComplete(typing: String): List<String> {
+    override fun tabComplete(
+        sender: CommandSender,
+        typing: String,
+    ): List<String> {
         return materialNames.partialMatches(typing)
     }
 }
