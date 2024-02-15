@@ -7,9 +7,15 @@ import org.bukkit.command.CommandSender
 abstract class CommandArgument<T>(
     val name: String,
 ) {
-    abstract fun parse(sender: CommandSender, value: String): T?
+    abstract fun parse(
+        sender: CommandSender,
+        value: String,
+    ): T?
 
-    open fun tabComplete(sender: CommandSender, typing: String): List<String> = emptyList()
+    open fun tabComplete(
+        sender: CommandSender,
+        typing: String,
+    ): List<String> = emptyList()
 
     // TODO: This is using the static Singleton :/
     open fun errorMessage(value: String? = null): Message = Basics.messages.invalidValueForArgument(getArgumentName(), value ?: "null")

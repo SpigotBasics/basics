@@ -42,7 +42,7 @@ class ArgumentPath<T : CommandContext>(
         args.indices.forEach { index ->
             // val parsed = arguments[index].parse(args[index])
             val (_, argument) = arguments[index]
-            val parsed = argument.parse(args[index])
+            val parsed = argument.parse(sender, args[index])
 
             if (parsed == null) {
                 val error = argument.errorMessage(args[index])
@@ -84,7 +84,7 @@ class ArgumentPath<T : CommandContext>(
                 break
             }
 
-            val parsed = arg.parse(args[index])
+            val parsed = arg.parse(sender, args[index])
             if (parsed == null) {
                 logger.debug(10, "Failure: parsed == null for arg: $arg, args[$index]: ${args[index]} (index: $index)")
                 errors.add(arg.errorMessage(args[index]))
@@ -112,11 +112,14 @@ class ArgumentPath<T : CommandContext>(
         }
     }
 
-    fun tabComplete(args: List<String>): List<String> {
+    fun tabComplete(
+        sender: CommandSender,
+        args: List<String>,
+    ): List<String> {
         if (args.isEmpty() || args.size > arguments.size) return emptyList()
 
         val currentArgIndex = args.size - 1
-        return arguments[currentArgIndex].second.tabComplete(args.lastOrEmpty())
+        return arguments[currentArgIndex].second.tabComplete(sender, args.lastOrEmpty())
     }
 
     fun isCorrectSender(sender: CommandSender): Boolean {
@@ -154,7 +157,7 @@ class ArgumentPath<T : CommandContext>(
                 return@forEachIndexed
             } // Last argument is still typing
             val arg = arguments[index].second
-            val parsed = arg.parse(s)
+            val parsed = arg.parse(sender, s)
             if (parsed == null) {
                 logger.debug(200, "     parsed == null")
                 return false

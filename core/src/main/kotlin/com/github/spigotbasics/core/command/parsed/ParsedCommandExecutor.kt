@@ -127,7 +127,7 @@ class ParsedCommandExecutor<T : CommandContext>(
             if (!path.isCorrectSender(sender)) continue
             if (!path.hasPermission(sender)) continue
             if (!path.matchesStart(sender, input)) continue
-            completions.addAll(path.tabComplete(input))
+            completions.addAll(path.tabComplete(sender, input))
         }
         // Remove duplicates and return
         return completions.distinct()
