@@ -36,6 +36,8 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
 
     fun unsupportedServerSoftware(feature: String) = getMessage("unsupported-server-software").tagParsed("argument", feature)
 
+    fun selectorIncludesEntities(selector: String) = getMessage("selector-includes-entities").tagUnparsed("argument", selector)
+
     fun errorExecutingCommand(
         receiver: Permissible,
         error: Throwable,

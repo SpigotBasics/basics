@@ -59,6 +59,11 @@ object Basics {
     val coreConfigManager get() = basics.coreConfigManager
 
     /**
+     * Core Permissions
+     */
+    val permissions get() = basics.permissions
+
+    /**
      * Messages used by the plugin itself or by more than one module.
      */
     val messages get() = basics.messages

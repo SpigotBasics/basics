@@ -18,6 +18,8 @@ import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.permission.BasicsPermissionManager
+import com.github.spigotbasics.core.permission.CorePermissions
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
 import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
@@ -46,6 +48,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             SpigotFacade()
         }
 
+    private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+
+    override val permissions = CorePermissions(BasicsPermissionManager(logger))
     override val moduleFolder = File(dataFolder, "modules")
     override val moduleManager = ModuleManager(this, server, moduleFolder)
     override val tagResolverFactory: TagResolverFactory = TagResolverFactory(facade)
@@ -70,7 +75,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
     override val chunkTicketManager: ChunkTicketManager = ChunkTicketManager()
 
-    private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
+
 
     internal val modulePlayerDataLoader by lazy {
         ModulePlayerDataLoader(

@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicsgive
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.command.parsed.arguments.PlayerArg
+import com.github.spigotbasics.core.command.parsed.arguments.PlayersArg
 import com.github.spigotbasics.core.command.parsed.arguments.SnbtArg
 import com.github.spigotbasics.core.messages.tags.providers.ItemStackTag
 import com.github.spigotbasics.core.module.AbstractBasicsModule
@@ -64,11 +65,11 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
         val itemArg = ItemMaterialArg("Item")
         val snbtItemArg = SnbtArg("Item SNBT")
-        val playerArg = PlayerArg("Receiving Player")
+        val playerArg = PlayersArg("Receiving Player(s)")
 
         commandFactory.parsedCommandBuilder("give", permission)
             .mapContext {
-                usage = "[Receiving Player] <Item> [Amount]"
+                usage = "[Receiving Player(s)] <Item|SNBT> [Amount]"
 
                 path {
                     playerOnly()

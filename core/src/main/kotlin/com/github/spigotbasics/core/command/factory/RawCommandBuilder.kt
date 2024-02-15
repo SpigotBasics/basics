@@ -32,7 +32,7 @@ class RawCommandBuilder(
 
     fun usage(usage: String) =
         apply {
-            if (usage.startsWith("/")) error("Usage should not start with /<command> - only pass the arguments.")
+            if (usage.trimStart().startsWith("/")) error("Usage should not start with /<command> - only pass the arguments.")
             this.usage = usage
         }
 

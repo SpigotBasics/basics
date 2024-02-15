@@ -57,7 +57,7 @@ class ArgumentPath<T : CommandContext>(
             val parsed = argument.parse(sender, currentArg)
 
             if (parsed == null) {
-                val error = argument.errorMessage(currentArg)
+                val error = argument.errorMessage(sender, currentArg)
                 firstErrorIndex = if (firstErrorIndex == -1) index else min(firstErrorIndex, index)
                 errors.add(error)
             }
@@ -84,6 +84,16 @@ class ArgumentPath<T : CommandContext>(
         commandArguments: List<CommandArgument<*>>,
         greedyPosition: Int,
     ): String {
+        val result = accumulateArguments0(argIndex, givenArgs, commandArguments, greedyPosition)
+        logger.debug(400, "Accumulated arguments @ $argIndex  ----- $result")
+        return result
+    }
+    fun accumulateArguments0(
+        argIndex: Int,
+        givenArgs: List<String>,
+        commandArguments: List<CommandArgument<*>>,
+        greedyPosition: Int,
+    ): String {
         if (greedyPosition == -1) {
             return givenArgs[argIndex]
         }
@@ -91,13 +101,16 @@ class ArgumentPath<T : CommandContext>(
             return givenArgs[argIndex]
         }
         val greedyArgumentExtraSize = givenArgs.size - commandArguments.size
-        val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize)
+        val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize + 1)
+
+        logger.debug(600, "Accumulating arguments: argIndex: $argIndex, givenArgs: $givenArgs, commandArguments: $commandArguments, greedyPosition: $greedyPosition")
+        logger.debug(500, "GreedyArgumentExtraSize: $greedyArgumentExtraSize, extraArgs: $extraArgs")
 
         if (argIndex == greedyPosition) {
             return extraArgs.joinToString(" ")
         }
-        val offsetFromEnd = commandArguments.size - argIndex
-        return givenArgs[argIndex - offsetFromEnd]
+
+        return givenArgs[argIndex + greedyArgumentExtraSize]
     }
 
     fun parse(
@@ -134,7 +147,7 @@ class ArgumentPath<T : CommandContext>(
             val parsed = arg.parse(sender, currentArg)
             if (parsed == null) {
                 logger.debug(10, "Failure: parsed == null for arg: $arg, args[$index]: ${args[index]} (index: $index)")
-                errors.add(arg.errorMessage(currentArg))
+                errors.add(arg.errorMessage(sender, currentArg))
                 break
             } else {
                 logger.debug(10, "  parsed: $parsed for arg: $arg, args[$index]: ${args[index]} (index: $index)")

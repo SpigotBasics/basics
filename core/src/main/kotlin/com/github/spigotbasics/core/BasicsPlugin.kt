@@ -7,6 +7,7 @@ import com.github.spigotbasics.core.messages.CoreMessages
 import com.github.spigotbasics.core.messages.MessageFactory
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import com.github.spigotbasics.core.permission.CorePermissions
 import com.github.spigotbasics.core.playerdata.CorePlayerData
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.pipe.SpigotPaperFacade
@@ -50,6 +51,11 @@ interface BasicsPlugin {
      * Manager for handling configuration and message files
      */
     val coreConfigManager: CoreConfigManager
+
+    /**
+     * Core Permissions
+     */
+    val permissions: CorePermissions
 
     /**
      * Messages used by the plugin itself or by more than one module.

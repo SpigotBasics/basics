@@ -29,7 +29,7 @@ class PlayerArg(name: String) : CommandArgument<Player>(name) {
     }
 
     // TODO: We need an ArgumentFactory! To get rid of the static access to Basics.messages
-    override fun errorMessage(value: String?): Message {
-        return Basics.messages.playerNotFound(value ?: "null")
+    override fun errorMessage(sender: CommandSender, value: String): Message {
+        return Basics.messages.playerNotFound(value)
     }
 }
