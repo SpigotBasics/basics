@@ -4,7 +4,9 @@ import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 
-abstract class CommandArgument<T>(open val name: String? = null) {
+abstract class CommandArgument<T>(
+    val name: String,
+) {
     abstract fun parse(sender: CommandSender, value: String): T?
 
     open fun tabComplete(sender: CommandSender, typing: String): List<String> = emptyList()
@@ -12,5 +14,5 @@ abstract class CommandArgument<T>(open val name: String? = null) {
     // TODO: This is using the static Singleton :/
     open fun errorMessage(value: String? = null): Message = Basics.messages.invalidValueForArgument(getArgumentName(), value ?: "null")
 
-    fun getArgumentName(): String = name ?: this::class.simpleName ?: "unknown"
+    fun getArgumentName(): String = name // ?: this::class.simpleName ?: "unknown"
 }

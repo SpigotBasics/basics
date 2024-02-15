@@ -3,7 +3,6 @@ package com.github.spigotbasics.core
 /**
  * The Basics core, this is the Basics equivalent of the [org.bukkit.Bukkit] class
  */
-@Deprecated("Use provided instances instead!")
 object Basics {
     private lateinit var basics: BasicsPlugin
 

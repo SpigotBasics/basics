@@ -4,7 +4,7 @@ import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.BasicsModule
 
-open class ModuleArg(name: String? = null, private val predicate: (BasicsModule) -> Boolean) : CommandArgument<BasicsModule>(name) {
+open class ModuleArg(name: String, private val predicate: (BasicsModule) -> Boolean) : CommandArgument<BasicsModule>(name) {
     private val moduleManager by lazy { Basics.moduleManager } // TODO: DI
 
     override fun parse(value: String): BasicsModule? {
@@ -22,9 +22,9 @@ open class ModuleArg(name: String? = null, private val predicate: (BasicsModule)
         return moduleManager.loadedModules.filter(predicate).map { it.info.name }.partialMatches(typing)
     }
 
-    class EnabledModules(name: String? = null) : ModuleArg(name, BasicsModule::isEnabled)
+    class EnabledModules(name: String) : ModuleArg(name, BasicsModule::isEnabled)
 
-    class DisabledModules(name: String? = null) : ModuleArg(name, { !it.isEnabled() })
+    class DisabledModules(name: String) : ModuleArg(name, { !it.isEnabled() })
 
-    class LoadedModules(name: String? = null) : ModuleArg(name, { true })
+    class LoadedModules(name: String) : ModuleArg(name, { true })
 }
