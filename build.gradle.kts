@@ -13,9 +13,12 @@ allprojects {
     repositories {
         mavenCentral()
     }
-    tasks.withType<ShadowJar> {
-        archiveVersion = ""
-        archiveClassifier = "shaded"
+
+    afterEvaluate {
+        tasks.withType<ShadowJar> {
+            archiveVersion = ""
+            archiveClassifier = "shaded"
+        }
     }
 }
 
