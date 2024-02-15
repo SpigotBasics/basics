@@ -55,6 +55,17 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
 
         commandFactory.parsedCommandBuilder("give", permission)
+            .mapContext {
+                usage = "[Receiving Player] <Item> [Amount]"
+
+                path {
+                    arguments {
+                        named
+                    }
+                }
+            }
+
+        commandFactory.parsedCommandBuilder("give", permission)
             .mapContext()
             .usage("[Receiving Player] <Item> [Amount]")
             // give diamond
