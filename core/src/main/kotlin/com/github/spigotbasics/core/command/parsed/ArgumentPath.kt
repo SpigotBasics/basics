@@ -231,6 +231,4 @@ class ArgumentPath<T : CommandContext>(
     override fun toString(): String {
         return "ArgumentPath(senderArgument=$senderArgument, arguments=$arguments, permission=$permission)"
     }
-
-
 }
