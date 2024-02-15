@@ -9,7 +9,6 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.Permission
-import kotlin.math.max
 import kotlin.math.min
 
 class ArgumentPath<T : CommandContext>(
@@ -31,8 +30,7 @@ class ArgumentPath<T : CommandContext>(
     fun matches(
         sender: CommandSender,
         args: List<String>,
-    ): Either<PathMatchResult, Pair<Int,List<Message>>> {
-
+    ): Either<PathMatchResult, Pair<Int, List<Message>>> {
         val greedyArg = arguments.indexOfFirst { it.second.greedy }
         var firstErrorIndex = -1
 
@@ -47,7 +45,7 @@ class ArgumentPath<T : CommandContext>(
         val errors = mutableListOf<Message>()
         arguments.indices.forEach { index ->
 
-            if(index >= args.size) {
+            if (index >= args.size) {
                 return@forEach // Needed because we now iterate over arguments and not args anymore
             }
 
@@ -60,7 +58,7 @@ class ArgumentPath<T : CommandContext>(
 
             if (parsed == null) {
                 val error = argument.errorMessage(currentArg)
-                firstErrorIndex = if(firstErrorIndex == -1) index else min(firstErrorIndex, index)
+                firstErrorIndex = if (firstErrorIndex == -1) index else min(firstErrorIndex, index)
                 errors.add(error)
             }
         }
@@ -68,9 +66,9 @@ class ArgumentPath<T : CommandContext>(
         if (errors.isNotEmpty()) return Either.Right(firstErrorIndex to errors)
 
         if (greedyArg == -1) {
-            if(args.size > arguments.size) {
+            if (args.size > arguments.size) {
                 return Either.Right(
-                    arguments.size to listOf(Basics.messages.tooManyArguments) // TODO
+                    arguments.size to listOf(Basics.messages.tooManyArguments),
                 )
             }
         }
@@ -80,17 +78,22 @@ class ArgumentPath<T : CommandContext>(
         return Either.Left(PathMatchResult.YES)
     }
 
-    fun accumulateArguments(argIndex: Int, givenArgs: List<String>, commandArguments: List<CommandArgument<*>>, greedyPosition: Int): String {
-        if(greedyPosition == -1) {
+    fun accumulateArguments(
+        argIndex: Int,
+        givenArgs: List<String>,
+        commandArguments: List<CommandArgument<*>>,
+        greedyPosition: Int,
+    ): String {
+        if (greedyPosition == -1) {
             return givenArgs[argIndex]
         }
-        if(argIndex < greedyPosition) {
+        if (argIndex < greedyPosition) {
             return givenArgs[argIndex]
         }
         val greedyArgumentExtraSize = givenArgs.size - commandArguments.size
         val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize)
 
-        if(argIndex == greedyPosition) {
+        if (argIndex == greedyPosition) {
             return extraArgs.joinToString(" ")
         }
         val offsetFromEnd = commandArguments.size - argIndex

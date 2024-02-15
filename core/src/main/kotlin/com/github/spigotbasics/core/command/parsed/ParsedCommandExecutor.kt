@@ -50,7 +50,6 @@ class ParsedCommandExecutor<T : CommandContext>(
             val matchResult = path.matches(sender, input)
             logger.debug(10, "Match result: $matchResult")
 
-
             if (matchResult is Either.Right) {
                 // TODO: Maybe collect all error messages? Right now, which error message is shown depends on the order of the paths
                 //  That means more specific ones should be registered first
@@ -58,7 +57,7 @@ class ParsedCommandExecutor<T : CommandContext>(
                 if (lastErrorIndex == -1 ||
                     // errors!!.size > newErrors.size // Old version - use the one with the least errors
                     lastErrorIndex < firstErrorIndex
-                    ) {
+                ) {
                     errors = newErrors
                     lastErrorIndex = firstErrorIndex
                 }
