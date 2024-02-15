@@ -6,9 +6,10 @@ import com.github.spigotbasics.core.command.parsed.context.MapContext
 import org.bukkit.command.CommandSender
 
 class ShowTpsCommand : CommandContextExecutor<MapContext> {
-    override fun execute(sender: CommandSender, context: MapContext) {
+    override fun execute(
+        sender: CommandSender,
+        context: MapContext,
+    ) {
         sender.sendMessage("TPS: " + Basics.nms.getTps().joinToString())
     }
-
-
 }
