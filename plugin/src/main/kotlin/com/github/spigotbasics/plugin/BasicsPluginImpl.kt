@@ -1,10 +1,11 @@
 package com.github.spigotbasics.plugin
 
+import com.github.spigotbasics.common.MinecraftVersion
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.BasicsPlugin
+import com.github.spigotbasics.core.CURRENT_MINECRAFT_VERSION
 import com.github.spigotbasics.core.ChunkTicketManager
 import com.github.spigotbasics.core.Constants
-import com.github.spigotbasics.core.MinecraftVersion
 import com.github.spigotbasics.core.Spiper
 import com.github.spigotbasics.core.command.parsed.arguments.ItemMaterialArg
 import com.github.spigotbasics.core.config.ConfigName
@@ -24,6 +25,8 @@ import com.github.spigotbasics.core.playerdata.CorePlayerDataListener
 import com.github.spigotbasics.core.playerdata.ModulePlayerDataLoader
 import com.github.spigotbasics.core.storage.StorageManager
 import com.github.spigotbasics.core.util.ClassLoaderFixer
+import com.github.spigotbasics.nms.NMSAggregator
+import com.github.spigotbasics.nms.NMSFacade
 import com.github.spigotbasics.pipe.SpigotPaperFacade
 import com.github.spigotbasics.pipe.paper.PaperFacade
 import com.github.spigotbasics.pipe.spigot.SpigotFacade
@@ -70,9 +73,9 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
             CoreMessages::class.java,
         )
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
-
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
     override val chunkTicketManager: ChunkTicketManager = ChunkTicketManager()
+    override val nms: NMSFacade = NMSAggregator.getNmsFacade(CURRENT_MINECRAFT_VERSION)
 
     internal val modulePlayerDataLoader by lazy {
         ModulePlayerDataLoader(
@@ -100,7 +103,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
      * @return True if this server is running a rusty version of Spigot
      */
     private fun isRustySpigot(): Boolean {
-        val myVersion = MinecraftVersion.current()
+        val myVersion = CURRENT_MINECRAFT_VERSION
         return rustySpigotThreshold > myVersion
     }
 
@@ -116,7 +119,7 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         classLoaderFixer.trickOnEnable()
 
         if (isRustySpigot()) {
-            logger.severe("Your server version (${MinecraftVersion.current()}) is terminally rusty.")
+            logger.severe("Your server version (${CURRENT_MINECRAFT_VERSION}) is terminally rusty.")
             logger.severe("Please update to at least Spigot $rustySpigotThreshold!")
             logger.severe("")
             logger.severe("See here for more information:")

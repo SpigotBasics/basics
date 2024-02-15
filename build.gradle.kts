@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
 version = "git-${getGitCommitHash()}"
 
@@ -6,21 +8,21 @@ plugins {
     base
     // id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") apply false
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0" apply false
 }
 
 allprojects {
     repositories {
         mavenCentral()
     }
-    tasks.withType<ShadowJar> {
+    tasks.withType<ShadowJar>().configureEach {
         archiveVersion = ""
         archiveClassifier = "shaded"
     }
 }
 
 subprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    //apply(plugin = "org.jlleitschuh.gradle.ktlint")
     version = rootProject.version
 }
 
