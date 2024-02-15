@@ -18,7 +18,7 @@ abstract class CommandArgument<T>(
     ): List<String> = emptyList()
 
     // TODO: This is using the static Singleton :/
-    open fun errorMessage(value: String? = null): Message = Basics.messages.invalidValueForArgument(getArgumentName(), value ?: "null")
+    open fun errorMessage(value: String? = null): Message = Basics.messages.invalidValueForArgument(name, value ?: "null")
 
-    fun getArgumentName(): String = name // ?: this::class.simpleName ?: "unknown"
+    // fun getArgumentName(): String = name // ?: this::class.simpleName ?: "unknown"
 }

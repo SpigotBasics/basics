@@ -2,7 +2,7 @@ package com.github.spigotbasics.core.command.parsed.arguments
 
 import org.bukkit.command.CommandSender
 
-class LiteralArg(name: String) : CommandArgument<String>(name) {
+open class LiteralArg(name: String) : CommandArgument<String>(name) {
     override fun parse(
         sender: CommandSender,
         value: String,

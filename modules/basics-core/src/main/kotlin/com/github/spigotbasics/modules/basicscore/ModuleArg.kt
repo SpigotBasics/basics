@@ -1,6 +1,7 @@
-package com.github.spigotbasics.core.command.parsed.arguments
+package com.github.spigotbasics.modules.basicscore
 
 import com.github.spigotbasics.core.Basics
+import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.BasicsModule
 import org.bukkit.command.CommandSender

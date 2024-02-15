@@ -14,6 +14,7 @@ invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argumen
 invalid-value-for-argument-number-not-in-range: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be between <bright_red><#min></bright_red> and <bright_red><#max></bright_red>, was <dark_red><#value></dark_red>!</red>"
 
 # Tags: <#argument>
+invalid-subcommand: "<error><red>Invalid subcommand: </red><bright_red><#argument></bright_red>"
 missing-value-for-argument: "<error><red>Missing value for <bright_red><#argument></bright_red>!</red>"
 invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></bright_red>"
 player-not-found: "<error><red>Player not found: </red><bright_red><#argument></bright_red>"

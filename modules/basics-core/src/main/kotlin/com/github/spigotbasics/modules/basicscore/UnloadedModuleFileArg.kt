@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicscore
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.extensions.partialMatches
 import com.github.spigotbasics.core.module.manager.ModuleManager
+import org.bukkit.command.CommandSender
 
 class UnloadedModuleFileArg(name: String, private val moduleManager: ModuleManager) : CommandArgument<String>(name) {
     private fun filesNamesUnloadedModules(): List<String> {
@@ -16,7 +17,10 @@ class UnloadedModuleFileArg(name: String, private val moduleManager: ModuleManag
         }?.map { it.name } ?: listOf()
     }
 
-    override fun parse(value: String): String? {
+    override fun parse(
+        sender: CommandSender,
+        value: String,
+    ): String? {
         return if (filesNamesUnloadedModules().contains(value)) {
             value
         } else {
@@ -24,7 +28,10 @@ class UnloadedModuleFileArg(name: String, private val moduleManager: ModuleManag
         }
     }
 
-    override fun tabComplete(typing: String): List<String> {
+    override fun tabComplete(
+        sender: CommandSender,
+        typing: String,
+    ): List<String> {
         return filesNamesUnloadedModules().partialMatches(typing)
     }
 }

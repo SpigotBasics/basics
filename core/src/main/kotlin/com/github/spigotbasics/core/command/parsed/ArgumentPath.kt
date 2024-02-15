@@ -80,7 +80,7 @@ class ArgumentPath<T : CommandContext>(
             val (argName, arg) = argumentPair
             if (index >= args.size) {
                 logger.debug(10, "Failure: index >= args.size")
-                errors.add(Basics.messages.missingArgument(arg.getArgumentName()))
+                errors.add(Basics.messages.missingArgument(arg.name))
                 break
             }
 

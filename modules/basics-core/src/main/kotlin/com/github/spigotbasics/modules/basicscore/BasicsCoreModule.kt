@@ -1,6 +1,5 @@
 package com.github.spigotbasics.modules.basicscore
 
-import com.github.spigotbasics.core.command.parsed.arguments.ModuleArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.PermissionDefault
@@ -91,7 +90,7 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 // no arguments -> help
                 path {}
             }
-            .executor(NewModulesCommand(this))
+            .executor(ModuleCommand(this))
             .register()
     }
 }
