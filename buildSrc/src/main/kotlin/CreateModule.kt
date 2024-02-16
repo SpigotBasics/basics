@@ -6,6 +6,7 @@ private const val skeletonModuleName = "_skeleton"
 private const val skeletonJavaModuleName = "_skeleton-java"
 private const val languageInputPrompt = "Which language do you want to use? [kotlin, java] : "
 private val moduleInputPrompt = "Enter module name ( ${moduleNameRegex.pattern} ) : "
+private fun String.escapeAsPlaceholder() = "%{$this}%"
 
 open class CreateModule : DefaultTask() {
 
@@ -43,9 +44,9 @@ open class CreateModule : DefaultTask() {
         copySkeletonTo(skeleton, folder)
 
         val replacements = mapOf(
-            "module-name-lower" to moduleLower,
-            "module-name-pascal" to moduleUpper,
-            "module-name" to moduleName
+            "module-name-lower".escapeAsPlaceholder() to moduleLower,
+            "module-name-pascal".escapeAsPlaceholder() to moduleUpper,
+            "module-name".escapeAsPlaceholder() to moduleName
         )
 
         println("Replacing placeholders in files and filenames ...")

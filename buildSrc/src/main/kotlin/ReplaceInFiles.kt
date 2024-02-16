@@ -49,7 +49,7 @@ fun replaceInFileContent(file: File, replacements: Map<String, String>) {
     try {
         var content = file.readText()
         replacements.forEach { (key, value) ->
-            content = content.replace("%{$key}%", value)
+            content = content.replace(key, value)
         }
         file.writeText(content)
     } catch (e: Exception) {
@@ -60,7 +60,7 @@ fun replaceInFileContent(file: File, replacements: Map<String, String>) {
 fun replaceInFilename(file: File, replacements: Map<String, String>): String {
     var newName = file.name
     replacements.forEach { (key, value) ->
-        newName = newName.replace("%{$key}%", value)
+        newName = newName.replace(key, value)
     }
     if (newName != file.name) {
         val newFile = File(file.parent, newName)
