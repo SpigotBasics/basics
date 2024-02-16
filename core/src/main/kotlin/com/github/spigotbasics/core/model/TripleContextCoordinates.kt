@@ -15,14 +15,16 @@ data class TripleContextCoordinates(
     val pitch: Float = 0f,
     val pitchRelative: Relativity = Relativity.RELATIVE_TO_FIRST,
 ) {
-
     enum class Relativity {
         ABSOLUTE,
         RELATIVE_TO_FIRST,
         RELATIVE_TO_SECOND,
     }
 
-    fun toLocation(first: Location, second: Location = first): Location {
+    fun toLocation(
+        first: Location,
+        second: Location = first,
+    ): Location {
         val nX = applyRelativity(xRelative, x, first.x, second.x)
         val nY = applyRelativity(yRelative, y, first.y, second.y)
         val nZ = applyRelativity(zRelative, z, first.z, second.z)
@@ -38,19 +40,19 @@ data class TripleContextCoordinates(
             val (y, yRelative) = parseSingle(parts[1])
             val (z, zRelative) = parseSingle(parts[2])
 
-            val (yaw, yawRelative) = if (parts.size > 3) {
-                parseSingle(parts[3])
-            } else {
-                Pair(0.0, Relativity.RELATIVE_TO_FIRST)
-            }
+            val (yaw, yawRelative) =
+                if (parts.size > 3) {
+                    parseSingle(parts[3])
+                } else {
+                    Pair(0.0, Relativity.RELATIVE_TO_FIRST)
+                }
 
-            val (pitch, pitchRelative) = if (parts.size > 4) {
-                parseSingle(parts[4])
-            } else {
-                Pair(0.0, Relativity.RELATIVE_TO_FIRST)
-            }
-
-
+            val (pitch, pitchRelative) =
+                if (parts.size > 4) {
+                    parseSingle(parts[4])
+                } else {
+                    Pair(0.0, Relativity.RELATIVE_TO_FIRST)
+                }
 
             return TripleContextCoordinates(
                 x,
@@ -66,7 +68,12 @@ data class TripleContextCoordinates(
             )
         }
 
-        fun applyRelativity(relativity: Relativity, value: Double, first: Double, second: Double): Double {
+        fun applyRelativity(
+            relativity: Relativity,
+            value: Double,
+            first: Double,
+            second: Double,
+        ): Double {
             return when (relativity) {
                 Relativity.ABSOLUTE -> value
                 Relativity.RELATIVE_TO_FIRST -> first + value
@@ -74,7 +81,12 @@ data class TripleContextCoordinates(
             }
         }
 
-        fun applyRelativity(relativity: Relativity, value: Float, first: Float, second: Float): Float {
+        fun applyRelativity(
+            relativity: Relativity,
+            value: Float,
+            first: Float,
+            second: Float,
+        ): Float {
             return when (relativity) {
                 Relativity.ABSOLUTE -> value
                 Relativity.RELATIVE_TO_FIRST -> first + value
@@ -92,5 +104,4 @@ data class TripleContextCoordinates(
             }
         }
     }
-
 }

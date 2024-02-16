@@ -105,13 +105,12 @@ sealed class Either<out L, out R> {
      */
     fun <NewL, NewR> mapBoth(
         transformLeft: (L) -> NewL,
-        transformRight: (R) -> NewR
+        transformRight: (R) -> NewR,
     ): Either<NewL, NewR> =
         when (this) {
             is Left -> Left(transformLeft(value))
             is Right -> Right(transformRight(value))
         }
-
 
     companion object {
         /**
