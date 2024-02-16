@@ -14,6 +14,7 @@ plugins {
 apply(plugin = "com.github.johnrengelman.shadow")
 
 dependencies {
+    compileOnly(project(":common"))
     compileOnly(project(":core"))
 }
 

@@ -1,5 +1,8 @@
 package com.github.spigotbasics.common
 
+import com.github.spigotbasics.common.Either.Left
+import com.github.spigotbasics.common.Either.Right
+
 /**
  * Represents a value of one of two possible types (a disjoint union).
  * Instances of [Either] are either an instance of [Left] or [Right].
@@ -67,6 +70,48 @@ sealed class Either<out L, out R> {
      * @return The right value, or null if this is a [Either.Left].
      */
     fun rightOrNull(): R? = (this as? Either.Right<R>)?.value
+
+    /**
+     * Transforms the value inside this [Either] if it's a [Left] by applying [transform] to it.
+     *
+     * @param transform The transformation function to apply to the [Left] value.
+     * @return An [Either] containing the transformed [Left] value, or the original [Right] value if this is a [Right].
+     */
+    fun <NewL> mapLeft(transform: (L) -> NewL): Either<NewL, R> =
+        when (this) {
+            is Left -> Left(transform(value))
+            is Right -> this
+        }
+
+    /**
+     * Transforms the value inside this [Either] if it's a [Right] by applying [transform] to it.
+     *
+     * @param transform The transformation function to apply to the [Right] value.
+     * @return An [Either] containing the transformed [Right] value, or the original [Left] value if this is a [Left].
+     */
+    fun <NewR> mapRight(transform: (R) -> NewR): Either<L, NewR> =
+        when (this) {
+            is Left -> this
+            is Right -> Right(transform(value))
+        }
+
+    /**
+     * Transforms the values inside this [Either], applying [transformLeft] if it's a [Left]
+     * or [transformRight] if it's a [Right].
+     *
+     * @param transformLeft The transformation function to apply to the [Left] value.
+     * @param transformRight The transformation function to apply to the [Right] value.
+     * @return An [Either] containing the transformed value.
+     */
+    fun <NewL, NewR> mapBoth(
+        transformLeft: (L) -> NewL,
+        transformRight: (R) -> NewR
+    ): Either<NewL, NewR> =
+        when (this) {
+            is Left -> Left(transformLeft(value))
+            is Right -> Right(transformRight(value))
+        }
+
 
     companion object {
         /**
