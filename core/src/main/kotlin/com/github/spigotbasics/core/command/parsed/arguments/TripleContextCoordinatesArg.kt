@@ -19,7 +19,9 @@ class TripleContextCoordinatesArg(name: String) : CommandArgument<TripleContextC
         sender: CommandSender,
         typing: String,
     ): List<String> {
-        println(typing)
+        // println(typing)
+        // TODO: Add selectors and ~ ~~ for tabcomplete if has permission
+        // TODO: That requires passing the concat-ed string to the tabComplete method
         return super.tabComplete(sender, typing)
     }
 
