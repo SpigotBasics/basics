@@ -83,11 +83,14 @@ data class Message(
             tags(it.toTagResolver())
         }
         `object`.getTagProviders().forEach {
-            when(it) {
+            when (it) {
                 is TagResolver -> tags(it)
                 else -> {
-                    if(it is CustomTag) {
-                        error("CustomTags must be provided by the MessageTagProvider.getMessageTags method, not the MessageTagProvider.getTagProviders method.")
+                    if (it is CustomTag) {
+                        error(
+                            "CustomTags must be provided by the MessageTagProvider.getMessageTags method, not the " +
+                                "MessageTagProvider.getTagProviders method.",
+                        )
                     } else {
                         error("Unsupported TagResolver type: ${it::class} - must be instance of ${TagResolver::class}")
                     }

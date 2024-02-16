@@ -45,7 +45,11 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
         return when (val result = facade.getDisplayName(player)) {
-            is Either.Right -> Placeholder.component("${MESSAGE_SPECIFIC_TAG_PREFIX}player-display-name", miniMessage.deserialize(result.value.value))
+            is Either.Right ->
+                Placeholder.component(
+                    "${MESSAGE_SPECIFIC_TAG_PREFIX}player-display-name",
+                    miniMessage.deserialize(result.value.value),
+                )
             is Either.Left -> Placeholder.unparsed("${MESSAGE_SPECIFIC_TAG_PREFIX}player-display-name", result.value)
             else -> error("Unknown result type: ${result::class.qualifiedName}")
         }

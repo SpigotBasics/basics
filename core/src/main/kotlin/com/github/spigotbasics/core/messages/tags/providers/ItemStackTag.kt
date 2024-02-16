@@ -39,6 +39,13 @@ class ItemStackTag(private val item: ItemStack) : MessageTagProvider {
     }
 
     private fun getHoverTag(): TagResolver {
-        return Placeholder.styling("${MESSAGE_SPECIFIC_TAG_PREFIX}item-hover", HoverEvent.showItem(Key.key("minecraft:" + item.type.name.lowercase()), item.amount, BinaryTagHolder.binaryTagHolder(item.toSnbtWithoutType())))
+        return Placeholder.styling(
+            "${MESSAGE_SPECIFIC_TAG_PREFIX}item-hover",
+            HoverEvent.showItem(
+                Key.key("minecraft:" + item.type.name.lowercase()),
+                item.amount,
+                BinaryTagHolder.binaryTagHolder(item.toSnbtWithoutType()),
+            ),
+        )
     }
 }
