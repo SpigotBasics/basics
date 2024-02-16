@@ -52,15 +52,10 @@ data class Message(
     }
 
     fun sendToPlayers(players: Collection<Player>) {
-        players.forEach {
-            sendToPlayer(it)
-        }
+        players.forEach(this::sendToPlayer)
     }
 
-    fun concerns(player: Player?): Message {
-        this.concerns = player
-        return this
-    }
+    fun concerns(player: Player?) = apply { this.concerns = player }
 
     /**
      * Applies the given transform to each line of the message
@@ -68,15 +63,9 @@ data class Message(
      * @param transform Transform to apply
      * @return The message with the transform applied
      */
-    fun map(transform: (String) -> String): Message {
-        lines = lines.map(transform)
-        return this
-    }
+    fun map(transform: (String) -> String) = apply { lines = lines.map(transform) }
 
-    private fun tags(tags: Collection<TagResolver>): Message {
-        customTagResolvers.addAll(tags)
-        return this
-    }
+    private fun tags(tags: Collection<TagResolver>) = apply { customTagResolvers.addAll(tags) }
 
     fun tags(`object`: MessageTagProvider): Message {
         `object`.getMessageTags().forEach {

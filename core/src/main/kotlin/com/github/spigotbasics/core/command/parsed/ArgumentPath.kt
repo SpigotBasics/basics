@@ -24,9 +24,7 @@ class ArgumentPath<T : CommandContext>(
     }
 
     init {
-        if (arguments.any { it.first == "sender" }) {
-            throw IllegalArgumentException("Argument name 'sender' is reserved")
-        }
+        require(arguments.none { it.first == "sender" }) { "Argument name 'sender' is reserved" }
     }
 
     fun matches(
@@ -100,7 +98,7 @@ class ArgumentPath<T : CommandContext>(
         // Count length of combined arguments before this one
         var myStartIndex = commandArguments.subList(0, argIndex).sumOf { it.length }
         val myLength = commandArguments[argIndex].length
-        var myEndIndex = myStartIndex + myLength
+        val myEndIndex = myStartIndex + myLength
 
         if (myEndIndex > givenArgs.size) {
             return Either.Right(null)
@@ -153,8 +151,7 @@ class ArgumentPath<T : CommandContext>(
             return ParseResult.Failure(listOf(Basics.messages.commandNotFromConsole))
         }
 
-        val parsedArgs = mutableMapOf<String, Any?>()
-        parsedArgs["sender"] = sender
+        val parsedArgs = mutableMapOf<String, Any?>("sender" to sender)
         val errors = mutableListOf<Message>()
 
         for ((index, argumentPair) in arguments.withIndex()) {

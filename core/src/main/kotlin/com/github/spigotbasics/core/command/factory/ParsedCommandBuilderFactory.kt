@@ -63,7 +63,8 @@ class ParsedCommandBuilderFactory(
                 name = name,
                 permission = permission,
             )
-        builder.block() // Apply the DSL configurations
-        return builder // return .build() ?
+        // Apply the DSL configurations
+        // return .build() ?
+        return builder.apply(block)
     }
 }
