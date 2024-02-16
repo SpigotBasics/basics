@@ -91,7 +91,7 @@ class BasicsCommandManager(private val serverCommandMap: SimpleCommandMap) {
             (simpleCommandMap_knownCommands?.get(serverCommandMap) as? MutableMap<String, Command>)?.let { knownCommands ->
                 knownCommands.entries.removeIf { it.value == command }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         command.disableExecutor()
     }

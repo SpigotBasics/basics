@@ -79,9 +79,7 @@ open class ParsedCommandBuilder<T : CommandContext>(
     }
 
     fun register(): BasicsCommand {
-        val command = build()
-        commandManager.registerCommand(command)
-        return command
+        return build().also(commandManager::registerCommand)
     }
 
     fun build(): BasicsCommand {

@@ -56,7 +56,7 @@ class ModuleManager(
 
     fun enableAllLoadedModules() {
         for (module in myLoadedModules) {
-            enableModule(module, false, false)
+            enableModule(module, reloadConfig = false, syncCommands = false)
         }
     }
 
@@ -206,11 +206,14 @@ class ModuleManager(
     private fun forceGc() {
         System.runFinalization()
         System.gc()
-        Thread {
-            sleep(1000)
-            System.runFinalization()
-            System.gc()
-        }.start()
+        val thread =
+            Thread {
+                sleep(1000)
+                System.runFinalization()
+                System.gc()
+            }
+        thread.priority = 10
+        thread.start()
     }
 
     fun disableAllModules(): CompletableFuture<Void?> {

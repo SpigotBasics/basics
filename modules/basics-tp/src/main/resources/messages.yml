@@ -1,0 +1,2 @@
+teleported: "<def_text>Teleported <lite_text><#target> <def_text>to <lite_text><#destination></lite_text>."
+coordinates: "<def_text>X: <lite_text><#x></lite_text> Y: <lite_text><#y></lite_text> Z: <lite_text><#z></lite_text>"

@@ -25,10 +25,7 @@ class MapContextParsedCommandBuilder(
         permission = permission,
     ) {
     fun MapContextParsedCommandBuilder.path(block: MapArgumentPathBuilder.() -> Unit): ArgumentPath<MapContext> {
-        val builder = MapArgumentPathBuilder()
-        builder.block()
-        val built = builder.build()
-        this.argumentPaths.add(built)
-        return built
+        val builder = MapArgumentPathBuilder().apply(block)
+        return builder.build().also(this.argumentPaths::add)
     }
 }
