@@ -21,6 +21,7 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     val commandModuleDisabled get() = getMessage("command-module-disabled")
     val failedToLoadDataOnJoin get() = getMessage("failed-to-load-data-on-join")
     val notHavingItemInHand get() = getMessage("not-having-item-in-hand")
+    val cantUseRelativeCoordsFromConsole get() = getMessage("cant-use-relative-coords-from-console")
 
     fun notHavingItemInHand(player: Player) = getMessage("others-not-having-item-in-hand").concerns(player)
 
@@ -102,5 +103,6 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)
 
     fun invalidSubcommand(argument: String) = getMessage("invalid-subcommand").tagUnparsed("argument", argument)
+
     fun notEnoughArgumentsGivenForArgument(name: String) = getMessage("not-enough-arguments-given-for-argument").tagParsed("argument", name)
 }

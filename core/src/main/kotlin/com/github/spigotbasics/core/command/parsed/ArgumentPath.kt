@@ -102,7 +102,7 @@ class ArgumentPath<T : CommandContext>(
         val myLength = commandArguments[argIndex].length
         var myEndIndex = myStartIndex + myLength
 
-        if(myEndIndex > givenArgs.size) {
+        if (myEndIndex > givenArgs.size) {
             return Either.Right(null)
         }
 
@@ -118,7 +118,7 @@ class ArgumentPath<T : CommandContext>(
         logger.debug(
             600,
             "Accumulating arguments: argIndex: $argIndex, givenArgs: $givenArgs, commandArguments: $commandArguments, " +
-                    "greedyPosition: $greedyPosition",
+                "greedyPosition: $greedyPosition",
         )
         logger.debug(500, "GreedyArgumentSize: $greedyArgumentSize, extraArgs: $extraArgs")
 
@@ -129,7 +129,7 @@ class ArgumentPath<T : CommandContext>(
         val lengthAfterMe = commandArguments.subList(argIndex + 1, commandArguments.size).sumOf { it.length }
         myStartIndex = givenArgs.size - lengthAfterMe - 1
 
-        if(myStartIndex + 1 > givenArgs.size) {
+        if (myStartIndex + 1 > givenArgs.size) {
             return Either.Right(null)
         }
 
@@ -143,7 +143,7 @@ class ArgumentPath<T : CommandContext>(
         logger.debug(
             10,
             "ArgumentPath#parse: sender: $sender, args: $args, senderArgument: $senderArgument, arguments: $arguments, " +
-                    "permission: $permission, contextBuilder: $contextBuilder",
+                "permission: $permission, contextBuilder: $contextBuilder",
         )
 
         val greedyArg = arguments.indexOfFirst { it.second.greedy } // TODO: Can be field

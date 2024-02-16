@@ -7,7 +7,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class TeleportCommand(module: BasicsTpModule) : CommandContextExecutor<MapContext> {
-    override fun execute(sender: CommandSender, context: MapContext) {
+    override fun execute(
+        sender: CommandSender,
+        context: MapContext,
+    ) {
         val player = context.getOrDefault("player", sender) as Player
         val coords = context["coords"] as XYZCoords
         val location = coords.toLocation(player.world)

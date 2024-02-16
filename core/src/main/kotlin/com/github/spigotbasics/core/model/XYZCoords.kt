@@ -8,7 +8,6 @@ fun Location.toXYZCoords(): XYZCoords {
 }
 
 data class XYZCoords(val x: Double, val y: Double, val z: Double) {
-
     fun toLocation(world: World): Location {
         return Location(world, x, y, z)
     }

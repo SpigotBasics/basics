@@ -48,7 +48,6 @@ data class SimpleLocation(
     fun toXYZCoords(): XYZCoords {
         return XYZCoords(x, y, z)
     }
-
 }
 
 /**
@@ -62,6 +61,3 @@ fun Location.toSimpleLocation(): SimpleLocation {
     val world = world ?: throw WorldNotLoadedException(this)
     return SimpleLocation(world.name, x, y, z, yaw, pitch)
 }
-
-
-

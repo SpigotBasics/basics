@@ -5,7 +5,6 @@ import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 
 class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-
     private val permission = permissionManager.createSimplePermission("basics.tp", "Allows teleporting")
 
     override fun onEnable() {
