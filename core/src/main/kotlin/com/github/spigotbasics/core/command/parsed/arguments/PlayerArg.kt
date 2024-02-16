@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Deprecated("Use SelectorSinglePlayerArg instead", ReplaceWith("SelectorSinglePlayerArg(name)"))
 class PlayerArg(name: String) : CommandArgument<Player>(name) {
     override fun parse(
         sender: CommandSender,

@@ -10,6 +10,9 @@ unknown-option: "<error><red>Unknown option: </red><color:#FF8888><#option></col
 # Tags: <#argument> <#value>
 invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argument></bright_red>: <bright_red><#value></bright_red></red>"
 invalid-value-for-argument-must-be-integer: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be an integer, was <dark_red><#value></dark_red>!</red>"
+selector-includes-entities: "<error><red>Only players may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> includes entities!</red>"
+selector-matches-multiple-players: "<error><red>Only one player may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> matches multiple players!</red>"
+selector-could-not-parse: "<error><red>Could not parse selector <bright_red><#value></bright_red> for argument <bright_red><#argument></bright_red>!</red>"
 
 # Tags: <#argument> <#value> <#min> <#max>
 invalid-value-for-argument-number-not-in-range: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be between <bright_red><#min></bright_red> and <bright_red><#max></bright_red>, was <dark_red><#value></dark_red>!</red>"
@@ -21,7 +24,6 @@ invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></
 player-not-found: "<error><red>Player not found: </red><bright_red><#argument></bright_red>"
 world-not-found: "<error><red>World not found: </red><bright_red><#argument></bright_red>"
 unsupported-server-software: "<error><red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
-selector-includes-entities: "<error><red>Only players may be affected by this command, but the provided selector <bright_red><#argument></bright_red> includes entities!</red>"
 
 no-safe-location-found: "<error><red>Couldn't find a safe location to teleport to!</red>"
 not-having-item-in-hand: "<error><red>You're not holding any item in your hand!</red>"
