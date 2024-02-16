@@ -17,13 +17,10 @@ class ParsedCommandExecutor<T : CommandContext>(
     }
 
     init {
-
         for (path in paths) {
-            if (path.ownExecutor == null && executor == null) {
-                throw IllegalArgumentException(
-                    "Attempting to create a ParsedCommandExecutor with a path that has no executor and no default " +
-                        "executor was provided. Path: $path",
-                )
+            require(path.ownExecutor != null || executor != null) {
+                "Attempting to create a ParsedCommandExecutor with a path that has no executor and no default " +
+                    "executor was provided. Path: $path"
             }
         }
 

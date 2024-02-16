@@ -29,9 +29,8 @@ class NamespacedStorage(private val backend: StorageBackend, val namespace: Stri
     }
 
     fun getJsonElement(keyId: String): CompletableFuture<JsonElement?> {
-        if (hasShutdown) {
-            throw IllegalStateException("Storage has been shutdown, not accepting new get requests")
-        }
+        check(!hasShutdown) { "Storage has been shutdown, not accepting new get requests" }
+
         if (isShutdown) {
             logger.warning("Storage is shutting down, yet received a get request for key $keyId - this should be avoided.")
             // throw IllegalStateException("Storage is shutting down, not accepting new get requests")
@@ -43,9 +42,7 @@ class NamespacedStorage(private val backend: StorageBackend, val namespace: Stri
         keyId: String,
         value: JsonElement?,
     ): CompletableFuture<Void?> {
-        if (hasShutdown) {
-            throw IllegalStateException("Storage has been shutdown, not accepting new set requests")
-        }
+        check(!hasShutdown) { "Storage has been shutdown, not accepting new get requests" }
         return track(backend.setJsonElement(namespace, keyId, value))
     }
 
