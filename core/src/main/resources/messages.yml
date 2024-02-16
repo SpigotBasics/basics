@@ -12,6 +12,8 @@ invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argumen
 invalid-value-for-argument-must-be-integer: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be an integer, was <dark_red><#value></dark_red>!</red>"
 selector-includes-entities: "<error><red>Only players may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> includes entities!</red>"
 selector-matches-multiple-players: "<error><red>Only one player may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> matches multiple players!</red>"
+selector-matches-multiple-entities: "<error><red>Only one entity may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> matches multiple entities!</red>"
+selector-matches-no-entities: "<error><red>The given selector <bright_red><#value></bright_red> does not match any entities for argument <bright_red><#argument></bright_red>!</red>"
 selector-could-not-parse: "<error><red>Could not parse selector <bright_red><#value></bright_red> for argument <bright_red><#argument></bright_red>!</red>"
 
 # Tags: <#argument> <#value> <#min> <#max>

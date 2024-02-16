@@ -44,10 +44,24 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
         .tagParsed("argument", argumentName)
         .tagUnparsed("value", selector)
 
+    fun selectorMatchesNoEntities(
+        argumentName: String,
+        selector: String,
+    ) = getMessage("selector-matches-no-entities")
+        .tagParsed("argument", argumentName)
+        .tagUnparsed("value", selector)
+
     fun selectorMatchesMultiplePlayers(
         argumentName: String,
         selector: String,
     ) = getMessage("selector-matches-multiple-players")
+        .tagParsed("argument", argumentName)
+        .tagUnparsed("value", selector)
+
+    fun selectorMatchesMultipleEntities(
+        argumentName: String,
+        selector: String,
+    ) = getMessage("selector-matches-multiple-entities")
         .tagParsed("argument", argumentName)
         .tagUnparsed("value", selector)
 
