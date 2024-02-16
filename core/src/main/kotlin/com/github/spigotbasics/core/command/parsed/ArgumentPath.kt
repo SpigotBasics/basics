@@ -23,7 +23,7 @@ class ArgumentPath<T : CommandContext>(
     }
 
     init {
-        require(arguments.none { it.first == "sender" }) { "Argument name 'sender' is reserved"}
+        require(arguments.none { it.first == "sender" }) { "Argument name 'sender' is reserved" }
     }
 
     fun matches(
