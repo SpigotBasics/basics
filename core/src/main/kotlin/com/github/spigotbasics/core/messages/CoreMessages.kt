@@ -36,7 +36,26 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
 
     fun unsupportedServerSoftware(feature: String) = getMessage("unsupported-server-software").tagParsed("argument", feature)
 
-    fun selectorIncludesEntities(selector: String) = getMessage("selector-includes-entities").tagUnparsed("argument", selector)
+    fun selectorIncludesEntities(
+        argumentName: String,
+        selector: String,
+    ) = getMessage("selector-includes-entities")
+        .tagParsed("argument", argumentName)
+        .tagUnparsed("value", selector)
+
+    fun selectorMatchesMultiplePlayers(
+        argumentName: String,
+        selector: String,
+    ) = getMessage("selector-matches-multiple-players")
+        .tagParsed("argument", argumentName)
+        .tagUnparsed("value", selector)
+
+    fun selectorCouldNotParse(
+        argumentName: String,
+        selector: String,
+    ) = getMessage("selector-could-not-parse")
+        .tagParsed("argument", argumentName)
+        .tagUnparsed("value", selector)
 
     fun errorExecutingCommand(
         receiver: Permissible,
