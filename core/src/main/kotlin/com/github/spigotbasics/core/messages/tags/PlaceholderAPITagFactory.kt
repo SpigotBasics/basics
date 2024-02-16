@@ -12,14 +12,14 @@ object PlaceholderAPITagFactory {
     val nonPlayerPapi = createNonPlayerPapi()
 
     private fun createNonPlayerPapi(): TagResolver {
-        return TagResolver.resolver("papi") { args, _ ->
+        return TagResolver.resolver("${MESSAGE_SPECIFIC_TAG_PREFIX}papi") { args, _ ->
             val content = args.popOr("string expected").value()
             Tag.inserting(Component.text().content(replacePlaceholders(content)))
         }
     }
 
     fun playerPapi(player: Player): TagResolver {
-        return TagResolver.resolver("papi") { args, _ ->
+        return TagResolver.resolver("${MESSAGE_SPECIFIC_TAG_PREFIX}papi") { args, _ ->
             val content = args.popOr("string expected").value()
             Tag.inserting(Component.text().content(replacePlaceholders(content, player)))
         }

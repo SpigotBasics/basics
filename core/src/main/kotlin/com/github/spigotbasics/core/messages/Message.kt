@@ -1,5 +1,6 @@
 package com.github.spigotbasics.core.messages
 
+import com.github.spigotbasics.core.messages.tags.CustomTag
 import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import com.github.spigotbasics.core.messages.tags.TagResolverFactory
 import com.github.spigotbasics.pipe.SerializedMiniMessage
@@ -80,6 +81,18 @@ data class Message(
     fun tags(`object`: MessageTagProvider): Message {
         `object`.getMessageTags().forEach {
             tags(it.toTagResolver())
+        }
+        `object`.getTagProviders().forEach {
+            when(it) {
+                is TagResolver -> tags(it)
+                else -> {
+                    if(it is CustomTag) {
+                        error("CustomTags must be provided by the MessageTagProvider.getMessageTags method, not the MessageTagProvider.getTagProviders method.")
+                    } else {
+                        error("Unsupported TagResolver type: ${it::class} - must be instance of ${TagResolver::class}")
+                    }
+                }
+            }
         }
         return this
     }

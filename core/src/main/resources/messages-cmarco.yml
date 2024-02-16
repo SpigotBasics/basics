@@ -21,7 +21,7 @@ unsupported-server-software: "<error><red>Thy server, antiquated and feeble, sup
 
 no-safe-location-found: "<error><red>Thy quest for a safe haven is but a fool's errand!</red>"
 not-having-item-in-hand: "<error><red>Thou art as empty-handed as thou art of wit!</red>"
-others-not-having-item-in-hand: "<error><red><gold><player-name></gold>, much like thyself, holds naught but air.</red>"
+others-not-having-item-in-hand: "<error><red><gold><#player-name></gold>, much like thyself, holds naught but air.</red>"
 
 command-not-from-console: "<error><red>This command, noble as it is, rejects the cold embrace of the console!</red>"
 must-specify-player-from-console: "<error><red>From the void of the console, name thy champion!</red>"

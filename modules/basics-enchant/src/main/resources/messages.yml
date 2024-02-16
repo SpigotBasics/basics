@@ -1,5 +1,5 @@
 # Tags: <#item>
 enchanted-self: "<def_text>Enchanted your <lite_text><#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
 # TODO: Cannot enchant others' items yet
-enchanted-others: "<def_text>Enchanted <player-dm><player-name-genitive-suffix> <lite_text><#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
+enchanted-others: "<def_text>Enchanted <player-dm><#player-name-genitive-suffix> <lite_text><#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
 removed-self: "<dark_text>Removed <dark_text><#enchantment></dark_text> from your <dark_text><#item></dark_text>!"

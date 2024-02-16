@@ -1,12 +1,26 @@
 # This file allows you to add custom tags (basically like custom placeholders) in messages.
 
 # The following tags are included by default:
-# <player-name>                  - Player's username
-# <player-name-genitive-suffix>  - Genitive suffix for player's username ('s or ')
-# <player-display-name>          - Player's display name
 
-# If you have PlaceholderAPI installed, you can also use any placeholders using the <papi:placeholder> tag:
-# <papi:%...%>                   - Any PlaceholderAPI placeholder
+# For players:
+
+# <#player-name>                  - Player's username
+# <#player-name-genitive-suffix>  - Genitive suffix for player's username ('s or ')
+# <#player-display-name>          - Player's display name
+
+# For ItemStacks:
+
+# <#item-type>                    - Item's type (e.g. DIAMOND_PICKAXE)
+# <#item-type-human>              - Item's type in human-readable format (e.g. Diamond Pickaxe)
+# <#item-amount>                  - The amount of the item
+# <#item-max-stack-size>          - Max stack size (usually 64 or 1)
+# <#item-display-name>            - The display name of the item (if any)
+# <#item-lore>                    - The lore of the item
+# <#item-hover>...</#item-hover>  - The item as hover popup
+
+# If you have PlaceholderAPI installed, you can also use any placeholders using the <#papi:placeholder> tag:
+
+# <#papi:%...%>                   - Any PlaceholderAPI placeholder
 
 ########################################################################################################################
 
@@ -37,7 +51,7 @@
 # This example lets you use <player-dm> to insert a clickable version of a player's name
 player-dm:
   type: parsed
-  value: "<click:suggest_command:/msg <player-name> ><hover:show_text:'Message <player-name>'><lite_text><player-display-name></lite_text></hover></click>"
+  value: "<click:suggest_command:/msg <#player-name> ><hover:show_text:'Message <#player-name>'><lite_text><#player-display-name></lite_text></hover></click>"
 
 error:
   type: parsed

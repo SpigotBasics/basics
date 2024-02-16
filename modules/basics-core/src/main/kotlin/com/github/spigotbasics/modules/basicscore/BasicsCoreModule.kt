@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicscore
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import com.github.spigotbasics.modules.basicscore.commands.CreateGiveCommand
 import com.github.spigotbasics.modules.basicscore.commands.PrintPermissionsCommand
 import com.github.spigotbasics.modules.basicscore.commands.SetDebugLogLevelCommand
 import com.github.spigotbasics.modules.basicscore.commands.ShowTpsCommand
@@ -128,6 +129,14 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                         sub("tps")
                     }
                     executor(ShowTpsCommand())
+                }
+
+                path {
+                    arguments {
+                        sub("creategivecommand")
+                    }
+                    playerOnly()
+                    executor(CreateGiveCommand(messageFactory))
                 }
             }
             .register()
