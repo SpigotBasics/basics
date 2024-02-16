@@ -42,6 +42,7 @@ include("plugin")
 include("bootstrap")
 
 // NMS Modules
+include("nms")
 include("nms:facade")
 include("nms:aggregator")
 
