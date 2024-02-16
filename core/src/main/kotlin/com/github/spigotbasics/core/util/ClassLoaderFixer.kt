@@ -108,8 +108,7 @@ class ClassLoaderFixer(
             if (method.parameterCount == 0 && method.returnType != Void.TYPE) {
                 try {
                     method.isAccessible = true
-                    @Suppress("UNUSED_VARIABLE")
-                    val value = method.invoke(null)
+                    method.invoke(null)
                 } catch (_: Throwable) {
                 }
             }
@@ -120,8 +119,6 @@ class ClassLoaderFixer(
         for (field in enclosingClass.declaredFields) {
             try {
                 field.isAccessible = true
-                @Suppress("UNUSED_VARIABLE")
-                val value = field[null]
             } catch (_: Throwable) {
             }
         }
