@@ -1,7 +1,6 @@
 package com.github.spigotbasics.core.command.parsed
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.common.leftOrNull
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.command.parsed.context.CommandContext

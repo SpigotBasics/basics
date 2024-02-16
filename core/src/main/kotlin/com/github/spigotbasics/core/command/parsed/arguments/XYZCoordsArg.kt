@@ -1,8 +1,6 @@
 package com.github.spigotbasics.core.command.parsed.arguments
 
 import com.github.spigotbasics.common.Either
-import com.github.spigotbasics.common.leftOrNull
-import com.github.spigotbasics.common.rightOrNull
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.model.XYZCoords

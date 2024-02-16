@@ -1,6 +1,9 @@
 package com.github.spigotbasics.core.model
 
 import com.github.spigotbasics.core.exceptions.WorldNotLoadedException
+import com.github.spigotbasics.core.extensions.decimals
+import com.github.spigotbasics.core.messages.tags.CustomTag
+import com.github.spigotbasics.core.messages.tags.MessageTagProvider
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -22,7 +25,7 @@ data class SimpleLocation(
     val z: Double,
     val yaw: Float,
     val pitch: Float,
-) {
+) : MessageTagProvider {
     /**
      * Turns a [SimpleLocation] into a [Location].
      *
@@ -47,6 +50,21 @@ data class SimpleLocation(
 
     fun toXYZCoords(): XYZCoords {
         return XYZCoords(x, y, z)
+    }
+
+    override fun getMessageTags(): List<CustomTag> {
+        return getMessageTags(0)
+    }
+
+    fun getMessageTags(decimalPlaces: Int): List<CustomTag> {
+        return listOf(
+            CustomTag.parsed("x", x.decimals(decimalPlaces)),
+            CustomTag.parsed("y", y.decimals(decimalPlaces)),
+            CustomTag.parsed("z", z.decimals(decimalPlaces)),
+            CustomTag.parsed("yaw", yaw.decimals(decimalPlaces)),
+            CustomTag.parsed("pitch", pitch.decimals(decimalPlaces)),
+            CustomTag.parsed("world", world),
+        )
     }
 }
 

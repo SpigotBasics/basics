@@ -53,18 +53,40 @@ sealed class Either<out L, out R> {
             is Left -> fnL(value)
             is Right -> fnR(value)
         }
+
+    /**
+     * Returns the left value or null if this is a [Either.Right].
+     *
+     * @return The left value, or null if this is a [Either.Right].
+     */
+    fun leftOrNull(): L? = (this as? Either.Left<L>)?.value
+
+    /**
+     * Returns the right value or null if this is a [Either.Left].
+     *
+     * @return The right value, or null if this is a [Either.Left].
+     */
+    fun rightOrNull(): R? = (this as? Either.Right<R>)?.value
+
+    companion object {
+        /**
+         * Constructs an Either object from two nullable values. If both are null, or both are non-null, an exception is thrown.
+         *
+         * @param L? The nullable left value.
+         * @param R? The nullable right value.
+         * @return Either object encapsulating the non-null value.
+         * @throws IllegalArgumentException if both L and R are null or non-null.
+         */
+        fun <L, R> of(
+            l: L?,
+            r: R?,
+        ): Either<L, R> {
+            return when {
+                l != null && r != null -> throw IllegalArgumentException("Both L and R cannot be non-null")
+                l != null -> Left(l)
+                r != null -> Right(r)
+                else -> throw IllegalArgumentException("Both L and R cannot be null")
+            }
+        }
+    }
 }
-
-/**
- * Returns the left value or null if this is a [Either.Right].
- *
- * @return The left value, or null if this is a [Either.Right].
- */
-fun <L, R> Either<L, R>.leftOrNull(): L? = (this as? Either.Left<L>)?.value
-
-/**
- * Returns the right value or null if this is a [Either.Left].
- *
- * @return The right value, or null if this is a [Either.Left].
- */
-fun <L, R> Either<L, R>.rightOrNull(): R? = (this as? Either.Right<R>)?.value
