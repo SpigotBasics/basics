@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicstp
 import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.command.parsed.arguments.SelectorMultiEntityArg
 import com.github.spigotbasics.core.command.parsed.arguments.SelectorSingleEntityArg
+import com.github.spigotbasics.core.command.parsed.arguments.TripleContextCoordinatesArg
 import com.github.spigotbasics.core.command.parsed.arguments.XYZCoordsArg
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.tags.providers.LocationTag
@@ -37,13 +38,13 @@ class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule
 
     override fun onEnable() {
         commandFactory.parsedCommandBuilder("tp", permission).mapContext {
-            usage = "[player] <x y z | entity>"
+            usage = "[player] <x y z [yaw pitch]| entity>"
 
             // x y z
             path {
                 playerOnly()
                 arguments {
-                    named("destination", XYZCoordsArg("Destination Coordinates"))
+                    named("destination", TripleContextCoordinatesArg("Destination Coordinates"))
                 }
             }
 
@@ -59,7 +60,7 @@ class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule
             path {
                 arguments {
                     named("targets", SelectorMultiEntityArg("Entities to teleport"))
-                    named("destination", XYZCoordsArg("Destination Coordinates"))
+                    named("destination", TripleContextCoordinatesArg("Destination Coordinates"))
                 }
                 permissions(permissionOthers)
             }

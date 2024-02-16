@@ -6,3 +6,5 @@ import org.bukkit.util.StringUtil
 fun String.startsWithIgnoreCase(prefix: String) = StringUtil.startsWithIgnoreCase(this, prefix)
 
 fun String.toHumanReadable() = TextFormatter.toHumanReadable(this)
+
+fun String.toZeroWhenEmpty() = ifEmpty { "0" }
