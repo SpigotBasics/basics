@@ -67,9 +67,7 @@ class RawCommandBuilder(
         }
 
     fun register(): BasicsCommand {
-        val command = build()
-        commandManager.registerCommand(command)
-        return command
+        return build().also(commandManager::registerCommand)
     }
 
     private fun build(): BasicsCommand {

@@ -100,7 +100,7 @@ class ClassLoaderFixer(
     fun forceLoadClassesForEnclosingClass(enclosingClass: Class<*>) {
         touchFields(enclosingClass)
         touchMethods(enclosingClass)
-        enclosingClass.classes.forEach { forceLoadClassesForEnclosingClass(it) }
+        enclosingClass.classes.forEach(this::forceLoadClassesForEnclosingClass)
     }
 
     private fun touchMethods(enclosingClass: Class<*>) {
@@ -147,7 +147,7 @@ class ClassLoaderFixer(
             .map { entry ->
                 entry.name.replace('/', '.').removeSuffix(".class")
             }.toList().apply {
-                if (size == 0) {
+                if (isEmpty()) {
                     logger.warning("No classes found in jar file: $jarFilePath")
                 }
             }

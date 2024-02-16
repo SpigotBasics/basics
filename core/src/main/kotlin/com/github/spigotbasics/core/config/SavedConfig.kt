@@ -22,9 +22,7 @@ open class SavedConfig(context: ConfigInstantiationContext) : YamlConfiguration(
     /**
      * Saves this configuration to the file.
      */
-    fun save() {
-        save(file)
-    }
+    fun save() = save(file)
 
     override fun load(file: File) {
         try {

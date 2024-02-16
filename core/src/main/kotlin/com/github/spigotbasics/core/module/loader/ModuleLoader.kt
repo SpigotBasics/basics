@@ -19,6 +19,7 @@ class ModuleLoader
         val file: File,
     ) : AutoCloseable {
         private val path: String = file.absolutePath
+        // FIXME: unused field
         private val logger = BasicsLoggerFactory.getCoreLogger(ModuleLoader::class)
 
         // val jarFile: JarFile

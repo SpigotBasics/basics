@@ -3,19 +3,19 @@ package com.github.spigotbasics.core.util
 object DurationParser {
     private val regex =
         (
-            "(\\d+(?:\\.\\d+)?)\\s*" + // Number part
-                "(" +
-                "ms|milli|millis|millisecond|milliseconds|" +
-                "t|tick|ticks|" +
-                "s|sec|secs|second|seconds|" +
-                "m|min|mins|minute|minutes|" +
-                "h|hour|hours|" +
-                "d|day|days|" +
-                "w|week|weeks" +
-                ")?"
-        ).toRegex(
-            RegexOption.IGNORE_CASE,
-        )
+                "(\\d+(?:\\.\\d+)?)\\s*" + // Number part
+                        "(" +
+                        "ms|milli|millis|millisecond|milliseconds|" +
+                        "t|tick|ticks|" +
+                        "s|sec|secs|second|seconds|" +
+                        "m|min|mins|minute|minutes|" +
+                        "h|hour|hours|" +
+                        "d|day|days|" +
+                        "w|week|weeks" +
+                        ")?"
+                ).toRegex(
+                RegexOption.IGNORE_CASE,
+            )
     private val onlyNumbers = """(\d+(?:\.\d+)?)""".toRegex(RegexOption.IGNORE_CASE)
 
     fun parseDurationToTicks(input: String): Long {
