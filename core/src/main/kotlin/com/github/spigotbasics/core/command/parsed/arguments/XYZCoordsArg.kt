@@ -10,6 +10,10 @@ import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+// TODO: Use Player's coordinates as base for relative coordinates when console is using relative coordinates
+//  Maybe always use the teleportee's coordinates as base for relative coordinates?
+//  This would also make the command more consistent, as it would always use the same base for relative coordinates
+//  This would however be a breaking change, but it would make more sense
 class XYZCoordsArg(name: String) : CommandArgument<XYZCoords>(name) {
     private enum class ErrorType {
         INVALID_COORDS,
