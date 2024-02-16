@@ -36,8 +36,8 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
 
     private fun createDefaultPlaceholdersForPlayer(player: Player): List<TagResolver> {
         return listOf(
-            Placeholder.parsed("player-name", player.name),
-            Placeholder.parsed("player-name-genitive-suffix", player.name.genitiveSuffix()),
+            Placeholder.parsed("${MESSAGE_SPECIFIC_TAG_PREFIX}player-name", player.name),
+            Placeholder.parsed("${MESSAGE_SPECIFIC_TAG_PREFIX}player-name-genitive-suffix", player.name.genitiveSuffix()),
             createDisplayNameTagResolver(player),
             PlaceholderAPITagFactory.playerPapi(player),
         )
@@ -45,8 +45,12 @@ class TagResolverFactory(private val facade: SpigotPaperFacade) {
 
     private fun createDisplayNameTagResolver(player: Player): TagResolver {
         return when (val result = facade.getDisplayName(player)) {
-            is Either.Right -> Placeholder.component("player-display-name", miniMessage.deserialize(result.value.value))
-            is Either.Left -> Placeholder.unparsed("player-display-name", result.value)
+            is Either.Right ->
+                Placeholder.component(
+                    "${MESSAGE_SPECIFIC_TAG_PREFIX}player-display-name",
+                    miniMessage.deserialize(result.value.value),
+                )
+            is Either.Left -> Placeholder.unparsed("${MESSAGE_SPECIFIC_TAG_PREFIX}player-display-name", result.value)
             else -> error("Unknown result type: ${result::class.qualifiedName}")
         }
     }

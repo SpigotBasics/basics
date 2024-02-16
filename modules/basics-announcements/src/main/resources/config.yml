@@ -6,5 +6,5 @@ messages:
   - "<lite_text>Did you know?</lite_text> <def_text>You can check out the basics repo on <click:open_url:https://github.com/SpigotBascis/basics><hover:show_text:'<dark_text>Click to visit Github'><lite_text><u>Github</u></lite_text></hover></click>!</def_text>"
   - "<def_text>\"With <bold><lite_text>Basics</lite_text></bold>, managing our server has never been this easy! Say goodbye to headaches and hello to a smooth gaming experience!\"\n- CMarco (AI)</def_text>"
   - "<def_text>You can customize these messages in the basics-announcements module</def_text>"
-  - "<def_text>If you have PlaceholderAPI installed, you can use any placeholder! <lite_text><papi:%server_tps%></lite_text></def_text>"
+  - "<def_text>If you have PlaceholderAPI installed, you can use any placeholder! <lite_text><#papi:%server_tps%></lite_text></def_text>"
   - "<def_text>Basics utilizes <click:open_url:https://docs.advntr.dev/minimessage/index.html><hover:show_text:'<dark_text>Click to visit MiniMessage Documentation'><lite_text><u>MiniMessage</u></lite_text></hover></click>!</def_text>"

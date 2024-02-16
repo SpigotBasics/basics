@@ -1,5 +1,5 @@
 # Tags: <#new-gamemode>
-gamemode-changed-others: "<def_text>Set <player-dm><player-name-genitive-suffix> game mode to <lite_text><#new-gamemode></lite_text>."
+gamemode-changed-others: "<def_text>Set <player-dm><#player-name-genitive-suffix> game mode to <lite_text><#new-gamemode></lite_text>."
 gamemode-changed-self: "<def_text>Set <lite_text>your</lite_text> game mode to <lite_text><#new-gamemode></lite_text>."
 
 survival: "<gradient:#00AA00:#00FF00>survival</gradient>"

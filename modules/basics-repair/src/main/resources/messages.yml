@@ -1,11 +1,11 @@
 # Repair message sent to you when repairing another player's hand
-repair-hand-other: "<def_text>Repaired <lite_text><player-dm><player-name-genitive-suffix></lite_text> hand"
+repair-hand-other: "<def_text>Repaired <lite_text><player-dm><#player-name-genitive-suffix></lite_text> hand"
 
 # Repair message sent when you repair your own hand
 repair-hand-self: "<def_text>Repaired <lite_text>your</lite_text> hand"
 
 # Repair message sent when you repair another player's inventory
-repair-all-other: "<def_text>Repaired <lite_text><player-dm><player-name-genitive-suffix></lite_text> inventory"
+repair-all-other: "<def_text>Repaired <lite_text><player-dm><#player-name-genitive-suffix></lite_text> inventory"
 
 # Repair message sent when you repair your own inventory
 repair-all-self: "<def_text>Repaired <lite_text>your</lite_text> inventory"

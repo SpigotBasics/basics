@@ -28,4 +28,10 @@ abstract class CommandArgument<T>(
      * Only one argument can be greedy in a path.
      */
     open val greedy = false
+
+    open val length = 1
+
+    override fun toString(): String {
+        return javaClass.simpleName
+    }
 }

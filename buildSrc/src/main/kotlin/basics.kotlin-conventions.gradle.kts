@@ -11,9 +11,9 @@ plugins {
     `maven-publish`
 }
 
-if(!project.path.startsWith(":nms:versions")) {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-}
+// if(!project.path.startsWith(":nms:versions")) {
+apply(plugin = "org.jlleitschuh.gradle.ktlint")
+// }
 
 dependencies {
     testImplementation(kotlin("test"))
