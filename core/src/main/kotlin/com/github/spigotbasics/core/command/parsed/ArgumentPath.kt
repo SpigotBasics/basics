@@ -96,27 +96,35 @@ class ArgumentPath<T : CommandContext>(
         commandArguments: List<CommandArgument<*>>,
         greedyPosition: Int,
     ): String {
-        if (greedyPosition == -1) {
-            return givenArgs[argIndex]
+        // Count length of combined arguments before this one
+        var myStartIndex = commandArguments.subList(0, argIndex).sumOf { it.length }
+        val myLength = commandArguments[argIndex].length
+        var myEndIndex = myStartIndex + myLength
+
+        val expectedLengthWithoutGreedy = commandArguments.filter { !it.greedy }.sumOf { it.length }
+
+        if (greedyPosition == -1 || argIndex < greedyPosition) {
+            return givenArgs.subList(myStartIndex, myEndIndex).joinToString(" ")
         }
-        if (argIndex < greedyPosition) {
-            return givenArgs[argIndex]
-        }
-        val greedyArgumentExtraSize = givenArgs.size - commandArguments.size
-        val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentExtraSize + 1)
+
+        val greedyArgumentSize = givenArgs.size - expectedLengthWithoutGreedy
+        val extraArgs = givenArgs.subList(greedyPosition, greedyPosition + greedyArgumentSize)
 
         logger.debug(
             600,
             "Accumulating arguments: argIndex: $argIndex, givenArgs: $givenArgs, commandArguments: $commandArguments, " +
                 "greedyPosition: $greedyPosition",
         )
-        logger.debug(500, "GreedyArgumentExtraSize: $greedyArgumentExtraSize, extraArgs: $extraArgs")
+        logger.debug(500, "GreedyArgumentSize: $greedyArgumentSize, extraArgs: $extraArgs")
 
         if (argIndex == greedyPosition) {
             return extraArgs.joinToString(" ")
         }
 
-        return givenArgs[argIndex + greedyArgumentExtraSize]
+        val lengthAfterMe = commandArguments.subList(argIndex + 1, commandArguments.size).sumOf { it.length }
+        myStartIndex = givenArgs.size - lengthAfterMe - 1
+
+        return givenArgs.subList(myStartIndex, givenArgs.size).joinToString(" ")
     }
 
     fun parse(
