@@ -29,9 +29,9 @@ class ArgumentPath<T : CommandContext>(
     fun matches(
         sender: CommandSender,
         args: List<String>,
-    ): Either<PathMatchResult, Pair<Int, List<Message>>> {
+    ): Either<PathMatchResult, Pair<Double, List<Message>>> {
         val greedyArg = arguments.indexOfFirst { it.second.greedy }
-        var firstErrorIndex = -1
+        var firstErrorIndex = -1.0
 
         // Each provided arg must be parseable by its corresponding CommandArgument
         val errors = mutableListOf<Message>()
@@ -48,6 +48,10 @@ class ArgumentPath<T : CommandContext>(
 
             if (currentArgResult is Either.Right) {
                 errors.add(Basics.messages.notEnoughArgumentsGivenForArgument(argument.name))
+                val missingArguments = currentArgResult.value
+                // "First error" is the first missing argument, adjusted by 0.5 so that arguments with matching paths are preferred
+                val returnValue = (index + 1) - missingArguments + 0.5
+                firstErrorIndex = if (firstErrorIndex == -1.0) returnValue else min(firstErrorIndex, returnValue) // TODO - is this correct?
                 return@forEach
             }
 
@@ -57,7 +61,7 @@ class ArgumentPath<T : CommandContext>(
 
             if (parsed == null) {
                 val error = argument.errorMessage(sender, currentArg)
-                firstErrorIndex = if (firstErrorIndex == -1) index else min(firstErrorIndex, index)
+                firstErrorIndex = if (firstErrorIndex == -1.0) index.toDouble() else min(firstErrorIndex, index.toDouble())
                 errors.add(error)
             }
         }
@@ -67,7 +71,7 @@ class ArgumentPath<T : CommandContext>(
         if (greedyArg == -1) {
             if (args.size > arguments.sumOf { it.second.length }) {
                 return Either.Right(
-                    arguments.size to listOf(Basics.messages.tooManyArguments),
+                    arguments.size.toDouble() to listOf(Basics.messages.tooManyArguments),
                 )
             }
         }
@@ -82,7 +86,7 @@ class ArgumentPath<T : CommandContext>(
         givenArgs: List<String>,
         commandArguments: List<CommandArgument<*>>,
         greedyPosition: Int,
-    ): Either<String, Nothing?> {
+    ): Either<String, Int> {
         val result = accumulateArguments0(argIndex, givenArgs, commandArguments, greedyPosition)
         logger.debug(400, "Accumulated arguments @ $argIndex  ----- $result")
         return result
@@ -93,14 +97,15 @@ class ArgumentPath<T : CommandContext>(
         givenArgs: List<String>,
         commandArguments: List<CommandArgument<*>>,
         greedyPosition: Int,
-    ): Either<String, Nothing?> {
+    ): Either<String, Int> {
         // Count length of combined arguments before this one
         var myStartIndex = commandArguments.subList(0, argIndex).sumOf { it.length }
-        val myLength = commandArguments[argIndex].length
-        val myEndIndex = myStartIndex + myLength
+        val mySupposedLength = commandArguments[argIndex].length
+        val myEndIndex = myStartIndex + mySupposedLength
+        var missingArguments = mySupposedLength - (givenArgs.size - myStartIndex)
 
         if (myEndIndex > givenArgs.size) {
-            return Either.Right(null)
+            return Either.Right(missingArguments) // TODO: Is this correct?
         }
 
         val expectedLengthWithoutGreedy = commandArguments.filter { !it.greedy }.sumOf { it.length }
@@ -126,8 +131,10 @@ class ArgumentPath<T : CommandContext>(
         val lengthAfterMe = commandArguments.subList(argIndex + 1, commandArguments.size).sumOf { it.length }
         myStartIndex = givenArgs.size - lengthAfterMe - 1
 
+        missingArguments = mySupposedLength - (givenArgs.size - myStartIndex)
+
         if (myStartIndex + 1 > givenArgs.size) {
-            return Either.Right(null)
+            return Either.Right(missingArguments)
         }
 
         return Either.Left(givenArgs.subList(myStartIndex, givenArgs.size).joinToString(" "))
