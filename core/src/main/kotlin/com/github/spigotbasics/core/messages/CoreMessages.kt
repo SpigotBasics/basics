@@ -102,4 +102,5 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
     fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)
 
     fun invalidSubcommand(argument: String) = getMessage("invalid-subcommand").tagUnparsed("argument", argument)
+    fun notEnoughArgumentsGivenForArgument(name: String) = getMessage("not-enough-arguments-given-for-argument").tagParsed("argument", name)
 }

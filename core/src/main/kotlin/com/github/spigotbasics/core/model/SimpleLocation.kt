@@ -22,7 +22,34 @@ data class SimpleLocation(
     val z: Double,
     val yaw: Float,
     val pitch: Float,
-)
+) {
+    /**
+     * Turns a [SimpleLocation] into a [Location].
+     *
+     * @return The [Location] representation of the [SimpleLocation].
+     * @throws WorldNotLoadedException If the world is not loaded.
+     */
+    @Throws(WorldNotLoadedException::class)
+    fun toLocation(): Location {
+        val world = Bukkit.getWorld(this.world) ?: throw WorldNotLoadedException(this.world)
+        return Location(world, x, y, z, yaw, pitch)
+    }
+
+    /**
+     * Turns a [SimpleLocation] into a [Location] for the given world.
+     *
+     * @param world The world to use.
+     * @return The [Location] representation of the [SimpleLocation].
+     */
+    fun toLocation(world: World): Location {
+        return Location(world, x, y, z, yaw, pitch)
+    }
+
+    fun toXYZCoords(): XYZCoords {
+        return XYZCoords(x, y, z)
+    }
+
+}
 
 /**
  * Turns a [Location] into a [SimpleLocation].
@@ -36,24 +63,5 @@ fun Location.toSimpleLocation(): SimpleLocation {
     return SimpleLocation(world.name, x, y, z, yaw, pitch)
 }
 
-/**
- * Turns a [SimpleLocation] into a [Location].
- *
- * @return The [Location] representation of the [SimpleLocation].
- * @throws WorldNotLoadedException If the world is not loaded.
- */
-@Throws(WorldNotLoadedException::class)
-fun SimpleLocation.toLocation(): Location {
-    val world = Bukkit.getWorld(this.world) ?: throw WorldNotLoadedException(this.world)
-    return Location(world, x, y, z, yaw, pitch)
-}
 
-/**
- * Turns a [SimpleLocation] into a [Location] for the given world.
- *
- * @param world The world to use.
- * @return The [Location] representation of the [SimpleLocation].
- */
-fun SimpleLocation.toLocation(world: World): Location {
-    return Location(world, x, y, z, yaw, pitch)
-}
+

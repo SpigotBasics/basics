@@ -1,7 +1,6 @@
 package com.github.spigotbasics.modules.basicsworld
 
 import com.github.spigotbasics.core.model.SimpleLocation
-import com.github.spigotbasics.core.model.toLocation
 import org.bukkit.Location
 import org.bukkit.World
 
