@@ -1,6 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
 version = "git-${getGitCommitHash()}"
 
@@ -8,7 +6,7 @@ plugins {
     base
     // id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") apply false
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0" apply false
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
 allprojects {
