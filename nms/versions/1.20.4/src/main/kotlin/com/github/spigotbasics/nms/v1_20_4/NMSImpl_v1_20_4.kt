@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 
 class NMSImpl_v1_20_4 : NMSFacade {
     override fun getTps(): DoubleArray {
+        @Suppress("DEPRECATION")
         return (Bukkit.getServer() as CraftServer).handle.server.recentTps
     }
 }
