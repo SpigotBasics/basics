@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture
 class StorageManager(configManager: CoreConfigManager) {
     private val logger = BasicsLoggerFactory.getCoreLogger(StorageManager::class)
 
-    val namespaceRegex = "^[_a-zA-Z][_a-zA-Z0-9]{0,63}\$".toRegex()
+    private val namespaceRegex = "^[_a-zA-Z][_a-zA-Z0-9]{0,63}\$".toRegex()
 
     val config =
         configManager.getConfig(
@@ -38,9 +38,7 @@ class StorageManager(configManager: CoreConfigManager) {
     }
 
     internal fun createStorage(namespace: String): NamespacedStorage {
-        if (!namespaceRegex.matches(namespace)) {
-            throw IllegalArgumentException("Namespace '$namespace' does not match regex ${namespaceRegex.pattern}")
-        }
+        require(namespaceRegex.matches(namespace)) { "Namespace '$namespace' does not match regex ${namespaceRegex.pattern}" }
         return NamespacedStorage(backend, namespace)
     }
 

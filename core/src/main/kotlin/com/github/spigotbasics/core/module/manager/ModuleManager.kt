@@ -56,7 +56,7 @@ class ModuleManager(
 
     fun enableAllLoadedModules() {
         for (module in myLoadedModules) {
-            enableModule(module, false, false)
+            enableModule(module, reloadConfig = false, syncCommands = false)
         }
     }
 

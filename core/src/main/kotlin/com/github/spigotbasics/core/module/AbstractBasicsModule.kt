@@ -56,18 +56,14 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
     }
 
     final override fun createStorage(name: String?): NamespacedStorage {
-        if (!isEnabled) {
-            throw IllegalStateException("Cannot create storage while module is disabled")
-        }
+        check(isEnabled) { "Cannot create storage while module is disabled" }
 
         var namespacedName = "m_${info.name.replace(STORAGE_NAMESPACE_NOT_ALLOWED_REGEX, "_")}"
         if (name != null) {
             namespacedName += "__${name.replace(STORAGE_NAMESPACE_NOT_ALLOWED_REGEX, "_")}"
         }
 
-        if (storages.containsKey(namespacedName)) {
-            throw IllegalArgumentException("Storage with name '$namespacedName' already exists")
-        }
+        require(!storages.containsKey(namespacedName)) { "Storage with name '$namespacedName' already exists" }
 
         val storage: NamespacedStorage = plugin.storageManager.createStorage(namespacedName)
         storages[namespacedName] = storage
@@ -102,9 +98,7 @@ abstract class AbstractBasicsModule(context: ModuleInstantiationContext) : Basic
             }.toTypedArray(),
         )
 
-    final override fun isEnabled(): Boolean {
-        return isEnabled
-    }
+    final override fun isEnabled() = isEnabled
 
     final override fun loadAllOnlinePlayerData(): CompletableFuture<Void?> {
         val futures = mutableListOf<CompletableFuture<Void?>>()

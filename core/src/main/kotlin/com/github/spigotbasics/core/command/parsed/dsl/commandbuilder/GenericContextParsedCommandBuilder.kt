@@ -25,10 +25,7 @@ class GenericContextParsedCommandBuilder<T : CommandContext>(
         permission = permission,
     ) {
     fun GenericContextParsedCommandBuilder<T>.path(block: GenericArgumentPathBuilder<T>.() -> Unit): ArgumentPath<T> {
-        val builder = GenericArgumentPathBuilder<T>()
-        builder.block()
-        val built = builder.build()
-        this.argumentPaths.add(built)
-        return built
+        val builder = GenericArgumentPathBuilder<T>().apply(block)
+        return builder.build().also(this.argumentPaths::add)
     }
 }
