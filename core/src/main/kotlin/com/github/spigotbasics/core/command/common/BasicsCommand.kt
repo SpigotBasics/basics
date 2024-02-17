@@ -75,20 +75,29 @@ class BasicsCommand internal constructor(
             try {
                 returned?.process(context)
             } catch (e: Exception) {
+                coreMessages.errorExecutingCommand(sender, e).sendToSender(sender)
                 logger.log(Level.SEVERE, "Error processing returned command result for ${info.name}", e)
             }
         } catch (e: BasicsCommandException) {
             try {
                 e.commandResult.process(context)
             } catch (e: Exception) {
+                coreMessages.errorExecutingCommand(sender, e).sendToSender(sender)
                 logger.log(Level.SEVERE, "Error processing thrown command result for ${info.name}", e)
             }
-        } catch (e: UnsupportedServerSoftwareException) {
-            // Also want to catch NoSuchMethod and NoSuchField exception here
-            coreMessages.unsupportedServerSoftware(e.feature).sendToSender(sender)
         } catch (e: Throwable) {
-            coreMessages.errorExecutingCommand(sender, e).sendToSender(sender)
-            logger.log(Level.SEVERE, "Error executing command ${info.name}", e)
+            when (e) {
+                // TODO: NMSNotSupportedException too
+                is UnsupportedServerSoftwareException -> {
+                    // Also want to catch NoSuchMethod and NoSuchField exception here
+                    coreMessages.unsupportedServerSoftware(e.feature).sendToSender(sender)
+                }
+
+                else -> {
+                    coreMessages.errorExecutingCommand(sender, e).sendToSender(sender)
+                    logger.log(Level.SEVERE, "Error executing command ${info.name}", e)
+                }
+            }
         }
         return true
     }
