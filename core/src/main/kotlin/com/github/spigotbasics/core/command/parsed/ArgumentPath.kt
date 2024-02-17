@@ -217,7 +217,7 @@ class ArgumentPath<T : CommandContext>(
         input: List<String>,
     ): Boolean {
         logger.debug(200, "TabComplete matchesStart: input: $input @ $this")
-        if (input.size > arguments.size) {
+        if (input.size > arguments.sumOf { it.second.length }) {
             logger.debug(200, "  input.size > arguments.size")
             return false
         }
