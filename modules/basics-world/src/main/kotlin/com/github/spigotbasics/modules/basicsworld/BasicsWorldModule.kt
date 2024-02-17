@@ -1,7 +1,6 @@
 package com.github.spigotbasics.modules.basicsworld
 
 import com.github.spigotbasics.core.command.parsed.arguments.StringOptionArg
-import com.github.spigotbasics.core.command.parsed.arguments.WorldArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.Permission
@@ -23,7 +22,7 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         ).tagUnparsed("world", world)
 
     override fun onEnable() {
-        val worldArg = WorldArg("World")
+        val worldArg = WorldArg(this, "World")
         val forceArg = StringOptionArg("Force", listOf("--force", "-f"))
         commandFactory.parsedCommandBuilder("world", permission)
             .mapContext {
@@ -42,16 +41,11 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
                 path {
                     playerOnly()
                     arguments {
-                        named("forced", forceArg)
                         named("world", worldArg)
+                        named("forced", forceArg)
                     }
                 }
-            }
-        commandFactory.rawCommandBuilder("world", permission)
-            .usage("<world>")
-            .description("Teleport to another world")
-            .executor(WorldCommand(this))
-            .register()
+            }.executor(BasicsWorldCommand(this)).register()
 
         server.worlds.forEach {
             getWorldPermission(it.name)
