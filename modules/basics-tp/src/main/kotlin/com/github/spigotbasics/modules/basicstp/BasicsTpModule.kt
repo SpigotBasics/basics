@@ -36,14 +36,18 @@ class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule
     }
 
     override fun onEnable() {
+        val targetEntitiesArg = SelectorMultiEntityArg("Entities to teleport")
+        val destCoordsArg = TripleContextCoordinatesArg("Destination Coordinates")
+        val destEntityArg = SelectorSingleEntityArg("Destination Entity")
+
         commandFactory.parsedCommandBuilder("tp", permission).mapContext {
             usage = "[player] <x y z [yaw pitch]| entity>"
 
-            // x y z
+            // x y z [pitch yaw]
             path {
                 playerOnly()
                 arguments {
-                    named("destination", TripleContextCoordinatesArg("Destination Coordinates"))
+                    named("destination", destCoordsArg)
                 }
             }
 
@@ -51,24 +55,24 @@ class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule
             path {
                 playerOnly()
                 arguments {
-                    named("destination", SelectorSingleEntityArg("Destination Entity"))
+                    named("destination", destEntityArg)
                 }
             }
 
             // @entities @entity
             path {
                 arguments {
-                    named("targets", SelectorMultiEntityArg("Entities to teleport"))
-                    named("destination", SelectorSingleEntityArg("Destination Entity"))
+                    named("targets", targetEntitiesArg)
+                    named("destination", destEntityArg)
                 }
                 permissions(permissionOthers)
             }
 
-            // @entities x y z
+            // @entities x y z [pitch yaw]
             path {
                 arguments {
-                    named("targets", SelectorMultiEntityArg("Entities to teleport"))
-                    named("destination", TripleContextCoordinatesArg("Destination Coordinates"))
+                    named("targets", targetEntitiesArg)
+                    named("destination", destCoordsArg)
                 }
                 permissions(permissionOthers)
             }

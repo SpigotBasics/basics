@@ -64,7 +64,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         val amountRangeArg = IntRangeArg("Amount", { 1 }, ::maxAmount)
         val itemArg = ItemMaterialArg("Item")
         val snbtItemArg = SnbtArg("Item SNBT")
-        val playerArg = SelectorMultiPlayerArg("Receiving Player(s)")
+        val multiPlayerArg = SelectorMultiPlayerArg("Receiving Player(s)")
 
         commandFactory.parsedCommandBuilder("give", permission)
             .mapContext {
@@ -91,7 +91,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                     permissions(permissionOthers)
 
                     arguments {
-                        named("receiver", playerArg)
+                        named("receiver", multiPlayerArg)
                         named("item", itemArg)
                     }
                 }
@@ -100,7 +100,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                     permissions(permissionOthers, permissionSnbt)
 
                     arguments {
-                        named("receiver", playerArg)
+                        named("receiver", multiPlayerArg)
                         named("snbt", snbtItemArg)
                     }
                 }
@@ -128,7 +128,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                     permissions(permissionOthers)
 
                     arguments {
-                        named("receiver", playerArg)
+                        named("receiver", multiPlayerArg)
                         named("item", itemArg)
                         named("amount", amountRangeArg)
                     }
@@ -138,7 +138,7 @@ class BasicsGiveModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                     permissions(permissionOthers, permissionSnbt)
 
                     arguments {
-                        named("receiver", playerArg)
+                        named("receiver", multiPlayerArg)
                         named("snbt", snbtItemArg)
                         named("amount", amountRangeArg)
                     }
