@@ -4,3 +4,6 @@
 | `/tp <x y z [pitch yaw]>`          | basics.tp        |
 | `/tp @targets @destination`        | basics.tp.others |
 | `/tp @targets <x y z [pitch yaw]>` | basics.tp.others |
+
+> [!NOTE]  
+> Using selectors additionally requires permission `basics.selectors`.
