@@ -1,0 +1,2 @@
+extinguished: "<def_text>You have extinguished <lite_text>yourself</lite_text>!</def_text>"
+extinguished-others: "<def_text>You have extinguished <player-dm>!</def_text>"
