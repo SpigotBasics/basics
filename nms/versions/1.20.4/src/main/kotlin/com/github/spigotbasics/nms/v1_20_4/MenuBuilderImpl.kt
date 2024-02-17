@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.GrindstoneMenu
 import net.minecraft.world.inventory.LoomMenu
 import net.minecraft.world.inventory.MenuConstructor
 import net.minecraft.world.inventory.SmithingMenu
+import net.minecraft.world.inventory.StonecutterMenu
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.event.inventory.InventoryType
@@ -29,6 +30,7 @@ object MenuBuilderImpl {
         builder[InventoryType.CARTOGRAPHY] = worldAccess(::CartographyTableMenu)
         builder[InventoryType.GRINDSTONE] = worldAccess(::GrindstoneMenu)
         builder[InventoryType.SMITHING] = worldAccess(::SmithingMenu)
+        builder[InventoryType.STONECUTTER] = worldAccess(::StonecutterMenu)
     }
 
     init {
@@ -38,6 +40,7 @@ object MenuBuilderImpl {
         titles[InventoryType.CARTOGRAPHY] = Component.translatable("container.cartography_table")
         titles[InventoryType.GRINDSTONE] = Component.translatable("container.grindstone_title")
         titles[InventoryType.SMITHING] = Component.translatable("container.upgrade")
+        titles[InventoryType.STONECUTTER] = Component.translatable("container.stonecutter")
     }
 
     fun build(

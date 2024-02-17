@@ -2,6 +2,7 @@ package com.github.spigotbasics.modules.basicsextinguish
 
 import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
 import com.github.spigotbasics.core.command.common.CommandResult
+import com.github.spigotbasics.core.command.parsed.arguments.SelectorSinglePlayerArg
 import com.github.spigotbasics.core.command.raw.RawCommandContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -21,12 +22,23 @@ class BasicsExtinguishModule(context: ModuleInstantiationContext) : AbstractBasi
     val messageExtinguishedOther = messages.getMessage("extinguished-others")
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("extinguish", permExtinguish)
-            .description("Extinguishes Players")
-            .usage("[player]")
-            .aliases(listOf("ext"))
-            .executor(ExtinguishExecutor(this))
-            .register()
+        val playerArg = SelectorSinglePlayerArg("Player")
+        commandFactory.parsedCommandBuilder("extinguish", permExtinguish)
+            .mapContext {
+                usage = "[player]"
+                description("Extinguished Players")
+
+                path {
+                    playerOnly()
+                }
+
+                path {
+                    permissions(permExtinguishOthers)
+                    arguments {
+                        named("player", playerArg)
+                    }
+                }
+            }.executor(BasicsExtinguishExecutor(this)).register()
     }
 
     private inner class ExtinguishExecutor(private val module: BasicsExtinguishModule) : BasicsCommandExecutor(module) {
