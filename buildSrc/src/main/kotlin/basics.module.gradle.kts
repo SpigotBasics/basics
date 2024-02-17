@@ -41,7 +41,7 @@ tasks.processResources {
 
 val moduleName = project.name
 tasks.register("copyModule${moduleName.pascalCase()}ToTestServer", CopyModule::class) {
-    group  = "basics-test"
+    group  = "basics custom testserver"
     description = "Copies the ${moduleName} module to the test server"
     from(tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
     into(getServerModulesDirectory())
