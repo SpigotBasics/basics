@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":pipe:facade"))
     implementation(project(":pipe:spigot"))
     implementation(project(":pipe:paper"))
-    // implementation(project(":nms:facade"))
+    compileOnly(project(":nms:facade"))
     implementation(project(":nms:aggregator", "shadow"))
     // implementation(project(":common"))
     // implementation(kotlin("reflect"))

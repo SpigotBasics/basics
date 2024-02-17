@@ -2,6 +2,7 @@ package com.github.spigotbasics.nms.v1_20_4
 
 import com.github.spigotbasics.nms.v1_20_4.MenuBuilderImpl.ContainerProvider
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -18,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.event.inventory.InventoryType
 
 object MenuBuilderImpl {
-
     private val builder = mutableMapOf<InventoryType, ContainerProvider>()
+    private val titles = mutableMapOf<InventoryType, Component>()
 
     init {
         builder[InventoryType.ANVIL] = worldAccess(::AnvilMenu)
@@ -30,15 +31,37 @@ object MenuBuilderImpl {
         builder[InventoryType.SMITHING] = worldAccess(::SmithingMenu)
     }
 
-    fun build(serverPlayer: ServerPlayer, inventoryType: InventoryType): AbstractContainerMenu? {
+    init {
+        titles[InventoryType.ANVIL] = Component.translatable("container.repair")
+        titles[InventoryType.ENCHANTING] = Component.translatable("container.enchant")
+        titles[InventoryType.LOOM] = Component.translatable("container.loom")
+        titles[InventoryType.CARTOGRAPHY] = Component.translatable("container.cartography_table")
+        titles[InventoryType.GRINDSTONE] = Component.translatable("container.grindstone_title")
+        titles[InventoryType.SMITHING] = Component.translatable("container.upgrade")
+    }
+
+    fun build(
+        serverPlayer: ServerPlayer,
+        inventoryType: InventoryType,
+    ): AbstractContainerMenu? {
         return (builder[inventoryType] ?: return null).supply(serverPlayer, serverPlayer.inventory)
     }
 
-    private fun interface ContainerProvider {
-        fun supply(player: ServerPlayer, playerInventory: Inventory): AbstractContainerMenu
+    fun title(inventoryType: InventoryType): Component? {
+        return titles[inventoryType]
     }
 
-    private fun tile(block: Block, entity: (BlockPos, BlockState) -> MenuConstructor): ContainerProvider {
+    private fun interface ContainerProvider {
+        fun supply(
+            player: ServerPlayer,
+            playerInventory: Inventory,
+        ): AbstractContainerMenu
+    }
+
+    private fun tile(
+        block: Block,
+        entity: (BlockPos, BlockState) -> MenuConstructor,
+    ): ContainerProvider {
         return ContainerProvider { player, inventory ->
             return@ContainerProvider entity.invoke(BlockPos.ZERO, block.defaultBlockState())
                 .createMenu(player.nextContainerCounter(), inventory, player)!!
@@ -50,7 +73,7 @@ object MenuBuilderImpl {
             return@ContainerProvider accessor.invoke(
                 player.nextContainerCounter(),
                 inventory,
-                ContainerLevelAccess.create(player.level(), player.blockPosition())
+                ContainerLevelAccess.create(player.level(), player.blockPosition()),
             )
         }
     }

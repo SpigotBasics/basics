@@ -1,6 +1,7 @@
 package com.github.spigotbasics.pipe.spigot
 
 import com.github.spigotbasics.common.Either
+import com.github.spigotbasics.nms.NMSFacade
 import com.github.spigotbasics.pipe.OpenInventoryFacade
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import com.github.spigotbasics.pipe.SpigotPaperFacade
@@ -11,7 +12,9 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.SimplePluginManager
 
-class SpigotFacade : SpigotPaperFacade {
+class SpigotFacade(nms: NMSFacade) : SpigotPaperFacade {
+    private val inventoryFacade = SpigotOpenInventoryFacade(nms)
+
     override fun setJoinMessage(
         event: PlayerJoinEvent,
         legacy: String,
@@ -39,5 +42,5 @@ class SpigotFacade : SpigotPaperFacade {
         return field.get(spm) as SimpleCommandMap
     }
 
-    override val openInventoryFacade: OpenInventoryFacade = SpigotOpenInventoryFacade
+    override val openInventoryFacade: OpenInventoryFacade = inventoryFacade
 }

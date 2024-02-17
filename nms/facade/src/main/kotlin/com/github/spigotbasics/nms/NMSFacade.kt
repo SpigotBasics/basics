@@ -18,5 +18,8 @@ interface NMSFacade {
      * @throws IllegalStateException if the given entity is not a player with a connection
      */
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
-    fun openWorkbench(entity: HumanEntity, type: InventoryType): InventoryView
+    fun openWorkbench(
+        entity: HumanEntity,
+        type: InventoryType,
+    ): InventoryView?
 }

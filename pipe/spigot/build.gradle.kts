@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     implementation(project(":pipe:facade"))
+    compileOnly(project(":nms:facade"))
 }
