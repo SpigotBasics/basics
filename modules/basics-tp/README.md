@@ -8,6 +8,7 @@
 
 > [!TIP]  
 > Coordinates **relative to the sender** can be used with `~x ~y ~z ~pitch ~yaw`
+> 
 > Coordinates **relative to the target(s)** can be used with `~~x ~~y ~~z ~~pitch ~~yaw`
 > 
 > Examples:
