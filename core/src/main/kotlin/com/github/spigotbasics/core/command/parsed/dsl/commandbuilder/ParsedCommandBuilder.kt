@@ -44,6 +44,8 @@ open class ParsedCommandBuilder<T : CommandContext>(
             this.usage = usage
         }
 
+    fun aliases(aliases: List<String>) = apply { this.aliases = aliases }
+
     fun path(argumentPath: ArgumentPath<T>) = apply { this.argumentPaths.add(argumentPath) }
 
     fun path(argumentPathBuilder: ArgumentPathBuilder<T>) = apply { this.argumentPaths.add(argumentPathBuilder.build()) }
