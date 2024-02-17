@@ -36,7 +36,6 @@ class BasicsTpModule(context: ModuleInstantiationContext) : AbstractBasicsModule
     }
 
     override fun onEnable() {
-
         val targetEntitiesArg = SelectorMultiEntityArg("Entities to teleport")
         val destCoordsArg = TripleContextCoordinatesArg("Destination Coordinates")
         val destEntityArg = SelectorSingleEntityArg("Destination Entity")
