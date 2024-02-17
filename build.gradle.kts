@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.incremental.deleteRecursivelyOrThrow
 
 version = "git-${getGitCommitHash()}"
 
@@ -7,6 +8,7 @@ plugins {
     // id("basics.kotlin-conventions")
     id("com.github.johnrengelman.shadow") apply false
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 allprojects {
@@ -26,30 +28,31 @@ subprojects {
 }
 
 tasks.register("copyAllToTestServer") {
-    group = "basics"
+    group = "basics custom testserver"
     description = "Copies the plugin and all modules to the test server"
     dependsOn("plugin:copyPluginToTestServer")
     dependsOn("copyAllModulesToTestServer")
 }
 
-tasks.register<Copy>("distribution") {
-    group = "basics"
-    description = "Bundle the plugin and all modules into a single directory."
+val distribution =
+    tasks.register<Copy>("distribution") {
+        group = "basics"
+        description = "Bundle the plugin and all modules into a single directory."
 
-    dependsOn(tasks.build)
+        dependsOn(tasks.build)
 
-    into("build/dist/basics-$version")
+        into("build/dist/basics-$version")
 
-    from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
+        from(project(":plugin").tasks.getByName("shadowJar", ShadowJar::class).archiveFile)
 
-    project(":modules").subprojects.forEach { module ->
-        module.tasks.withType<ShadowJar>().forEach { shadowTask ->
-            from(shadowTask.archiveFile) {
-                into("Basics/modules")
+        project(":modules").subprojects.forEach { module ->
+            module.tasks.withType<ShadowJar>().forEach { shadowTask ->
+                from(shadowTask.archiveFile) {
+                    into("Basics/modules")
+                }
             }
         }
     }
-}
 
 tasks.register<Zip>("zipDistribution") {
     group = "basics"
@@ -71,7 +74,7 @@ tasks.register<Zip>("zipDistribution") {
 }
 
 tasks.register("copyAllModulesToTestServer") {
-    group = "basics-test"
+    group = "basics custom testserver"
     description = "Copies all modules to the test server"
     val copyAllModulesTask = this
     subprojects.forEach { module ->
@@ -85,4 +88,29 @@ tasks.register("printVersion") {
     doLast {
         println(version)
     }
+}
+
+tasks {
+    runServer {
+
+        group = "basics"
+        description = "Runs the server with the Basics plugin and all modules"
+
+        dependsOn(distribution)
+
+        val distFolder = project.rootDir.resolve("build/dist/basics-${project.version}")
+        val serverFolder = project.rootDir.resolve("run")
+        val pluginsFolder = serverFolder.resolve("plugins")
+        val basicsFolder = pluginsFolder.resolve("Basics")
+
+        doFirst {
+            basicsFolder.deleteRecursivelyOrThrow()
+            distFolder.copyRecursively(pluginsFolder, true)
+        }
+        minecraftVersion("1.20.4")
+    }
+}
+
+runPaper {
+    disablePluginJarDetection()
 }

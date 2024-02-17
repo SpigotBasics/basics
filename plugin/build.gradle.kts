@@ -46,7 +46,7 @@ tasks.shadowJar {
 }
 
 tasks.register("copyPluginToTestServer", Copy::class) {
-    group = "basics-test"
+    group = "basics custom testserver"
     description = "Copies the plugin to the test server"
     from(tasks.shadowJar.get().archiveFile)
     into(getServerPluginsDirectory())
