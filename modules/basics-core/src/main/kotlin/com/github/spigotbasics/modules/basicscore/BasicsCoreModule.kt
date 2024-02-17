@@ -28,6 +28,7 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
         commandFactory.parsedCommandBuilder("module", modulePermission)
             .mapContext {
                 usage = "<command> [module]"
+                aliases(listOf("mod"))
 
                 // module help
                 path {

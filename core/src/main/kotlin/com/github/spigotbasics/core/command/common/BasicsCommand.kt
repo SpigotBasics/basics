@@ -35,6 +35,7 @@ class BasicsCommand internal constructor(
         permission = if (coreConfig.hideCommandsWhenNoPermission) permString else null
         description = info.description ?: ""
         usage = info.usage
+        aliases = info.aliases
         permissionMessage = info.permissionMessage.tagParsed("permission", permString).toLegacyString()
     }
 

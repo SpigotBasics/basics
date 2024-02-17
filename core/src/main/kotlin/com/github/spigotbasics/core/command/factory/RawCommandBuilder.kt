@@ -39,7 +39,6 @@ class RawCommandBuilder(
     @Deprecated("Ignored by Bukkit")
     private fun permissionMessage(permissionMessage: Message) = apply { this.permissionMessage = permissionMessage }
 
-    @Deprecated("Will be registered automatically in the future")
     fun aliases(aliases: List<String>) = apply { this.aliases = aliases }
 
     fun executor(executor: BasicsCommandExecutor) = apply { this.executor = executor }
