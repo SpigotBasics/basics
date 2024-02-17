@@ -12,6 +12,7 @@ class CommandFactory(
     private val coreMessages: CoreMessages,
     private val commandManager: BasicsCommandManager,
 ) {
+    @Deprecated("Use ParsedCommandBuilder instead")
     fun rawCommandBuilder(
         name: String,
         permission: Permission,
