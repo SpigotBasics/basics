@@ -42,12 +42,12 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
         )
 
     override val audienceProvider: AudienceProvider = AudienceProvider(this)
-
+    override val nms: NMSFacade = NMSAggregator.getNmsFacade(CURRENT_MINECRAFT_VERSION)
     override val facade: SpigotPaperFacade =
         if (Spiper.isPaper) {
             PaperFacade()
         } else {
-            SpigotFacade()
+            SpigotFacade(nms)
         }
 
     private val logger = BasicsLoggerFactory.getCoreLogger(this::class)
@@ -75,7 +75,6 @@ class BasicsPluginImpl : JavaPlugin(), BasicsPlugin {
     override val storageManager: StorageManager by lazy { StorageManager(coreConfigManager) }
     override val corePlayerData: CorePlayerData by lazy { CorePlayerData(storageManager) }
     override val chunkTicketManager: ChunkTicketManager = ChunkTicketManager()
-    override val nms: NMSFacade = NMSAggregator.getNmsFacade(CURRENT_MINECRAFT_VERSION)
 
     internal val modulePlayerDataLoader by lazy {
         ModulePlayerDataLoader(
