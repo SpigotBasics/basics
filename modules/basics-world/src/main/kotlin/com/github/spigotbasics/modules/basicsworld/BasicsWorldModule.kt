@@ -1,11 +1,14 @@
 package com.github.spigotbasics.modules.basicsworld
 
+import com.github.spigotbasics.core.command.parsed.arguments.StringOptionArg
+import com.github.spigotbasics.core.command.parsed.arguments.WorldArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import org.bukkit.permissions.Permission
 
 class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    private val permission = permissionManager.createSimplePermission("basics.world", "Allows to switch worlds using /world")
+    private val permission =
+        permissionManager.createSimplePermission("basics.world", "Allows to switch worlds using /world")
     val worldPermissions = mutableMapOf<String, Permission>()
 
     fun msgAlreadyInWorld(world: String) = messages.getMessage("already-in-world").tagUnparsed("world", world)
@@ -20,6 +23,30 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         ).tagUnparsed("world", world)
 
     override fun onEnable() {
+        val worldArg = WorldArg("World")
+        val forceArg = StringOptionArg("Force", listOf("--force", "-f"))
+        commandFactory.parsedCommandBuilder("world", permission)
+            .mapContext {
+                usage = "[world]"
+                aliases(listOf("worldtp", "tpworld"))
+
+                description("Teleport to another world")
+
+                path {
+                    playerOnly()
+                    arguments {
+                        named("world", worldArg)
+                    }
+                }
+
+                path {
+                    playerOnly()
+                    arguments {
+                        named("forced", forceArg)
+                        named("world", worldArg)
+                    }
+                }
+            }
         commandFactory.rawCommandBuilder("world", permission)
             .usage("<world>")
             .description("Teleport to another world")
