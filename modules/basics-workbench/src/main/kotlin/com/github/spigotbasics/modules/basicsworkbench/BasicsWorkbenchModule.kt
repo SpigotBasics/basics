@@ -11,37 +11,29 @@ class BasicsWorkbenchModule(context: ModuleInstantiationContext) : AbstractBasic
     private val facade = plugin.facade.openInventoryFacade
 
     override fun onEnable() {
-        makeParsedCommand("craftingtable", listOf("workbench", "craft")) {
-            it.openWorkbench(
-                null,
-                true,
-            )
+        makeParsedCommand("craftingtable", aliases = listOf("workbench", "craft")) {
+            it.openWorkbench(null, true)
         }
-        makeParsedCommand("cartographytable", listOf("cartography")) { facade.openCartographyTable(it) }
+        makeParsedCommand("cartographytable", aliases = listOf("cartography")) { facade.openCartographyTable(it) }
         makeParsedCommand("loom") { facade.openLoom(it) }
         makeParsedCommand("grindstone") { facade.openGrindstone(it) }
-        makeParsedCommand("smithingtable", listOf("smithing")) { facade.openSmithingTable(it) }
+        makeParsedCommand("smithingtable", aliases = listOf("smithing")) { facade.openSmithingTable(it) }
         makeParsedCommand("stonecutter") { facade.openStonecutter(it) }
-        makeParsedCommand("anvil") { facade.openAnvil(it) }
+        makeParsedCommand("anvil", "Allows the player to open an anvil using /anvil", "Opens an anvil") { facade.openAnvil(it) }
     }
 
-    fun makeParsedCommand(
+    private fun makeParsedCommand(
         name: String,
-        openFunction: (Player) -> Unit,
-    ) {
-        makeParsedCommand(name, mutableListOf(), openFunction)
-    }
-
-    fun makeParsedCommand(
-        name: String,
-        aliases: List<String>,
+        permDescription: String = "Allows the player to open a $name using /$name",
+        commandDescription: String = "Opens a $name",
+        aliases: List<String> = mutableListOf(),
         openFunction: (Player) -> Unit,
     ) {
         commandFactory.parsedCommandBuilder(
             name,
-            permissionManager.createSimplePermission("basics.$name", "Allows a player to open a $name using /$name"),
+            permissionManager.createSimplePermission("basics.$name", permDescription),
         ).mapContext {
-            description("Opens a $name workbench")
+            description(commandDescription)
             aliases(aliases)
             path {
                 playerOnly()
