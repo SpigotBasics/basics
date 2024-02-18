@@ -3,6 +3,7 @@ package com.github.spigotbasics.modules.basicsworld
 import com.github.spigotbasics.core.command.parsed.arguments.StringOptionArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import org.bukkit.World
 import org.bukkit.permissions.Permission
 
 class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -42,13 +43,13 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
                     playerOnly()
                     arguments {
                         named("world", worldArg)
-                        named("forced", forceArg)
+                        named("force", forceArg)
                     }
                 }
             }.executor(BasicsWorldCommand(this)).register()
 
         server.worlds.forEach {
-            getWorldPermission(it.name)
+            getWorldPermission(it)
         }
     }
 
@@ -57,7 +58,8 @@ class BasicsWorldModule(context: ModuleInstantiationContext) : AbstractBasicsMod
         messages.reload()
     }
 
-    fun getWorldPermission(name: String): Permission {
+    fun getWorldPermission(world: World): Permission {
+        val name = world.name
         return worldPermissions.computeIfAbsent(name.lowercase()) {
             permissionManager.createSimplePermission(
                 "basics.world.${name.lowercase()}",
