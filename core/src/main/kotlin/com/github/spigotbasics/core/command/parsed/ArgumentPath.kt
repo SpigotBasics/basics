@@ -4,7 +4,6 @@ import com.github.spigotbasics.common.Either
 import com.github.spigotbasics.core.Basics
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.command.parsed.context.CommandContext
-import com.github.spigotbasics.core.extensions.lastOrEmpty
 import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
@@ -216,36 +215,109 @@ class ArgumentPath<T : CommandContext>(
         sender: CommandSender,
         input: List<String>,
     ): Boolean {
-        logger.debug(200, "TabComplete matchesStart: input: $input @ $this")
-        if (input.size > arguments.size) {
-            logger.debug(200, "  input.size > arguments.size")
-            return false
-        }
-        input.forEachIndexed { index, s ->
-            logger.debug(200, "  Checking index $index, s: $s")
-            if (index == input.size - 1) {
-                logger.debug(200, "    Last argument, skipping")
-                return@forEachIndexed
-            } // Last argument is still typing
-            val arg = arguments[index].second
-            val parsed = arg.parse(sender, s)
-            if (parsed == null) {
-                logger.debug(200, "     parsed == null")
+        if (!isCorrectSender(sender) || !hasPermission(sender)) return false
+
+        var accumulatedInputCount = 0
+        for ((index, pair) in arguments.withIndex()) {
+            val (_, argument) = pair
+            val isLastArgument = index == arguments.size - 1
+
+            // Calculate the expected count of inputs for this argument
+            val expectedCount = if (argument.greedy) input.size - accumulatedInputCount else argument.length
+            val availableInputs = input.drop(accumulatedInputCount).take(expectedCount)
+            val argumentInput = availableInputs.joinToString(" ")
+
+            // Update the accumulated input count for the next argument
+            accumulatedInputCount += availableInputs.size
+
+            // If it's not the last argument and parsing fails, return false
+            if (!isLastArgument && argument.parse(sender, argumentInput) == null) {
                 return false
             }
+
+            // If it's the last argument, it's okay if parse returns null (user might still be typing)
+            if (isLastArgument) {
+                // If there's enough input for the argument to potentially parse, return true (assume user might complete it)
+                // If argument is greedy, always return true since we're accommodating partial input
+                if (argument.greedy || argument.parse(sender, argumentInput) != null) {
+                    return true
+                } else {
+                    // For non-greedy last argument, it's okay if parsing fails due to partial input
+                    return availableInputs.size >= argument.length
+                }
+            }
         }
-        logger.debug(200, "  All arguments parsed, this path matches the input")
+
+        // If the loop completes without returning, all arguments except possibly the last have parsed successfully
         return true
     }
 
+//    fun matchesStart(
+//        sender: CommandSender,
+//        input: List<String>,
+//    ): Boolean {
+//        if (!isCorrectSender(sender) || !hasPermission(sender)) return false
+//
+//        var currentIndex = 0
+//        arguments.forEachIndexed { index, (_, argument) ->
+//            if (!argument.greedy) {
+//                // Check if current argument can be fully covered by remaining input
+//                if (currentIndex + argument.length > input.size) {
+//                    // If this is the last argument or a greedy argument is next and the user is still typing it, partial input is okay
+//                    if (index == arguments.size - 1 || (arguments.getOrNull(index + 1)?.second?.greedy ?: false)) {
+//                        return true // Accept partial input for the last non-greedy argument or before a greedy one
+//                    }
+//                    return false // Not enough input for this non-greedy argument
+//                }
+//                currentIndex += argument.length
+//            } else {
+//                // For a greedy argument, ensure at least its minimum length is available
+//                if (currentIndex + argument.length > input.size) {
+//                    // Allow partial input for greedy arguments if it's the last argument
+//                    return index == arguments.size - 1
+//                }
+//                // Greedy argument consumes the rest; no need to check further
+//                return true
+//            }
+//        }
+//
+//        // If all non-greedy arguments up to the last one were satisfied with correct length, or a greedy argument had enough input
+//        return true
+//    }
+
     fun tabComplete(
         sender: CommandSender,
-        args: List<String>,
+        input: List<String>,
     ): List<String> {
-        if (args.isEmpty() || args.size > arguments.size) return emptyList()
+        if (!isCorrectSender(sender) || !hasPermission(sender)) return emptyList()
 
-        val currentArgIndex = args.size - 1
-        return arguments[currentArgIndex].second.tabComplete(sender, args.lastOrEmpty())
+        // Identify the argument the user is currently completing
+        val currentIndex = input.size - 1
+        var accumulatedIndex = 0
+
+        arguments.forEachIndexed { index, (argName, argument) ->
+            val isLastArgument = index == arguments.size - 1
+            val isGreedyArgument = argument.greedy
+
+            // Calculate the start and end index for the current argument's input
+            val startIndex = accumulatedIndex
+            var endIndex = accumulatedIndex + argument.length
+
+            // If the argument is greedy, or we are at the last argument, adjust endIndex to include all remaining input
+            if (isGreedyArgument || isLastArgument) endIndex = input.size
+
+            // Update accumulatedIndex for the next iteration
+            accumulatedIndex += argument.length
+
+            // Check if the current argument is the one being completed
+            if (currentIndex >= startIndex && currentIndex < endIndex) {
+                // For greedy and last arguments, include all remaining input; otherwise, limit to the argument's length
+                val relevantInput = if (currentIndex < input.size) input.subList(startIndex, endIndex).joinToString(" ") else ""
+                return argument.tabComplete(sender, relevantInput)
+            }
+        }
+
+        return emptyList()
     }
 
     fun isCorrectSender(sender: CommandSender): Boolean {

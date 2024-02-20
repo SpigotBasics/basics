@@ -103,5 +103,11 @@ data class TripleContextCoordinates(
                 Pair(string.toDouble(), Relativity.ABSOLUTE)
             }
         }
+
+        private val validSinglePartRegex = Regex("^(~|~~)?-?\\d*(\\.\\d+)?$")
+
+        fun isValidSinglePart(string: String): Boolean {
+            return string.matches(validSinglePartRegex)
+        }
     }
 }

@@ -10,7 +10,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 
-abstract class SelectorEntityArgBase<T>(name: String) : CommandArgument<T>(name) {
+abstract class SelectorEntityArgBase<T>(
+    name: String,
+    private val allowMultiple: Boolean,
+    private val allowEntities: Boolean,
+) : CommandArgument<T>(name) {
     protected enum class ErrorType {
         NOT_FOUND,
         NO_PERMISSION_SELECTORS,
@@ -27,21 +31,39 @@ abstract class SelectorEntityArgBase<T>(name: String) : CommandArgument<T>(name)
         sender: CommandSender,
         typing: String,
     ): List<String> {
+        val playerNames = getPlayerNames(sender)
+        val selectors = getSelectors(sender)
+        return (playerNames + selectors).partialMatches(typing)
+    }
+
+    private fun getPlayerNames(sender: CommandSender): List<String> {
         return Bukkit.getOnlinePlayers().filter {
             if (sender is Player) {
                 sender.canSee(it)
             } else {
                 true
             }
-        }.map { it.name }.partialMatches(typing)
+        }.map { it.name }
+    }
+
+    private fun getSelectors(sender: CommandSender): List<String> {
+        if (!sender.hasPermission(selectorPermission)) {
+            return emptyList()
+        }
+        val list = mutableListOf("@p", "@r", "@s")
+        if (allowEntities && allowMultiple) {
+            list.add("@e")
+        }
+        if (allowMultiple) {
+            list.add("@a")
+        }
+        return list
     }
 
     // TODO: Additional canSee check for all matched players?
     protected fun get(
         sender: CommandSender,
         value: String,
-        allowMultiple: Boolean,
-        allowEntities: Boolean,
     ): Either<ErrorType, List<Entity>> {
         val onePlayer = Bukkit.getPlayer(value)
         if (onePlayer != null) {
@@ -75,10 +97,8 @@ abstract class SelectorEntityArgBase<T>(name: String) : CommandArgument<T>(name)
     protected fun errorMessage0(
         sender: CommandSender,
         value: String,
-        allowMultiple: Boolean,
-        allowEntities: Boolean,
     ): Message {
-        return when (get(sender, value, allowMultiple, allowEntities).leftOrNull()) {
+        return when (get(sender, value).leftOrNull()) {
             ErrorType.NOT_FOUND -> Basics.messages.playerNotFound(value)
             ErrorType.NOT_FOUND_ENTITY -> Basics.messages.selectorMatchesNoEntities(name, value)
             ErrorType.NO_PERMISSION_SELECTORS -> Basics.messages.noPermission(selectorPermission)

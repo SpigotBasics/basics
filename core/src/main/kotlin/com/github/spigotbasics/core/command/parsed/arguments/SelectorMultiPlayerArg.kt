@@ -4,12 +4,12 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class SelectorMultiPlayerArg(name: String) : SelectorEntityArgBase<List<Player>>(name) {
+class SelectorMultiPlayerArg(name: String) : SelectorEntityArgBase<List<Player>>(name, allowMultiple = true, allowEntities = false) {
     override fun parse(
         sender: CommandSender,
         value: String,
     ): List<Player>? {
-        return get(sender, value, allowMultiple = true, allowEntities = false).fold(
+        return get(sender, value).fold(
             { _ -> null },
             { it },
         )?.map { it as Player }
@@ -19,6 +19,6 @@ class SelectorMultiPlayerArg(name: String) : SelectorEntityArgBase<List<Player>>
         sender: CommandSender,
         value: String,
     ): Message {
-        return errorMessage0(sender, value, allowMultiple = true, allowEntities = false)
+        return errorMessage0(sender, value)
     }
 }
