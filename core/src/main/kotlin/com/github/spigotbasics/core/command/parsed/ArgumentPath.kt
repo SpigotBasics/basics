@@ -217,10 +217,11 @@ class ArgumentPath<T : CommandContext>(
     ): Boolean {
         if (!isCorrectSender(sender) || !hasPermission(sender)) return false
 
+        logger.debug(300, ">> Matching start: $this")
         var accumulatedInputCount = 0
         for ((index, pair) in arguments.withIndex()) {
             val (_, argument) = pair
-            val isLastArgument = index == arguments.size - 1
+            val isLastArgument = index == input.size - 1 || index == arguments.size - 1
 
             // Calculate the expected count of inputs for this argument
             val expectedCount = if (argument.greedy) input.size - accumulatedInputCount else argument.length
@@ -230,8 +231,15 @@ class ArgumentPath<T : CommandContext>(
             // Update the accumulated input count for the next argument
             accumulatedInputCount += availableInputs.size
 
+            logger.debug(400, "accumulatedInputCount: $accumulatedInputCount")
+            logger.debug(400, "expectedCount: $expectedCount")
+            logger.debug(400, "availableInputs: $availableInputs")
+            logger.debug(400, "argumentInput: $argumentInput")
+            logger.debug(400, "isLastArgument: $isLastArgument")
+
             // If it's not the last argument and parsing fails, return false
             if (!isLastArgument && argument.parse(sender, argumentInput) == null) {
+                logger.debug(400, "Failure: !isLastArgument && argument.parse(sender, argumentInput) == null")
                 return false
             }
 
@@ -240,15 +248,18 @@ class ArgumentPath<T : CommandContext>(
                 // If there's enough input for the argument to potentially parse, return true (assume user might complete it)
                 // If argument is greedy, always return true since we're accommodating partial input
                 if (argument.greedy || argument.parse(sender, argumentInput) != null) {
+                    logger.debug(400, "Success: isLastArgument && (argument.greedy || argument.parse(sender, argumentInput) != null)")
                     return true
                 } else {
                     // For non-greedy last argument, it's okay if parsing fails due to partial input
+                    logger.debug(400, "Failure: isLastArgument && ! (argument.greedy || argument.parse(sender, argumentInput) != null)")
                     return availableInputs.size >= argument.length
                 }
             }
         }
 
         // If the loop completes without returning, all arguments except possibly the last have parsed successfully
+        logger.debug(400, "-> true")
         return true
     }
 
@@ -295,6 +306,11 @@ class ArgumentPath<T : CommandContext>(
         val currentIndex = input.size - 1
         var accumulatedIndex = 0
 
+        logger.debug(300, "Tabcompleting:")
+        logger.debug(300, "ArgumentPath: $this")
+        logger.debug(300, "currentIndex: $currentIndex")
+        logger.debug(300, "input: $input")
+
         arguments.forEachIndexed { index, (argName, argument) ->
             val isLastArgument = index == arguments.size - 1
             val isGreedyArgument = argument.greedy
@@ -309,10 +325,16 @@ class ArgumentPath<T : CommandContext>(
             // Update accumulatedIndex for the next iteration
             accumulatedIndex += argument.length
 
+            logger.debug(300, "argName: $argName")
+            logger.debug(300, "startIndex: $startIndex")
+            logger.debug(300, "endIndex: $endIndex")
+            logger.debug(300, "accumulatedIndex: $accumulatedIndex")
+
             // Check if the current argument is the one being completed
             if (currentIndex >= startIndex && currentIndex < endIndex) {
                 // For greedy and last arguments, include all remaining input; otherwise, limit to the argument's length
                 val relevantInput = if (currentIndex < input.size) input.subList(startIndex, endIndex).joinToString(" ") else ""
+                logger.debug(200, "TabComplete @ ${argument.name}, relevantInput: $relevantInput")
                 return argument.tabComplete(sender, relevantInput)
             }
         }

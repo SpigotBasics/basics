@@ -1,6 +1,7 @@
 package com.github.spigotbasics.modules.basicscore
 
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
+import com.github.spigotbasics.core.command.parsed.arguments.SelectorMultiEntityArg
 import com.github.spigotbasics.core.command.parsed.arguments.TripleContextCoordinatesArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
@@ -147,7 +148,8 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
             .mapContext {
                 path {
                     arguments {
-                        named("test", TripleContextCoordinatesArg("Test"))
+                        named("entities", SelectorMultiEntityArg("Entities"))
+                        named("coords", TripleContextCoordinatesArg("Coordinates"))
                     }
                 }
             }.executor(TabTestCommand()).register()
