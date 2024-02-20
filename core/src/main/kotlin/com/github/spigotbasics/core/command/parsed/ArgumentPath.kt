@@ -334,6 +334,7 @@ class ArgumentPath<T : CommandContext>(
             if (currentIndex >= startIndex && currentIndex < endIndex) {
                 // For greedy and last arguments, include all remaining input; otherwise, limit to the argument's length
                 val relevantInput = if (currentIndex < input.size) input.subList(startIndex, endIndex).joinToString(" ") else ""
+                logger.debug(200, "TabComplete @ ${argument.name}, relevantInput: $relevantInput")
                 return argument.tabComplete(sender, relevantInput)
             }
         }

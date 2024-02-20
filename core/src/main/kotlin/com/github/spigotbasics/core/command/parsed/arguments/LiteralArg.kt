@@ -4,7 +4,6 @@ import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import org.bukkit.command.CommandSender
 
 open class LiteralArg(name: String) : CommandArgument<String>(name) {
-
     companion object {
         private val logger = BasicsLoggerFactory.getCoreLogger(LiteralArg::class)
     }
