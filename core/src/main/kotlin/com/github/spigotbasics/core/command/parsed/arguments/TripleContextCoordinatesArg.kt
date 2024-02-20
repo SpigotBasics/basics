@@ -1,9 +1,16 @@
 package com.github.spigotbasics.core.command.parsed.arguments
 
+import com.github.spigotbasics.core.extensions.lastOrEmpty
+import com.github.spigotbasics.core.extensions.partialMatches
+import com.github.spigotbasics.core.logger.BasicsLoggerFactory
 import com.github.spigotbasics.core.model.TripleContextCoordinates
 import org.bukkit.command.CommandSender
 
 class TripleContextCoordinatesArg(name: String) : CommandArgument<TripleContextCoordinates>(name) {
+    companion object {
+        val logger = BasicsLoggerFactory.getCoreLogger(TripleContextCoordinatesArg::class)
+    }
+
     override fun parse(
         sender: CommandSender,
         value: String,
@@ -19,10 +26,16 @@ class TripleContextCoordinatesArg(name: String) : CommandArgument<TripleContextC
         sender: CommandSender,
         typing: String,
     ): List<String> {
-        // println(typing)
-        // TODO: Add selectors and ~ ~~ for tabcomplete if has permission
-        // TODO: That requires passing the concat-ed string to the tabComplete method
-        return super.tabComplete(sender, typing)
+        logger.debug(1, typing)
+
+        val split = typing.split(" ")
+        if (split.size > 5) return emptyList()
+        for (previous in split.dropLast(1)) {
+            if (!TripleContextCoordinates.isValidSinglePart(previous)) {
+                return emptyList()
+            }
+        }
+        return listOf("~", "~~").partialMatches(split.lastOrEmpty())
     }
 
     override val greedy = true

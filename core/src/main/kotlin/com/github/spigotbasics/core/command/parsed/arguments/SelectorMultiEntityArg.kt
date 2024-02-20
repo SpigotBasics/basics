@@ -4,12 +4,12 @@ import com.github.spigotbasics.core.messages.Message
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 
-class SelectorMultiEntityArg(name: String) : SelectorEntityArgBase<List<Entity>>(name) {
+class SelectorMultiEntityArg(name: String) : SelectorEntityArgBase<List<Entity>>(name, allowMultiple = true, allowEntities = true) {
     override fun parse(
         sender: CommandSender,
         value: String,
     ): List<Entity>? {
-        return get(sender, value, allowMultiple = true, allowEntities = true).fold(
+        return get(sender, value).fold(
             { _ -> null },
             { it },
         )
@@ -19,6 +19,6 @@ class SelectorMultiEntityArg(name: String) : SelectorEntityArgBase<List<Entity>>
         sender: CommandSender,
         value: String,
     ): Message {
-        return errorMessage0(sender, value, allowMultiple = true, allowEntities = true)
+        return errorMessage0(sender, value)
     }
 }

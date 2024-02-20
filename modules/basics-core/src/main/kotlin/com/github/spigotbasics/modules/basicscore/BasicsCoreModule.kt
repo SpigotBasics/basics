@@ -1,6 +1,7 @@
 package com.github.spigotbasics.modules.basicscore
 
 import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
+import com.github.spigotbasics.core.command.parsed.arguments.TripleContextCoordinatesArg
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
 import com.github.spigotbasics.modules.basicscore.commands.CreateGiveCommand
@@ -141,5 +142,14 @@ class BasicsCoreModule(context: ModuleInstantiationContext) : AbstractBasicsModu
                 }
             }
             .register()
+
+        commandFactory.parsedCommandBuilder("tabtest", debugPermission)
+            .mapContext {
+                path {
+                    arguments {
+                        named("test", TripleContextCoordinatesArg("Test"))
+                    }
+                }
+            }.executor(TabTestCommand()).register()
     }
 }
