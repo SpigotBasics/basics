@@ -1,6 +1,6 @@
-| Command                        | Permission            |
-|--------------------------------|-----------------------|
-| `/entchant <entchant> <level>` | basics.enchant        |
+| Command                       | Permission            |
+|-------------------------------|-----------------------|
+| `/enchant <entchant> <level>` | basics.enchant        |
 
 
 > [!NOTE]  
