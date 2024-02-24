@@ -1,7 +1,7 @@
-| Command         | Permission        |
-|-----------------|-------------------|
-| `/fly`          | basics.fly        |
-| `/fly @targets` | basics.fly.others |
+| Command        | Permission        |
+|----------------|-------------------|
+| `/fly`         | basics.fly        |
+| `/fly @target` | basics.fly.others |
 
 
 > [!NOTE]  

@@ -1,6 +1,6 @@
-| Command                       | Permission |
-|-------------------------------|------------|
-| `/msg @reciepients <message>` | basics.msg |
+| Command                      | Permission |
+|------------------------------|------------|
+| `/msg @reciepient <message>` | basics.msg |
 
 
 > [!NOTE]  
