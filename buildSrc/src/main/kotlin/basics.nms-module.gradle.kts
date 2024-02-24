@@ -9,7 +9,6 @@ plugins {
 
 dependencies {
     compileOnly(project(":nms:facade"))
-    //paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
 }
 
 tasks.assemble {
