@@ -1,9 +1,9 @@
-| Command         | Permission         |
-|-----------------|--------------------|
-| `/heal`         | basics.heal        |
-| `/heal @target` | basics.heal.others |
-| `/feed`         | basics.feed        |
-| `/feed @target` | basics.feed.others |
+| Command          | Permission         |
+|------------------|--------------------|
+| `/heal`          | basics.heal        |
+| `/heal @targets` | basics.heal.others |
+| `/feed`          | basics.feed        |
+| `/feed @targets` | basics.feed.others |
 
 
 > [!NOTE]  
