@@ -1,3 +1,3 @@
-| Command                      | Permission |
-|------------------------------|------------|
-| `/msg @reciepient <message>` | basics.msg |
+| Command                   | Permission |
+|---------------------------|------------|
+| `/msg <player> <message>` | basics.msg |

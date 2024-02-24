@@ -1,4 +1,4 @@
-| Command               | Permission               |
-|-----------------------|--------------------------|
-| `/enderchest`         | basics.enderchest        |
-| `/enderchest @target` | basics.enderchest.others |
+| Command                | Permission               |
+|------------------------|--------------------------|
+| `/enderchest`          | basics.enderchest        |
+| `/enderchest <player>` | basics.enderchest.others |

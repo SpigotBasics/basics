@@ -1,6 +1,6 @@
 | Command          | Permission         |
 |------------------|--------------------|
 | `/heal`          | basics.heal        |
-| `/heal @targets` | basics.heal.others |
+| `/heal <player>` | basics.heal.others |
 | `/feed`          | basics.feed        |
-| `/feed @targets` | basics.feed.others |
+| `/feed <player>` | basics.feed.others |
