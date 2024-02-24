@@ -4,7 +4,3 @@
 | `/heal @targets` | basics.heal.others |
 | `/feed`          | basics.feed        |
 | `/feed @targets` | basics.feed.others |
-
-
-> [!NOTE]  
-> Using selectors additionally requires permission `basics.selectors`.
