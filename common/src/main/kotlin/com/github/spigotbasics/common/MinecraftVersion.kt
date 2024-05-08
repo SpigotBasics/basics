@@ -13,6 +13,8 @@ data class MinecraftVersion(
     val patch: Int = 0,
 ) : Comparable<MinecraftVersion> {
     companion object {
+        val v1_20_6 = MinecraftVersion(1, 20, 6)
+        val v1_20_5 = MinecraftVersion(1, 20, 5)
         val v1_20_4 = MinecraftVersion(1, 20, 4)
         val v1_20_3 = MinecraftVersion(1, 20, 3)
 
