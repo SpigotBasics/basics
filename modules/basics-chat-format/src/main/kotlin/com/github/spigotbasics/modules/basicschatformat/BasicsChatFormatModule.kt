@@ -91,7 +91,7 @@ class BasicsChatFormatModule(context: ModuleInstantiationContext) : AbstractBasi
 
     override fun savePlayerData(uuid: UUID): CompletableFuture<Void?> {
         val chatDatum = chatFormatStore.chatFormatData[uuid]
-        val storage = storage ?: error("Storage is null")
+        val storage = storage
         return storage.setJsonElement(uuid.toString(), Serialization.toJson(chatDatum))
     }
 
