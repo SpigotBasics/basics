@@ -43,7 +43,7 @@ class BasicsEnderchestModule(context: ModuleInstantiationContext) : AbstractBasi
                     context: MapContext,
                 ) {
                     val playerSender = sender as Player
-                    val player = if (context["player"] != null) context["player"] as Player else sender as Player
+                    val player = if (context["player"] != null) context["player"] as Player else playerSender
                     val setTitle = player != sender
 
                     val view = playerSender.openInventory(player.enderChest)
