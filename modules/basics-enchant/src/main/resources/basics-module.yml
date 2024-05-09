@@ -1,4 +1,4 @@
-main-class: com.github.spigotbasics.modules.basicsenchant.BasicsEnchantModule
+main-class: com.github.spigotbasics.modules.basicsenchant.v2.BasicsEnchantModule
 name: basics-enchant
 version: ${moduleVersion}
 description: Allows enchanting items using /enchant

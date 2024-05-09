@@ -1,107 +1,78 @@
 package com.github.spigotbasics.modules.basicsenchant
 
-import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.common.CommandResult
-import com.github.spigotbasics.core.command.raw.RawCommandContext
-import com.github.spigotbasics.core.extensions.partialMatches
-import com.github.spigotbasics.core.extensions.toHumanReadable
+import com.github.spigotbasics.core.command.parsed.arguments.BukkitRegistryArg
+import com.github.spigotbasics.core.command.parsed.arguments.IntRangeArg
+import com.github.spigotbasics.core.command.parsed.arguments.SelectorMultiEntityArg
+import com.github.spigotbasics.core.command.parsed.arguments.SelectorSinglePlayerArg
+import com.github.spigotbasics.core.config.ConfigName
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
-import org.bukkit.Bukkit
+import com.github.spigotbasics.modules.basicsenchant.command.EnchantmentCommandOther
+import com.github.spigotbasics.modules.basicsenchant.command.EnchantmentCommandSelf
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 
 class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val permission =
+    private val commandPermission =
+        permissionManager.createSimplePermission("basics.enchant", "Allows players access to the /enchant command")
+    private val commandOtherPermission = permissionManager.createSimplePermission(
+        "basics.enchant.other",
+        "Allows players access to the /enchant command to enchant others"
+    )
+    val unsafeLevelsPermission =
         permissionManager.createSimplePermission(
-            "basics.enchant",
-            "Allows the player to enchant items",
+            "basics.enchant.unsafe.level",
+            "Allows assignment of unsafe levels for enchantments",
+        )
+    val unsafeEnchantPermission =
+        permissionManager.createSimplePermission(
+            "basics.enchant.unsafe.enchant",
+            "Allows assignment of unsafe enchantments to item",
         )
 
-    val permissionUnsafeLevels =
-        permissionManager.createSimplePermission(
-            "basics.enchant.allowunsafe",
-            "Allows the player to enchant items with unsafe levels",
-        )
-
-    val enchantments = Bukkit.getRegistry(Enchantment::class.java)?.map { it.key.key.lowercase() }?.toList() ?: emptyList()
-
-    val enchantmentPermissions =
-        Bukkit.getRegistry(Enchantment::class.java)?.associateWith { enchantment ->
-            val name = enchantment.key.key.lowercase()
-            permissionManager.createSimplePermission(
-                "basics.enchant.$name",
-                "Allows the player to enchant items with the ${name.toHumanReadable()} enchantment",
-            )
-        } ?: emptyMap()
-
-    fun msgEnchantedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("enchanted-self").tags(tag)
-
-    // TODO: Cannot enchant others stuff yet
-    fun msgEnchantedOthers(
-        tag: EnchantOperationMessageTag,
-        player: Player,
-    ) = messages.getMessage("enchanted-others")
-        .tags(tag)
-        .concerns(player)
-
-    fun msgRemovedSelf(tag: EnchantOperationMessageTag) = messages.getMessage("removed-self").tags(tag)
+    override val messages: Messages = getConfig(ConfigName.MESSAGES, Messages::class.java)
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("enchant", permission)
-            .description("Enchants the item in the player's hand")
-            .usage("<enchantment> [level]")
-            .executor(EnchantExecutor())
-            .register()
-    }
-
-    inner class EnchantExecutor : BasicsCommandExecutor(this@BasicsEnchantModule) {
-        override fun execute(context: RawCommandContext): CommandResult {
-            val player = requirePlayerOrMustSpecifyPlayerFromConsole(context.sender) // TODO: Create a requirePlayer(Sender) method
-            val args = context.args
-            if (args.size == 0) return CommandResult.USAGE
-            val item = requireItemInHand(player)
-            val enchantment = getEnchantment(args[0]) ?: throw failInvalidArgument(args[0]).asException()
-            var desiredLevel = (item.itemMeta?.getEnchantLevel(enchantment) ?: 0) + 1
-            val maxLevel = enchantment.maxLevel
-            if (args.size > 1) {
-                desiredLevel = args[1].toIntOrNull() ?: throw failInvalidArgument(args[1]).asException()
+        val instance = this
+        commandFactory.parsedCommandBuilder("enchant", commandPermission).mapContext {
+            val basicExecutor = EnchantmentCommandSelf(instance)
+            val otherExecutor = EnchantmentCommandOther(instance)
+            usage = "<enchantment> [level]"
+            path {
+                playerOnly()
+                arguments {
+                    named("enchantment", BukkitRegistryArg("enchantment", Enchantment::class.java))
+                }
+                executor(basicExecutor)
             }
 
-            // Unsafe levels require extra perm
-            if (desiredLevel > maxLevel) {
-                requirePermission(context.sender, permissionUnsafeLevels)
+            path {
+                playerOnly()
+                arguments {
+                    named("enchantment", BukkitRegistryArg("enchantment", Enchantment::class.java))
+                    named("level", IntRangeArg("level", { 0 }, { 255 }))
+                    executor(basicExecutor)
+                }
             }
 
-            // Enchantment-specific permissions
-            enchantmentPermissions[enchantment]?.let { requirePermission(context.sender, it) }
-
-            val tag = EnchantOperationMessageTag(item, enchantment, desiredLevel)
-
-            if (desiredLevel == 0) {
-                item.removeEnchantment(enchantment) // TODO: message "removed enchantment"
-                msgRemovedSelf(tag).sendToPlayer(player)
-                return CommandResult.SUCCESS
+            path {
+                permissions(commandOtherPermission)
+                arguments {
+                    named("targets", SelectorMultiEntityArg("targets"))
+                    named("enchantment", BukkitRegistryArg("enchantment", Enchantment::class.java))
+                    named("level", IntRangeArg("level", { 0 }, { 255 }))
+                    executor(otherExecutor)
+                }
             }
 
-            item.addUnsafeEnchantment(
-                enchantment,
-                desiredLevel,
-            ) // TODO: Separate permission for unsafe enchants, separate permission for max-level and for enchantment type
-            msgEnchantedSelf(tag).sendToPlayer(player)
-            return CommandResult.SUCCESS
-        }
-
-        override fun tabComplete(context: RawCommandContext): List<String>? {
-            val args = context.args
-            if (args.size == 1) {
-                return enchantments.partialMatches(args[0])
+            path {
+                permissions(commandOtherPermission)
+                arguments {
+                    named("player", SelectorSinglePlayerArg("player"))
+                    named("enchantment", BukkitRegistryArg("enchantment", Enchantment::class.java))
+                    named("level", IntRangeArg("level", { 0 }, { 255 }))
+                    executor(otherExecutor)
+                }
             }
-            return null
-        }
-
-        private fun getEnchantment(name: String): Enchantment? {
-            return Bukkit.getRegistry(Enchantment::class.java)?.match(name.lowercase())
-        }
+        }.register()
     }
 }

@@ -15,7 +15,10 @@ class SpigotChatEventListener(private val module: BasicsChatFormatModule) : List
         event.format =
             module.chatFormat.concerns(event.player)
                 .tagUnparsed("message", event.message) // TODO: To allow MiniMessage in chat, this should be parsed.
-                .tagParsed("message-color", "<${module.chatFormatStore.getChatDataOrDefault(event.player.uniqueId).color}>").toLegacyString()
+                .tagParsed(
+                    "message-color",
+                    "<${module.chatFormatStore.getChatDataOrDefault(event.player.uniqueId).color}>",
+                ).toLegacyString()
                 .escapeFormat()
     }
 }

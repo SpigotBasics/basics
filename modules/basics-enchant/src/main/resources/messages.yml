@@ -1,5 +1,12 @@
-# Tags: <#item>
+# Tags: <#item> <#enchantment> <#roman-level>
 enchanted-self: "<def_text>Enchanted your <lite_text><#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
-# TODO: Cannot enchant others' items yet
+# Tags: <#item> <#enchantment> <#roman-level> <#entity>
+enchanted-entity: "<def_text>Enchanted <lite_text><#entity>'s <#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
+# Tags: <#item> <#enchantment> <#roman-level> <#player-name-genitive-suffix>
 enchanted-others: "<def_text>Enchanted <player-dm><#player-name-genitive-suffix> <lite_text><#item></lite_text> with <lite_text><#enchantment> <#roman-level></lite_text>!</def_text>"
-removed-self: "<dark_text>Removed <dark_text><#enchantment></dark_text> from your <dark_text><#item></dark_text>!"
+# Tags: <#item> <#enchantment>
+enchanted-invalid-combination-self: "<error><red>Can not enchant <lite_text><#item></lite_text> with <lite_text><#enchantment></lite_text> because it is not applicable to this item"
+# Tags: <#item> <#enchantment> <#entity>
+enchanted-invalid-combination-entity: "<error><red>Can not enchant <lite_text><#entity>'s <#item></lite_text> with <lite_text><#enchantment></lite_text> because it is not applicable to this item"
+# Tags: <#item> <#enchantment> <#player-name-genitive-suffix>
+enchanted-invalid-combination-others: "<error><red>Can not enchant <lite_text><player-dm><#player-name-genitive-suffix> <#item></lite_text> with <lite_text><#enchantment></lite_text> because it is not applicable to this item"
