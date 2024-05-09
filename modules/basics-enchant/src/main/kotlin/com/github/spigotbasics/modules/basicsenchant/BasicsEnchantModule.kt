@@ -14,10 +14,11 @@ import org.bukkit.enchantments.Enchantment
 class BasicsEnchantModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
     private val commandPermission =
         permissionManager.createSimplePermission("basics.enchant", "Allows players access to the /enchant command")
-    private val commandOtherPermission = permissionManager.createSimplePermission(
-        "basics.enchant.other",
-        "Allows players access to the /enchant command to enchant others"
-    )
+    private val commandOtherPermission =
+        permissionManager.createSimplePermission(
+            "basics.enchant.other",
+            "Allows players access to the /enchant command to enchant others",
+        )
     val unsafeLevelsPermission =
         permissionManager.createSimplePermission(
             "basics.enchant.unsafe.level",
