@@ -1,10 +1,11 @@
 package com.github.spigotbasics.modules.basicshealth
 
-import com.github.spigotbasics.core.command.common.BasicsCommandExecutor
-import com.github.spigotbasics.core.command.common.CommandResult
-import com.github.spigotbasics.core.command.raw.RawCommandContext
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.arguments.SelectorSinglePlayerArg
+import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
@@ -38,79 +39,63 @@ class BasicsHealthModule(context: ModuleInstantiationContext) : AbstractBasicsMo
     private fun msgFedOthers(player: Player) = messages.getMessage("fed-others").concerns(player)
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("heal", permHeal)
-            .description("Heals Players")
-            .usage("[player]")
-            .executor(HealCommandExecutor(this))
-            .register()
-        commandFactory.rawCommandBuilder("feed", permFeed)
-            .description("Feeds Players")
-            .usage("[player]")
-            .executor(FeedCommandExecutor(this))
-            .register()
-    }
+        commandFactory.parsedCommandBuilder("heal", permHeal).mapContext {
+            description("Heals Players")
+            usage = "[player]"
 
-    inner class HealCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
-        override fun execute(context: RawCommandContext): CommandResult {
-            val player =
-                if (context.args.size == 1) {
-                    requirePermission(context.sender, module.permHealOthers)
-                    requirePlayer(context.args[0])
-                } else {
-                    requirePlayer(context.sender)
+            path {
+                arguments {
+                    playerOnly()
                 }
-
-            player.health = player.healthScale
-
-            val message =
-                if (context.sender == player) {
-                    module.msgHealed
-                } else {
-                    module.msgHealedOthers(player)
-                }
-
-            message.sendToSender(context.sender)
-            return CommandResult.SUCCESS
-        }
-
-        override fun tabComplete(context: RawCommandContext): MutableList<String>? {
-            return if (context.args.size == 1 && context.sender.hasPermission(module.permHealOthers)) {
-                null
-            } else {
-                mutableListOf()
             }
-        }
-    }
 
-    inner class FeedCommandExecutor(private val module: BasicsHealthModule) : BasicsCommandExecutor(module) {
-        override fun execute(context: RawCommandContext): CommandResult {
-            val player =
-                if (context.args.size == 1) {
-                    requirePermission(context.sender, module.permFeedOthers)
-                    requirePlayer(context.args[0])
-                } else {
-                    requirePlayer(context.sender)
+            path {
+                arguments {
+                    permissions(permHealOthers)
+                    named("player", SelectorSinglePlayerArg("player"))
                 }
-
-            player.foodLevel = 20
-
-            val message =
-                if (context.sender == player) {
-                    module.msgFed
-                } else {
-                    module.msgFedOthers(player)
-                }
-
-            message.sendToSender(context.sender)
-            return CommandResult.SUCCESS
-        }
-
-        override fun tabComplete(context: RawCommandContext): MutableList<String>? {
-            return if (context.args.size == 1 && context.sender.hasPermission(module.permFeedOthers)) {
-                null
-            } else {
-                mutableListOf()
             }
-        }
+        }.executor(
+            object : CommandContextExecutor<MapContext> {
+                override fun execute(
+                    sender: CommandSender,
+                    context: MapContext,
+                ) {
+                    val target = if (context["player"] != null) context["player"] as Player else sender as Player
+                    target.health = target.healthScale
+                    val message = if (sender == target) msgHealed else msgHealedOthers(target)
+                    message.sendToSender(sender)
+                }
+            },
+        ).register()
+        commandFactory.parsedCommandBuilder("feed", permFeed).mapContext {
+            description("Feeds Players")
+            usage = "[player]"
+
+            path {
+                arguments {
+                    playerOnly()
+                }
+            }
+
+            path {
+                permissions(permFeedOthers)
+                arguments {
+                    named("player", SelectorSinglePlayerArg("player"))
+                }
+            }
+        }.executor(
+            object : CommandContextExecutor<MapContext> {
+                override fun execute(
+                    sender: CommandSender,
+                    context: MapContext,
+                ) {
+                    val target = if (context["player"] != null) context["player"] as Player else sender as Player
+                    target.foodLevel = 20
+                    val message = if (sender == target) msgFed else msgFedOthers(target)
+                    message.sendToSender(sender)
+                }
+            },
+        ).register()
     }
 }

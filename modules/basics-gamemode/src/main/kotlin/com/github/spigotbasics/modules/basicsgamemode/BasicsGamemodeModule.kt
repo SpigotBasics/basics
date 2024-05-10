@@ -58,9 +58,11 @@ class BasicsGamemodeModule(context: ModuleInstantiationContext) : AbstractBasics
                 arguments {
                     named("gamemode", GameModeArgument(instance, "gamemode"))
                 }
+            }
 
+            path {
+                permissions(permOthers)
                 arguments {
-                    permissions(permOthers)
                     named("gamemode", GameModeArgument(instance, "gamemode"))
                     named("target", SelectorSinglePlayerArg("target"))
                 }

@@ -1,6 +1,7 @@
 package com.github.spigotbasics.modules.basicsgamemode
 
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
+import com.github.spigotbasics.core.extensions.partialMatches
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 
@@ -37,6 +38,6 @@ class GameModeArgument(private val module: BasicsGamemodeModule, name: String) :
             list += "spectator"
         }
 
-        return list
+        return list.partialMatches(typing)
     }
 }
