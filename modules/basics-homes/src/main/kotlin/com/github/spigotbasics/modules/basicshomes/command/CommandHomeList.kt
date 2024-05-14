@@ -1,12 +1,12 @@
-package com.github.spigotbasics.modules.basicshomes.v2.command
+package com.github.spigotbasics.modules.basicshomes.command
 
 import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
 import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.messages.tags.MESSAGE_SPECIFIC_TAG_PREFIX
+import com.github.spigotbasics.modules.basicshomes.BasicsHomesModule
+import com.github.spigotbasics.modules.basicshomes.HomeStore
 import com.github.spigotbasics.modules.basicshomes.data.Home
-import com.github.spigotbasics.modules.basicshomes.v2.BasicsHomesModule
-import com.github.spigotbasics.modules.basicshomes.v2.HomeStore
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

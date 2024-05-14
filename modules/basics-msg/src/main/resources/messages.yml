@@ -1,0 +1,10 @@
+# Tags: <#message>
+format-received: "<dark_text>[ <negative_text><player-dm></negative_text> » <negative_text>You</negative_text> ]</dark_text><reset> <negative_text><#message>"
+format-sent: "<dark_text>[ <negative_text>You</negative_text> » <negative_text><player-dm></negative_text> ]</dark_text><reset> <negative_text><#message>"
+format-self: "<dark_text>[ <negative_text>You » Yourself</negative_text> ]</dark_text><reset> <negative_text><#message>"
+format-console: "<dark_text>[ <red>Console</red> » You ]</dark_text><reset> <negative_text><#message>"
+format-other: "<dark_text>[ <gray>Unknown</gray> » You ]</dark_text><reset> <negative_text><#message>"
+
+# Tags: NONE
+no-recent-messages: "<error><error_red>You have not recently messaged someone so you can not respond</error_red>"
+recent-not-online: "<error><error_red>The player you last sent a message to is not online and can not be messaged</error_red>"

@@ -1,4 +1,4 @@
-package com.github.spigotbasics.modules.basicshomes.v2
+package com.github.spigotbasics.modules.basicshomes
 
 import com.github.spigotbasics.core.Serialization
 import com.github.spigotbasics.modules.basicshomes.data.Home

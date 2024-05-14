@@ -1,9 +1,9 @@
-package com.github.spigotbasics.modules.basicshomes.v2.command
+package com.github.spigotbasics.modules.basicshomes.command
 
 import com.github.spigotbasics.core.command.parsed.arguments.CommandArgument
 import com.github.spigotbasics.core.extensions.partialMatches
+import com.github.spigotbasics.modules.basicshomes.HomeStore
 import com.github.spigotbasics.modules.basicshomes.data.Home
-import com.github.spigotbasics.modules.basicshomes.v2.HomeStore
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
