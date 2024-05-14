@@ -25,6 +25,7 @@ missing-value-for-argument: "<error><red>Missing value for <bright_red><#argumen
 invalid-argument: "<error><red>Invalid argument: </red><bright_red><#argument></bright_red>"
 player-not-found: "<error><red>Player not found: </red><bright_red><#argument></bright_red>"
 world-not-found: "<error><red>World not found: </red><bright_red><#argument></bright_red>"
+world-not-loaded: "<error><red>World not loaded: </red><bright_red><#argument></bright_red>"
 unsupported-server-software: "<error><red>Your server software does not support <bright_red><hover:show_text:'<gray>Missing class/method:</gray> <#argument>'>this feature</hover></bright_red>!</red>"
 not-enough-arguments-given-for-argument: "<error><red>Not enough arguments given for argument <bright_red><#argument></bright_red>!</red>"
 

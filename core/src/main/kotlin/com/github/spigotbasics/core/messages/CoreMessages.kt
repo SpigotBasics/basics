@@ -35,6 +35,8 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
 
     fun worldNotFound(name: String) = getMessage("world-not-found").tagUnparsed("argument", name)
 
+    fun worldNotLoaded(name: String) = getMessage("world-not-loaded").tagUnparsed("argument", name)
+
     fun unsupportedServerSoftware(feature: String) = getMessage("unsupported-server-software").tagParsed("argument", feature)
 
     fun selectorIncludesEntities(

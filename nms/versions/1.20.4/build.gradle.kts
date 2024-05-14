@@ -1,6 +1,6 @@
 plugins {
     id("basics.nms-module")
-    id("io.papermc.paperweight.userdev") version "1.7.0"
+    id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
 dependencies {
