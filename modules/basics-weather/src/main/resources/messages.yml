@@ -1,5 +1,6 @@
 # Tags: <#new-weather>
 weather-changed: "<def_text>Set the weather to <lite_text><#new-weather></lite_text>."
 
-storm: "storm"
 clear: "clear"
+rain: "rain"
+thunder: "thunder"

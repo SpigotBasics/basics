@@ -1,28 +1,65 @@
 package com.github.spigotbasics.modules.basicsweather
 
+import com.github.spigotbasics.core.command.parsed.CommandContextExecutor
+import com.github.spigotbasics.core.command.parsed.arguments.IntArg
+import com.github.spigotbasics.core.command.parsed.context.MapContext
+import com.github.spigotbasics.core.messages.Message
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
-import org.bukkit.WeatherType
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
 class BasicsWeatherModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
-    val perm = permissionManager.createSimplePermission("basics.weather", "Allows the user to change the weather")
+    private val permission = permissionManager.createSimplePermission("basics.weather")
 
-    val msgClear get() = messages.getMessage("clear")
-    val msgStorm get() = messages.getMessage("storm")
-    val msgWeatherChanged get() = messages.getMessage("weather-changed")
+    private val weatherChangedMessage
+        get() = messages.getMessage("weather-changed")
+    private val clearMessage
+        get() = messages.getMessage("clear")
+    private val rainMessage
+        get() = messages.getMessage("rain")
+    private val thunderMessage
+        get() = messages.getMessage("thunder")
 
     override fun onEnable() {
-        commandFactory.rawCommandBuilder("weather", perm)
-            .usage("<clear|storm> [duration]")
-            .executor(WeatherCommand(this))
-            .register()
-    }
+        commandFactory.parsedCommandBuilder("weather", permission).mapContext {
+            usage = "<weather-type>"
+            description("Sets the weather of the world")
 
-    fun weatherTypeFromString(str: String): WeatherType? {
-        return when (str.lowercase()) {
-            "sun", "clear", "sunny" -> WeatherType.CLEAR
-            "storm", "rain", "rainy", "stormy" -> WeatherType.DOWNFALL
-            else -> null
-        }
+            path {
+                arguments {
+                    playerOnly()
+                    named("type", BasicsWeatherTypeArg("type"))
+                }
+            }
+
+            path {
+                arguments {
+                    playerOnly()
+                    named("type", BasicsWeatherTypeArg("type"))
+                    named("duration", IntArg("duration"))
+                }
+            }
+        }.executor(
+            object : CommandContextExecutor<MapContext> {
+                override fun execute(
+                    sender: CommandSender,
+                    context: MapContext,
+                ) {
+                    val player = sender as Player
+                    val type = context["type"] as BasicsWeatherType
+                    val duration = context["duration"] as Int?
+                    type.activate(player.world, duration)
+                    val statusMessage: Message =
+                        when (type) {
+                            BasicsWeatherType.CLEAR -> clearMessage
+                            BasicsWeatherType.RAIN -> rainMessage
+                            BasicsWeatherType.THUNDER -> thunderMessage
+                        }
+
+                    weatherChangedMessage.tagMessage("new-weather", statusMessage).concerns(player).sendToPlayer(player)
+                }
+            },
+        ).register()
     }
 }
