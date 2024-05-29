@@ -1,3 +1,4 @@
-| Command                   | Permission |
-|---------------------------|------------|
-| `/msg <player> <message>` | basics.msg |
+| Command                       | Permission     |
+|-------------------------------|----------------|
+| `/message <player> <message>` | basics.msg     |
+| `/respond <message>`          | basics.respond |            
