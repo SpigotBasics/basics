@@ -1,5 +1,6 @@
-package com.github.spigotbasics.modules.basicschatformat
+package com.github.spigotbasics.modules.basicschatformat.listener
 
+import com.github.spigotbasics.modules.basicschatformat.BasicsChatFormatModule
 import com.github.spigotbasics.pipe.SerializedMiniMessage
 import com.github.spigotbasics.pipe.paper.NativeComponentConverter
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -19,14 +20,14 @@ class PaperChatEventListener(private val module: BasicsChatFormatModule) : Liste
         }
     }
 
-    fun formatMessage(
+    private fun formatMessage(
         player: Player,
         message: Component,
     ): Component {
         val serialized =
-            module.format.concerns(player)
+            module.chatFormat.concerns(player)
                 .tagMiniMessage("message", SerializedMiniMessage(mini.serialize(message)))
-                .tagParsed("message-color", "<${module.getChatDataOrDefault(player.uniqueId).color}>")
+                .tagParsed("message-color", "<${module.chatFormatStore.getChatDataOrDefault(player.uniqueId).color}}>")
                 .serialize()
         val component = NativeComponentConverter.toNativeComponent(serialized)
         return component

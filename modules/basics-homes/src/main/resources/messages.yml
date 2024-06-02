@@ -1,17 +1,13 @@
-# TODO: Add some system to auto-apply all home-related placeholders, not just name
-# Tags: <#home> // later / TODO: <#limit> <#regex> <#name> <#homes> <#x> <#y> <#z> <#world>
-home-set: "<def_text>Set home <lite_text><#home></lite_text> to your current location.</def_text>"
-home-deleted: "<dark_text>Deleted home <lite_text><#home></lite_text>.</dark_text>"
-home-teleported: "<def_text>Teleported to home <lite_text><#home></lite_text>.</def_text>"
-home-not-found: "<error><error_red>Home <bright_red><#home></bright_red> not found.</error_red>"
+# Tags: <#home>, <#x>, <#y>, <#z>, <#world>
+home-teleport: "<def_text>Teleported to home <lite_text><#home></lite_text>.<def_text>"
+home-set: "<def_text>Set home, <lite_text><#home></lite_text> to your current location.</def_text>"
+home-remove: "<dark_text>Deleted home <lite_text><#home></lite_text>.</dark_text>"
 
-home-none-set: "<error><error_red>You don't have any homes set.</error_red>"
+# Tags: <#home>
+home-not-found: "<error><error_red>Home not found.</error_red>"
 
 # Tags: <#limit>
 home-limit-reached: "<error><error_red>You cannot set more than <bright_red><#limit></bright_red> homes.</error_red>"
-
-# Tags: <#world> // TODO: Move to core messages
-home-world-not-loaded: "<error><error_red>World <bright_red><#world></bright_red> is not loaded.</error_red>"
 
 # Tags: <#regex>
 home-invalid-name: "<error><error_red>Invalid home name. Home names must match the following regex: <bright_red><#regex></bright_red></error_red>"
@@ -19,8 +15,11 @@ home-invalid-name: "<error><error_red>Invalid home name. Home names must match t
 # Tags: <#homes> (= home-list-entry + home-list-separator)
 home-list:
   - "<def_text>Available homes <lite_text>(Click to teleport)</lite_text>:</def_text>"
-  - "  <#homes>"
+  - "<#homes>"
 
 # Tags: <#name> <#x> <#y> <#z> <#world>
 home-list-entry: "<hover:show_text:'<lite_text><#home></lite_text>\nX: <lite_text><#x></lite_text> <dark_text>|</dark_text> Y: <lite_text><#y></lite_text> <dark_text>|</dark_text> Z: <lite_text><#z></lite_text> <dark_text>|</dark_text> <lite_text><#world></lite_text>\n<dark_text>Click to teleport</dark_text>'><lite_text><click:run_command:'/home <#home>'><#home></click></lite_text></hover>"
 home-list-separator: "<dark_text>, </dark_text>"
+
+# No Tags
+home-none-set: "<error><error_red>You don't have any homes set.</error_red>"

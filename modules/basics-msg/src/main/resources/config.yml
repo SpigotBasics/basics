@@ -1,5 +1,0 @@
-# Tags: <#message>
-format-received: "<dark_text>[ <negative_text><player-dm></negative_text> » <negative_text>You</negative_text> ]</dark_text><reset> <negative_text><#message>"
-format-sent: "<dark_text>[ <negative_text>You</negative_text> » <negative_text><player-dm></negative_text> ]</dark_text><reset> <negative_text><#message>"
-format-self: "<dark_text>[ <negative_text>You » Yourself</negative_text> ]</dark_text><reset> <negative_text><#message>"
-format-console: "<dark_text>[ <red>Console</red> » you ]</dark_text><reset> <negative_text><#message>"

@@ -9,3 +9,5 @@ repair-all-other: "<def_text>Repaired <lite_text><player-dm><#player-name-geniti
 
 # Repair message sent when you repair your own inventory
 repair-all-self: "<def_text>Repaired <lite_text>your</lite_text> inventory"
+
+repair-no-item: "<error><error_red>The target had no item in their hand</error_red>"

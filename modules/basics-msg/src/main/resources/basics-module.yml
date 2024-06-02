@@ -1,4 +1,4 @@
-main-class: com.github.spigotbasics.modules.basicsmsg.BasicsMsgModule
+main-class: com.github.spigotbasics.modules.basicsmsg.BasicsMessageModule
 name: basics-msg
 version: ${moduleVersion}
 description: "Simple private messaging"
