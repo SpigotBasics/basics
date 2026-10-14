@@ -1,0 +1,3 @@
+# Tags: <player-dm>
+afk-now: "<dark_text><player-dm> is now <lite_text>AFK</lite_text>.</dark_text>"
+afk-no-longer: "<dark_text><player-dm> is no longer <lite_text>AFK</lite_text>.</dark_text>"
