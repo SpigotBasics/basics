@@ -5,13 +5,16 @@ import com.github.spigotbasics.core.command.parsed.arguments.SelectorSinglePlaye
 import com.github.spigotbasics.core.command.parsed.context.MapContext
 import com.github.spigotbasics.core.module.AbstractBasicsModule
 import com.github.spigotbasics.core.module.loader.ModuleInstantiationContext
+import com.github.spigotbasics.core.storage.NamespacedStorage
+import com.google.gson.JsonPrimitive
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 
 class BasicsGodModule(context: ModuleInstantiationContext) : AbstractBasicsModule(context) {
     private val permission =
@@ -34,12 +37,15 @@ class BasicsGodModule(context: ModuleInstantiationContext) : AbstractBasicsModul
 
     private fun msgDisabledOthers(player: Player) = messages.getMessage("god-disabled-others").concerns(player)
 
-    private val godPlayers = mutableSetOf<UUID>()
+    private lateinit var storage: NamespacedStorage
+    private val godPlayers = ConcurrentHashMap.newKeySet<UUID>()
+    private val storedPlayers = ConcurrentHashMap.newKeySet<UUID>() // Players with god mode saved in storage
 
     override fun onEnable() {
+        storage = createStorage()
+
         eventBus.subscribe(EntityDamageEvent::class.java, ::onDamage, EventPriority.HIGH)
         eventBus.subscribe(FoodLevelChangeEvent::class.java, ::onFoodLevelChange, EventPriority.HIGH)
-        eventBus.subscribe(PlayerQuitEvent::class.java) { godPlayers.remove(it.player.uniqueId) }
 
         commandFactory.parsedCommandBuilder("god", permission).mapContext {
             usage = "[player]"
@@ -81,8 +87,23 @@ class BasicsGodModule(context: ModuleInstantiationContext) : AbstractBasicsModul
         ).register()
     }
 
-    override fun onDisable() {
-        godPlayers.clear()
+    override fun loadPlayerData(uuid: UUID): CompletableFuture<Void?> =
+        storage.getJsonElement(uuid.toString()).thenAccept { json ->
+            if (json != null) {
+                storedPlayers += uuid
+                godPlayers += uuid
+            }
+        }
+
+    override fun savePlayerData(uuid: UUID): CompletableFuture<Void?> {
+        val god = uuid in godPlayers
+        if (god == (uuid in storedPlayers)) return CompletableFuture.completedFuture(null)
+        return storage.setJsonElement(uuid.toString(), if (god) JsonPrimitive(true) else null)
+    }
+
+    override fun forgetPlayerData(uuid: UUID) {
+        godPlayers -= uuid
+        storedPlayers -= uuid
     }
 
     private fun onDamage(event: EntityDamageEvent) {
