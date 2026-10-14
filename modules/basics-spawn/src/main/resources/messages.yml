@@ -1,0 +1,4 @@
+spawn: "<def_text>Teleported to <lite_text>spawn</lite_text>.</def_text>"
+spawn-others: "<def_text>Teleported <player-dm> to <lite_text>spawn</lite_text>.</def_text>"
+# Tags: <#world>, <#x>, <#y>, <#z>
+spawn-set: "<def_text>Set the spawn of <lite_text><#world></lite_text> to <lite_text><#x> <#y> <#z></lite_text>.</def_text>"
