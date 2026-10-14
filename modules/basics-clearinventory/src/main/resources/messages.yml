@@ -1,0 +1,2 @@
+cleared: "<def_text>Cleared <lite_text>your</lite_text> inventory.</def_text>"
+cleared-others: "<def_text>Cleared <player-dm><#player-name-genitive-suffix> inventory.</def_text>"
