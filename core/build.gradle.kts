@@ -6,10 +6,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-}
-
 // api            = shaded, exposed to modules
 // apiCompileOnly = not shaded, exposed to modules
 // implementation = shaded, internal use only
