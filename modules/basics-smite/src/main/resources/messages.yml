@@ -1,0 +1,3 @@
+smite: "<def_text>Thou hast been <lite_text>smitten</lite_text>!</def_text>"
+smite-others: "<def_text>Smote <player-dm> with <lite_text>lightning</lite_text>!</def_text>"
+smite-block: "<def_text>Summoned <lite_text>lightning</lite_text>!</def_text>"
