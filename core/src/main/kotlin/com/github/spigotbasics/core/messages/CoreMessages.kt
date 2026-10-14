@@ -3,6 +3,7 @@ package com.github.spigotbasics.core.messages
 import com.github.spigotbasics.core.config.ConfigInstantiationContext
 import com.github.spigotbasics.core.config.SavedConfig
 import com.github.spigotbasics.core.extensions.toCompactStackTrace
+import com.github.spigotbasics.core.extensions.toShortString
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permissible
 import org.bukkit.permissions.Permission
@@ -103,6 +104,15 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
             .tagUnparsed("value", givenValue)
     }
 
+    fun invalidValueForArgumentMustBeNumber(
+        argumentName: String,
+        givenValue: String,
+    ): Message {
+        return getMessage("invalid-value-for-argument-must-be-number")
+            .tagUnparsed("argument", argumentName)
+            .tagUnparsed("value", givenValue)
+    }
+
     fun invalidValueForArgumentNumberNotInRange(
         argumentName: String,
         givenValue: Int,
@@ -114,6 +124,19 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
             .tagUnparsed("value", givenValue.toString())
             .tagUnparsed("min", min.toString())
             .tagUnparsed("max", max.toString())
+    }
+
+    fun invalidValueForArgumentNumberNotInRange(
+        argumentName: String,
+        givenValue: Float,
+        min: Float,
+        max: Float,
+    ): Message {
+        return getMessage("invalid-value-for-argument-number-not-in-range")
+            .tagUnparsed("argument", argumentName)
+            .tagUnparsed("value", givenValue.toShortString())
+            .tagUnparsed("min", min.toShortString())
+            .tagUnparsed("max", max.toShortString())
     }
 
     fun missingArgument(name: String) = getMessage("missing-value-for-argument").tagParsed("argument", name)

@@ -10,6 +10,7 @@ unknown-option: "<error><red>Unknown option: </red><color:#FF8888><#option></col
 # Tags: <#argument> <#value>
 invalid-value-for-argument: "<error><red>Invalid value for <bright_red><#argument></bright_red>: <bright_red><#value></bright_red></red>"
 invalid-value-for-argument-must-be-integer: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be an integer, was <dark_red><#value></dark_red>!</red>"
+invalid-value-for-argument-must-be-number: "<error><red>Invalid value for <bright_red><#argument></bright_red>: Must be a number, was <dark_red><#value></dark_red>!</red>"
 selector-includes-entities: "<error><red>Only players may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> includes entities!</red>"
 selector-matches-multiple-players: "<error><red>Only one player may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> matches multiple players!</red>"
 selector-matches-multiple-entities: "<error><red>Only one entity may be selected for argument <bright_red><#argument></bright_red>, but the provided selector <bright_red><#value></bright_red> matches multiple entities!</red>"
