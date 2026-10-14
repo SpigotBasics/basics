@@ -1,0 +1,4 @@
+god-enabled: "<def_text>God mode <lite_text>enabled</lite_text>.</def_text>"
+god-disabled: "<def_text>God mode <lite_text>disabled</lite_text>.</def_text>"
+god-enabled-others: "<def_text>Enabled god mode for <player-dm>.</def_text>"
+god-disabled-others: "<def_text>Disabled god mode for <player-dm>.</def_text>"
