@@ -1,0 +1,3 @@
+hat-equipped: "<def_text>Enjoy your new <lite_text>hat</lite_text>!</def_text>"
+hat-removed: "<def_text>You took off your <lite_text>hat</lite_text>.</def_text>"
+hat-cursed: "<error><error_red>Your current hat is cursed and can't be taken off</error_red>"
