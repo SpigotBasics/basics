@@ -1,0 +1,3 @@
+# Tags: <#world>, <#x>, <#y>, <#z>, <#yaw>, <#pitch>
+getpos: "<def_text>You are at <lite_text><#x> <#y> <#z></lite_text> in <lite_text><#world></lite_text> (yaw <#yaw>, pitch <#pitch>).</def_text>"
+getpos-others: "<player-dm><def_text> is at <lite_text><#x> <#y> <#z></lite_text> in <lite_text><#world></lite_text> (yaw <#yaw>, pitch <#pitch>).</def_text>"
