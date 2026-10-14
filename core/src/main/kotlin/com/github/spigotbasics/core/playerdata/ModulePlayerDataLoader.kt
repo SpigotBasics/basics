@@ -34,6 +34,7 @@ class ModulePlayerDataLoader(
 
     val cachedLoginData = ConcurrentHashMap<UUID, CompletableFuture<Void?>>()
     val scheduledClearCacheFutures = ConcurrentHashMap<UUID, ScheduledFuture<*>>()
+    private val pendingSaves = ConcurrentHashMap<UUID, CompletableFuture<Void?>>()
 
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
@@ -48,7 +49,9 @@ class ModulePlayerDataLoader(
 
         val future =
             cachedLoginData.computeIfAbsent(uuid) {
-                val newFuture = loadAll(uuid)
+                // Wait for a save (and forget) from a previous quit to finish, or we'd load stale data and lose it
+                val pendingSave = pendingSaves[uuid] ?: CompletableFuture.completedFuture(null)
+                val newFuture = pendingSave.handle { _, _ -> }.thenCompose { loadAll(uuid) }
                 scheduledClearCacheFutures[uuid] =
                     scheduler.schedule({
                         cachedLoginData.remove(uuid)?.cancel(true)
@@ -149,7 +152,10 @@ class ModulePlayerDataLoader(
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        saveAndForgetAll(event.player.uniqueId)
+        val uuid = event.player.uniqueId
+        val future = saveAndForgetAll(uuid)
+        pendingSaves[uuid] = future
+        future.whenComplete { _, _ -> pendingSaves.remove(uuid, future) }
     }
 
     fun shutdownScheduler() {
