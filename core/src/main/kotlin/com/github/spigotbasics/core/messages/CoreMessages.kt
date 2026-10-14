@@ -104,15 +104,6 @@ class CoreMessages(context: ConfigInstantiationContext) : SavedConfig(context) {
             .tagUnparsed("value", givenValue)
     }
 
-    fun invalidValueForArgumentMustBeNumber(
-        argumentName: String,
-        givenValue: String,
-    ): Message {
-        return getMessage("invalid-value-for-argument-must-be-number")
-            .tagUnparsed("argument", argumentName)
-            .tagUnparsed("value", givenValue)
-    }
-
     fun invalidValueForArgumentNumberNotInRange(
         argumentName: String,
         givenValue: Int,

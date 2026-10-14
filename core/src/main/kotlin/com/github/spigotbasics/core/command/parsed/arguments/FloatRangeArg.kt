@@ -23,7 +23,7 @@ class FloatRangeArg(name: String, private val min: () -> Float, private val max:
         sender: CommandSender,
         value: String,
     ): Message {
-        val given = super.parse(sender, value) ?: return Basics.messages.invalidValueForArgumentMustBeNumber(name, value)
+        val given = super.parse(sender, value) ?: return super.errorMessage(sender, value)
         return Basics.messages.invalidValueForArgumentNumberNotInRange(name, given, min(), max())
     }
 
