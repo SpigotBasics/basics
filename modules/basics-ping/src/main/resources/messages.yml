@@ -1,0 +1,3 @@
+# Tags: <#ping>
+ping: "<def_text>Pong! Your ping is <lite_text><#ping>ms</lite_text>.</def_text>"
+ping-others: "<def_text><player-dm><#player-name-genitive-suffix> ping is <lite_text><#ping>ms</lite_text>.</def_text>"
