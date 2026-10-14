@@ -1,0 +1,3 @@
+main-class: com.github.spigotbasics.modules.basicstop.BasicsTopModule
+name: basics-top
+version: ${moduleVersion}
