@@ -1,0 +1,3 @@
+# Tags: <#radius>, <#players>
+near: "<def_text>Players within <lite_text><#radius></lite_text> blocks: <lite_text><#players></lite_text></def_text>"
+near-none: "<def_text>There are no players within <lite_text><#radius></lite_text> blocks.</def_text>"
