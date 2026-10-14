@@ -1,0 +1,2 @@
+# Tags: <#item-hover>, <#item-amount>, <#item-type>
+more: "<def_text>Filled your stack to <#item-hover><lite_text><#item-amount></lite_text>x <lite_text><#item-type></lite_text></#item-hover>.</def_text>"
