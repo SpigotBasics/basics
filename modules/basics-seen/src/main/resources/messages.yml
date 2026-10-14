@@ -1,0 +1,4 @@
+# Tags: <#name>, <#time>
+seen-online: "<lite_text><#name></lite_text><def_text> is <lite_text>online</lite_text> right now.</def_text>"
+seen-offline: "<lite_text><#name></lite_text><def_text> was last seen <lite_text><#time></lite_text> ago.</def_text>"
+seen-never: "<error><error_red><#name> has never played on this server</error_red>"
