@@ -15,3 +15,6 @@ fun Float.decimals(decimalPlaces: Int = 0): String {
         "%.${decimalPlaces}f".format(this)
     }
 }
+
+/** Formats without a trailing ".0" for whole numbers, e.g. 10.0 -> "10" and 1.5 -> "1.5" */
+fun Float.toShortString(): String = toString().removeSuffix(".0")

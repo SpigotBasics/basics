@@ -1,0 +1,3 @@
+# Tags: <#type>, <#speed>
+speed-set: "<def_text>Set your <lite_text><#type></lite_text> speed to <lite_text><#speed></lite_text>.</def_text>"
+speed-set-others: "<def_text>Set <player-dm><#player-name-genitive-suffix> <lite_text><#type></lite_text> speed to <lite_text><#speed></lite_text>.</def_text>"
