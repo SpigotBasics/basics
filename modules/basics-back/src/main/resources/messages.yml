@@ -1,0 +1,2 @@
+back: "<def_text>Teleported <lite_text>back</lite_text> to your previous location.</def_text>"
+back-no-location: "<error><error_red>You don't have a previous location to go back to</error_red>"
